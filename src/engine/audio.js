@@ -50,8 +50,19 @@ function ensureCtx() {
 if (typeof window !== "undefined") {
   const debloque = () => {
     const c = ensureCtx();
+    if (!c) return;
+    /* astuce « buffer silencieux » : jouer un tout petit son muet dans le
+       geste réveille les contextes récalcitrants (iOS Safari, certains
+       Firefox) mieux qu'un simple resume(). */
+    try {
+      const b = c.createBuffer(1, 1, 22050);
+      const s = c.createBufferSource();
+      s.buffer = b;
+      s.connect(c.destination);
+      s.start(0);
+    } catch { /* pas grave */ }
     /* dès que le contexte tourne vraiment, on retire les écouteurs */
-    if (c && c.state === "running") {
+    if (c.state === "running") {
       ["pointerdown", "touchstart", "keydown", "click"].forEach((ev) =>
         window.removeEventListener(ev, debloque, true));
     }
