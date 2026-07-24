@@ -1,0 +1,126 @@
+/* ============================================================
+   MARTINE — styles globaux
+   Animations partagées par tout le jeu (décors, interface).
+   ============================================================ */
+
+* { box-sizing: border-box; }
+body { margin: 0; background: #080d16; }
+
+/* ============================================================
+   CONFORT DE LECTURE (accessibilité) — activé depuis ⚙ Réglages.
+   Ces règles sont posées via des classes sur <html> par App.jsx.
+   Elles utilisent `!important` À DESSEIN : c'est ce qui leur permet
+   d'atteindre AUSSI les composants du moteur (dialogue, besace,
+   fiches…) sans avoir à les modifier un par un.
+   ============================================================ */
+
+/* — Gros texte (mode classe / vidéoprojecteur, lisible à 5 m) —
+   L'écran de jeu est en height:100dvh + overflow:hidden : le zoom
+   agrandit tout sans jamais provoquer de défilement (le décor
+   absorbe la place). */
+html.a11y-gros body { zoom: 1.18; }
+
+/* — Lecture facilitée (élèves dys) —
+   Police sans empattement + espacement généreux entre lettres, mots
+   et lignes : c'est l'espacement, plus qu'une police « magique », qui
+   aide le plus à la lecture (et ça n'ajoute aucune dépendance). */
+html.a11y-dys body,
+html.a11y-dys body * {
+  font-family: "Trebuchet MS", "Verdana", "Segoe UI", sans-serif !important;
+  letter-spacing: 0.055em !important;
+  word-spacing: 0.14em !important;
+  line-height: 1.7 !important;
+  font-style: normal !important;
+}
+
+/* — Animations calmes (moins de distraction, moins de mal de cœur) —
+   coupe particules, halos, machine à écrire, tremblements… */
+html.a11y-calme *,
+html.a11y-calme *::before,
+html.a11y-calme *::after {
+  animation: none !important;
+  transition: none !important;
+}
+/* … et automatiquement pour qui a réglé son système sur « moins d'animations » */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ============================================================
+   LE CARNET IMPRIMABLE — la trace écrite de la séance.
+   À l'écran : invisible. À l'impression : c'est la SEULE chose
+   qui sort du jeu (noir et blanc, sans les décors ni l'interface).
+   On masque tout le reste avec `visibility` (et non `display`)
+   pour que la feuille puisse couler sur plusieurs pages A4.
+   ============================================================ */
+.carnet-print { display: none; }
+
+@media print {
+  body { background: #fff; }
+  body * { visibility: hidden !important; }
+  .carnet-print, .carnet-print * { visibility: visible !important; }
+  .carnet-print {
+    display: block !important;
+    position: absolute; left: 0; top: 0; width: 100%;
+    background: #fff; color: #000;
+    font-family: Georgia, "Times New Roman", serif;
+  }
+  /* on évite qu'une fiche soit coupée en deux entre deux pages */
+  .cp-fiche, .cp-epoque { break-inside: avoid; page-break-inside: avoid; }
+  @page { size: A4 portrait; margin: 14mm; }
+}
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+@keyframes twinkle { 0%,100%{opacity:.9} 50%{opacity:.15} }
+@keyframes flick { 0%,100%{transform:scaleY(1) scaleX(1)} 50%{transform:scaleY(1.14) scaleX(.93)} }
+@keyframes glow { 0%,100%{opacity:.75} 50%{opacity:1} }
+@keyframes drift { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+@keyframes spark { 0%{transform:translateY(0);opacity:1} 100%{transform:translateY(-30px);opacity:0} }
+@keyframes ripple { 0%,100%{opacity:.5} 50%{opacity:.15} }
+@keyframes sway { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(2.5deg)} }
+@keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+@keyframes popIn { from{transform:scale(.92);opacity:0} to{transform:scale(1);opacity:1} }
+
+/* --- Effets de réussite (jalon M1) --- */
+/* apparition à ressort d'un objet dans la besace */
+@keyframes pop { 0%{transform:scale(0)} 60%{transform:scale(1.22)} 100%{transform:scale(1)} }
+/* apparition en fondu SANS mouvement (pour le phylactère, qui doit garder
+   son transform de centrage) */
+@keyframes fadein { from{opacity:0} to{opacity:1} }
+/* une particule dorée s'éloigne (--dx/--dy) et s'estompe */
+@keyframes particleFly { to { transform: translate(var(--dx), var(--dy)) scale(.2); opacity: 0; } }
+/* le creuset pulse une fois (objet fabriqué) */
+@keyframes cruciblePulse {
+  0% { box-shadow: 0 0 0 rgba(94,255,158,0); }
+  35% { box-shadow: 0 0 38px rgba(94,255,158,0.75); }
+  100% { box-shadow: 0 0 0 rgba(94,255,158,0); }
+}
+/* version amplifiée (message transmis au futur) */
+@keyframes cruciblePulseBig {
+  0% { box-shadow: 0 0 0 rgba(255,209,102,0); }
+  35% { box-shadow: 0 0 80px rgba(255,209,102,0.95); }
+  100% { box-shadow: 0 0 0 rgba(255,209,102,0); }
+}
+/* remplissage animé d'une jauge (préparé pour M2) */
+@keyframes gaugeFill { from { width: 0; } }
+/* clignement d'œil de l'avatar MARTINE (paupière visible un instant) */
+@keyframes blink { 0%, 90%, 100% { opacity: 0; } 93%, 96% { opacity: 1; } }
+/* travelling d'entrée quand on change de tableau (sens du déplacement) */
+@keyframes sceneFromRight { from { transform: translateX(10%) scale(1.03); opacity: 0.15; } to { transform: none; opacity: 1; } }
+@keyframes sceneFromLeft { from { transform: translateX(-10%) scale(1.03); opacity: 0.15; } to { transform: none; opacity: 1; } }
+/* mouton qui broute (la tête monte et descend doucement) */
+@keyframes grazing { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(11deg) translateY(2px); } }
+/* tourbillon de l'écran de transition entre deux époques */
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes spinGrow { 0% { transform: rotate(0deg) scale(0.6); opacity: 0; } 30% { opacity: 1; } 100% { transform: rotate(720deg) scale(1); opacity: 1; } }
+/* message PERDU : le pictogramme s'envole et se désintègre en poussière */
+@keyframes dissolve {
+  0% { transform: translate(-50%, -50%) translateY(0) scale(1) rotate(0deg); opacity: 1; filter: blur(0); }
+  30% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) translateY(-64px) scale(1.5) rotate(-12deg); opacity: 0; filter: blur(7px); }
+}
+
+/* Accessibilité : les élèves sensibles au mouvement peuvent
+   désactiver les animations dans les réglages de leur appareil. */
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; } }

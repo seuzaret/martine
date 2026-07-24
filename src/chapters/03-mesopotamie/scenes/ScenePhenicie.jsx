@@ -1,0 +1,164 @@
+import Hotspot from "../../../engine/Hotspot.jsx";
+import { PLayer } from "../../../engine/Parallax.jsx";
+
+/* ============================================================
+   CHAPITRE 3 — Tableau : la côte phénicienne
+   Peinture fine — lumière méditerranéenne, un port, des navires
+   marchands, des ballots de marchandises, le comptoir où l'on
+   troque… et où l'alphabet se transmet.
+   À trouver : les 22 signes (au comptoir), les navires marchands.
+   ============================================================ */
+
+export default function ScenePhenicie({ collect, action, reveal, made = [] }) {
+  return (
+    <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="ph-sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#2f6a9e" />
+          <stop offset="48%" stopColor="#79aacb" />
+          <stop offset="80%" stopColor="#e6c98a" />
+          <stop offset="100%" stopColor="#f4dca0" />
+        </linearGradient>
+        <radialGradient id="ph-sun" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#fff4d0" /><stop offset="50%" stopColor="#ffe09a" stopOpacity="0.6" /><stop offset="100%" stopColor="#ffe09a" stopOpacity="0" /></radialGradient>
+        <linearGradient id="ph-sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#5aa0b0" /><stop offset="55%" stopColor="#2f7e92" /><stop offset="100%" stopColor="#1c5a6e" /></linearGradient>
+        <linearGradient id="ph-quay" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#c2a877" /><stop offset="100%" stopColor="#7a6240" /></linearGradient>
+        <filter id="ph-grain" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0" result="a" />
+          <feComposite in="a" in2="SourceGraphic" operator="in" />
+        </filter>
+        <filter id="ph-blur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7" /></filter>
+      </defs>
+
+      {/* ═══ ciel méditerranéen ═══ */}
+      <rect width="1000" height="560" fill="url(#ph-sky)" />
+      <circle cx="800" cy="150" r="150" fill="url(#ph-sun)" />
+      <circle cx="800" cy="150" r="42" fill="#fff4d0" opacity="0.95" />
+      {/* mouettes */}
+      <path d="M180 120 q8 -8 16 0 q8 -8 16 0 M260 150 q6 -6 12 0 q6 -6 12 0" stroke="#3c4452" strokeWidth="2.2" fill="none" opacity="0.6" />
+
+      {/* ═══ couche lointaine : cap rocheux + ville phénicienne ═══ */}
+      <PLayer depth={1}>
+        <path d="M0 300 Q160 250 320 288 L320 340 L0 340 Z" fill="#8a7a5e" />
+        {/* maisons blanches à flanc de colline */}
+        {[[60, 268], [110, 256], [150, 280], [220, 262], [270, 284]].map(([x, y], i) => (
+          <g key={i}><rect x={x - 12} y={y} width="24" height="26" fill="#d8cdb4" /><path d={`M${x - 14} ${y} L${x} ${y - 12} L${x + 14} ${y} Z`} fill="#a86a4a" /></g>
+        ))}
+        {/* phare / tour de guet */}
+        <rect x="300" y="230" width="16" height="70" fill="#c2b48e" /><rect x="298" y="224" width="20" height="10" fill="#a86a4a" />
+      </PLayer>
+
+      {/* ═══ couche intermédiaire : la mer + les navires marchands ═══ */}
+      <PLayer depth={2}>
+        <rect y="300" width="1000" height="130" fill="url(#ph-sea)" />
+        <path d="M700 306 L790 306 L820 420 L660 420 Z" fill="#ffe09a" opacity="0.2" />
+        {[316, 342, 368, 396].map((y, i) => (
+          <path key={i} d={`M0 ${y} q110 ${i % 2 ? 5 : -5} 220 0 t220 0 t220 0 t220 0`} stroke="#bfe0dc" strokeWidth="1.6" fill="none" opacity="0.4" style={{ animation: `ripple ${3 + (i % 3)}s ease-in-out infinite` }} />
+        ))}
+        {/* deux navires marchands (coque à rames + voile carrée) */}
+        {[[420, 350, 1], [720, 372, 0.8]].map(([x, y, s], i) => (
+          <g key={i} transform={`translate(${x},${y}) scale(${s})`}>
+            <path d="M-56 16 Q0 34 56 16 L46 30 Q0 40 -46 30 Z" fill="#5a3f24" />
+            <path d="M-56 16 Q-60 6 -52 4 M56 16 Q60 6 52 4" stroke="#7a5636" strokeWidth="3" fill="none" />
+            <path d="M0 16 L0 -46" stroke="#4a3320" strokeWidth="3" />
+            <rect x="-30" y="-46" width="60" height="34" fill="#e8dcc0" />
+            <path d="M-30 -46 h60 M-30 -30 h60" stroke="#c2a86a" strokeWidth="1.4" opacity="0.6" />
+            {/* rames */}
+            <path d="M-40 24 l-14 12 M-24 26 l-12 12 M24 26 l12 12 M40 24 l14 12" stroke="#6e4c2e" strokeWidth="2.4" />
+          </g>
+        ))}
+      </PLayer>
+
+      {/* ═══ premier plan : le quai, les ballots, le comptoir ═══ */}
+      <PLayer depth={3}>
+        <path d="M0 560 L0 418 Q250 404 520 424 Q760 442 1000 416 L1000 560 Z" fill="url(#ph-quay)" />
+        <path d="M0 560 L0 418 Q250 404 520 424 Q760 442 1000 416 L1000 560 Z" fill="#3c2c18" opacity="0.3" filter="url(#ph-grain)" />
+        {/* dalles du quai */}
+        <path d="M0 470 h1000 M0 512 h1000 M180 440 v120 M420 440 v120 M700 440 v120" stroke="#5c4830" strokeWidth="1.6" opacity="0.4" />
+        <ellipse cx="500" cy="500" rx="440" ry="46" fill="#7a6240" opacity="0.35" />
+
+        {/* BALLOTS de marchandises empilés */}
+        <g transform="translate(150,486)">
+          <rect x="-34" y="-4" width="34" height="30" rx="4" fill="#a86a4a" />
+          <rect x="2" y="-4" width="34" height="30" rx="4" fill="#b8794a" />
+          <rect x="-16" y="-32" width="34" height="30" rx="4" fill="#96613e" />
+          <path d="M-30 10 h30 M6 10 h30 M-12 -18 h30" stroke="#5c3822" strokeWidth="1.4" opacity="0.6" />
+          {/* amphores appuyées */}
+          <g transform="translate(44,10)"><path d="M-7 -2 Q-9 12 0 16 Q9 12 7 -2 Q7 -10 0 -12 Q-7 -10 -7 -2 Z" fill="#b8935e" /><rect x="-3" y="-16" width="6" height="6" fill="#8a6238" /></g>
+        </g>
+
+        {/* LE COMPTOIR : une table où l'on troque, une tablette aux 22 signes */}
+        <g transform="translate(470,500)">
+          <rect x="-70" y="6" width="140" height="12" rx="3" fill="#8a6238" />
+          <rect x="-64" y="18" width="10" height="24" fill="#6e4c2e" /><rect x="54" y="18" width="10" height="24" fill="#6e4c2e" />
+          {/* la plaquette de l'alphabet (22 signes simples) */}
+          <g transform="translate(-4,-8)">
+            <rect x="-40" y="-14" width="80" height="26" rx="3" fill="#e8dcc0" />
+            <rect x="-40" y="-14" width="80" height="26" rx="3" fill="#6e5228" opacity="0.2" filter="url(#ph-grain)" />
+            {["𐤀","𐤁","𐤂","𐤃","𐤄","𐤅","𐤆"].map((c, i) => (
+              <text key={i} x={-34 + i * 11} y="-2" fontSize="9" fill="#3c2c18" fontFamily="ui-monospace,monospace">{c}</text>
+            ))}
+            {["𐤇","𐤈","𐤉","𐤊","𐤋","𐤌","𐤍"].map((c, i) => (
+              <text key={i} x={-34 + i * 11} y="9" fontSize="9" fill="#3c2c18" fontFamily="ui-monospace,monospace">{c}</text>
+            ))}
+          </g>
+          {/* balance de marchand */}
+          <g transform="translate(56,-6)">
+            <path d="M0 -14 L0 0 M-12 -10 L12 -10" stroke="#6e5230" strokeWidth="1.6" />
+            <path d="M-12 -10 l-4 8 l8 0 Z M12 -10 l-4 8 l8 0 Z" fill="#c2a86a" />
+          </g>
+        </g>
+
+        {/* un marchand phénicien assis au comptoir */}
+        <g transform="translate(560,486)">
+          <path d="M-11 4 Q-14 -14 0 -17 Q14 -14 11 4 L8 24 L-8 24 Z" fill="#7a3f34" />
+          <circle cx="0" cy="-25" r="8" fill="#a06a44" />
+          <path d="M-8 -30 q8 -6 16 0 q-2 -6 -8 -6 q-7 0 -8 6" fill="#2c1c12" />
+          <path d="M8 -4 q10 -2 14 4" stroke="#a06a44" strokeWidth="4" fill="none" strokeLinecap="round" />
+        </g>
+
+        {/* TABLETTE À GRAVER — ouvre le mini-jeu « Écris MARTINE » */}
+        <g transform="translate(300,500)">
+          <ellipse cx="0" cy="20" rx="40" ry="9" fill="#160f06" opacity="0.4" />
+          <path d="M-36 14 Q-38 -14 -30 -18 L30 -16 Q40 -14 38 12 Q38 20 28 20 L-26 20 Q-36 20 -36 14 Z" fill="#c8a46a" stroke="#8a6a3a" strokeWidth="2" />
+          <g stroke="#5a3f22" strokeWidth="1.6" fill="none" strokeLinecap="round">
+            <path d="M-24 -4 L-18 8 L-12 -4 M-24 -4 q-4 -6 -8 -4 M-12 -4 q4 -6 8 -4" />
+            <path d="M-4 -6 q3 4 6 0 q3 4 6 0" />
+            <path d="M16 -8 L26 4 M26 -8 L16 4" />
+          </g>
+          <g transform="translate(30,-12) rotate(28)"><rect x="-1.4" y="-14" width="2.8" height="26" rx="1.4" fill="#c9a86a" /></g>
+          <text x="0" y="-28" textAnchor="middle" fontSize="16" fill="#ffd166" style={{ animation: "glow 2s ease-in-out infinite" }}>✍</text>
+        </g>
+
+        {/* bittes d'amarrage + corde */}
+        <g transform="translate(820,470)">
+          <rect x="-6" y="0" width="12" height="24" rx="4" fill="#5c4630" />
+          <path d="M0 4 q40 8 70 -6" stroke="#8a6a42" strokeWidth="3" fill="none" opacity="0.8" />
+        </g>
+
+        {/* herbes / cordages qui cadrent le bas */}
+        <g opacity="0.85"><path d="M-4 560 q8 -22 2 -34 M980 560 q-6 -20 2 -32" stroke="#3a2c18" strokeWidth="4" fill="none" /></g>
+      </PLayer>
+
+      {/* voile de grain global */}
+      <rect width="1000" height="560" fill="#231a10" opacity="0.06" style={{ pointerEvents: "none" }} />
+
+      {/* zones cliquables */}
+      {/* le « ? » du marchand : un code simple, apprenable en quelques jours */}
+      {!made.includes("msg_alphabet") && (
+        <>
+          <g transform="translate(552,414)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+            <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
+            <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
+          </g>
+          <Hotspot cx={572} cy={424} r={28} label="parler au marchand" reveal={reveal} onClick={() => action("marchand")} />
+        </>
+      )}
+
+      <Hotspot cx={462} cy={492} r={46} label="22 signes" item="signes" reveal={reveal} onClick={() => collect("signes")} />
+      <Hotspot cx={470} cy={356} r={70} label="navires" item="navires" reveal={reveal} onClick={() => collect("navires")} />
+      {/* la tablette : ouvre le mini-jeu de l'alphabet (bonus, toujours dispo) */}
+      <Hotspot cx={300} cy={494} r={46} label="graver l'alphabet" reveal={reveal} onClick={() => action("alphabet")} />
+    </svg>
+  );
+}

@@ -1,0 +1,173 @@
+/* ============================================================
+   CHAPITRE 9 — Le XXIe siècle : tout dans la poche (aujourd'hui)
+   ============================================================
+   2 tableaux en ÉNIGMES : la chambre d'ado et le datacenter.
+   Idée forte : tout converge dans un seul objet… et le support
+   semble disparaître (streaming, cloud). En réalité il n'a pas
+   disparu : il est CHEZ QUELQU'UN D'AUTRE.
+
+   DEUX messages perdus, les plus importants du jeu :
+   - la DISQUETTE héritée du chapitre 8 → illisible en 30 ans ;
+   - les photos d'enfance → le service ferme, tout disparaît.
+   Voir docs/AJOUTER-UN-CHAPITRE.md.
+   ============================================================ */
+
+import SceneChambre from "./scenes/SceneChambre.jsx";
+import SceneDatacenter from "./scenes/SceneDatacenter.jsx";
+
+/* ------------------------------------------------------------
+   LES ÉLÉMENTS
+   ------------------------------------------------------------ */
+const ITEMS = {
+  /* HÉRITAGE du chapitre 8 — elle voyage dans la besace */
+  disquette: { name: "Disquette", emoji: "💾", heirloom: true, desc: "Ta disquette des années 80, rapportée du chapitre précédent. Il y a un fichier dessus. Elle a 30 ans à peine… ça devrait aller, non ?" },
+
+  /* T1 — la chambre d'ado */
+  memoire_flash:  { name: "Mémoire flash", emoji: "🔲", desc: "Une puce grosse comme un ongle. Elle retient des données toute seule : sans bande, sans disque qui tourne, sans électricité pour tenir." },
+  poche:          { name: "Poche", emoji: "👖", desc: "La poche de ton jean. Minuscule. Le défi : y faire tenir plus de livres que dans la bibliothèque d'Alexandrie." },
+  ecran_tactile:  { name: "Écran tactile", emoji: "📱", desc: "Une vitre qui sent ton doigt. Plus de boutons, plus de clavier : l'objet devient tout ce qu'on veut afficher dessus." },
+  /* support: true → fixe, ne va pas au sac : on lui apporte un objet
+     (le moteur l'affiche en cyan). */
+  reseau_mobile:  { name: "Réseau mobile", emoji: "📶", support: true, desc: "L'antenne-relais, là, derrière la fenêtre. Elle te relie au monde entier, partout, tout le temps." },
+  pc_moderne:     { name: "PC moderne", emoji: "💻", support: true, desc: "Ton ordinateur d'aujourd'hui. Fin, rapide, puissant. Et… tiens, il n'a aucun lecteur de disquette." },
+  photos_enfance: { name: "Photos d'enfance", emoji: "🖼️", desc: "Toutes tes photos depuis que tu es petit. Elles ne sont pas ici : elles sont « dans le nuage ». C'est-à-dire… ailleurs." },
+
+  /* T2 — le datacenter */
+  serveurs:      { name: "Serveurs lointains", emoji: "🗄️", support: true, desc: "Des milliers de machines qui tournent jour et nuit, dans un hangar réfrigéré, à des centaines de kilomètres de chez toi." },
+  abonnement:    { name: "Abonnement", emoji: "💳", desc: "Tu ne possèdes rien : tu paies pour ACCÉDER. Tant que tu paies, tout est là. Et si tu arrêtes ? Et si c'est EUX qui arrêtent ?" },
+  service_ferme: { name: "Service fermé", emoji: "⛔", support: true, desc: "Un écriteau : « Ce service ferme le 31 décembre. Merci de votre fidélité. » Et tes photos, alors ?" },
+};
+
+/* ------------------------------------------------------------
+   LES TABLEAUX
+   ------------------------------------------------------------ */
+const SCENES = [
+  { id: "chambre",    name: "Ta chambre",    Component: SceneChambre },
+  { id: "datacenter", name: "Le datacenter", Component: SceneDatacenter },
+];
+
+const WHERE = {
+  disquette: "dans ta besace — la disquette du chapitre 8 (si tu ne l'as plus, rejoue le chapitre 8 et ramasse-la au labo)",
+  memoire_flash: "dans ta chambre", poche: "dans ta chambre", ecran_tactile: "dans ta chambre",
+  photos_enfance: "dans ta chambre",
+  abonnement: "au datacenter",
+};
+
+const HIDDEN_BY_FLAG = {};
+
+/* ------------------------------------------------------------
+   LES RECETTES
+   ------------------------------------------------------------ */
+const RECIPES = [
+  { a: "memoire_flash", b: "poche", out: "msg_usb", msg: true },
+  { a: "ecran_tactile", b: "reseau_mobile", out: "msg_smartphone", msg: true },
+  { a: "serveurs", b: "abonnement", out: "msg_streaming", msg: true },
+  /* MESSAGE PERDU 1 — LE clou du jeu : la disquette du chapitre 8, 30 ans après. */
+  { a: "disquette", b: "pc_moderne", out: "msg_disquette", msg: true, perdu: true },
+  /* MESSAGE PERDU 2 — la mémoire confiée à quelqu'un d'autre. */
+  { a: "photos_enfance", b: "service_ferme", out: "msg_compte", msg: true, perdu: true },
+];
+
+/* ------------------------------------------------------------
+   LES MESSAGES (fiches + jauges 1 à 5)
+   ------------------------------------------------------------ */
+const MESSAGES = {
+  msg_usb: { title: "Clé USB, carte SD, SSD", emoji: "🔌",
+    jauges: { vitesse: 2, portee: 2, capacite: 5, durabilite: 2 },
+    fact: "Une puce grosse comme un ongle, et voilà plus de livres que n'en contenait toute la bibliothèque d'Alexandrie — dans ta poche. En un siècle, la quantité d'informations qu'on peut ranger dans un objet a été multipliée par des milliards. Mais attention à la blague : une clé USB tient environ 10 ans avant de devenir illisible. La bibliothèque d'Alexandrie, elle, a tenu des siècles. Le plus petit et le plus puissant n'est pas le plus solide." },
+  msg_smartphone: { title: "Smartphone", emoji: "📱",
+    jauges: { vitesse: 5, portee: 5, capacite: 4, durabilite: 2 },
+    fact: "Un écran tactile, le réseau mobile, et TOUS les médias de ton voyage tiennent dans un seul objet : l'appareil photo, le téléphone, la télé, la radio, le journal, le courrier, la bibliothèque, le cinéma. Tout ce que tu as fabriqué depuis Lascaux est là, dans ta main. Mais pose-toi une question : cet objet est fabriqué pour capter ton attention le plus longtemps possible. Alors à qui profite ton temps d'écran ?" },
+  msg_streaming: { title: "Streaming & cloud", emoji: "☁️",
+    jauges: { vitesse: 5, portee: 5, capacite: 5, durabilite: 1 },
+    fact: "Musique, films, photos, devoirs : plus besoin de support ! Enfin… c'est ce qu'on dit. En vrai le support existe toujours, mais il est CHEZ QUELQU'UN D'AUTRE, dans un hangar rempli de serveurs. Tu ne possèdes plus : tu accèdes, tant que tu paies et tant que le service existe. Et le jour où l'entreprise ferme, change ses règles ou supprime ton compte ? La vraie question de ton époque : à qui confies-tu tes messages ?" },
+  /* MESSAGES PERDUS */
+  msg_disquette: { title: "Fichier illisible", emoji: "💾", perdu: true,
+    jauges: { vitesse: 1, portee: 1, capacite: 2, durabilite: 1 },
+    fact: "Tu as gardé ta disquette pendant 30 ans. Elle n'est ni cassée, ni mouillée, ni brûlée : elle est intacte. Le fichier est toujours dessus. Mais plus aucun ordinateur n'a de lecteur de disquette, et le format du fichier ne s'ouvre plus nulle part. Le message n'a pas été effacé : il est devenu ILLISIBLE. Et pour toi, ça revient exactement au même. 30 ans ont suffi. La paroi de Lascaux, elle, se lit encore après 20 000 ans." },
+  msg_compte: { title: "Compte supprimé", emoji: "⛔", perdu: true,
+    jauges: { vitesse: 4, portee: 3, capacite: 4, durabilite: 1 },
+    fact: "Toutes tes photos d'enfance étaient « dans le nuage ». Et puis le service a fermé. Ou ton compte a été supprimé. Ou tu as oublié le mot de passe. En une seconde, des années de souvenirs disparaissent — et tu n'y peux rien, parce qu'ils n'étaient pas chez toi. Comment se protéger ? Faire plusieurs copies, à plusieurs endroits, dans des formats ouverts. C'est le métier des archivistes : la BnF, par exemple, archive le web français pour qu'il en reste quelque chose." },
+};
+
+/* ------------------------------------------------------------
+   LES INDICES (bouton 💡)
+   ------------------------------------------------------------ */
+const HINTS = [
+  { needs: ["memoire_flash", "poche"], out: "msg_usb", text: "Une puce de mémoire flash, et hop, dans ta poche : la clé USB. Des bibliothèques entières dans ton jean." },
+  { needs: ["ecran_tactile", "reseau_mobile"], out: "msg_smartphone", text: "Un écran tactile + le réseau mobile de l'antenne, dehors : tu obtiens le smartphone, qui contient TOUS les médias du jeu." },
+  { needs: ["serveurs", "abonnement"], out: "msg_streaming", text: "Des serveurs très loin + un abonnement que tu paies : c'est le streaming. Tu n'as plus de support… enfin, tu crois." },
+  { needs: ["disquette", "pc_moderne"], out: "msg_disquette", text: "Tu meurs d'envie de savoir ce qu'il y a sur cette vieille disquette ? Essaie donc de la lire sur ton PC moderne…" },
+  { needs: ["photos_enfance", "service_ferme"], out: "msg_compte", text: "Tes photos d'enfance sont sur un service qui ferme le 31 décembre. Regarde ce qui se passe…" },
+];
+
+const NEAR_MISS = [
+  { pair: ["disquette", "memoire_flash"], line: "Copier la disquette sur la puce flash ? Excellente idée ! Encore faudrait-il pouvoir la LIRE, ta disquette. Essaie sur le PC, tu verras." },
+  { pair: ["ecran_tactile", "serveurs"], line: "Un écran tactile branché sur un datacenter ? Il te manque le lien entre les deux : le réseau mobile." },
+  { pair: ["photos_enfance", "poche"], line: "Tu voudrais mettre tes photos dans ta poche ? Mauvaise nouvelle : elles ne sont pas chez toi. Elles sont au datacenter." },
+  { pair: ["abonnement", "poche"], line: "Un abonnement dans la poche… Tu paies, mais tu ne possèdes toujours rien. C'est bien ça, le problème." },
+];
+
+const FAIL_LINES = [
+  "Bzzt. Même ton époque n'a pas inventé ça.",
+  "Combinaison rejetée. Un support, un message : concentre-toi.",
+  "Mes archives ne connaissent pas. Réessaie.",
+  "Erreur : ces deux-là ne feront pas un message.",
+  "Zéro invention détectée. On tente autre chose ?",
+];
+
+const INTRO = [
+  "Nous y voilà : TON époque. Tout ce qu'on a fabriqué en 20 000 ans va tenir dans un seul objet, au fond d'une poche.",
+  "Deux personnes, deux vérités qui grincent. L'ado veut que TOUT — téléphone, photos, musique, jeux — tienne dans un seul truc. Le technicien, lui, sourit : « tes souvenirs ? Ils ne sont pas chez toi. Ils sont ICI, dans mes serveurs. Chez quelqu'un d'autre. »",
+  "Aide-les, remplis ma jauge une dernière fois — et garde bien ta disquette du chapitre 8. J'ai une petite expérience à te proposer avant de te ramener chez toi.",
+];
+
+const ACTIONS = {
+  wreck: { mood: "vexe", say: "Je me suis posée entre ta console et trois chargeurs. Personne n'a rien remarqué : tout le monde regardait son écran. C'est vexant, je te l'avoue." },
+
+  ado: { mood: "neutre",
+    bubble: "Regarde ce bazar : un téléphone, un appareil photo, un baladeur, une console, une télé, un réveil, un plan de la ville, une pile de courrier… Ça fait BEAUCOUP d'objets à trimballer ! Et si tout ça tenait dans un seul truc, dans ma poche ?",
+    say: "Le smartphone : TOUS les médias de ton voyage dans un seul objet. Fait pour capter ton attention, aussi — à qui profite ton temps d'écran ?" },
+
+  technicien: { mood: "neutre",
+    bubble: "Tes photos, ta musique, tes devoirs… tu crois qu'ils sont dans ton téléphone ? Regarde autour de toi : ils sont ICI, dans ces serveurs. Chez quelqu'un d'autre. Et tant que tu paies, tout va bien.",
+    say: "Le cloud : « plus de support » ? Faux — il est chez quelqu'un d'autre. Posséder ou accéder ? Et si le service ferme ?" },
+};
+
+/* ------------------------------------------------------------
+   LA FICHE DU CHAPITRE
+   ------------------------------------------------------------ */
+const chapter = {
+  id: "09-xxie",
+  bandeau: "CHAPITRE 9 · AUJOURD'HUI",
+  date: "AUJOURD'HUI",
+  epoque: "XXIe siècle",
+  emoji: "📱",
+
+  titre: "MARTINE",
+  sousTitre: "Machine À Remonter le Temps Intelligente Néanmoins Excellente",
+  presentationTitre: "Chapitre 9 — Ton époque.",
+  presentation: "Tout converge : l'appareil photo, le téléphone, la télé, la radio, le journal, la bibliothèque… tout tient désormais dans un seul objet, dans ta poche. Et le support semble avoir disparu — streaming, cloud, « le nuage ». Sauf qu'il n'a pas disparu du tout : il est chez quelqu'un d'autre. Deux lieux : ta chambre, et le hangar où dorment vraiment tes souvenirs.",
+  accroche: "La clé USB 🔌 · le smartphone 📱 · le cloud ☁️ · et deux messages qui se perdent…",
+
+  finTitre: "VOYAGE TERMINÉ",
+  finTexte: "« Circuits rechargés à {pct} %. Regarde ta frise, humain. Toute l'histoire est là, en un coup d'œil : la vitesse explose, la portée explose, la capacité explose… et la durabilité tombe au fond du trou. Ta disquette avait 30 ans et elle est déjà illisible. La paroi de Lascaux a 20 000 ans et on la lit encore. Alors avant que je te ramène : j'ai UNE dernière question pour toi. » — MARTINE",
+
+  required: 3,
+  startScene: 0,
+  destination: "ÉPILOGUE",
+
+  items: ITEMS,
+  scenes: SCENES,
+  where: WHERE,
+  hiddenByFlag: HIDDEN_BY_FLAG,
+  recipes: RECIPES,
+  messages: MESSAGES,
+  hints: HINTS,
+  nearMiss: NEAR_MISS,
+  failLines: FAIL_LINES,
+  intro: INTRO,
+  actions: ACTIONS,
+};
+
+export default chapter;

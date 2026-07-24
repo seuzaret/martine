@@ -1,0 +1,349 @@
+import Hotspot from "../../../engine/Hotspot.jsx";
+import { PLayer } from "../../../engine/Parallax.jsx";
+import { GrassTuft, Birds } from "./decor.jsx";
+
+/* ============================================================
+   CHAPITRE 1 — Tableau : devant la grotte (tableau de départ)
+   VERSION « PEINTURE FINE » (démonstration du style réaliste) :
+   crêtes irrégulières + brume entre les plans, textures de
+   roche et de sol (grain), lumière rasante du couchant,
+   ombres longues, végétation détaillée, premier plan qui cadre.
+   À trouver ici : l'ocre, la liane. On peut entrer dans la
+   grotte (action "cave") ou examiner l'épave (action "wreck").
+   Les zones cliquables n'ont pas bougé.
+   ============================================================ */
+
+export default function SceneExterieur({ collect, action, reveal, made = [] }) {
+  return (
+    <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
+      <defs>
+        {/* ciel de début de matinée : bleu-lavande qui rosit vers l'horizon */}
+        <linearGradient id="x2sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#24356a" />
+          <stop offset="22%" stopColor="#40518e" />
+          <stop offset="46%" stopColor="#7a72a8" />
+          <stop offset="68%" stopColor="#c493a0" />
+          <stop offset="84%" stopColor="#eec08c" />
+          <stop offset="100%" stopColor="#ffe6b0" />
+        </linearGradient>
+        <radialGradient id="x2sun" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#fff8e0" />
+          <stop offset="35%" stopColor="#ffe4a8" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="#ffe0a0" stopOpacity="0" />
+        </radialGradient>
+        {/* plans de montagnes : bleutés au loin (perspective atmosphérique) */}
+        <linearGradient id="x2mFar" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#6a78b4" /><stop offset="100%" stopColor="#505e98" /></linearGradient>
+        <linearGradient id="x2mMid" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#6f6494" /><stop offset="100%" stopColor="#524874" /></linearGradient>
+        <linearGradient id="x2mNear" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#4c4258" /><stop offset="100%" stopColor="#322c42" /></linearGradient>
+        <linearGradient id="x2soil" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#a08256" />
+          <stop offset="18%" stopColor="#8a6844" />
+          <stop offset="55%" stopColor="#6a5034" />
+          <stop offset="100%" stopColor="#423020" />
+        </linearGradient>
+        <linearGradient id="x2rock" x1="0.1" y1="0" x2="0.9" y2="1">
+          <stop offset="0%" stopColor="#8a6448" />
+          <stop offset="35%" stopColor="#6e4c36" />
+          <stop offset="70%" stopColor="#523828" />
+          <stop offset="100%" stopColor="#38261c" />
+        </linearGradient>
+        <radialGradient id="x2cave" cx="50%" cy="26%" r="85%">
+          <stop offset="0%" stopColor="#040201" />
+          <stop offset="62%" stopColor="#0f0804" />
+          <stop offset="100%" stopColor="#26150e" />
+        </radialGradient>
+        {/* flou doux pour les nuages et halos */}
+        <filter id="x2blur" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="7" />
+        </filter>
+        {/* grain fin de matière (roche, sol, voile général) */}
+        <filter id="x2grain" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.55 0" result="a" />
+          <feComposite in="a" in2="SourceGraphic" operator="in" />
+        </filter>
+        {/* marbrures larges (plaques d'usure du sol, taches de la roche) */}
+        <filter id="x2mottle" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0" result="a" />
+          <feComposite in="a" in2="SourceGraphic" operator="in" />
+        </filter>
+      </defs>
+
+      {/* ═══ ciel (fixe) ═══ */}
+      <rect width="1000" height="560" fill="url(#x2sky)" />
+      {/* dernières étoiles qui s'effacent dans le petit matin */}
+      {[[70, 36, 1.3, 0.4], [300, 30, 1.4, 0.35], [560, 24, 1.1, 0.3], [880, 40, 1.3, 0.35]].map(([x, y, r, o], i) => (
+        <circle key={i} cx={x} cy={y} r={r} fill="#fff" opacity={o} style={{ animation: `twinkle ${3 + i}s infinite` }} />
+      ))}
+      {/* soleil levant, encore bas — il émerge derrière les crêtes */}
+      <circle cx="705" cy="235" r="175" fill="url(#x2sun)" />
+      <circle cx="705" cy="235" r="78" fill="#ffe4a8" opacity="0.45" filter="url(#x2blur)" />
+      <circle cx="705" cy="235" r="42" fill="#fff8e2" />
+      <circle cx="705" cy="235" r="42" fill="none" stroke="#fffbe8" strokeWidth="1.5" opacity="0.8" />
+      {/* nuages du matin, rosés par le soleil rasant */}
+      <g filter="url(#x2blur)">
+        <ellipse cx="265" cy="118" rx="150" ry="13" fill="#f0b8a0" opacity="0.4" />
+        <ellipse cx="330" cy="132" rx="90" ry="8" fill="#e8987a" opacity="0.32" />
+        <ellipse cx="585" cy="170" rx="185" ry="11" fill="#f8d0a8" opacity="0.45" />
+        <ellipse cx="650" cy="184" rx="90" ry="6" fill="#ffe8c0" opacity="0.5" />
+        <ellipse cx="852" cy="106" rx="115" ry="9" fill="#d8a0a8" opacity="0.35" />
+      </g>
+      <Birds />
+
+      {/* ═══ couche lointaine (bouge peu) ═══ */}
+      <PLayer depth={1}>
+      {/* crête lointaine, dentelée */}
+      <path d="M0 306 L58 268 L104 226 L128 246 L152 262 L208 238 L252 270 L300 240 L342 208 L378 228 L420 252 L452 234 L500 262 L540 280 L586 246 L622 260 L658 300 L700 268 L742 292 L788 256 L836 276 L876 254 L918 272 L962 252 L1000 288 L1000 420 L0 420 Z" fill="url(#x2mFar)" opacity="0.95" />
+      {/* brume matinale au pied de la crête */}
+      <rect y="290" width="1000" height="30" fill="#ffe6b0" opacity="0.2" filter="url(#x2blur)" />
+      {/* crête intermédiaire */}
+      <path d="M0 342 L66 300 L118 266 L148 288 L196 272 L246 310 L296 342 L348 300 L398 276 L440 296 L486 320 L540 288 L590 306 L648 348 L700 316 L756 288 L804 314 L860 296 L912 322 L1000 336 L1000 430 L0 430 Z" fill="url(#x2mMid)" />
+      <rect y="332" width="1000" height="24" fill="#ffe6b0" opacity="0.16" filter="url(#x2blur)" />
+      {/* collines proches, adoucies, avec forêt en silhouette */}
+      <path d="M0 384 Q90 344 180 366 Q270 388 360 360 Q450 334 540 366 Q630 396 720 372 Q810 348 900 376 Q950 390 1000 372 L1000 440 L0 440 Z" fill="url(#x2mNear)" />
+      {[150, 190, 228, 262, 566, 600, 636, 850, 884].map((x, i) => (
+        <path key={i} d={`M${x} ${i < 4 ? 372 - (i % 2) * 6 : i < 7 ? 366 + (i % 2) * 4 : 374} l7 -${13 + (i % 3) * 3} l7 ${13 + (i % 3) * 3} Z`} fill="#2a1830" opacity="0.75" />
+      ))}
+      {/* deux MAMMOUTHS en silhouette sur la crête (défenses claires
+          pour qu'on les reconnaisse au premier coup d'œil) */}
+      <g>
+        {/* l'adulte */}
+        <g transform="translate(786,362)" fill="#20122c">
+          <rect x="-27" y="-4" width="7" height="26" rx="3" />
+          <rect x="-13" y="-2" width="7" height="24" rx="3" />
+          <rect x="5" y="-4" width="7" height="26" rx="3" />
+          <rect x="17" y="-2" width="7" height="24" rx="3" />
+          {/* croupe basse → grosse bosse d'épaule → tête bombée */}
+          <path d="M-36 0 Q-40 -14 -30 -22 Q-20 -32 -6 -32 Q2 -40 12 -38 Q24 -36 28 -26 Q32 -18 28 -10 Q24 -2 16 0 Q-6 4 -24 3 Q-33 3 -36 0 Z" />
+          {/* trompe qui descend et s'enroule vers l'arrière */}
+          <path d="M27 -22 q11 8 9 20 q-2 11 -11 13 q6 -9 4 -16 q-2 -9 -8 -13 Z" />
+          {/* poils qui pendent sous le ventre */}
+          <path d="M-26 3 l-2 7 M-12 4 l-2 8 M2 4 l-1 7 M12 2 l-2 7" stroke="#20122c" strokeWidth="2" />
+          {/* défenses claires, courbées vers le haut */}
+          <path d="M24 -6 q13 6 20 -3" stroke="#d8c8b4" strokeWidth="3.2" fill="none" strokeLinecap="round" />
+          <path d="M22 -3 q10 6 16 1" stroke="#c0b0a0" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        </g>
+        {/* le petit, qui suit */}
+        <g transform="translate(858,374) scale(0.5)" fill="#241530">
+          <rect x="-27" y="-4" width="8" height="26" rx="3" />
+          <rect x="-11" y="-2" width="8" height="24" rx="3" />
+          <rect x="7" y="-4" width="8" height="26" rx="3" />
+          <path d="M-36 0 Q-40 -14 -30 -22 Q-20 -32 -6 -32 Q2 -40 12 -38 Q24 -36 28 -26 Q32 -18 28 -10 Q24 -2 16 0 Q-6 4 -24 3 Q-33 3 -36 0 Z" />
+          <path d="M27 -22 q11 8 9 20 q-2 11 -11 13 q6 -9 4 -16 q-2 -9 -8 -13 Z" />
+        </g>
+      </g>
+      </PLayer>
+
+      {/* ═══ couche intermédiaire ═══ */}
+      <PLayer depth={2}>
+      {/* sol */}
+      <rect y="400" width="1000" height="160" fill="url(#x2soil)" />
+      {/* nappe de lumière dorée du matin, côté soleil */}
+      <ellipse cx="710" cy="404" rx="430" ry="46" fill="#ffe0a0" opacity="0.18" filter="url(#x2blur)" />
+      {/* nappe de brume qui traîne encore au ras du sol */}
+      <ellipse cx="420" cy="408" rx="380" ry="18" fill="#f0e0c0" opacity="0.16" filter="url(#x2blur)" />
+      {/* textures du sol : marbrures larges + grain fin renforcé */}
+      <rect y="402" width="1000" height="158" fill="#241608" opacity="0.35" filter="url(#x2mottle)" />
+      <rect y="402" width="1000" height="158" fill="#2c1c10" opacity="0.5" filter="url(#x2grain)" />
+      {/* ondulations du terrain */}
+      <path d="M0 408 Q260 396 520 408 T1000 402 L1000 424 Q700 436 380 424 T0 432 Z" fill="#a08050" opacity="0.4" />
+      <path d="M120 452 Q300 444 470 452 M560 470 Q740 462 920 472" stroke="#3c2a1a" strokeWidth="2" fill="none" opacity="0.35" />
+      {/* sentier usé */}
+      <path d="M240 560 Q300 490 420 462 Q560 430 705 424 L742 430 Q580 444 470 474 Q360 504 330 560 Z" fill="#ac8756" opacity="0.5" />
+      <path d="M255 560 Q320 496 430 468 Q560 440 700 428" stroke="#c49a62" strokeWidth="3" fill="none" opacity="0.35" />
+      <path d="M300 522 q14 -4 26 -2 M370 492 q16 -6 30 -4 M470 464 q18 -5 34 -4" stroke="#8a6a42" strokeWidth="2.5" fill="none" opacity="0.5" />
+      {/* cailloux du sol, ombres longues vers la gauche (soleil à droite) */}
+      {[[380, 470, 7], [452, 496, 5], [608, 452, 6], [665, 484, 4], [905, 452, 8], [545, 508, 6]].map(([x, y, r], i) => (
+        <g key={i}>
+          <ellipse cx={x - r * 1.8} cy={y + 1.5} rx={r * 2.1} ry={r * 0.42} fill="#241628" opacity="0.4" />
+          <ellipse cx={x} cy={y} rx={r} ry={r * 0.68} fill={i % 2 ? "#6e5a42" : "#5a4632"} />
+          <path d={`M${x - r * 0.7} ${y - r * 0.35} q${r * 0.7} -${r * 0.5} ${r * 1.5} -${r * 0.1}`} stroke="#c49a62" strokeWidth="1.2" fill="none" opacity="0.6" />
+        </g>
+      ))}
+
+      {/* LA FALAISE — silhouette irrégulière, strates, lumière rasante */}
+      <path d="M0 430 L0 96 Q28 76 58 84 Q78 62 104 92 Q134 74 152 96 Q178 84 208 118 Q238 108 258 138 Q290 132 308 176 Q330 214 318 258 Q338 292 312 330 Q336 374 300 398 Q318 416 292 430 Z" fill="url(#x2rock)" />
+      {/* textures de la roche : taches larges + grain fin renforcé */}
+      <path d="M0 430 L0 96 Q28 76 58 84 Q78 62 104 92 Q134 74 152 96 Q178 84 208 118 Q238 108 258 138 Q290 132 308 176 Q330 214 318 258 Q338 292 312 330 Q336 374 300 398 Q318 416 292 430 Z" fill="#1c1006" opacity="0.3" filter="url(#x2mottle)" />
+      <path d="M0 430 L0 96 Q28 76 58 84 Q78 62 104 92 Q134 74 152 96 Q178 84 208 118 Q238 108 258 138 Q290 132 308 176 Q330 214 318 258 Q338 292 312 330 Q336 374 300 398 Q318 416 292 430 Z" fill="#221408" opacity="0.6" filter="url(#x2grain)" />
+      {/* piquetage de la roche (petits creux d'érosion) */}
+      {[[64, 140], [118, 188], [86, 246], [156, 210], [190, 168], [132, 302], [98, 344], [204, 268], [246, 196], [174, 386], [228, 342], [268, 240]].map(([x, y], i) => (
+        <ellipse key={i} cx={x} cy={y} rx={2.2 + (i % 3)} ry={1.4 + (i % 2)} fill="#241608" opacity="0.45" />
+      ))}
+      {/* strates irrégulières */}
+      <path d="M24 148 q70 -14 148 4 q40 10 74 26 M18 214 q86 -10 168 12 q36 10 66 24 M26 288 q74 -6 148 14 q40 12 68 26 M40 352 q64 -4 128 12" stroke="#33210f" strokeWidth="4" fill="none" opacity="0.4" />
+      <path d="M30 176 q60 -8 128 6 M22 246 q70 -6 142 12 M34 318 q58 -4 120 10" stroke="#241608" strokeWidth="2" fill="none" opacity="0.35" />
+      {/* fissures verticales */}
+      <path d="M120 106 q12 56 -6 118 q-8 34 4 66 M212 132 q16 62 4 124 q-6 34 6 62 M282 168 q10 44 -2 92" stroke="#2a1a0e" strokeWidth="2.5" fill="none" opacity="0.55" />
+      {/* lumière rasante du matin sur les arêtes */}
+      <path d="M258 138 Q290 132 308 176 Q330 214 318 258 Q338 292 312 330" stroke="#ffe0a0" strokeWidth="4" fill="none" opacity="0.45" />
+      <path d="M208 118 Q238 108 258 138 M104 92 Q134 74 152 96" stroke="#ffe0a0" strokeWidth="3" fill="none" opacity="0.32" />
+      <path d="M312 330 Q336 374 300 398" stroke="#f0c890" strokeWidth="3" fill="none" opacity="0.32" />
+      {/* mousse et végétation accrochée */}
+      {[[236, 150], [274, 210], [252, 300], [296, 258]].map(([x, y], i) => (
+        <g key={i} opacity="0.8">
+          <ellipse cx={x} cy={y} rx={9 + (i % 2) * 3} ry={4} fill="#3c4a24" />
+          <ellipse cx={x - 4} cy={y - 2} rx={5} ry={2.5} fill="#4c5c2c" />
+        </g>
+      ))}
+
+      {/* bouche de la grotte */}
+      <path d="M92 430 Q84 320 168 298 Q254 314 246 430 Z" fill="url(#x2cave)" />
+      <path d="M92 430 Q84 320 168 298 Q254 314 246 430" fill="none" stroke="#1a0d08" strokeWidth="8" />
+      <path d="M100 430 Q96 336 168 314" stroke="#ffe0a0" strokeWidth="3" fill="none" opacity="0.3" />
+      <path d="M238 430 Q240 350 196 322" stroke="#0a0503" strokeWidth="5" fill="none" opacity="0.6" />
+      {/* blocs à l'entrée + éboulis, ombres longues */}
+      {[[86, 444, 18], [130, 452, 12], [252, 446, 16], [286, 452, 10], [200, 448, 8]].map(([x, y, r], i) => (
+        <g key={i}>
+          <ellipse cx={x - r * 1.6} cy={y + 3} rx={r * 2} ry={r * 0.4} fill="#241628" opacity="0.45" />
+          <ellipse cx={x} cy={y} rx={r} ry={r * 0.6} fill="#5a4030" />
+          <path d={`M${x - r * 0.6} ${y - r * 0.3} q${r * 0.6} -${r * 0.45} ${r * 1.3} -${r * 0.05}`} stroke="#b08a58" strokeWidth="1.4" fill="none" opacity="0.55" />
+        </g>
+      ))}
+
+      {/* la tache d'OCRE, plus matérielle : croûte, éclats, traînées */}
+      <g>
+        <ellipse cx="112" cy="490" rx="40" ry="10" fill="#241628" opacity="0.35" />
+        <ellipse cx="118" cy="486" rx="35" ry="11" fill="#a8431f" />
+        <ellipse cx="106" cy="482" rx="15" ry="5" fill="#c95a28" />
+        <ellipse cx="130" cy="488" rx="10" ry="4" fill="#8a3418" />
+        <ellipse cx="96" cy="488" rx="6" ry="2.6" fill="#d96a35" />
+        {[[142, 484], [148, 490], [138, 494]].map(([x, y], i) => (
+          <ellipse key={i} cx={x} cy={y} rx="3" ry="1.6" fill="#b84a22" />
+        ))}
+        <path d="M92 480 q12 -7 26 -4 M100 492 q14 4 30 1" stroke="#d96a35" strokeWidth="2" fill="none" opacity="0.8" />
+        <path d="M118 478 q6 -3 12 -2" stroke="#e8804a" strokeWidth="1.5" fill="none" />
+      </g>
+
+      {/* lianes détaillées, avec feuilles */}
+      <g>
+        <path d="M296 298 q10 36 -6 64 q-10 26 4 48" stroke="#3c5528" strokeWidth="5" fill="none" style={{ animation: "sway 4.2s ease-in-out infinite", transformOrigin: "296px 298px", transformBox: "view-box" }} />
+        <path d="M306 304 q4 32 -8 56 q-7 22 2 40" stroke="#527232" strokeWidth="3.5" fill="none" style={{ animation: "sway 3.6s ease-in-out infinite", transformOrigin: "306px 304px", transformBox: "view-box" }} />
+        <path d="M288 294 q11 30 0 58 q-5 18 2 34" stroke="#324a22" strokeWidth="3" fill="none" />
+        {[[300, 336, -1], [291, 366, 1], [303, 398, -1], [296, 322, 1], [286, 384, -1]].map(([x, y, s], i) => (
+          <path key={i} d={`M${x} ${y} q${8 * s} -3 ${10 * s} -10 q-${9 * s} 1 -${10 * s} 10 Z`} fill={i % 2 ? "#527232" : "#46632c"} />
+        ))}
+        <path d="M298 306 q-4 20 2 38" stroke="#5d7a36" strokeWidth="1.5" fill="none" opacity="0.7" />
+      </g>
+
+      {/* buisson détaillé, feuillage en bouquets + lisière éclairée */}
+      <g>
+        <ellipse cx="368" cy="458" rx="52" ry="8" fill="#241628" opacity="0.4" />
+        <ellipse cx="380" cy="448" rx="42" ry="18" fill="#33421f" />
+        <ellipse cx="360" cy="440" rx="26" ry="13" fill="#3e5026" />
+        <ellipse cx="398" cy="440" rx="22" ry="11" fill="#2a3819" />
+        <ellipse cx="378" cy="432" rx="18" ry="9" fill="#46602c" />
+        {[[352, 434], [370, 426], [390, 430], [404, 438], [360, 446]].map(([x, y], i) => (
+          <path key={i} d={`M${x} ${y} q4 -6 10 -6 q-2 6 -10 6 Z`} fill="#557236" opacity="0.9" />
+        ))}
+        <path d="M362 428 q16 -8 34 -2" stroke="#7a9a4a" strokeWidth="2" fill="none" opacity="0.7" />
+      </g>
+      {[430, 540, 660, 950].map((x, i) => <GrassTuft key={i} x={x} y={470 + (i % 2) * 40} c={i % 2 ? "#5d6b2e" : "#4e5c28"} />)}
+      <GrassTuft x={200} y={540} c="#6b5a2e" />
+      </PLayer>
+
+      {/* ═══ premier plan (bouge le plus) ═══ */}
+      <PLayer depth={3}>
+      {/* LA TRACE DU CRASH : MARTINE a rebondi deux fois puis labouré
+          le sol en glissant jusqu'à sa position actuelle */}
+      <g>
+        {/* les deux premiers rebonds (petits cratères espacés) */}
+        {[[498, 512, 13], [552, 516, 17]].map(([x, y, r], i) => (
+          <g key={i}>
+            <ellipse cx={x} cy={y} rx={r} ry={r * 0.28} fill="#2c1a0e" />
+            <path d={`M${x - r} ${y} q${r} -${r * 0.45} ${r * 2} 0`} stroke="#b89264" strokeWidth="1.8" fill="none" opacity="0.5" />
+          </g>
+        ))}
+        {/* la tranchée, étroite au début, large près de l'épave */}
+        <path d="M596 517 Q700 505 800 498 L806 510 Q702 513 604 525 Z" fill="#2c1a0e" />
+        <path d="M640 517 Q720 509 792 503 L794 507 Q722 511 646 521 Z" fill="#1a0f08" />
+        {/* bourrelets de terre retournée, éclairés par le soleil levant */}
+        <path d="M592 513 Q698 501 802 494" stroke="#b89264" strokeWidth="3" fill="none" opacity="0.55" />
+        <path d="M604 529 Q706 517 808 512" stroke="#8a6a42" strokeWidth="3" fill="none" opacity="0.5" />
+        {/* mottes de terre projetées de part et d'autre */}
+        {[[614, 505, 4], [664, 498, 5], [716, 522, 4], [746, 492, 6], [782, 518, 4], [692, 528, 5]].map(([x, y, r], i) => (
+          <g key={i}>
+            <ellipse cx={x} cy={y} rx={r} ry={r * 0.55} fill="#4c3620" />
+            <path d={`M${x - r * 0.6} ${y - r * 0.3} q${r * 0.6} -${r * 0.4} ${r * 1.2} 0`} stroke="#b89264" strokeWidth="1.2" fill="none" opacity="0.6" />
+          </g>
+        ))}
+        {/* poussière qui retombe encore le long de la trace */}
+        <ellipse cx="700" cy="502" rx="80" ry="8" fill="#d8b884" opacity="0.14" filter="url(#x2blur)" />
+      </g>
+      {/* MARTINE : une noix spatiale échouée (fidèle au dessin de l'auteur) */}
+      <g transform="translate(840,486) rotate(12)">
+        <ellipse cx="-6" cy="21" rx="52" ry="10" fill="#140b06" opacity="0.65" />
+        {/* coque de noix à demi enfoncée dans le sillon */}
+        <path d="M0 -36 Q30 -34 34 -8 Q36 12 18 20 L-20 20 Q-36 10 -34 -8 Q-30 -34 0 -36 Z" fill="#8a6240" />
+        <path d="M0 -36 Q30 -34 34 -8 Q35 4 26 14 Q16 -6 18 -22 Q12 -32 0 -36 Z" fill="#6e4a2c" opacity="0.7" />
+        <path d="M-32 -10 Q0 -20 32 -10" stroke="#5c3a22" strokeWidth="3" fill="none" opacity="0.8" />
+        <path d="M-20 -28 q8 6 5 14 M14 -30 q-5 8 0 16 M-12 2 q8 5 17 2" stroke="#5c3a22" strokeWidth="2" fill="none" opacity="0.55" />
+        {/* lumière du matin sur la coque */}
+        <path d="M18 -30 Q30 -22 32 -8" stroke="#ffe0b0" strokeWidth="2.5" fill="none" opacity="0.55" />
+        {/* hublot-œil, sonné mais vivant */}
+        <circle cx="-2" cy="-8" r="9" fill="#cfeaff" stroke="#5c3a22" strokeWidth="2" />
+        <circle cx="-2" cy="-8" r="3.2" fill="#0c2233" />
+        {/* écran de bord : la date, qui clignote après le crash */}
+        <rect x="-19" y="4" width="34" height="11" rx="2.5" fill="#0c1410" stroke="#5c3a22" strokeWidth="1.2" />
+        <text x="-2" y="12.5" textAnchor="middle" fontSize="7.5" fill="#5eff9e" fontFamily="ui-monospace,monospace" style={{ animation: "pulse 2.2s infinite" }}>−18 000</text>
+        {/* antenne tordue par le crash */}
+        <path d="M4 -36 q7 -9 15 -6" stroke="#8a94a8" strokeWidth="3" fill="none" strokeLinecap="round" />
+        <circle cx="20" cy="-43" r="3" fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
+        {/* propulseur arraché, tombé à côté */}
+        <rect x="-46" y="8" width="15" height="9" rx="4" fill="#6a7488" transform="rotate(-24 -38 12)" />
+        {/* fumée */}
+        <path d="M-20 -30 q-6 -14 4 -22 q-8 4 -12 -8" stroke="#8a94a8" strokeWidth="3" fill="none" opacity="0.5" style={{ animation: "drift 4s ease-in-out infinite" }} />
+      </g>
+      {/* herbes sombres qui cadrent le bas de l'image */}
+      <g opacity="0.9">
+        <path d="M-4 560 q10 -34 4 -52 M14 560 q2 -28 14 -44 M34 560 q-6 -24 2 -40 M60 560 q8 -26 0 -38" stroke="#241a10" strokeWidth="4" fill="none" />
+        <path d="M950 560 q-8 -30 -2 -46 M972 560 q4 -26 12 -38 M992 560 q-4 -22 4 -34 M928 560 q6 -20 -2 -32" stroke="#241a10" strokeWidth="4" fill="none" />
+        <path d="M120 560 q6 -20 0 -30 M480 560 q-5 -18 2 -28 M700 560 q6 -18 0 -26" stroke="#2c2014" strokeWidth="3.5" fill="none" />
+      </g>
+      {/* poussière dorée en suspension dans la lumière du matin */}
+      {[[620, 470], [700, 440], [780, 460]].map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="1.6" fill="#ffe8b8" opacity="0.6" style={{ animation: `drift ${4 + i}s ease-in-out infinite` }} />
+      ))}
+
+      {/* L'ENFANT À L'OCRE — elle joue près du pigment et montre ses paumes
+          toutes rouges. C'est elle qui a l'idée des mains négatives. */}
+      <g transform="translate(252,494)">
+        <ellipse cx="0" cy="16" rx="20" ry="5" fill="#241a10" opacity="0.6" />
+        {/* le petit corps, une peau nouée sur l'épaule */}
+        <path d="M-10 16 Q-13 -6 0 -12 Q13 -6 10 16 Z" fill="#8a6a48" />
+        <path d="M-10 16 Q-13 -6 0 -12 Q13 -6 10 16 Z" fill="#2c1a0c" opacity="0.3" filter="url(#x2grain)" />
+        {/* la tête, cheveux en bataille */}
+        <circle cx="0" cy="-22" r="8.5" fill="#c89a72" />
+        <path d="M-8 -26 q1 -10 8 -9 q9 1 8 9 q-3 -5 -8 -5 q-6 0 -8 5 Z" fill="#3a2a1c" />
+        <path d="M-7 -30 l-3 -5 M0 -31 l0 -6 M7 -30 l3 -5" stroke="#3a2a1c" strokeWidth="1.6" />
+        {/* LES DEUX MAINS LEVÉES, rouges d'ocre : « regarde ! » */}
+        <path d="M-10 -2 q-10 -6 -12 -18" stroke="#c89a72" strokeWidth="4" fill="none" strokeLinecap="round" />
+        <path d="M10 -2 q10 -6 12 -18" stroke="#c89a72" strokeWidth="4" fill="none" strokeLinecap="round" />
+        <circle cx="-23" cy="-22" r="4.5" fill="#b5451f" />
+        <circle cx="23" cy="-22" r="4.5" fill="#b5451f" />
+        {/* les doigts écartés */}
+        <path d="M-26 -26 l-2 -4 M-23 -27 l0 -4 M-20 -26 l2 -4" stroke="#b5451f" strokeWidth="1.4" strokeLinecap="round" />
+        <path d="M20 -26 l-2 -4 M23 -27 l0 -4 M26 -26 l2 -4" stroke="#b5451f" strokeWidth="1.4" strokeLinecap="round" />
+      </g>
+      {/* le « ? » : il y a quelqu'un à qui parler ici */}
+      {!made.includes("msg_mains") && (
+        <g transform="translate(236,398)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+          <path d="M0 0 q0 -22 22 -22 q22 0 22 18 q0 15 -18 20 l0 7" fill="none" stroke="#ffd166" strokeWidth="4" />
+          <circle cx="22" cy="34" r="2.8" fill="#ffd166" />
+        </g>
+      )}
+      </PLayer>
+
+      {/* léger voile de grain sur toute l'image (unifie la matière) */}
+      <rect width="1000" height="560" fill="#1a1410" opacity="0.1" filter="url(#x2grain)" style={{ pointerEvents: "none" }} />
+
+      {/* zones cliquables — hors couches (décalage max « rayon) */}
+      <Hotspot cx={118} cy={486} r={44} label="ocre" item="ocre" reveal={reveal} onClick={() => collect("ocre")} />
+      <Hotspot cx={297} cy={360} r={48} label="liane" item="liane" reveal={reveal} onClick={() => collect("liane")} />
+      <Hotspot cx={168} cy={380} r={60} label="grotte" reveal={reveal} onClick={() => action("cave")} />
+      <Hotspot cx={840} cy={486} r={60} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
+      <Hotspot cx={252} cy={476} r={40} label="l'enfant" reveal={reveal} onClick={(p) => action("enfant", p)} />
+    </svg>
+  );
+}

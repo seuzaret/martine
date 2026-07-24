@@ -1,0 +1,180 @@
+import Hotspot from "../../../engine/Hotspot.jsx";
+import { PLayer } from "../../../engine/Parallax.jsx";
+
+/* ============================================================
+   CHAPITRE 2 — Tableau : le col de la montagne (l'homme des glaces)
+   Peinture fine — HAUTE MONTAGNE ALPINE (Ötzi = Alpes, pas le
+   pôle) : roche grise-brune qui affleure, névés et plaques de
+   neige, alpenglow chaud sur les cimes, moraine rocheuse au sol.
+   À trouver ici : le minerai de cuivre, l'aiguille d'os, la suie
+   (près du feu), la pierre à marteler.
+   ============================================================ */
+
+export default function SceneCol({ collect, action, reveal, made = [] }) {
+  return (
+    <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="cl-sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#33517e" />
+          <stop offset="50%" stopColor="#7c9cbc" />
+          <stop offset="82%" stopColor="#c8cfc8" />
+          <stop offset="100%" stopColor="#e6d8b8" />
+        </linearGradient>
+        <linearGradient id="cl-rockFar" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#9a8f84" /><stop offset="100%" stopColor="#6e6660" /></linearGradient>
+        <linearGradient id="cl-rock" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#8c8076" /><stop offset="55%" stopColor="#6a6056" /><stop offset="100%" stopColor="#463f38" /></linearGradient>
+        <linearGradient id="cl-ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8a7e6e" /><stop offset="100%" stopColor="#544a3e" /></linearGradient>
+        <linearGradient id="cl-glacier" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#d6e2e6" /><stop offset="100%" stopColor="#a6bac2" /></linearGradient>
+        <radialGradient id="cl-fire" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ffc068" stopOpacity="0.6" /><stop offset="100%" stopColor="#ff9540" stopOpacity="0" /></radialGradient>
+        <filter id="cl-grain" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0" result="a" />
+          <feComposite in="a" in2="SourceGraphic" operator="in" />
+        </filter>
+        <filter id="cl-mottle" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0" result="a" />
+          <feComposite in="a" in2="SourceGraphic" operator="in" />
+        </filter>
+        <filter id="cl-blur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7" /></filter>
+      </defs>
+
+      {/* ═══ ciel alpin (plus chaud à l'horizon) ═══ */}
+      <rect width="1000" height="560" fill="url(#cl-sky)" />
+      <circle cx="790" cy="120" r="40" fill="#fff2d2" opacity="0.9" />
+      <circle cx="790" cy="120" r="72" fill="#fff2d2" opacity="0.22" filter="url(#cl-blur)" />
+      <ellipse cx="300" cy="130" rx="150" ry="14" fill="#e8dcc0" opacity="0.35" filter="url(#cl-blur)" />
+
+      {/* ═══ couche lointaine : sommets ROCHEUX à calottes de neige ═══ */}
+      <PLayer depth={1}>
+        <path d="M0 268 L140 150 L260 244 L380 120 L520 252 L660 148 L800 250 L920 172 L1000 244 L1000 430 L0 430 Z" fill="url(#cl-rockFar)" />
+        {/* neige seulement sur les cimes et dans les couloirs */}
+        <path d="M380 120 L410 168 L350 168 Z M660 148 L690 196 L630 196 Z M140 150 L170 196 L110 196 Z M920 172 L944 210 L896 210 Z" fill="#eef4f6" opacity="0.92" />
+        <path d="M380 132 L392 168 L368 168 Z M660 160 L672 196 L648 196 Z" fill="#c6d4dc" opacity="0.7" />
+        {/* alpenglow chaud sur les faces au soleil */}
+        <path d="M380 120 L410 168 L398 168 Z M660 148 L690 196 L678 196 Z M800 250 L860 200 L846 214 Z" fill="#f4c88a" opacity="0.35" />
+        {/* strates rocheuses */}
+        <path d="M300 220 q60 -10 130 6 M560 230 q70 -12 150 8" stroke="#4e463e" strokeWidth="2" fill="none" opacity="0.4" />
+        <rect y="250" width="1000" height="26" fill="#c8cfc8" opacity="0.28" filter="url(#cl-blur)" />
+      </PLayer>
+
+      {/* ═══ couche intermédiaire : langue de glacier + moraine rocheuse ═══ */}
+      <PLayer depth={2}>
+        {/* pente rocheuse */}
+        <path d="M0 300 Q250 274 500 302 Q750 330 1000 298 L1000 440 L0 440 Z" fill="url(#cl-rock)" />
+        <path d="M0 300 Q250 274 500 302 Q750 330 1000 298 L1000 440 L0 440 Z" fill="#2e2820" opacity="0.3" filter="url(#cl-grain)" />
+        {/* langue de glacier qui descend au centre */}
+        <path d="M410 300 Q470 360 452 440 L560 440 Q548 360 588 300 Z" fill="url(#cl-glacier)" />
+        <path d="M470 320 q6 40 -4 90 M530 320 q-4 44 6 96" stroke="#8aa6b4" strokeWidth="3" fill="none" opacity="0.5" />
+        {/* plaques de névé accrochées à la roche */}
+        <path d="M120 360 q30 -8 62 4 q-24 12 -62 6 Z" fill="#dde8ec" opacity="0.85" />
+        <path d="M820 372 q34 -8 70 6 q-30 12 -70 4 Z" fill="#dde8ec" opacity="0.85" />
+        {/* blocs de roche (moraine) */}
+        <ellipse cx="250" cy="404" rx="34" ry="15" fill="#6e655a" />
+        <ellipse cx="700" cy="410" rx="40" ry="17" fill="#645b50" />
+        <ellipse cx="250" cy="398" rx="20" ry="8" fill="#847a6c" opacity="0.7" />
+      </PLayer>
+
+      {/* ═══ premier plan : le col rocheux (moraine + plaques de neige) ═══ */}
+      <PLayer depth={3}>
+        <path d="M0 560 L0 420 Q250 398 520 424 Q760 444 1000 416 L1000 560 Z" fill="url(#cl-ground)" />
+        <path d="M0 560 L0 420 Q250 398 520 424 Q760 444 1000 416 L1000 560 Z" fill="#2a2318" opacity="0.34" filter="url(#cl-mottle)" />
+        <path d="M0 560 L0 420 Q250 398 520 424 Q760 444 1000 416 L1000 560 Z" fill="#2e2820" opacity="0.4" filter="url(#cl-grain)" />
+        {/* plaques de neige résiduelle au sol (pas un manteau) */}
+        <path d="M60 470 Q160 458 250 472 Q180 486 80 482 Q50 480 60 470 Z" fill="#e4eef0" opacity="0.85" />
+        <path d="M560 486 Q680 476 800 490 Q690 500 580 496 Q540 494 560 486 Z" fill="#e4eef0" opacity="0.8" />
+        <path d="M360 520 Q430 512 500 522 Q440 530 370 528 Z" fill="#e4eef0" opacity="0.7" />
+        {/* cailloux de scree */}
+        {[[180, 520, 9], [430, 540, 7], [520, 508, 6], [905, 516, 8], [250, 544, 6]].map(([x, y, r], i) => (
+          <g key={i}>
+            <ellipse cx={x - 2} cy={y + 2} rx={r * 1.3} ry={r * 0.35} fill="#1c1810" opacity="0.4" />
+            <ellipse cx={x} cy={y} rx={r} ry={r * 0.62} fill={i % 2 ? "#7a6e5e" : "#645a4c"} />
+            <path d={`M${x - r * 0.6} ${y - r * 0.3} q${r * 0.6} -${r * 0.4} ${r * 1.2} 0`} stroke="#9a8c78" strokeWidth="1.2" fill="none" opacity="0.5" />
+          </g>
+        ))}
+
+        {/* LE FEU de bivouac + halo, et bol de SUIE */}
+        <g transform="translate(430,478)">
+          <ellipse cx="0" cy="16" rx="120" ry="40" fill="url(#cl-fire)" style={{ animation: "glow 2.4s ease-in-out infinite" }} />
+          <path d="M-22 12 L20 16 M-18 18 L18 8" stroke="#3a2412" strokeWidth="6" strokeLinecap="round" />
+          <g style={{ transformOrigin: "0px 10px", transformBox: "view-box", animation: "flick 0.9s ease-in-out infinite" }}>
+            <path d="M0 12 Q-14 -6 -4 -26 Q0 -12 4 -20 Q14 -4 6 10 Z" fill="#ff7f24" />
+            <path d="M0 11 Q-7 0 -2 -14 Q1 -6 3 -10 Q8 -1 3 9 Z" fill="#ffd36a" />
+            <path d="M0 10 Q-3 4 0 -5 Q3 4 1 9 Z" fill="#fff2c4" />
+          </g>
+          <circle cx="-8" cy="-4" r="1.6" fill="#ffd166" style={{ animation: "spark 2.2s linear infinite" }} />
+          {/* bol de suie */}
+          <g transform="translate(46,16)">
+            <ellipse cx="0" cy="7" rx="11" ry="4" fill="#2c2c30" opacity="0.5" />
+            <path d="M-11 -3 Q-12 7 0 8 Q12 7 11 -3 Z" fill="#5a4636" />
+            <ellipse cx="0" cy="-3" rx="10" ry="4.5" fill="#1c1c1c" />
+            <ellipse cx="-3" cy="-4" rx="4" ry="2" fill="#3a3a3a" />
+          </g>
+        </g>
+
+        {/* L'HOMME DES GLACES, emmitouflé, arc à côté, haleine visible */}
+        <g transform="translate(300,470)">
+          <ellipse cx="0" cy="34" rx="26" ry="7" fill="#2e281e" opacity="0.5" />
+          <path d="M-16 6 Q-22 -16 0 -20 Q22 -16 16 6 L12 30 L-12 30 Z" fill="#6a5238" />
+          <path d="M-16 6 Q-22 -16 0 -20 Q22 -16 16 6 L12 30 L-12 30 Z" fill="#4a3a28" opacity="0.4" filter="url(#cl-grain)" />
+          <path d="M-16 6 Q0 12 16 6 L14 18 Q0 24 -14 18 Z" fill="#5a4630" />
+          <path d="M-14 2 l-4 4 M14 2 l4 4 M-10 22 l-3 5 M10 22 l3 5" stroke="#4a3a28" strokeWidth="1.8" />
+          <path d="M-10 -18 Q0 -30 10 -18 Q12 -8 0 -6 Q-12 -8 -10 -18 Z" fill="#7a6244" />
+          <circle cx="0" cy="-16" r="6" fill="#b08a68" />
+          {/* haleine */}
+          <ellipse cx="11" cy="-14" rx="9" ry="4" fill="#f0f4f8" opacity="0.45" style={{ animation: "drift 3.5s ease-in-out infinite" }} filter="url(#cl-blur)" />
+          {/* arc appuyé */}
+          <path d="M24 34 Q40 0 30 -34" stroke="#6e4c2e" strokeWidth="3" fill="none" />
+          <path d="M24 34 L30 -34" stroke="#c9b48a" strokeWidth="1.2" opacity="0.7" />
+          {/* aiguille d'os sur la fourrure */}
+          <g transform="translate(-22,10) rotate(-30)">
+            <rect x="-1" y="-10" width="2" height="20" rx="1" fill="#e8e0cc" />
+            <circle cx="0" cy="-10" r="2" fill="#e8e0cc" />
+            <circle cx="0" cy="-10" r="0.8" fill="#5a4636" />
+          </g>
+        </g>
+
+        {/* PIERRE À MARTELER (enclume) */}
+        <g transform="translate(620,506)">
+          <ellipse cx="0" cy="10" rx="34" ry="10" fill="#2e281e" opacity="0.5" />
+          <path d="M-30 8 Q-34 -8 -14 -12 L18 -12 Q34 -10 32 6 Q30 14 14 14 L-16 14 Q-30 14 -30 8 Z" fill="#8a8278" />
+          <path d="M-30 8 Q-34 -8 -14 -12 L18 -12 Q34 -10 32 6 Q30 14 14 14 L-16 14 Q-30 14 -30 8 Z" fill="#5a5248" opacity="0.3" filter="url(#cl-grain)" />
+          <path d="M-24 -2 Q0 -8 26 -2" stroke="#b8b0a4" strokeWidth="1.6" fill="none" opacity="0.6" />
+          <ellipse cx="6" cy="-8" rx="10" ry="7" fill="#6a6258" />
+        </g>
+
+        {/* MINERAI de cuivre (malachite) au pied d'un rocher */}
+        <g transform="translate(830,512)">
+          <ellipse cx="0" cy="8" rx="30" ry="9" fill="#2e281e" opacity="0.5" />
+          <ellipse cx="0" cy="0" rx="22" ry="14" fill="#5c584c" />
+          <path d="M-14 -2 Q-4 -10 6 -4 Q14 0 8 8 Q-2 12 -12 6 Z" fill="#2e8a5a" />
+          <path d="M-8 0 q6 -4 12 0 M-4 5 q5 -3 10 -1" stroke="#5ec88a" strokeWidth="2" fill="none" opacity="0.8" />
+          <ellipse cx="-6" cy="-2" rx="4" ry="3" fill="#7ad8a0" opacity="0.7" />
+        </g>
+
+        {/* rochers qui cadrent les coins du bas */}
+        <path d="M0 560 L0 512 Q46 502 86 522 Q54 540 18 544 Q4 546 0 560 Z" fill="#3e372c" />
+        <path d="M1000 560 L1000 508 Q950 500 916 520 Q956 538 986 542 Q998 544 1000 560 Z" fill="#3a342a" />
+      </PLayer>
+
+      {/* voile atmosphérique léger (pas froid-bleu) */}
+      <rect width="1000" height="560" fill="#d8ceb8" opacity="0.05" style={{ pointerEvents: "none" }} />
+
+      {/* zones cliquables */}
+      {/* le « ? » de l'homme des glaces : une marque qui ne s'efface jamais ? */}
+      {!made.includes("msg_tatouage") && (
+        <>
+          <g transform="translate(310,368)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+            <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
+            <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
+          </g>
+          <Hotspot cx={330} cy={378} r={28} label="parler à l'homme des glaces" reveal={reveal} onClick={() => action("otzi")} />
+        </>
+      )}
+
+      <Hotspot cx={278} cy={462} r={40} label="aiguille" item="aiguille" reveal={reveal} onClick={() => collect("aiguille")} />
+      <Hotspot cx={476} cy={492} r={40} label="suie" item="suie" reveal={reveal} onClick={() => collect("suie")} />
+      <Hotspot cx={620} cy={500} r={44} label="pierre" item="pierre" reveal={reveal} onClick={() => collect("pierre")} />
+      <Hotspot cx={830} cy={508} r={44} label="minerai" item="minerai" reveal={reveal} onClick={() => collect("minerai")} />
+    </svg>
+  );
+}

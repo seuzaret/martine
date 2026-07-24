@@ -1,0 +1,170 @@
+import Hotspot from "../../../engine/Hotspot.jsx";
+import { PLayer } from "../../../engine/Parallax.jsx";
+
+/* ============================================================
+   CHAPITRE 2 — Tableau : la lande aux mégalithes (Bretagne)
+   Peinture fine — ciel breton changeant, mer grise au loin,
+   granit patiné et lichen, ajoncs. À trouver ici : le silex
+   (pour graver la dalle), la grande dalle, et le clan.
+   ============================================================ */
+
+export default function SceneLande({ collect, action, reveal, made = [] }) {
+  return (
+    <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="ld-sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#5a6376" />
+          <stop offset="45%" stopColor="#8b95a0" />
+          <stop offset="78%" stopColor="#c2c4be" />
+          <stop offset="100%" stopColor="#dcdcd2" />
+        </linearGradient>
+        <linearGradient id="ld-sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#93a0a6" /><stop offset="100%" stopColor="#6a787e" /></linearGradient>
+        <linearGradient id="ld-land" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#787a50" /><stop offset="100%" stopColor="#4a4e34" /></linearGradient>
+        <linearGradient id="ld-granite" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#b0aca2" /><stop offset="48%" stopColor="#86827a" /><stop offset="100%" stopColor="#5a564e" /></linearGradient>
+        <filter id="ld-grain" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0" result="a" />
+          <feComposite in="a" in2="SourceGraphic" operator="in" />
+        </filter>
+        <filter id="ld-mottle" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0" result="a" />
+          <feComposite in="a" in2="SourceGraphic" operator="in" />
+        </filter>
+        <filter id="ld-blur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8" /></filter>
+      </defs>
+
+      {/* ═══ ciel breton, bas et mouvant ═══ */}
+      <rect width="1000" height="560" fill="url(#ld-sky)" />
+      <g filter="url(#ld-blur)">
+        <ellipse cx="220" cy="86" rx="170" ry="20" fill="#767e88" opacity="0.5" />
+        <ellipse cx="560" cy="66" rx="210" ry="18" fill="#828a92" opacity="0.45" />
+        <ellipse cx="850" cy="104" rx="150" ry="16" fill="#6e7680" opacity="0.5" />
+      </g>
+      {/* trouée de lumière pâle qui perce les nuages */}
+      <path d="M660 40 L760 40 L820 250 L600 250 Z" fill="#f4f4e8" opacity="0.16" filter="url(#ld-blur)" />
+      <ellipse cx="700" cy="150" rx="120" ry="66" fill="#f4f4e8" opacity="0.3" filter="url(#ld-blur)" />
+
+      {/* ═══ couche lointaine : la mer grise ═══ */}
+      <PLayer depth={1}>
+        <rect y="250" width="1000" height="82" fill="url(#ld-sea)" />
+        {/* reflet pâle de la trouée sur l'eau */}
+        <path d="M660 254 L740 254 L760 328 L620 328 Z" fill="#e4e8e0" opacity="0.2" />
+        {[262, 284, 306, 322].map((y, i) => (
+          <path key={i} d={`M0 ${y} q120 ${i % 2 ? 4 : -4} 240 0 t240 0 t240 0 t240 0`} stroke="#c4ccce" strokeWidth="1.5" fill="none" opacity="0.4" />
+        ))}
+        {/* îlots de granit dans la mer */}
+        <ellipse cx="180" cy="322" rx="30" ry="9" fill="#5a564e" />
+        <ellipse cx="900" cy="318" rx="24" ry="8" fill="#5a564e" />
+      </PLayer>
+
+      {/* ═══ couche intermédiaire : lande + alignements de menhirs ═══ */}
+      <PLayer depth={2}>
+        <path d="M0 330 Q250 300 500 328 Q750 356 1000 322 L1000 440 L0 440 Z" fill="url(#ld-land)" />
+        <path d="M0 330 Q250 300 500 328 Q750 356 1000 322 L1000 440 L0 440 Z" fill="#2c3018" opacity="0.3" filter="url(#ld-grain)" />
+        {/* alignement (clin d'œil à Carnac) : menhirs qui rapetissent au loin */}
+        {[[110, 336, 48], [178, 340, 62], [252, 338, 54], [332, 342, 66], [906, 330, 52], [846, 336, 42], [792, 340, 34]].map(([x, y, h], i) => (
+          <g key={i}>
+            <ellipse cx={x} cy={y + 2} rx={12} ry={4} fill="#2c2c22" opacity="0.4" />
+            <path d={`M${x - 9} ${y} Q${x - 11} ${y - h * 0.6} ${x - 4} ${y - h} Q${x + 2} ${y - h - 4} ${x + 6} ${y - h * 0.9} Q${x + 11} ${y - h * 0.5} ${x + 9} ${y} Z`} fill="url(#ld-granite)" />
+            <path d={`M${x - 4} ${y - 6} Q${x - 6} ${y - h * 0.6} ${x - 1} ${y - h * 0.9}`} stroke="#c8c4bc" strokeWidth="1.3" fill="none" opacity="0.5" />
+            <ellipse cx={x - 2} cy={y - h * 0.45} rx="4" ry="3" fill="#7a8a3a" opacity="0.4" />
+          </g>
+        ))}
+        {/* ajoncs et bruyère */}
+        {[80, 420, 600, 780, 960].map((x, i) => (
+          <g key={i}>
+            <path d={`M${x} 430 q-5 -16 -10 -20 M${x} 430 q0 -18 6 -22 M${x} 430 q6 -14 12 -16`} stroke="#6a7238" strokeWidth="2.4" fill="none" opacity="0.85" />
+            <circle cx={x - 6} cy={412} r="2" fill="#c86a9a" opacity="0.6" />
+          </g>
+        ))}
+      </PLayer>
+
+      {/* ═══ premier plan : le chantier du mégalithe ═══ */}
+      <PLayer depth={3}>
+        <path d="M0 560 L0 430 Q250 408 520 432 Q760 452 1000 428 L1000 560 Z" fill="url(#ld-land)" />
+        <path d="M0 560 L0 430 Q250 408 520 432 Q760 452 1000 428 L1000 560 Z" fill="#20240f" opacity="0.32" filter="url(#ld-mottle)" />
+        <ellipse cx="500" cy="500" rx="420" ry="50" fill="#33381f" opacity="0.4" />
+
+        {/* LA GRANDE DALLE couchée sur des rondins */}
+        <g transform="translate(360,470)">
+          {[-70, -20, 30, 80].map((dx, i) => (
+            <g key={i} transform={`translate(${dx},44)`}>
+              <ellipse cx="0" cy="0" rx="10" ry="10" fill="#6e4c2e" />
+              <ellipse cx="0" cy="0" rx="10" ry="10" fill="none" stroke="#4a3018" strokeWidth="2" />
+              <ellipse cx="0" cy="0" rx="4" ry="4" fill="#5c3f26" />
+            </g>
+          ))}
+          <path d="M-110 34 L96 10 Q118 8 120 24 L118 34 Q116 44 96 44 L-108 44 Q-118 44 -110 34 Z" fill="url(#ld-granite)" />
+          <path d="M-110 34 L96 10 Q118 8 120 24 L118 34 Q116 44 96 44 L-108 44 Q-118 44 -110 34 Z" fill="#2a2620" opacity="0.3" filter="url(#ld-grain)" />
+          <path d="M-100 22 L96 4" stroke="#c8c4bc" strokeWidth="2" opacity="0.5" />
+          <path d="M-60 24 q4 8 -2 16 M20 18 q5 8 -1 18" stroke="#4a463e" strokeWidth="1.6" fill="none" opacity="0.5" />
+          {/* lichen sur la dalle */}
+          <ellipse cx="-40" cy="26" rx="12" ry="4" fill="#8a9a48" opacity="0.5" />
+          <ellipse cx="60" cy="18" rx="8" ry="3" fill="#7a8a3a" opacity="0.5" />
+          {/* cordes prêtes */}
+          <path d="M110 18 Q170 -10 240 -30 M108 26 Q168 6 236 -10" stroke="#8a6a42" strokeWidth="3" fill="none" opacity="0.85" />
+        </g>
+
+        {/* SILEX à graver, posé sur une pierre plate */}
+        <g transform="translate(520,516)">
+          <ellipse cx="0" cy="8" rx="26" ry="8" fill="#20240f" opacity="0.4" />
+          <ellipse cx="0" cy="2" rx="22" ry="9" fill="#7a766c" />
+          <path d="M-16 0 q16 -6 32 -1" stroke="#a8a49a" strokeWidth="1.4" fill="none" opacity="0.6" />
+          {/* l'éclat de silex */}
+          <path d="M-6 -4 L14 -12 L22 -2 L4 4 Z" fill="#8d8d97" stroke="#dfe3ec" strokeWidth="1" />
+          <path d="M-2 -5 l14 -5" stroke="#eef0f6" strokeWidth="1.2" opacity="0.8" />
+        </g>
+
+        {/* LE CLAN qui tire (villageois arc-boutés) */}
+        <g transform="translate(660,462)">
+          {[0, 34, 66, 98].map((dx, i) => (
+            <g key={i} transform={`translate(${dx},${(i % 2) * 6})`}>
+              <ellipse cx="0" cy="34" rx="12" ry="4" fill="#20240f" opacity="0.4" />
+              <path d="M-6 6 Q-10 -12 4 -15 Q14 -12 8 6 L6 26 L-8 26 Z" fill={i % 2 ? "#7a4f34" : "#6a4a30"} transform="rotate(-14)" />
+              <circle cx="-4" cy="-20" r="6.5" fill="#8a5c3c" />
+              <path d="M4 -8 q14 -2 22 4" stroke="#8a5c3c" strokeWidth="4" fill="none" strokeLinecap="round" />
+            </g>
+          ))}
+          <path d="M-14 -6 L128 2" stroke="#8a6a42" strokeWidth="3" fill="none" opacity="0.85" />
+        </g>
+
+        {/* un menhir déjà dressé, premier plan, patiné et couvert de lichen */}
+        <g transform="translate(120,430)">
+          <ellipse cx="0" cy="88" rx="34" ry="10" fill="#20240f" opacity="0.5" />
+          <path d="M-24 88 Q-30 20 -14 -30 Q-6 -58 6 -56 Q22 -52 24 10 Q28 60 22 88 Z" fill="url(#ld-granite)" />
+          <path d="M-24 88 Q-30 20 -14 -30 Q-6 -58 6 -56 Q22 -52 24 10 Q28 60 22 88 Z" fill="#2a2620" opacity="0.3" filter="url(#ld-grain)" />
+          <path d="M-10 78 Q-16 20 -6 -40" stroke="#c8c4bc" strokeWidth="2" fill="none" opacity="0.45" />
+          <path d="M8 60 q6 8 0 20 M-4 30 q-6 6 -1 16" stroke="#4a463e" strokeWidth="1.6" fill="none" opacity="0.5" />
+          <ellipse cx="-6" cy="20" rx="9" ry="5" fill="#7a8a3a" opacity="0.6" />
+          <ellipse cx="10" cy="52" rx="6" ry="4" fill="#8a9a48" opacity="0.5" />
+          <ellipse cx="2" cy="-30" rx="7" ry="4" fill="#9aaa58" opacity="0.4" />
+        </g>
+
+        {/* herbes qui cadrent le bas */}
+        <g opacity="0.9">
+          <path d="M-4 560 q10 -28 4 -44 M18 560 q3 -22 14 -36 M960 560 q-6 -24 2 -38 M984 560 q4 -20 12 -30" stroke="#20240f" strokeWidth="4" fill="none" />
+        </g>
+      </PLayer>
+
+      {/* voile de grain global */}
+      <rect width="1000" height="560" fill="#1a1c14" opacity="0.06" style={{ pointerEvents: "none" }} />
+
+      {/* zones cliquables */}
+      {/* le « ? » du chef de clan : pourquoi dresser une pierre énorme ? */}
+      {!made.includes("msg_megalithe") && (
+        <>
+          <g transform="translate(712,326)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+            <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
+            <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
+          </g>
+          <Hotspot cx={732} cy={336} r={28} label="parler au chef du clan" reveal={reveal} onClick={() => action("chef")} />
+        </>
+      )}
+
+      <Hotspot cx={520} cy={514} r={40} label="silex" item="silex" reveal={reveal} onClick={() => collect("silex")} />
+      <Hotspot cx={360} cy={500} r={70} label="dalle" item="dalle" reveal={reveal} onClick={() => collect("dalle")} />
+      <Hotspot cx={720} cy={452} r={78} label="le clan" item="clan" reveal={reveal} onClick={() => collect("clan")} />
+    </svg>
+  );
+}

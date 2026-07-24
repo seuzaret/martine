@@ -1,0 +1,188 @@
+import Hotspot from "../../../engine/Hotspot.jsx";
+import { PLayer } from "../../../engine/Parallax.jsx";
+
+/* ============================================================
+   CHAPITRE 6 — Tableau : l'imprimerie en effervescence (départ)
+   Peinture fine — atelier animé, jour clair : une presse en
+   marche, des cordes de gazettes qui sèchent, des piles de
+   feuilles, et le colporteur qui remplit sa hotte à la porte.
+   À trouver : feuilles imprimées, le colporteur.
+   ============================================================ */
+
+export default function SceneImprimerie({ collect, action, reveal, made = [] }) {
+  return (
+    <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="im-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8a7658" /><stop offset="100%" stopColor="#5e4e38" /></linearGradient>
+        <linearGradient id="im-win" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#7ea0c0" /><stop offset="100%" stopColor="#cdd6c8" /></linearGradient>
+        <linearGradient id="im-wood" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#7a5230" /><stop offset="50%" stopColor="#9a6c40" /><stop offset="100%" stopColor="#5a3f24" /></linearGradient>
+        <linearGradient id="im-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#9a8058" /><stop offset="100%" stopColor="#544330" /></linearGradient>
+        <filter id="im-grain" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0" result="a" />
+          <feComposite in="a" in2="SourceGraphic" operator="in" />
+        </filter>
+        <filter id="im-blur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="6" /></filter>
+        {/* découpe l'intérieur de la fenêtre (pour y voir la ville sans déborder) */}
+        <clipPath id="im-winclip"><rect x="-56" y="-86" width="112" height="142" /></clipPath>
+      </defs>
+
+      {/* ═══ mur de l'atelier ═══ */}
+      <rect width="1000" height="560" fill="url(#im-wall)" />
+      <rect width="1000" height="560" fill="#2c2010" opacity="0.26" filter="url(#im-grain)" />
+
+      {/* ═══ couche lointaine : fenêtres, cordes de gazettes ═══ */}
+      <PLayer depth={1}>
+        {/* deux fenêtres ouvertes sur la VILLE D'ÉPOQUE */}
+        {[150, 420].map((x, i) => (
+          <g key={i} transform={`translate(${x},170)`}>
+            <rect x="-60" y="-90" width="120" height="150" fill="url(#im-win)" />
+            {/* la ville vue par la fenêtre (découpée au cadre) */}
+            <g clipPath="url(#im-winclip)">
+              {/* rangée de façades et de toits pentus */}
+              <rect x="-58" y="6" width="30" height="52" fill="#cbb890" />
+              <path d="M-60 6 L-43 -20 L-26 6 Z" fill="#6a4a34" />
+              <rect x="-26" y="-2" width="30" height="60" fill="#d8c8a0" />
+              <path d="M-28 -2 L-11 -34 L6 -2 Z" fill="#54545e" />
+              <rect x="6" y="10" width="32" height="48" fill="#c0ac84" />
+              <path d="M4 10 L21 -14 L38 10 Z" fill="#6a4a34" />
+              <rect x="38" y="2" width="22" height="56" fill="#d0c098" />
+              <path d="M36 2 L48 -18 L60 2 Z" fill="#54545e" />
+              {/* lucarnes (petites fenêtres de toit) */}
+              <path d="M-40 -6 l6 -3 l6 3 v6 h-12 Z" fill="#8a7458" />
+              <path d="M14 -2 l6 -3 l6 3 v6 h-12 Z" fill="#8a7458" />
+              {/* clocher d'église — plus proéminent dans la 2e fenêtre */}
+              {i === 1 && (
+                <g>
+                  <rect x="20" y="-30" width="15" height="42" fill="#b6aa8c" />
+                  <rect x="24" y="-24" width="7" height="9" fill="#3a3a44" />
+                  <path d="M18 -30 L27.5 -66 L37 -30 Z" fill="#4a4a56" />
+                  <path d="M27.5 -66 v-8" stroke="#3a3a44" strokeWidth="1.4" />
+                </g>
+              )}
+              {/* petites fenêtres sur les façades */}
+              {[[-48, 22], [-38, 22], [-18, 16], [-4, 16], [16, 26], [28, 26], [46, 18]].map(([wx, wy], k) => (
+                <rect key={k} x={wx} y={wy} width="5" height="8" fill="#3a3a42" />
+              ))}
+              {/* cheminées qui fument */}
+              {[[-34, -16], [-2, -26], [30, -8]].map(([cx, cy], k) => (
+                <g key={k}>
+                  <rect x={cx} y={cy} width="5" height="13" fill="#8a5a3c" />
+                  <path d={`M${cx + 2} ${cy} q-4 -8 2 -15`} stroke="#c8c0b6" strokeWidth="2" fill="none" opacity="0.45" style={{ animation: `drift ${4 + k + i}s ease-in-out infinite` }} />
+                </g>
+              ))}
+            </g>
+            {/* cadre + croisillons par-dessus */}
+            <rect x="-60" y="-90" width="120" height="150" fill="none" stroke="#3a2a18" strokeWidth="7" />
+            <path d="M0 -90 v150 M-60 -15 h120" stroke="#3a2a18" strokeWidth="4" />
+          </g>
+        ))}
+        {/* poutre + cordes à sécher, gazettes suspendues */}
+        <path d="M0 120 h1000" stroke="#3a2818" strokeWidth="9" />
+        <path d="M560 138 q180 16 420 0" stroke="#5a4630" strokeWidth="2" fill="none" />
+        {[600, 670, 740, 810, 880, 950].map((x, i) => (
+          <g key={i} transform={`translate(${x},140)`}>
+            <rect x="-20" y="0" width="40" height="52" fill="#efe6ce" transform={`rotate(${i % 2 ? 2 : -2})`} />
+            <path d="M-14 8 h28 M-14 16 h22 M-14 24 h26 M-14 32 h18 M-14 40 h24" stroke="#5a4a3a" strokeWidth="0.9" opacity="0.7" transform={`rotate(${i % 2 ? 2 : -2})`} />
+          </g>
+        ))}
+      </PLayer>
+
+      {/* ═══ couche intermédiaire : la presse, l'ouvrier ═══ */}
+      <PLayer depth={2}>
+        {/* la presse (silhouette solide) */}
+        <g transform="translate(300,320)">
+          <rect x="-56" y="-30" width="16" height="130" fill="url(#im-wood)" />
+          <rect x="40" y="-30" width="16" height="130" fill="url(#im-wood)" />
+          <rect x="-64" y="-40" width="128" height="14" fill="#6e4c2e" />
+          <rect x="-6" y="-24" width="12" height="54" fill="#8a8c92" />
+          <path d="M6 -8 h64" stroke="#5a3f24" strokeWidth="7" strokeLinecap="round" />
+          <rect x="-34" y="36" width="68" height="14" fill="#7a5636" />
+          {/* pressier qui tire la barre */}
+          <g transform="translate(78,50)">
+            <path d="M-10 4 Q-13 -13 0 -16 Q13 -13 10 4 L7 28 L-7 28 Z" fill="#6a5a40" />
+            <circle cx="0" cy="-22" r="7" fill="#c8a882" />
+            <path d="M-6 -8 q-14 -4 -18 -18" stroke="#c8a882" strokeWidth="4" fill="none" strokeLinecap="round" />
+          </g>
+        </g>
+        {/* étagère de caractères + pots d'encre */}
+        <g transform="translate(560,320)">
+          <rect x="-50" y="-10" width="100" height="10" fill="#5a3f24" />
+          <rect x="-46" y="-40" width="92" height="30" fill="#6e4c2e" />
+          <path d="M-46 -25 h92 M-20 -40 v30 M8 -40 v30" stroke="#3a2814" strokeWidth="1.4" />
+        </g>
+      </PLayer>
+
+      {/* ═══ premier plan : sol, piles de feuilles, colporteur ═══ */}
+      <PLayer depth={3}>
+        <rect y="400" width="1000" height="160" fill="url(#im-floor)" />
+        <rect y="402" width="1000" height="158" fill="#2c1c10" opacity="0.34" filter="url(#im-grain)" />
+        <path d="M0 456 h1000 M0 512 h1000 M340 410 v150 M700 410 v150" stroke="#3a2a18" strokeWidth="1.5" opacity="0.45" />
+        <ellipse cx="500" cy="474" rx="440" ry="52" fill="#6e5836" opacity="0.3" />
+
+        {/* PILES DE FEUILLES IMPRIMÉES */}
+        <g transform="translate(280,500)">
+          <g transform="rotate(-2)">
+            <rect x="-50" y="-6" width="94" height="30" rx="1" fill="#dfd5bb" />
+            <rect x="-54" y="0" width="94" height="30" rx="1" fill="#e6dcc2" />
+            <rect x="-52" y="6" width="94" height="30" rx="1" fill="#efe6ce" />
+            <path d="M-44 16 h74 M-44 22 h60 M-44 28 h68" stroke="#8a7a5a" strokeWidth="1" opacity="0.6" />
+          </g>
+          {/* une pile debout à côté */}
+          <g transform="translate(64,-6)">
+            {[0, -6, -12, -18].map((y, i) => <rect key={i} x="-18" y={y} width="36" height="8" fill="#e6dcc2" stroke="#c9b892" strokeWidth="0.6" />)}
+          </g>
+        </g>
+
+        {/* LE COLPORTEUR à la porte, remplissant sa hotte */}
+        <g transform="translate(760,466)">
+          <ellipse cx="0" cy="40" rx="30" ry="7" fill="#241608" opacity="0.5" />
+          {/* jambes + manteau */}
+          <path d="M-14 8 Q-18 -16 0 -20 Q18 -16 14 8 L12 34 L-12 34 Z" fill="#4a5a48" />
+          <path d="M-8 34 l-2 12 M8 34 l2 12" stroke="#3a2c1c" strokeWidth="6" strokeLinecap="round" />
+          {/* tête + chapeau */}
+          <circle cx="0" cy="-26" r="8" fill="#c8a882" />
+          <path d="M-12 -30 h24 M-9 -30 q9 -8 18 0" stroke="#3a2c1c" strokeWidth="4" fill="#3a2c1c" />
+          {/* la hotte pleine de feuilles dans le dos */}
+          <g transform="translate(20,-6)">
+            <path d="M-6 -18 L16 -18 L20 20 L-2 20 Z" fill="#7a5636" />
+            <path d="M-6 -18 L16 -18 L20 20 L-2 20 Z" fill="#3a2814" opacity="0.3" filter="url(#im-grain)" />
+            {[-12, -6, 0].map((y, i) => <rect key={i} x="-2" y={y - 22} width="18" height="8" fill="#efe6ce" transform="rotate(6)" />)}
+          </g>
+          {/* bras qui charge */}
+          <path d="M-8 -6 q-14 4 -18 16" stroke="#c8a882" strokeWidth="4" fill="none" strokeLinecap="round" />
+        </g>
+
+        {/* épave de MARTINE, contre une presse */}
+        <g transform="translate(910,506) rotate(8)">
+          <ellipse cx="0" cy="12" rx="26" ry="6" fill="#140b06" opacity="0.5" />
+          <path d="M0 -20 Q18 -18 20 -4 Q22 8 11 11 L-11 11 Q-22 8 -20 -4 Q-18 -18 0 -20 Z" fill="#8a6240" />
+          <circle cx="-1" cy="-4" r="5.5" fill="#cfeaff" stroke="#5c3a22" strokeWidth="1.4" />
+          <rect x="-13" y="3" width="24" height="7" rx="2" fill="#0c1410" stroke="#5c3a22" strokeWidth="1" />
+          <text x="-1" y="9" textAnchor="middle" fontSize="5.5" fill="#5eff9e" fontFamily="ui-monospace,monospace" style={{ animation: "pulse 2.2s infinite" }}>1794</text>
+          <circle cx="13" cy="-27" r="2.3" fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
+          <path d="M8 -20 q6 -8 13 -6" stroke="#8a94a8" strokeWidth="2.3" fill="none" strokeLinecap="round" />
+        </g>
+      </PLayer>
+
+      {/* voile de grain global */}
+      <rect width="1000" height="560" fill="#1a1208" opacity="0.08" style={{ pointerEvents: "none" }} />
+
+      {/* zones cliquables */}
+      {/* le « ? » du colporteur : mille feuilles en une nuit, incontrôlables */}
+      {!made.includes("msg_gazettes") && (
+        <>
+          <g transform="translate(758,356)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+            <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
+            <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
+          </g>
+          <Hotspot cx={778} cy={366} r={26} label="parler au colporteur" reveal={reveal} onClick={() => action("colporteur")} />
+        </>
+      )}
+
+      <Hotspot cx={288} cy={500} r={54} label="feuilles" item="feuilles" reveal={reveal} onClick={() => collect("feuilles")} />
+      <Hotspot cx={766} cy={456} r={50} label="colporteur" item="colporteur" reveal={reveal} onClick={() => collect("colporteur")} />
+      <Hotspot cx={910} cy={502} r={34} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
+    </svg>
+  );
+}
