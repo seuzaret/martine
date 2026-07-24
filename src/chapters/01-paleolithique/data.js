@@ -11,6 +11,7 @@ import SceneInterieur from "./scenes/SceneInterieur.jsx";
 import SceneExterieur from "./scenes/SceneExterieur.jsx";
 import SceneCampement from "./scenes/SceneCampement.jsx";
 import SceneRiviere from "./scenes/SceneRiviere.jsx";
+import { PortraitAna } from "./scenes/portraits.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -46,7 +47,9 @@ const ITEMS = {
    Component = le dessin correspondant, dans scenes/
    ------------------------------------------------------------ */
 const SCENES = [
-  { id: "interieur", name: "Au fond de la grotte", Component: SceneInterieur },
+  /* `ambience: "grotte"` : un fond sonore discret (tambour + chants du
+     clan, synthétisés) démarre dans ce tableau et s'arrête en le quittant. */
+  { id: "interieur", name: "Au fond de la grotte", Component: SceneInterieur, ambience: "grotte" },
   { id: "exterieur", name: "Devant la grotte",     Component: SceneExterieur },
   { id: "campement", name: "Le campement",         Component: SceneCampement },
   { id: "riviere",   name: "La rivière",           Component: SceneRiviere },
@@ -133,7 +136,7 @@ const MESSAGES = {
     jauges: { vitesse: 1, portee: 1, capacite: 1, durabilite: 5 },
     fact: "Main plaquée sur la roche, ocre soufflé autour : une main « en négatif ». La grotte de Gargas, dans les Hautes-Pyrénées, en compte plus de 200, vieilles de 27 000 ans ! Le message le plus simple du monde : « J'existe, j'étais là. » L'ancêtre lointain de la signature… et du selfie.",
     wiki: "https://fr.wikipedia.org/wiki/Grotte_de_Gargas" },
-  msg_flute: { title: "Flûte en os", emoji: "🪈",
+  msg_flute: { title: "Flûte en os", emoji: "🪈", sfx: "flute",
     jauges: { vitesse: 3, portee: 1, capacite: 2, durabilite: 4 },
     fact: "Un os creux, quelques trous percés au silex : une flûte. Les plus anciennes connues ont 35 000 ans (grotte de Hohle Fels) — et la grotte d'Isturitz, au Pays basque, en a livré plus de vingt ! La musique transmet des émotions sans aucun mot : un langage qui n'a pas besoin de traduction. (L'os a survécu 35 000 ans… mais les mélodies, elles, sont perdues à jamais.)",
     wiki: "https://fr.wikipedia.org/wiki/Grottes_d'Isturitz_et_d'Oxocelhaya" },
@@ -201,8 +204,8 @@ const FAIL_LINES = [
 /* Introduction de MARTINE au lancement du chapitre */
 const INTRO = [
   "⚠ IMPACT en −18 000. Mes circuits de retour sont grillés. Pour repartir, je carbure à une seule chose : les MESSAGES que les humains laissent au futur.",
-  "Bonne nouvelle : quelqu'un vient vers toi… et elle sourit. C'est le clan de Ceux-qui-marchent-debout. Gagne leur confiance, aide-les à laisser leurs traces — chacune remplit ma jauge, à droite.",
-  "Le « ? » doré te montre toujours QUI attend quelque chose de toi. Explore avec ‹ ›, touche ce qui t'intrigue… et commence par parler à cette jeune femme.",
+  "Et toi, tu as déjà un fan-club : tu as vu cet accueil ? Gagne la confiance du clan, aide chacun à laisser sa trace — elles remplissent ma jauge, à droite.",
+  "Le « ? » doré te montre toujours QUI attend quelque chose de toi. Explore avec ‹ ›, touche ce qui t'intrigue… et va saluer Raya, le chef, au campement.",
 ];
 
 /* Actions spéciales des décors (zones cliquables qui ne ramassent rien).
@@ -246,9 +249,11 @@ const ACTIONS = {
               (elle indique vers qui aller ensuite).
    ------------------------------------------------------------ */
 const QUETE = [
-  { perso: "ana",
-    bubble: "Bienvenue au clan de Ceux-qui-marchent-debout ! C'est rare de rencontrer de nouvelles personnes : viens donc passer quelque temps avec nous. Commence par saluer Raya, notre chef — près du grand feu, au campement.",
-    say: "Un accueil pareil après mon crash, ça change. Le campement est plus loin sur le sentier ›." },
+  /* `portrait: "ana"` : cette étape s'affiche en GROS PLAN — le personnage
+     s'avance devant l'écran pour parler (composant dans scenes/portraits.jsx,
+     déclaré dans `portraits` en bas de ce fichier). */
+  { perso: "ana", portrait: "ana",
+    bubble: "Bienvenue au clan de Ceux-qui-marchent-debout ! C'est rare de rencontrer de nouvelles personnes : viens donc passer quelque temps avec nous. Commence par saluer Raya, notre chef — près du grand feu, au campement." },
 
   { perso: "raya",
     bubble: "Bienvenue à toi, voyageur. Si tu veux nous aider et être correctement accueilli, va voir Doru, au bord de la rivière : il t'attend.",
@@ -338,6 +343,7 @@ const chapter = {
   intro: INTRO,
   actions: ACTIONS,
   quete: QUETE,
+  portraits: { ana: PortraitAna },
 };
 
 export default chapter;

@@ -79,6 +79,14 @@ const SFX = {
     tone(c, { f: 660, f1: 165, d: 0.6, type: "sine", v: 0.13 });
     tone(c, { f: 330, f1: 90, t: 0.05, d: 0.72, type: "triangle", v: 0.07 });
   },
+  /* la flûte en os : une petite mélodie pentatonique, soufflée.
+     Jouée quand la flûte est créée (voir `sfx` dans les MESSAGES). */
+  flute: (c) => {
+    [[587, 0.0], [784, 0.26], [659, 0.52], [880, 0.78], [784, 1.08]].forEach(([f, t]) => {
+      tone(c, { f, t, d: 0.34, type: "sine", v: 0.15 });
+      tone(c, { f: f * 2, t, d: 0.3, type: "triangle", v: 0.03 }); // souffle léger à l'octave
+    });
+  },
 };
 
 /** Joue un effet sonore (silencieux si le son est coupé ou indisponible). */
@@ -100,10 +108,60 @@ export function setMuted(m) {
 }
 
 /* ------------------------------------------------------------
-   Ambiances par époque (vent de la grotte, crépitement du feu…)
-   EMPLACEMENT PRÉVU, DÉSACTIVÉ PAR DÉFAUT (choix du jalon M1).
-   Pour l'activer plus tard : générer ou charger une boucle
-   discrète ici, la démarrer au changement de tableau.
+   AMBIANCES — boucles discrètes, synthétisées elles aussi.
+   Un tableau peut en demander une via `ambience: "…"` dans la
+   liste SCENES de son data.js ; App démarre/arrête au changement
+   de tableau. Volumes très bas : c'est un fond, pas un premier plan.
+
+   "grotte" : un tambour sourd comme un battement de cœur, et des
+   voix graves qui psalmodient — les chants du clan, au loin.
    ------------------------------------------------------------ */
-export function startAmbience(/* sceneId */) { /* volontairement vide */ }
-export function stopAmbience() { /* volontairement vide */ }
+
+/** Une voix qui psalmodie : attaque lente, deux voix légèrement
+    désaccordées + une octave grave, comme un chœur lointain. */
+function hum(c, f) {
+  [f, f * 1.006, f / 2].forEach((ff, i) => {
+    const o = c.createOscillator();
+    const g = c.createGain();
+    const now = c.currentTime;
+    o.type = i === 2 ? "triangle" : "sine";
+    o.frequency.setValueAtTime(ff, now);
+    g.gain.setValueAtTime(0, now);
+    g.gain.linearRampToValueAtTime(i === 2 ? 0.018 : 0.028, now + 0.55);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
+    o.connect(g);
+    g.connect(c.destination);
+    o.start(now);
+    o.stop(now + 1.6);
+  });
+}
+
+let amb = null; // { timer } : l'ambiance en cours
+
+export function startAmbience(sceneId) {
+  if (muted || amb || sceneId !== "grotte") return;
+  try {
+    const c = ensureCtx();
+    /* la mélopée : quatre notes graves qui tournent (sol, la, fa, sol) */
+    const chant = [98, 110, 87.3, 98];
+    let mesure = 0;
+    const timer = setInterval(() => {
+      /* tant que le navigateur n'a pas encore le droit de jouer du son
+         (aucun clic depuis le chargement), on attend sans rien planter */
+      if (muted || c.state !== "running") return;
+      /* le tambour : deux battements, comme un cœur (boum… boum) */
+      tone(c, { f: 92, f1: 50, d: 0.22, type: "sine", v: 0.055 });
+      tone(c, { f: 88, f1: 48, t: 0.34, d: 0.2, type: "sine", v: 0.035 });
+      /* une mesure sur deux, la voix psalmodie */
+      if (mesure % 2 === 0) hum(c, chant[(mesure / 2) % chant.length]);
+      mesure++;
+    }, 1500);
+    amb = { timer };
+  } catch {
+    /* pas d'audio : le jeu continue sans ambiance */
+  }
+}
+
+export function stopAmbience() {
+  if (amb) { clearInterval(amb.timer); amb = null; }
+}

@@ -6,7 +6,7 @@ import { DragProvider } from "./engine/DragDrop.jsx";
 import Particles from "./engine/Particles.jsx";
 import Gauges from "./engine/Gauges.jsx";
 import Frise, { trendSentence } from "./engine/Frise.jsx";
-import { playSfx, isMuted, setMuted } from "./engine/audio.js";
+import { playSfx, isMuted, setMuted, startAmbience, stopAmbience } from "./engine/audio.js";
 import { loadSave, writeSave, clearSave, hasSave, exportSaveString, importSaveString } from "./engine/save.js";
 import { findRecipe, findNearMiss, randomLine } from "./engine/Crafting.js";
 import { lastHotspotClick } from "./engine/Hotspot.jsx";
@@ -379,6 +379,15 @@ export default function App() {
     }
   }, [made, flags, quete]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  /* AMBIANCE SONORE : si le tableau courant en déclare une (champ
+     `ambience` dans les SCENES du data.js), elle démarre en douceur et
+     s'arrête dès qu'on change de tableau, d'écran, ou qu'on coupe le son. */
+  useEffect(() => {
+    const amb = screen === "play" && !muted ? chapter.scenes[tab]?.ambience : null;
+    if (amb) startAmbience(amb);
+    return stopAmbience;
+  }, [screen, chapterIndex, tab, muted]); // eslint-disable-line react-hooks/exhaustive-deps
+
   /* Octroyer un message SANS combinaison d'objets — pour les mini-jeux
      (ex. réussir « Écris MARTINE » transmet vraiment l'alphabet).
      Idempotent : pas de doublon si le cristal est déjà obtenu. */
@@ -446,6 +455,9 @@ export default function App() {
         setCollection((c) => c.some((x) => x.id === rec.out) ? c : [...c, { id: rec.out, titre: m.title, emoji: m.emoji, date: chapter.date, jauges: m.jauges, fact: m.fact, perdu: false }]);
         setInv((v) => cleanup(v, newMade));
         flash(); boom(point, true); playSfx("message");
+        /* certains messages ont leur propre son (ex. la flûte joue sa
+           mélodie) : il part juste après l'arpège de transmission */
+        if (m.sfx) setTimeout(() => playSfx(m.sfx), 950);
         say(`◆ « ${chapter.messages[rec.out].title} » transmis au futur ! Mes circuits se rechargent, je sens l'excellence revenir.`, "content");
         setTimeout(() => setModal({ type: "fact", id: rec.out }), 750);
         return;
@@ -1073,6 +1085,33 @@ export default function App() {
           Ancré au point renvoyé par la zone cliquable. Se place au-dessus du
           personnage (ou en dessous s'il est trop haut), et se recadre pour ne
           pas sortir de l'écran. Un clic dessus le referme. */}
+      {/* LE GROS PLAN de la quête : quand l'étape en cours porte
+          `portrait`, le personnage s'avance devant l'écran pour parler
+          (ex. Ana qui accueille le joueur). Le bouton fait avancer la
+          quête ; s'il y a un `say`, MARTINE enchaîne. */}
+      {screen === "play" && (() => {
+        const st = chapter.quete?.[quete];
+        const Portrait = st?.portrait && chapter.portraits?.[st.portrait];
+        if (!Portrait) return null;
+        const nom = st.nom ?? st.perso.charAt(0).toUpperCase() + st.perso.slice(1);
+        return (
+          <div style={{ position: "fixed", inset: 0, zIndex: 65, background: "rgba(4,8,14,0.8)", backdropFilter: "blur(3px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: 20, maxWidth: 860, animation: "fadein .5s ease-out" }}>
+              <div style={{ width: "min(44vh, 300px)", flex: "0 0 auto" }}><Portrait /></div>
+              <div style={{ flex: "1 1 300px", maxWidth: 400 }}>
+                <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, letterSpacing: 2, color: "#ffd166", marginBottom: 8 }}>✦ {nom.toUpperCase()}</div>
+                <div style={{ background: "#f4e8cc", color: "#2a1c10", border: "1px solid #cbb489", borderRadius: 16, padding: "16px 18px", fontFamily: "Palatino, Georgia, serif", fontSize: 16.5, lineHeight: 1.6, boxShadow: "0 12px 40px rgba(0,0,0,0.5)" }}>
+                  {st.bubble}
+                </div>
+                <button onClick={() => { setQuete((q) => q + 1); if (st.say) say(st.say, st.mood); }}
+                  style={{ marginTop: 14, width: "100%", background: "#e8934a", color: "#1a0e02", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer", fontSize: 15, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
+                  Continuer
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
       {bubble && (() => {
         const W = Math.min(300, window.innerWidth - 24);
         const dessous = bubble.y < 240;               // perso trop haut → bulle en dessous

@@ -128,14 +128,31 @@ export default function SceneInterieur({ collect, action, reveal, made = [], que
       ))}
 
       {/* ═══ RÉSULTATS peints sur la paroi (feedback direct) ═══ */}
-      {/* le CHEVAL au charbon, style Lascaux, quand la peinture est faite */}
+      {/* le MAMMOUTH au charbon — celui que le joueur a vu dans la vallée
+          (tableau « devant la grotte »), redessiné de mémoire à la façon
+          des mammouths de Rouffignac : un trait noir, souple et sûr. */}
       {made.includes("msg_peinture") && (
-        <g transform="translate(560,280)" style={{ animation: "fadein .9s ease-out" }}>
-          <path d="M-60 -6 Q-55 -24 -30 -26 Q0 -30 30 -24 Q46 -20 56 -22 Q70 -26 80 -18 Q84 -12 78 -8 Q70 -8 62 -14 Q50 -14 44 -8 Q40 4 -2 4 Q-40 4 -60 -2 Z" fill="#241610" stroke="#120a06" strokeWidth="1.5" />
-          <path d="M-44 2 L-47 22 M-30 3 L-31 24 M20 3 L18 24 M34 0 L38 20" stroke="#241610" strokeWidth="5" strokeLinecap="round" />
-          <path d="M-30 -26 q6 -12 12 -2 m-6 0 q6 -12 12 -2 m-6 0 q6 -12 12 -2 m-6 0 q6 -11 12 -2 m-6 0 q6 -11 12 -1" stroke="#160d07" strokeWidth="3" fill="none" strokeLinecap="round" />
-          <path d="M-52 0 Q-10 6 40 0" stroke="#a8542a" strokeWidth="3" fill="none" opacity="0.4" />
-          <circle cx="68" cy="-14" r="2" fill="#0a0503" />
+        <g transform="translate(575,272)" style={{ animation: "fadein .9s ease-out" }}>
+          <g fill="none" stroke="#1c1208" strokeLinecap="round" strokeLinejoin="round">
+            {/* la ligne du dos : dôme de la tête, creux de la nuque,
+                grande bosse, croupe qui tombe */}
+            <path d="M-84 4 Q-92 -22 -70 -36 Q-58 -44 -48 -36 Q-44 -52 -8 -54 Q36 -54 56 -32 Q70 -16 64 8" strokeWidth="5" />
+            {/* le ventre laineux */}
+            <path d="M-70 10 Q-30 24 24 20 Q48 18 60 10" strokeWidth="4.5" />
+            {/* les longs poils qui pendent */}
+            <path d="M-54 16 l-3 10 M-32 21 l-2 11 M-10 24 l-1 11 M14 22 l-1 10 M40 18 l-2 10" strokeWidth="2.5" />
+            {/* les pattes-colonnes */}
+            <path d="M-60 12 L-63 46 M-40 17 L-41 50 M22 20 L22 50 M46 12 L52 44" strokeWidth="6.5" />
+            {/* la trompe, qui descend et se recourbe */}
+            <path d="M-84 4 Q-96 22 -88 44 Q-84 54 -74 51" strokeWidth="4.5" />
+          </g>
+          {/* la défense, plus claire — gravée dans le trait */}
+          <path d="M-72 16 Q-48 32 -28 22" stroke="#8a6a48" strokeWidth="3.2" fill="none" strokeLinecap="round" />
+          <path d="M-70 12 Q-50 24 -36 17" stroke="#5a4028" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+          {/* l'œil, minuscule sous le dôme */}
+          <circle cx="-62" cy="-24" r="2" fill="#120a06" />
+          {/* rehaut d'ocre sur le flanc, souffle de couleur */}
+          <path d="M-52 0 Q-8 10 44 2" stroke="#a8542a" strokeWidth="3" fill="none" opacity="0.35" />
         </g>
       )}
       {/* les MAINS NÉGATIVES à l'ocre, quand les mains sont faites */}
