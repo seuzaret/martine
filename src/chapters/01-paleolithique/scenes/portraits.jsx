@@ -178,17 +178,12 @@ export function PortraitRaya() {
       <path d="M150 135 Q147 151 144 159 Q142 165 150 166" stroke="#96684a" strokeWidth="2.8" fill="none" strokeLinecap="round" />
       <path d="M153 164 q4 1 6 -2 M147 164 q-4 1 -6 -2" stroke="#96684a" strokeWidth="1.8" fill="none" opacity="0.55" />
 
-      {/* LA BARBE pleine : des favoris (reliés aux cheveux) au menton,
-          encadre la mâchoire ; laisse voir la bouche */}
-      <path d="M110 118 Q104 158 122 188 Q136 210 150 212 Q164 210 178 188 Q196 158 190 118 Q178 152 168 158 Q158 166 150 166 Q142 166 132 158 Q122 152 110 118 Z" fill="url(#pRayaHair)" />
-      {/* moustache, reliée à la barbe aux commissures */}
-      <path d="M126 156 Q150 166 174 156 Q168 168 150 165 Q132 168 126 156 Z" fill="#3e3628" />
-      {/* mèches grises, en miroir */}
-      <g stroke="#8a8272" strokeWidth="1.7" fill="none" opacity="0.6">
-        <path d="M122 156 Q124 184 134 206 M178 156 Q176 184 166 206 M140 168 Q142 190 149 209 M160 168 Q158 190 151 209 M150 172 L150 210" />
-      </g>
-      {/* la bouche, digne, sous la moustache */}
-      <path d="M139 165 Q150 168 161 165" stroke="#7a4630" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+      {/* RASÉ (pas de barbe) : une bouche digne, un peu de relief des
+          lèvres, sillons discrets et ombre légère sous le menton */}
+      <path d="M134 174 Q150 180 166 174" stroke="#7a4630" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <path d="M139 180 Q150 184 161 180" stroke="#a06a4e" strokeWidth="2.4" fill="none" strokeLinecap="round" opacity="0.7" />
+      <path d="M138 166 q-3 5 -2 9 M162 166 q3 5 2 9" stroke="#96684a" strokeWidth="1.5" fill="none" opacity="0.4" />
+      <path d="M141 190 q9 4 18 0" stroke="#96684a" strokeWidth="1.8" fill="none" opacity="0.3" />
 
       {/* CHEVEUX du dessus : tirés en arrière, front dégagé de chef */}
       <path d="M106 120 Q98 62 150 56 Q202 62 194 120 Q186 92 168 84 Q158 80 150 80 Q142 80 132 84 Q114 92 106 120 Z" fill="url(#pRayaHair)" />

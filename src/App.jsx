@@ -155,7 +155,13 @@ export default function App() {
     return () => { mq.removeEventListener("change", sync); window.removeEventListener("resize", sync); };
   }, []);
 
-  const toggleMute = () => { setMuted(!muted); setMutedState(!muted); };
+  const toggleMute = () => {
+    const next = !muted;
+    setMuted(next); setMutedState(next);
+    /* on vient d'ACTIVER le son ? un petit bip de confirmation, joué dans
+       ce clic (donc autorisé par Firefox) : test direct que le son sort. */
+    if (!next) setTimeout(() => playSfx("test"), 40);
+  };
   /* `mood` pilote l'expression de l'avatar : "neutre" | "content" | "vexe" */
   const say = (line, mood = "neutre") => setDialog({ lines: Array.isArray(line) ? line : [line], idx: 0, mood });
   const flash = () => { setSparkle(true); setTimeout(() => setSparkle(false), 800); };

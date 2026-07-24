@@ -80,6 +80,12 @@ function tone(c, { f, f1, t = 0, d = 0.15, type = "sine", v = 0.2 }) {
 
 /* Les recettes sonores (fréquences en Hz — do5 = 523, mi5 = 659…) */
 const SFX = {
+  /* bip de TEST : deux notes claires et un peu fortes — sert à vérifier
+     d'un clic sur 🔊 que le son sort bien. */
+  test: (c) => {
+    tone(c, { f: 660, d: 0.14, type: "triangle", v: 0.28 });
+    tone(c, { f: 990, t: 0.12, d: 0.2, type: "triangle", v: 0.28 });
+  },
   pickup: (c) => tone(c, { f: 520, f1: 700, d: 0.1, type: "sine", v: 0.18 }),
   craft: (c) => {
     tone(c, { f: 523, d: 0.12, type: "triangle", v: 0.2 });
@@ -117,15 +123,18 @@ const SFX = {
   },
 };
 
-/** Joue un effet sonore (silencieux si le son est coupé ou indisponible). */
+/** Joue un effet sonore (silencieux si le son est coupé ou indisponible).
+    On ne déclenche le son QUE lorsque le contexte tourne vraiment : sur
+    Firefox/Safari, `resume()` est asynchrone — jouer avant qu'il ait fini
+    programme la note « dans le passé » et on n'entend rien. D'où le
+    `resume().then(...)`. */
 export function playSfx(name) {
   if (muted) return;
-  try {
-    const c = ensureCtx();
-    SFX[name]?.(c);
-  } catch {
-    /* pas d'audio sur cet appareil : le jeu continue sans son */
-  }
+  const c = ensureCtx();
+  if (!c) return;
+  const jouer = () => { try { SFX[name]?.(c); } catch { /* rien */ } };
+  if (c.state === "running") jouer();
+  else c.resume().then(jouer).catch(() => { /* audio bloqué : tant pis */ });
 }
 
 export function isMuted() { return muted; }
