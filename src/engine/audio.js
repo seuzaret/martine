@@ -27,9 +27,37 @@ let ctx = null;
 let muted = typeof localStorage !== "undefined" && localStorage.getItem("martine.muted") === "1";
 
 function ensureCtx() {
-  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
-  if (ctx.state === "suspended") ctx.resume();
-  return ctx;
+  try {
+    if (!ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      ctx = new AC();
+    }
+    if (ctx.state === "suspended") ctx.resume();
+    return ctx;
+  } catch {
+    return null; // Web Audio indisponible : le jeu continue sans son
+  }
+}
+
+/* ------------------------------------------------------------
+   DÉBLOCAGE DE L'AUDIO — indispensable pour Firefox et Safari,
+   qui interdisent TOUT son tant que l'utilisateur n'a pas fait un
+   geste. On crée/réveille donc le contexte au TOUT PREMIER geste
+   (pointer, touche, toucher), à la source (capture), une fois pour
+   toutes. Sans ça, le premier son — voire tous — reste muet.
+   ------------------------------------------------------------ */
+if (typeof window !== "undefined") {
+  const debloque = () => {
+    const c = ensureCtx();
+    /* dès que le contexte tourne vraiment, on retire les écouteurs */
+    if (c && c.state === "running") {
+      ["pointerdown", "touchstart", "keydown", "click"].forEach((ev) =>
+        window.removeEventListener(ev, debloque, true));
+    }
+  };
+  ["pointerdown", "touchstart", "keydown", "click"].forEach((ev) =>
+    window.addEventListener(ev, debloque, true));
 }
 
 /** Joue une note : fréquence f (→ f1 si glissando), départ décalé

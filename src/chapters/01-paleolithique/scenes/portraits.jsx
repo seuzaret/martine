@@ -136,9 +136,9 @@ export function PortraitRaya() {
 
       <circle cx="150" cy="138" r="130" fill="url(#pRayaHalo)" />
 
-      {/* cheveux arrière, ramenés sur la nuque */}
-      <path d="M102 100 Q86 150 94 210 L112 200 Q102 150 112 108 Z" fill="#332c1e" />
-      <path d="M198 100 Q214 150 206 210 L188 200 Q198 150 188 108 Z" fill="#332c1e" />
+      {/* cheveux longs ramenés en arrière, sur la nuque */}
+      <path d="M108 108 Q90 158 98 212 L116 204 Q106 156 116 116 Z" fill="#3a3428" />
+      <path d="M192 108 Q210 158 202 212 L184 204 Q194 156 184 116 Z" fill="#3a3428" />
 
       {/* LE MANTEAU du chef : fourrure épaisse sur les DEUX épaules */}
       <path d="M40 340 Q42 256 92 234 Q122 222 150 224 Q178 222 208 234 Q258 256 260 340 Z" fill="url(#pRayaFur)" />
@@ -146,60 +146,60 @@ export function PortraitRaya() {
         <path d="M96 250 q13 -7 26 0 M140 244 q13 -6 26 0 M184 252 q13 -6 25 0 M76 280 q13 -6 26 0 M120 274 q13 -6 26 0 M168 278 q13 -6 26 0 M212 286 q12 -6 24 0 M96 306 q13 -6 26 0 M148 302 q13 -6 26 0 M196 314 q13 -6 25 0 M120 330 q13 -6 26 0" />
       </g>
       {/* l'attache en os du manteau */}
-      <rect x="138" y="252" width="24" height="7" rx="3.5" fill="#e0d4bc" stroke="#a89878" strokeWidth="1.2" transform="rotate(-8 150 255)" />
+      <rect x="138" y="284" width="24" height="7" rx="3.5" fill="#e0d4bc" stroke="#a89878" strokeWidth="1.2" transform="rotate(-8 150 287)" />
 
       {/* LE COU */}
-      <path d="M133 188 L167 188 L170 236 Q150 244 130 236 Z" fill="url(#pRayaSkin)" />
+      <path d="M134 188 L166 188 L169 234 Q150 242 131 234 Z" fill="url(#pRayaSkin)" />
 
-      {/* LE VISAGE : plus large, mâchoire forte */}
-      <path d="M150 60 C193 60 211 94 209 132 C207 168 190 196 150 202 C110 196 93 168 91 132 C89 94 107 60 150 60 Z" fill="url(#pRayaSkin)" />
-      <path d="M102 114 Q98 150 114 178" stroke="#ffd9a0" strokeWidth="5" fill="none" opacity="0.35" strokeLinecap="round" />
-      <ellipse cx="95" cy="140" rx="7" ry="11" fill="#b78a5e" />
-      <path d="M93 136 q5 2 4 8" stroke="#96684a" strokeWidth="2" fill="none" />
+      {/* LE VISAGE : ALLONGÉ, plus étroit, mâchoire carrée */}
+      <path d="M150 64 C179 64 193 88 194 118 C195 144 190 168 176 186 C167 197 159 202 150 202 C141 202 133 197 124 186 C110 168 105 144 106 118 C107 88 121 64 150 64 Z" fill="url(#pRayaSkin)" />
+      <path d="M112 112 Q108 146 124 174" stroke="#ffd9a0" strokeWidth="5" fill="none" opacity="0.35" strokeLinecap="round" />
+      <ellipse cx="107" cy="136" rx="7" ry="11" fill="#b78a5e" />
+      <path d="M105 132 q5 2 4 8" stroke="#96684a" strokeWidth="2" fill="none" />
+      <ellipse cx="193" cy="136" rx="7" ry="11" fill="#b78a5e" />
 
       {/* rides du front — l'expérience */}
-      <path d="M120 98 Q150 92 180 98 M124 108 Q150 103 176 108" stroke="#96684a" strokeWidth="1.8" fill="none" opacity="0.55" />
+      <path d="M124 100 Q150 94 176 100 M128 110 Q150 105 172 110" stroke="#96684a" strokeWidth="1.7" fill="none" opacity="0.5" />
 
-      {/* SOURCILS épais, presque froncés */}
-      <path d="M113 124 Q127 116 142 122" stroke="#3a3226" strokeWidth="4.6" fill="none" strokeLinecap="round" />
-      <path d="M158 122 Q173 116 187 124" stroke="#3a3226" strokeWidth="4.6" fill="none" strokeLinecap="round" />
-      {/* YEUX plus étroits, francs */}
-      <path d="M119 137 Q129 130 140 136 Q130 142 119 137 Z" fill="#f8efdd" />
-      <path d="M160 136 Q171 130 181 137 Q170 142 160 136 Z" fill="#f8efdd" />
-      <circle cx="130" cy="136" r="4" fill="#2e1d10" />
-      <circle cx="170" cy="136" r="4" fill="#2e1d10" />
-      <circle cx="131.4" cy="134.6" r="1.2" fill="#fff" />
-      <circle cx="171.4" cy="134.6" r="1.2" fill="#fff" />
-      <path d="M118 136 Q129 129 141 135 M159 135 Q171 129 182 136" stroke="#4a3322" strokeWidth="2.2" fill="none" strokeLinecap="round" />
-      {/* pattes d'oie */}
-      <path d="M114 136 l-7 -2 M114 139 l-7 2 M186 136 l7 -2 M186 139 l7 2" stroke="#96684a" strokeWidth="1.6" opacity="0.6" />
+      {/* SOURCILS épais */}
+      <path d="M119 124 Q131 117 144 123" stroke="#3a3226" strokeWidth="4.4" fill="none" strokeLinecap="round" />
+      <path d="M156 123 Q169 117 181 124" stroke="#3a3226" strokeWidth="4.4" fill="none" strokeLinecap="round" />
+      {/* YEUX francs, un peu étroits */}
+      <path d="M121 137 Q131 131 141 136 Q131 142 121 137 Z" fill="#f8efdd" />
+      <path d="M159 136 Q169 131 179 137 Q169 142 159 136 Z" fill="#f8efdd" />
+      <circle cx="131" cy="137" r="4" fill="#2e1d10" />
+      <circle cx="169" cy="137" r="4" fill="#2e1d10" />
+      <circle cx="132.3" cy="135.6" r="1.2" fill="#fff" />
+      <circle cx="170.3" cy="135.6" r="1.2" fill="#fff" />
+      <path d="M120 136 Q131 130 142 135 M158 135 Q169 130 180 136" stroke="#4a3322" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+      <path d="M115 137 l-6 -2 M115 140 l-6 2 M185 137 l6 -2 M185 140 l6 2" stroke="#96684a" strokeWidth="1.5" opacity="0.55" />
 
-      {/* NEZ plus marqué */}
-      <path d="M150 136 Q146 152 143 160 Q141 166 150 167" stroke="#96684a" strokeWidth="2.8" fill="none" strokeLinecap="round" />
-      <path d="M154 165 q4 1 5 -2" stroke="#96684a" strokeWidth="2" fill="none" opacity="0.6" />
+      {/* NEZ long et droit */}
+      <path d="M150 135 Q147 151 144 159 Q142 165 150 166" stroke="#96684a" strokeWidth="2.8" fill="none" strokeLinecap="round" />
+      <path d="M153 164 q4 1 6 -2 M147 164 q-4 1 -6 -2" stroke="#96684a" strokeWidth="1.8" fill="none" opacity="0.55" />
 
-      {/* LA BARBE fournie, poivre et sel — symétrique autour de l'axe x=150,
-          reliée aux favoris, pointe sous le menton */}
-      <path d="M108 148 Q100 200 124 226 Q138 241 150 241 Q162 241 176 226 Q200 200 192 148 Q180 184 150 188 Q120 184 108 148 Z" fill="url(#pRayaHair)" />
-      {/* moustache, bien centrée sous le nez */}
-      <path d="M126 168 Q150 178 174 168 Q168 185 150 183 Q132 185 126 168 Z" fill="#3e3628" />
-      {/* mèches grises, en miroir de part et d'autre de l'axe */}
-      <g stroke="#8a8272" strokeWidth="1.8" fill="none" opacity="0.62">
-        <path d="M120 166 Q122 196 133 219 M180 166 Q178 196 167 219 M139 186 Q141 208 149 229 M161 186 Q159 208 151 229 M150 190 L150 233" />
+      {/* LA BARBE pleine : des favoris (reliés aux cheveux) au menton,
+          encadre la mâchoire ; laisse voir la bouche */}
+      <path d="M110 118 Q104 158 122 188 Q136 210 150 212 Q164 210 178 188 Q196 158 190 118 Q178 152 168 158 Q158 166 150 166 Q142 166 132 158 Q122 152 110 118 Z" fill="url(#pRayaHair)" />
+      {/* moustache, reliée à la barbe aux commissures */}
+      <path d="M126 156 Q150 166 174 156 Q168 168 150 165 Q132 168 126 156 Z" fill="#3e3628" />
+      {/* mèches grises, en miroir */}
+      <g stroke="#8a8272" strokeWidth="1.7" fill="none" opacity="0.6">
+        <path d="M122 156 Q124 184 134 206 M178 156 Q176 184 166 206 M140 168 Q142 190 149 209 M160 168 Q158 190 151 209 M150 172 L150 210" />
       </g>
-      {/* la bouche, digne et posée, sous la moustache */}
-      <path d="M137 183 Q150 187 163 183" stroke="#7a4630" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+      {/* la bouche, digne, sous la moustache */}
+      <path d="M139 165 Q150 168 161 165" stroke="#7a4630" strokeWidth="2.6" fill="none" strokeLinecap="round" />
 
-      {/* CHEVELURE ramenée en arrière, front dégagé de chef */}
-      <path d="M91 136 Q78 54 150 46 Q222 54 209 136 Q208 104 192 88 Q172 74 150 74 Q128 74 108 88 Q92 104 91 136 Z" fill="url(#pRayaHair)" />
-      {/* les stries des cheveux tirés + mèches grises */}
-      <g stroke="#8a8272" strokeWidth="1.8" fill="none" opacity="0.65">
-        <path d="M120 62 Q104 84 98 118 M150 50 L150 74 M180 62 Q196 84 202 118 M134 54 Q122 76 114 106 M166 54 Q178 76 186 106" />
+      {/* CHEVEUX du dessus : tirés en arrière, front dégagé de chef */}
+      <path d="M106 120 Q98 62 150 56 Q202 62 194 120 Q186 92 168 84 Q158 80 150 80 Q142 80 132 84 Q114 92 106 120 Z" fill="url(#pRayaHair)" />
+      {/* stries des cheveux tirés en arrière + mèches grises */}
+      <g stroke="#8a8272" strokeWidth="1.7" fill="none" opacity="0.6">
+        <path d="M120 60 Q106 84 100 116 M180 60 Q194 84 200 116 M136 56 Q124 78 116 106 M164 56 Q176 78 184 106 M150 58 L150 80" />
       </g>
 
       {/* LE COLLIER de crocs — trophées du chef */}
-      <path d="M114 250 Q150 272 186 250" stroke="#3e2c18" strokeWidth="2.8" fill="none" />
-      {[[128, 259, -22], [141, 266, -10], [150, 268, 0], [159, 266, 10], [172, 259, 22]].map(([x, y, r], i) => (
+      <path d="M116 248 Q150 268 184 248" stroke="#3e2c18" strokeWidth="2.8" fill="none" />
+      {[[129, 256, -22], [141, 262, -10], [150, 264, 0], [159, 262, 10], [171, 256, 22]].map(([x, y, r], i) => (
         <g key={i} transform={`translate(${x},${y}) rotate(${r})`}>
           <path d="M-3 0 Q-3 8 0 13 Q3 8 3 0 Q0 -2 -3 0 Z" fill="#eee2c8" stroke="#b0a080" strokeWidth="1" />
         </g>
