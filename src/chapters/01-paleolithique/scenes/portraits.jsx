@@ -178,16 +178,17 @@ export function PortraitRaya() {
       <path d="M150 136 Q146 152 143 160 Q141 166 150 167" stroke="#96684a" strokeWidth="2.8" fill="none" strokeLinecap="round" />
       <path d="M154 165 q4 1 5 -2" stroke="#96684a" strokeWidth="2" fill="none" opacity="0.6" />
 
-      {/* LA BARBE fournie, poivre et sel, qui sourit */}
-      <path d="M106 146 Q104 200 126 226 Q140 240 150 240 Q160 240 174 226 Q196 200 194 146 Q184 186 150 190 Q116 186 106 146 Z" fill="url(#pRayaHair)" />
-      {/* moustache */}
-      <path d="M128 170 Q150 180 172 170 Q166 186 150 184 Q134 186 128 170 Z" fill="#3e3628" />
-      {/* mèches grises dans la barbe */}
-      <g stroke="#8a8272" strokeWidth="1.8" fill="none" opacity="0.7">
-        <path d="M118 168 Q120 196 132 216 M138 184 Q140 206 148 226 M182 168 Q180 196 168 216 M162 184 Q160 206 152 226 M150 192 L150 230" />
+      {/* LA BARBE fournie, poivre et sel — symétrique autour de l'axe x=150,
+          reliée aux favoris, pointe sous le menton */}
+      <path d="M108 148 Q100 200 124 226 Q138 241 150 241 Q162 241 176 226 Q200 200 192 148 Q180 184 150 188 Q120 184 108 148 Z" fill="url(#pRayaHair)" />
+      {/* moustache, bien centrée sous le nez */}
+      <path d="M126 168 Q150 178 174 168 Q168 185 150 183 Q132 185 126 168 Z" fill="#3e3628" />
+      {/* mèches grises, en miroir de part et d'autre de l'axe */}
+      <g stroke="#8a8272" strokeWidth="1.8" fill="none" opacity="0.62">
+        <path d="M120 166 Q122 196 133 219 M180 166 Q178 196 167 219 M139 186 Q141 208 149 229 M161 186 Q159 208 151 229 M150 190 L150 233" />
       </g>
-      {/* la bouche, sourire discret sous la moustache */}
-      <path d="M138 184 Q150 189 162 184" stroke="#7a4630" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+      {/* la bouche, digne et posée, sous la moustache */}
+      <path d="M137 183 Q150 187 163 183" stroke="#7a4630" strokeWidth="2.6" fill="none" strokeLinecap="round" />
 
       {/* CHEVELURE ramenée en arrière, front dégagé de chef */}
       <path d="M91 136 Q78 54 150 46 Q222 54 209 136 Q208 104 192 88 Q172 74 150 74 Q128 74 108 88 Q92 104 91 136 Z" fill="url(#pRayaHair)" />
@@ -259,23 +260,25 @@ export function PortraitDoru() {
       <ellipse cx="98" cy="142" rx="7" ry="11" fill="#bf9066" />
       <path d="M96 138 q5 2 4 8" stroke="#a3764e" strokeWidth="2" fill="none" />
 
-      {/* SOURCILS — celui de gauche coupé par une fine cicatrice */}
-      <path d="M116 124 Q128 117 141 122" stroke="#241a10" strokeWidth="3.4" fill="none" strokeLinecap="round" />
-      <path d="M159 122 Q172 117 184 124" stroke="#241a10" strokeWidth="3.4" fill="none" strokeLinecap="round" />
-      <path d="M133 114 L138 130" stroke="#d8ab80" strokeWidth="2.6" strokeLinecap="round" />
-      {/* YEUX vifs, grands ouverts */}
-      <path d="M118 136 Q129 127 141 135 Q130 143 118 136 Z" fill="#fdf4e6" />
-      <path d="M159 135 Q171 127 182 136 Q170 143 159 135 Z" fill="#fdf4e6" />
-      <circle cx="130" cy="135" r="4.8" fill="#2c1c0e" />
-      <circle cx="170" cy="135" r="4.8" fill="#2c1c0e" />
-      <circle cx="131.8" cy="133.2" r="1.5" fill="#fff" />
-      <circle cx="171.8" cy="133.2" r="1.5" fill="#fff" />
-      <path d="M117 135 Q129 126 142 134 M158 134 Q171 126 183 135" stroke="#4a3322" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+      {/* SOURCILS abaissés vers le centre — la concentration du chasseur ;
+          celui de gauche coupé par une fine cicatrice */}
+      <path d="M116 121 Q128 118 142 126" stroke="#241a10" strokeWidth="3.6" fill="none" strokeLinecap="round" />
+      <path d="M158 126 Q172 118 184 121" stroke="#241a10" strokeWidth="3.6" fill="none" strokeLinecap="round" />
+      <path d="M132 112 L138 129" stroke="#d8ab80" strokeWidth="2.6" strokeLinecap="round" />
+      {/* YEUX fixes, un peu plissés (à l'affût) */}
+      <path d="M118 137 Q129 131 141 136 Q130 142 118 137 Z" fill="#fdf4e6" />
+      <path d="M159 136 Q171 131 182 137 Q170 142 159 136 Z" fill="#fdf4e6" />
+      <circle cx="130" cy="137" r="4.4" fill="#2c1c0e" />
+      <circle cx="170" cy="137" r="4.4" fill="#2c1c0e" />
+      <circle cx="131.6" cy="135.4" r="1.4" fill="#fff" />
+      <circle cx="171.6" cy="135.4" r="1.4" fill="#fff" />
+      {/* paupières supérieures marquées, regard intense */}
+      <path d="M117 136 Q129 130 142 135 M158 135 Q171 130 183 136" stroke="#3a2818" strokeWidth="2.6" fill="none" strokeLinecap="round" />
 
-      {/* NEZ + le petit sourire en coin */}
+      {/* NEZ + une bouche NEUTRE, serrée : il ne sourit pas, il guette */}
       <path d="M150 136 Q147 150 145 156 Q143 162 150 163" stroke="#a3764e" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-      <path d="M133 174 Q152 183 167 172" stroke="#8a4a34" strokeWidth="3.2" fill="none" strokeLinecap="round" />
-      <path d="M167 172 q4 -1 6 -4" stroke="#8a4a34" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+      <path d="M136 177 Q150 179 164 177" stroke="#7a4630" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <path d="M138 183 q12 3 24 0" stroke="#a3764e" strokeWidth="1.6" fill="none" opacity="0.5" strokeLinecap="round" />
       <ellipse cx="120" cy="154" rx="9" ry="5.5" fill="#e0aa7c" opacity="0.35" />
       {/* trait d'ocre du chasseur, sous l'œil droit */}
       <path d="M162 148 l16 -2" stroke="#b5451f" strokeWidth="3.2" strokeLinecap="round" opacity="0.55" />
