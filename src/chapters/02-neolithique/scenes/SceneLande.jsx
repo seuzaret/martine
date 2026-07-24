@@ -86,7 +86,9 @@ export default function SceneLande({ collect, action, reveal, made = [] }) {
         <path d="M0 560 L0 430 Q250 408 520 432 Q760 452 1000 428 L1000 560 Z" fill="#20240f" opacity="0.32" filter="url(#ld-mottle)" />
         <ellipse cx="500" cy="500" rx="420" ry="50" fill="#33381f" opacity="0.4" />
 
-        {/* LA GRANDE DALLE couchée sur des rondins */}
+        {/* LA GRANDE DALLE couchée sur des rondins — tant que le mégalithe
+            n'est pas encore dressé */}
+        {!made.includes("msg_megalithe") && (
         <g transform="translate(360,470)">
           {[-70, -20, 30, 80].map((dx, i) => (
             <g key={i} transform={`translate(${dx},44)`}>
@@ -105,6 +107,7 @@ export default function SceneLande({ collect, action, reveal, made = [] }) {
           {/* cordes prêtes */}
           <path d="M110 18 Q170 -10 240 -30 M108 26 Q168 6 236 -10" stroke="#8a6a42" strokeWidth="3" fill="none" opacity="0.85" />
         </g>
+        )}
 
         {/* SILEX à graver, posé sur une pierre plate */}
         <g transform="translate(520,516)">
@@ -116,7 +119,8 @@ export default function SceneLande({ collect, action, reveal, made = [] }) {
           <path d="M-2 -5 l14 -5" stroke="#eef0f6" strokeWidth="1.2" opacity="0.8" />
         </g>
 
-        {/* LE CLAN qui tire (villageois arc-boutés) */}
+        {/* LE CLAN qui tire (villageois arc-boutés) — seulement pendant le chantier */}
+        {!made.includes("msg_megalithe") && (
         <g transform="translate(660,462)">
           {[0, 34, 66, 98].map((dx, i) => (
             <g key={i} transform={`translate(${dx},${(i % 2) * 6})`}>
@@ -128,6 +132,35 @@ export default function SceneLande({ collect, action, reveal, made = [] }) {
           ))}
           <path d="M-14 -6 L128 2" stroke="#8a6a42" strokeWidth="3" fill="none" opacity="0.85" />
         </g>
+        )}
+
+        {/* ═══ LE MÉGALITHE DRESSÉ (résultat de msg_megalithe) : le chantier
+            a disparu, la pierre gravée se tient droite, baignée par la
+            trouée de lumière — spirales façon Gavrinis. ═══ */}
+        {made.includes("msg_megalithe") && (
+        <g transform="translate(452,492)" style={{ animation: "fadein 1s ease-out" }}>
+          <ellipse cx="-6" cy="4" rx="66" ry="14" fill="#20240f" opacity="0.5" />
+          <path d="M-46 2 Q-56 -70 -46 -156 Q-40 -232 -14 -252 Q12 -258 30 -234 Q48 -170 44 -84 Q48 -24 40 2 Z" fill="url(#ld-granite)" />
+          <path d="M-46 2 Q-56 -70 -46 -156 Q-40 -232 -14 -252 Q12 -258 30 -234 Q48 -170 44 -84 Q48 -24 40 2 Z" fill="#2a2620" opacity="0.28" filter="url(#ld-grain)" />
+          {/* arête éclairée (côté trouée de lumière), arête d'ombre à gauche */}
+          <path d="M40 0 Q48 -70 44 -150 Q40 -226 20 -248" stroke="#eceae0" strokeWidth="3" fill="none" opacity="0.45" />
+          <path d="M-44 -4 Q-54 -74 -44 -156" stroke="#3a3830" strokeWidth="2.5" fill="none" opacity="0.5" />
+          {/* SPIRALES gravées + rehaut clair dans le creux */}
+          <g fill="none" strokeLinecap="round">
+            <path d="M-8 -70 a6 6 0 1 1 -9 3 a13 13 0 1 1 18 -5 a20 20 0 1 1 -28 8" stroke="#3f3c34" strokeWidth="3" opacity="0.8" />
+            <path d="M6 -152 a5 5 0 1 1 -7 3 a11 11 0 1 1 15 -4 a17 17 0 1 1 -23 7" stroke="#3f3c34" strokeWidth="3" opacity="0.8" />
+            <path d="M-8 -72 a6 6 0 1 1 -9 3 a13 13 0 1 1 18 -5" stroke="#b8b4aa" strokeWidth="1" opacity="0.5" />
+            <path d="M6 -154 a5 5 0 1 1 -7 3 a11 11 0 1 1 15 -4" stroke="#b8b4aa" strokeWidth="1" opacity="0.5" />
+          </g>
+          {/* chevrons gravés entre les spirales */}
+          <path d="M-24 -110 l14 -8 l14 8 M-24 -101 l14 -8 l14 8" stroke="#3f3c34" strokeWidth="2.3" fill="none" opacity="0.7" strokeLinecap="round" />
+          <path d="M-22 -202 l12 -7 l12 7 M-22 -194 l12 -7 l12 7" stroke="#3f3c34" strokeWidth="2.1" fill="none" opacity="0.7" strokeLinecap="round" />
+          {/* lichen patiné */}
+          <ellipse cx="-30" cy="-40" rx="12" ry="6" fill="#8a9a48" opacity="0.45" />
+          <ellipse cx="26" cy="-182" rx="9" ry="5" fill="#7a8a3a" opacity="0.45" />
+          <ellipse cx="0" cy="-244" rx="8" ry="4" fill="#9aaa58" opacity="0.4" />
+        </g>
+        )}
 
         {/* un menhir déjà dressé, premier plan, patiné et couvert de lichen */}
         <g transform="translate(120,430)">
@@ -163,8 +196,8 @@ export default function SceneLande({ collect, action, reveal, made = [] }) {
       )}
 
       <Hotspot cx={520} cy={514} r={40} label="silex" item="silex" reveal={reveal} onClick={() => collect("silex")} />
-      <Hotspot cx={360} cy={500} r={70} label="dalle" item="dalle" reveal={reveal} onClick={() => collect("dalle")} />
-      <Hotspot cx={720} cy={452} r={78} label="le clan" item="clan" reveal={reveal} onClick={() => collect("clan")} />
+      {!made.includes("msg_megalithe") && <Hotspot cx={360} cy={500} r={70} label="dalle" item="dalle" reveal={reveal} onClick={() => collect("dalle")} />}
+      {!made.includes("msg_megalithe") && <Hotspot cx={720} cy={452} r={78} label="le clan" item="clan" reveal={reveal} onClick={() => collect("clan")} />}
     </svg>
   );
 }

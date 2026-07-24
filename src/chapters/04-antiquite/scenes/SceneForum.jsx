@@ -71,10 +71,23 @@ export default function SceneForum({ collect, action, reveal, made = [] }) {
           <rect x="-96" y="-190" width="192" height="190" fill="none" stroke="#a89e86" strokeWidth="3" />
           {/* fronton */}
           <path d="M-104 -190 L0 -222 L104 -190 Z" fill="#e0dacc" />
-          {/* lignes de capitales romaines gravées (ombre portée) */}
-          {["SENATVS","POPVLVSQVE","ROMANVS","·  S P Q R  ·"].map((t, i) => (
-            <text key={i} x="0" y={-150 + i * 34} textAnchor="middle" fontSize={i === 3 ? 15 : 20} fill="#6e675a" fontFamily="Palatino, Georgia, serif" letterSpacing="2" style={{ fontWeight: 700 }}>{t}</text>
+          {/* AVANT gravure : la stèle est VIERGE — juste des lignes-repères
+              tracées à la craie, prêtes pour le graveur */}
+          {!made.includes("msg_inscription") && [-156, -122, -88, -56].map((y, i) => (
+            <line key={i} x1="-78" y1={y} x2="78" y2={y} stroke="#b8ae9a" strokeWidth="1" strokeDasharray="4 4" opacity="0.5" />
           ))}
+          {/* APRÈS (résultat de msg_inscription) : les CAPITALES ROMAINES se
+              gravent — ombre du creux + rehaut de pierre fraîchement taillée */}
+          {made.includes("msg_inscription") && (
+            <g style={{ animation: "fadein 1s ease-out" }}>
+              {["SENATVS", "POPVLVSQVE", "ROMANVS", "·  S P Q R  ·"].map((t, i) => (
+                <g key={i}>
+                  <text x="0" y={-150 + i * 34} textAnchor="middle" fontSize={i === 3 ? 15 : 20} fill="#5a5348" fontFamily="Palatino, Georgia, serif" letterSpacing="2" style={{ fontWeight: 700 }}>{t}</text>
+                  <text x="-1" y={-151 + i * 34} textAnchor="middle" fontSize={i === 3 ? 15 : 20} fill="#f4efe2" fontFamily="Palatino, Georgia, serif" letterSpacing="2" style={{ fontWeight: 700 }} opacity="0.5">{t}</text>
+                </g>
+              ))}
+            </g>
+          )}
         </g>
       </PLayer>
 

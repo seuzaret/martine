@@ -73,6 +73,21 @@ export default function SceneChateau({ collect, action, reveal, made = [] }) {
           <circle cx="0" cy="-84" r="22" fill="none" stroke="#6e685e" strokeWidth="4" />
           <path d="M0 -106 v44 M-22 -84 h44 M-16 -100 l32 32 M16 -100 l-32 32" stroke="#6e685e" strokeWidth="2" />
           {[["#c8382e", 0, -96], ["#2a6ab0", -10, -84], ["#e0b040", 10, -84], ["#3a8a4a", 0, -72]].map(([c, x, y], i) => <circle key={i} cx={x} cy={y} r="5" fill={c} opacity="0.8" />)}
+          {/* VITRAIL ALLUMÉ (résultat de msg_vitrail) : la rosace s'embrase
+              de lumière colorée, la lumière du jour la traverse enfin */}
+          {made.includes("msg_vitrail") && (
+            <g style={{ animation: "fadein 1.2s ease-out" }}>
+              <circle cx="0" cy="-84" r="44" fill="#ffe9b0" opacity="0.22" style={{ animation: "glow 3s ease-in-out infinite" }} />
+              <circle cx="0" cy="-84" r="22" fill="#140f18" />
+              {[...Array(8)].map((_, i) => (
+                <path key={i} d="M0 -84 L7 -104 A21 21 0 0 1 -7 -104 Z"
+                  fill={["#e23b2e", "#2a7ad0", "#3aa85a", "#f0c040"][i % 4]}
+                  transform={`rotate(${i * 45} 0 -84)`} style={{ animation: "glow 3.6s ease-in-out infinite" }} />
+              ))}
+              <circle cx="0" cy="-84" r="6.5" fill="#fff6d8" />
+              <circle cx="0" cy="-84" r="22" fill="none" stroke="#4a4038" strokeWidth="3" />
+            </g>
+          )}
         </g>
       </PLayer>
 
