@@ -175,7 +175,7 @@ function hum(c, f) {
     o.type = i === 2 ? "triangle" : "sine";
     o.frequency.setValueAtTime(ff, now);
     g.gain.setValueAtTime(0, now);
-    g.gain.linearRampToValueAtTime(i === 2 ? 0.018 : 0.028, now + 0.55);
+    g.gain.linearRampToValueAtTime(i === 2 ? 0.05 : 0.08, now + 0.55);
     g.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
     o.connect(g);
     g.connect(c.destination);
@@ -198,8 +198,8 @@ export function startAmbience(sceneId) {
     if (muted || !ctx || ctx.state !== "running") return;
     try {
       /* le tambour : deux battements, comme un cœur (boum… boum) */
-      tone(ctx, { f: 92, f1: 50, d: 0.22, type: "sine", v: 0.055 });
-      tone(ctx, { f: 88, f1: 48, t: 0.34, d: 0.2, type: "sine", v: 0.035 });
+      tone(ctx, { f: 92, f1: 50, d: 0.26, type: "sine", v: 0.13 });
+      tone(ctx, { f: 88, f1: 48, t: 0.34, d: 0.24, type: "sine", v: 0.09 });
       /* une mesure sur deux, la voix psalmodie */
       if (mesure % 2 === 0) hum(ctx, chant[(mesure / 2) % chant.length]);
       mesure++;
