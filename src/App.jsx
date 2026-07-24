@@ -118,6 +118,7 @@ export default function App() {
   const [collection, setCollection] = useState([]); // frise cumulative : {id, titre, emoji, date, jauges, perdu}
   const [made, setMade] = useState([]);          // tout ce qui a déjà été créé/découvert
   const [flags, setFlags] = useState({});        // drapeaux d'événements (ex. hunted)
+  const [quete, setQuete] = useState(0);         // étape en cours de la quête du chapitre (voir data.js)
   const [modal, setModal] = useState(null);      // fiche documentaire ou carnet
   const [bubble, setBubble] = useState(null);    // phylactère d'un personnage {text, x, y}
   const [shake, setShake] = useState(false);     // animation d'échec (besace)
@@ -180,9 +181,9 @@ export default function App() {
      partie existante avec un état vide). */
   useEffect(() => {
     if (screen === "play" || screen === "end") {
-      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection });
+      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete });
     }
-  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection]);
+  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete]);
 
   /* CONFORT DE LECTURE : applique les classes sur <html> (le CSS fait le
      reste, moteur compris) et mémorise le choix sur l'appareil. */
@@ -271,7 +272,7 @@ export default function App() {
   /* Démarre une NOUVELLE partie (tout remis à zéro, chapitre 1). */
   const newGame = () => {
     setChapterIndex(0); setMaxReached(0);
-    setInv([]); setMsgs([]); setMade([]); setFlags({}); setCollection([]);
+    setInv([]); setMsgs([]); setMade([]); setFlags({}); setCollection([]); setQuete(0);
     setTab(CHAPTERS[0].startScene); setDialog({ lines: CHAPTERS[0].intro, idx: 0, mood: "neutre" });
     setScreen("play");
   };
@@ -285,7 +286,7 @@ export default function App() {
     const carried = inv.filter((id) => chapter.items[id]?.heirloom && CHAPTERS[i].items[id]);
     setChapterIndex(i);
     setMaxReached((m) => Math.max(m, i));
-    setInv(carried); setMsgs([]); setMade([]); setFlags({});
+    setInv(carried); setMsgs([]); setMade([]); setFlags({}); setQuete(0);
     setTab(CHAPTERS[i].startScene);
     setDialog({ lines: CHAPTERS[i].intro, idx: 0, mood: "neutre" });
     setScreen("play");
@@ -296,7 +297,7 @@ export default function App() {
   const playChapter = (i) => {
     setChapterIndex(i);
     setMaxReached((m) => Math.max(m, i));
-    setInv([]); setMsgs([]); setMade([]); setFlags({});
+    setInv([]); setMsgs([]); setMade([]); setFlags({}); setQuete(0);
     setTab(CHAPTERS[i].startScene);
     setDialog({ lines: CHAPTERS[i].intro, idx: 0, mood: "neutre" });
     setScreen("play");
@@ -310,7 +311,7 @@ export default function App() {
     setChapterIndex(i);
     setMaxReached(s.maxReached ?? i);
     setInv(s.inv || []); setMsgs(s.msgs || []); setMade(s.made || []);
-    setFlags(s.flags || {}); setCollection(s.collection || []);
+    setFlags(s.flags || {}); setCollection(s.collection || []); setQuete(s.quete || 0);
     setTab(s.tab ?? CHAPTERS[i].startScene);
     setDialog({ lines: ["Reprise du voyage. Je remets les circuits en route là où on s'était arrêtés."], idx: 0, mood: "neutre" });
     setScreen(s.screen === "end" ? "end" : "play");
@@ -343,15 +344,40 @@ export default function App() {
     /* certaines « actions » ouvrent un mini-jeu (ex. l'alphabet) */
     if (act.modal) { setModal({ type: act.modal }); return; }
     if (act.goto !== undefined) setTab(act.goto);
+    /* LA QUÊTE (si le chapitre en a une) : quand on clique le personnage
+       de l'étape en cours, il dit SA réplique d'étape (pas sa réplique
+       par défaut). Une étape sans tâche (`attend`) passe aussitôt à la
+       suivante : le « ? » doré se déplace. */
+    const step = chapter.quete?.[quete];
+    let bubbleText = act.bubble, sayText = act.say, mood = act.mood;
+    if (step && step.perso === name) {
+      bubbleText = step.bubble ?? act.bubble;
+      sayText = step.say ?? act.say;
+      mood = step.mood ?? act.mood;
+      if (!step.attend) setQuete((q) => q + 1);
+    }
     /* un personnage qui a des paroles propres (`bubble`) les affiche en
        phylactère à côté de lui (ancré à la dernière position cliquée) ;
        MARTINE, elle, commente dans sa console (`say`). Les deux tombent
        en même temps. */
     const pt = point || lastHotspotClick;
-    if (act.bubble) setBubble({ text: act.bubble, x: pt.x, y: pt.y });
+    if (bubbleText) setBubble({ text: bubbleText, x: pt.x, y: pt.y });
     else setBubble(null);
-    if (act.say) say(act.say, act.mood);
+    if (sayText) say(sayText, mood);
   };
+
+  /* La quête avance toute seule quand la tâche de l'étape est accomplie
+     (un objet/message de `made`, ou un drapeau ; une liste = un parmi).
+     MARTINE annonce la suite un instant après le feu d'artifice. */
+  useEffect(() => {
+    const step = chapter.quete?.[quete];
+    if (!step || !step.attend) return;
+    const liste = Array.isArray(step.attend) ? step.attend : [step.attend];
+    if (liste.some((id) => made.includes(id) || flags[id])) {
+      setQuete((q) => q + 1);
+      if (step.suite) setTimeout(() => say(`➜ ${step.suite}`), 1800);
+    }
+  }, [made, flags, quete]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* Octroyer un message SANS combinaison d'objets — pour les mini-jeux
      (ex. réussir « Écris MARTINE » transmet vraiment l'alphabet).
@@ -457,7 +483,7 @@ export default function App() {
 
   const restart = () => {
     setChapterIndex(0);
-    setInv([]); setMsgs([]); setMade([]); setFlags({}); setCollection([]);
+    setInv([]); setMsgs([]); setMade([]); setFlags({}); setCollection([]); setQuete(0);
     setTab(CHAPTERS[0].startScene); setScreen("title");
   };
 
@@ -885,7 +911,9 @@ export default function App() {
      pour qu'ils puissent RÉAGIR : faire apparaître une invention une fois
      assemblée, réagir à un objet ramassé, etc. Un décor qui n'en a pas
      besoin les ignore simplement (rétro-compatible). */
-  const sceneProps = { collect, action, reveal, flags, made, inv };
+  /* `queteQui` : le personnage de l'étape en cours — les décors y posent
+     le « ? » doré (null quand la quête est finie ou absente). */
+  const sceneProps = { collect, action, reveal, flags, made, inv, queteQui: chapter.quete?.[quete]?.perso ?? null };
 
   /* ---- le carnet imprimable : découvertes regroupées par époque ----
      Les jauges sont dessinées en ■/□ : ça reste lisible en noir et blanc,

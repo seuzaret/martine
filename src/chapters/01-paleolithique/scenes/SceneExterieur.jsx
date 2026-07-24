@@ -13,7 +13,7 @@ import { GrassTuft, Birds } from "./decor.jsx";
    Les zones cliquables n'ont pas bougé.
    ============================================================ */
 
-export default function SceneExterieur({ collect, action, reveal, made = [] }) {
+export default function SceneExterieur({ collect, action, reveal, made = [], queteQui }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -306,8 +306,8 @@ export default function SceneExterieur({ collect, action, reveal, made = [] }) {
         <circle key={i} cx={x} cy={y} r="1.6" fill="#ffe8b8" opacity="0.6" style={{ animation: `drift ${4 + i}s ease-in-out infinite` }} />
       ))}
 
-      {/* L'ENFANT À L'OCRE — elle joue près du pigment et montre ses paumes
-          toutes rouges. C'est elle qui a l'idée des mains négatives. */}
+      {/* ANA — l'accueillante du clan, les paumes rouges d'ocre. C'est elle
+          qui ouvre les portes du clan… et qui aime les belles soirées. */}
       <g transform="translate(252,494)">
         <ellipse cx="0" cy="16" rx="20" ry="5" fill="#241a10" opacity="0.6" />
         {/* le petit corps, une peau nouée sur l'épaule */}
@@ -326,8 +326,8 @@ export default function SceneExterieur({ collect, action, reveal, made = [] }) {
         <path d="M-26 -26 l-2 -4 M-23 -27 l0 -4 M-20 -26 l2 -4" stroke="#b5451f" strokeWidth="1.4" strokeLinecap="round" />
         <path d="M20 -26 l-2 -4 M23 -27 l0 -4 M26 -26 l2 -4" stroke="#b5451f" strokeWidth="1.4" strokeLinecap="round" />
       </g>
-      {/* le « ? » : il y a quelqu'un à qui parler ici */}
-      {!made.includes("msg_mains") && (
+      {/* le « ? » doré : c'est au tour d'Ana dans la quête */}
+      {queteQui === "ana" && (
         <g transform="translate(236,398)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
           <path d="M0 0 q0 -22 22 -22 q22 0 22 18 q0 15 -18 20 l0 7" fill="none" stroke="#ffd166" strokeWidth="4" />
           <circle cx="22" cy="34" r="2.8" fill="#ffd166" />
@@ -343,7 +343,7 @@ export default function SceneExterieur({ collect, action, reveal, made = [] }) {
       <Hotspot cx={297} cy={360} r={48} label="liane" item="liane" reveal={reveal} onClick={() => collect("liane")} />
       <Hotspot cx={168} cy={380} r={60} label="grotte" reveal={reveal} onClick={() => action("cave")} />
       <Hotspot cx={840} cy={486} r={60} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
-      <Hotspot cx={252} cy={476} r={40} label="l'enfant" reveal={reveal} onClick={(p) => action("enfant", p)} />
+      <Hotspot cx={252} cy={476} r={40} label="Ana" reveal={reveal} onClick={(p) => action("ana", p)} />
     </svg>
   );
 }

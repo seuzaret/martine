@@ -36,8 +36,8 @@ const ITEMS = {
   fleche:   { name: "Flèche", emoji: "➶", desc: "Branche droite, pointe de silex. Elle vole droit." },
   arcarme:  { name: "Arc armé", emoji: "🎯", desc: "Arc + flèche. Prêt pour la chasse." },
   peau:     { name: "Peau de cerf", emoji: "🟤", desc: "Grattée au silex, séchée. Une surface souple… on pourrait y peindre." },
-  os:       { name: "Os", emoji: "🦴", desc: "Un long os de cerf, léger et creux à l'intérieur. Tel quel, il ne fait aucun bruit." },
-  os_creux: { name: "Os creux percé", emoji: "🪈", desc: "L'os, percé de quelques trous bien placés. Un tube percé, rien de plus… il lui manque un souffle." },
+  os:       { name: "Os", emoji: "🦴", desc: "Un long os de cerf, léger et creux à l'intérieur. Taillé au silex, il donnerait de beaux outils." },
+  outils_os:{ name: "Outils en os", emoji: "🪡", desc: "Une aiguille fine, un poinçon… et un os creux percé de quelques trous. La trousse à outils du clan, taillée au silex." },
   charbon:  { name: "Charbon de bois", emoji: "⚫", desc: "Bois passé au feu. Ça noircit les doigts — et tout ce qu'on touche." },
 };
 
@@ -88,20 +88,19 @@ const RECIPES = [
      du bois, du feu, et le bois noirci qui reste sert à dessiner. */
   { a: "tronc",   b: "feu",    out: "charbon",
     line: "Tu pousses le tronc dans les braises. Le bois se consume lentement, noircit, et tu en retires du CHARBON — de quoi tracer bien des traits." },
-  /* la flûte se fait en 2 temps : on PERCE l'os au silex, puis il faut
-     y mettre son SOUFFLE — un instrument muet n'est pas un message. */
-  { a: "os",      b: "silex",  out: "os_creux",
-    line: "Au silex, tu perces l'os de quelques trous bien placés. Et… rien. Aucun son. Ce n'est encore qu'un tube percé : il lui manque quelque chose de vivant." },
-  { a: "os_creux", b: "voix",  out: "msg_flute", msg: true },
+  /* Les OUTILS EN OS : le silex taille l'os → aiguille, poinçon, os percé.
+     C'est le passage obligé vers la tenue (coudre) ET la flûte (souffler). */
+  { a: "os",      b: "silex",  out: "outils_os",
+    line: "Au silex, tu tailles l'os : une AIGUILLE fine, un poinçon… et un os creux percé de quelques trous. Toute une trousse à outils !" },
+  { a: "outils_os", b: "voix", out: "msg_flute", msg: true },
   { a: "charbon", b: "paroi",  out: "msg_peinture", msg: true },
   { a: "ocre",    b: "paroi",  out: "msg_mains", msg: true },
   { a: "peau",    b: "charbon", out: "msg_peau", msg: true },
   { a: "peau",    b: "ocre",   out: "msg_peau", msg: true },
   { a: "peau",    b: "tronc",  out: "msg_tambour", msg: true },
-  /* La MODE, un mode de communication : au silex, on découpe et ajuste la
-     peau/le cuir → un vêtement, une parure. S'habiller, c'est déjà DIRE
-     qui on est (son groupe, son rang). */
-  { a: "silex",   b: "peau",   out: "msg_mode", msg: true },
+  /* La MODE, un mode de communication : avec l'aiguille d'os, on coud la
+     peau → la tenue du clan. S'habiller, c'est déjà DIRE qui on est. */
+  { a: "outils_os", b: "peau", out: "msg_mode", msg: true },
   { a: "voix",    b: "feu",    out: "msg_veillee", msg: true },
   /* MESSAGE PERDU (perdu: true) : la combinaison réussit, mais le
      support ne parvient pas au futur → fragment au lieu de cristal.
@@ -167,13 +166,13 @@ const HINTS = [
   { needs: ["arc", "fleche"], out: "arcarme", text: "Tu as l'arme et le projectile. Réunis-les." },
   { needs: ["arcarme"], out: "chasse", text: "Ton arc est armé ! Le cerf boit à la rivière, là-bas. Vise-le : glisse ton arc directement sur lui." },
   { needs: ["branche", "feu"], out: "charbon", text: "Que devient le bois quand il passe dans le feu ? Un outil pour dessiner, peut-être." },
-  { needs: ["os", "silex"], out: "os_creux", text: "Cet os est creux à l'intérieur… perce-le avec quelque chose de bien pointu." },
-  { needs: ["os_creux", "voix"], out: "msg_flute", text: "Ton os percé ne fera jamais un bruit tout seul. Il lui faut ton souffle." },
+  { needs: ["os", "silex"], out: "outils_os", text: "Cet os et un silex tranchant : de quoi tailler des outils fins — une aiguille, un poinçon… et percer l'os." },
+  { needs: ["outils_os", "voix"], out: "msg_flute", text: "L'os percé de ta trousse à outils ne demande qu'un souffle. Le tien." },
   { needs: ["charbon", "paroi"], out: "msg_peinture", text: "Tu as de quoi tracer du noir. Et au fond de la grotte, un immense écran de pierre…" },
   { needs: ["ocre", "paroi"], out: "msg_mains", text: "Du pigment rouge, une paroi… et ta main comme pochoir ?" },
   { needs: ["peau", "charbon"], out: "msg_peau", text: "La peau du cerf est une surface souple. De quoi y tracer un récit ?" },
   { needs: ["peau", "tronc"], out: "msg_tambour", text: "Une peau bien tendue sur quelque chose qui résonne…" },
-  { needs: ["silex", "peau"], out: "msg_mode", text: "Avec un silex, tu peux tailler la peau : un vêtement, une parure. Et s'habiller, n'est-ce pas déjà dire qui on est ?" },
+  { needs: ["outils_os", "peau"], out: "msg_mode", text: "Avec l'aiguille d'os et la peau de ta chasse, tu peux coudre la tenue du clan." },
   { needs: ["voix", "feu"], out: "msg_veillee", text: "Le soir, le clan se rassemble quelque part. Ta voix y trouverait un public." },
   { needs: ["tronc", "silex"], out: "msg_baton", text: "Un morceau de bois, un silex tranchant… tu pourrais y graver des signes. Mais le bois traverse-t-il vraiment le temps ?" },
 ];
@@ -186,7 +185,8 @@ const NEAR_MISS = [
   { pair: ["voix", "paroi"], line: "OHÉ !… ohé… ohé… Joli écho. Mais l'écho ne transmet rien au futur : il radote." },
   { pair: ["voix", "cerf"], line: "Tu as parlé au cerf. Il t'a écouté poliment, puis il a continué à boire. Le dialogue inter-espèces attendra." },
   { pair: ["ocre", "feu"], line: "Chauffer l'ocre le fonce — joli, mais ce n'est pas encore un message." },
-  { pair: ["os", "voix"], line: "Tu souffles de toutes tes forces dans un os plein. Résultat : tu es rouge, et l'os est toujours muet. Il faudrait d'abord y percer des trous." },
+  { pair: ["os", "voix"], line: "Tu souffles de toutes tes forces dans un os plein. Résultat : tu es rouge, et l'os est toujours muet. Taille-le d'abord au silex — il faut le percer." },
+  { pair: ["silex", "peau"], line: "Découper la peau à même le silex ? Tu vas la gâcher. Taille d'abord de vrais outils dans un os — une aiguille, ça coud." },
 ];
 
 /* Répliques d'échec génériques (piochées au hasard) */
@@ -201,9 +201,8 @@ const FAIL_LINES = [
 /* Introduction de MARTINE au lancement du chapitre */
 const INTRO = [
   "⚠ IMPACT en −18 000. Mes circuits de retour sont grillés. Pour repartir, je carbure à une seule chose : les MESSAGES que les humains laissent au futur.",
-  "Regarde ce clan. L'ancienne se meurt, et tout son savoir avec elle. L'enfant veut crier « j'existe ». Le conteur a peur d'oublier quelles baies tuent. Chacun cherche à laisser une trace… sans savoir comment.",
-  "Aide-les, un par un. Chaque trace qu'ils réussissent à laisser remplit ma jauge temporelle, à droite. Trois suffiront pour repartir — mais tu peux tout trouver.",
-  "Un détail : ici, avant de parler au futur, il faut survivre. Un cerf t'attend à la rivière. Explore avec ‹ › et touche ce qui t'intrigue.",
+  "Bonne nouvelle : quelqu'un vient vers toi… et elle sourit. C'est le clan de Ceux-qui-marchent-debout. Gagne leur confiance, aide-les à laisser leurs traces — chacune remplit ma jauge, à droite.",
+  "Le « ? » doré te montre toujours QUI attend quelque chose de toi. Explore avec ‹ ›, touche ce qui t'intrigue… et commence par parler à cette jeune femme.",
 ];
 
 /* Actions spéciales des décors (zones cliquables qui ne ramassent rien).
@@ -213,28 +212,92 @@ const ACTIONS = {
   wreck: { mood: "vexe", say: "Oui, c'est moi, là, plantée dans le sol. Un seul commentaire sur ma ressemblance avec une noix, UN SEUL, et je te laisse au Paléolithique." },
   cave:  { goto: 0, say: "Tu entres dans la grotte. Il y fait sombre… mais la lumière du matin éclaire une paroi magnifique, au fond." },
 
-  /* LES GENS DU CLAN — un par lieu. Chacun a un problème, et c'est SON
-     problème qui donne envie de fabriquer quelque chose. Clique sur eux. */
-  /* Chaque personnage a maintenant DEUX voix :
-     - `bubble` : ses propres paroles, dans un phylactère à côté de lui ;
-     - `say`    : le commentaire de MARTINE, dans sa console (les deux
-                  s'affichent en même temps). */
-  ancienne: { mood: "neutre",
-    bubble: "Je suis la plus vieille, ici. Je connais les chemins, les bêtes, les baies qui tuent. Quand je mourrai, tout ça mourra avec moi… Ce mur, lui, était là avant nous. Il sera là après. Si seulement je pouvais y laisser quelque chose.",
-    say: "Tu l'entends ? Elle cherche à faire DURER un savoir plus longtemps qu'une seule vie. Un message pour le futur, ni plus ni moins." },
+  /* LE CLAN — quatre personnages, une histoire (voir QUETE plus bas).
+     Ici : leur réplique « par défaut », quand ce n'est pas leur tour dans
+     la quête. `bubble` = leurs paroles (phylactère), `say` = MARTINE. */
+  ana: { mood: "content",
+    bubble: "Alors, comment trouves-tu le clan ? Prends ton temps, regarde tout… Et si tu es perdu, cherche le « ? » doré : il montre qui a besoin de toi.",
+    say: "Ana. C'est elle qui t'a ouvert les portes du clan — reste poli, on est invités." },
 
-  enfant: { mood: "content",
-    bubble: "Regarde mes mains, toutes rouges d'ocre ! Dis… si je posais ma main bien à plat sur le rocher et que je soufflais de la poudre tout autour, est-ce qu'elle resterait là pour toujours ?",
-    say: "« J'existe, j'étais là. » Le plus simple des messages du monde… et le lointain ancêtre du selfie, ma foi." },
+  raya: { mood: "neutre",
+    bubble: "Un chef veille sur tout : le feu, les bêtes, les histoires. Fais ta part, voyageur, et le clan fera la sienne.",
+    say: "Raya, le chef. Peu de mots, beaucoup d'autorité. Je l'aime bien." },
 
-  conteur: { mood: "neutre",
-    bubble: "Chaque soir, je raconte au clan d'où nous venons et quelles baies tuent. Mais hier, mon petit-fils a redit l'histoire à sa façon… et il s'est trompé sur les baies ! Comment faire pour qu'elle ne change plus jamais ?",
-    say: "L'oral se déforme à chaque fois qu'on le répète — un secret qui passe d'oreille en oreille. Et là, l'erreur peut tuer. Il faudrait pouvoir FIXER les mots quelque part." },
+  doru: { mood: "neutre",
+    bubble: "Chut ! Le gibier a l'oreille fine. Parle bas, marche léger.",
+    say: "Doru, le chasseur du clan. Lui, c'est la rivière et le silence." },
 
-  chasseur: { mood: "neutre",
-    bubble: "Avant de laisser des messages, il faut manger ! Le cerf est là… mais il court à soixante, et moi non. Si j'avance, il fuit. Il me faudrait un moyen de le toucher de loin.",
-    say: "Avant de communiquer, survivre. Aide-le à fabriquer de quoi chasser à distance — l'arc n'est pas loin." },
+  kyan: { mood: "neutre",
+    bubble: "Je suis la mémoire du clan. Tout ce qui s'oublie meurt une seconde fois — c'est pour ça que je me souviens.",
+    say: "Kyan, la mémoire du clan. Ce qu'elle sait tient dans une seule tête… fragile, non ?" },
 };
+
+/* ------------------------------------------------------------
+   LA QUÊTE — l'histoire du chapitre, étape par étape.
+   Le joueur est un étranger que le clan accueille… s'il fait ses
+   preuves. Chaque étape :
+   - perso  : QUI parle (le « ? » doré se place sur lui)
+   - bubble : ses paroles · say : le commentaire de MARTINE
+   - attend : ce qu'il faut accomplir pour passer à la suite
+              (un id de message/objet fabriqué, ou un drapeau comme
+              "hunted" ; une liste = n'importe lequel suffit).
+              Sans `attend`, l'étape passe dès qu'on a parlé.
+   - suite  : petite phrase de MARTINE quand l'étape est accomplie
+              (elle indique vers qui aller ensuite).
+   ------------------------------------------------------------ */
+const QUETE = [
+  { perso: "ana",
+    bubble: "Bienvenue au clan de Ceux-qui-marchent-debout ! C'est rare de rencontrer de nouvelles personnes : viens donc passer quelque temps avec nous. Commence par saluer Raya, notre chef — près du grand feu, au campement.",
+    say: "Un accueil pareil après mon crash, ça change. Le campement est plus loin sur le sentier ›." },
+
+  { perso: "raya",
+    bubble: "Bienvenue à toi, voyageur. Si tu veux nous aider et être correctement accueilli, va voir Doru, au bord de la rivière : il t'attend.",
+    say: "Le chef te met à l'épreuve. Direction la rivière ›." },
+
+  { perso: "doru",
+    bubble: "Doucement, pas de bruit ! Ici, c'est notre terrain de chasse. Trouve de quoi nous ramener ce joli cerf — de loin, sans le faire fuir.",
+    say: "Une arme de jet, donc : quelque chose qui plie, quelque chose qui tire, quelque chose qui pique. Fouille les environs.",
+    attend: "hunted",
+    suite: "Doru siffle, admiratif. Raya veut te voir : retourne au campement." },
+
+  { perso: "raya",
+    bubble: "Parfait, bien visé ! Rien ne sera gaspillé : la viande, la peau, les os. Maintenant va voir Kyan, la mémoire du clan, au fond de la grotte : c'est elle qui fait entrer les nouveaux dans la famille.",
+    say: "La grotte est au bout du sentier ‹, et la mémoire du clan t'y attend. Ne la fais pas patienter." },
+
+  { perso: "kyan",
+    bubble: "Approche, étranger. Pour faire partie de la famille, chacun laisse une trace de lui dans notre grotte sacrée. Quelque chose qui dise, pour toujours : « moi aussi, j'étais là ».",
+    say: "Une trace de TOI… ta main, par exemple ? J'ai vu de l'ocre rouge devant la grotte.",
+    attend: "msg_mains",
+    suite: "Kyan pose sa main sur la tienne : te voilà du clan. Reparle-lui — elle n'a pas fini." },
+
+  { perso: "kyan",
+    bubble: "Te voilà des nôtres ! Il te faut maintenant la tenue que nous portons tous. La peau de ta chasse fera l'affaire… mais il te faudra de bons outils pour la travailler.",
+    say: "Des outils fins : dans l'os, taillé au silex — aiguille, poinçon. Puis la peau.",
+    attend: "msg_mode",
+    suite: "Superbe tenue ! Raya t'appelle près du feu : le repas est prêt." },
+
+  { perso: "raya",
+    bubble: "Te voilà un vrai membre du clan ! Allons manger. Ce soir, nous fêtons ton arrivée : autour du feu, chacun raconte ses chasses.",
+    say: "Une veillée ! Ta voix + le feu du clan. C'est comme ça que TOUT se transmettait, avant l'écriture.",
+    attend: "msg_veillee",
+    suite: "Les récits s'éteignent doucement… Ana te cherche, devant la grotte." },
+
+  { perso: "ana",
+    bubble: "Toi qui viens de loin… n'aurais-tu pas une idée pour embellir la soirée, après ces récits merveilleux ?",
+    say: "De la musique ! Un os percé qui chante… ou une peau tendue sur un tronc, qui batte le rythme.",
+    attend: ["msg_flute", "msg_tambour"],
+    suite: "Le clan danse encore ! Kyan t'attend dans la grotte sacrée, pour finir." },
+
+  { perso: "kyan",
+    bubble: "Après ce bon repas, il est temps de rejoindre les ancêtres dans la grotte et de raconter notre histoire — la tienne aussi, désormais. Trouve un moyen d'illustrer mes mots, veux-tu ?",
+    say: "Illustrer un récit sur la paroi… il te faut de quoi DESSINER. Le feu laisse du charbon, tu sais.",
+    attend: "msg_peinture",
+    suite: "Les images dansent à la lueur du feu. Le clan entier s'en souviendra — et le futur aussi. Va saluer Raya." },
+
+  { perso: "raya",
+    bubble: "Tu es arrivé étranger : te voilà de la famille. Ta drôle de noix qui clignote t'appelle, là-bas… Va. Et où que tu ailles, souviens-toi de nous.",
+    say: "Ma jauge est pleine grâce à eux. Snif. Le bouton PARTIR n'attend que toi — quand tu seras prêt." },
+];
 
 /* ------------------------------------------------------------
    LA FICHE DU CHAPITRE — c'est l'objet que lit le moteur.
@@ -274,6 +337,7 @@ const chapter = {
   failLines: FAIL_LINES,
   intro: INTRO,
   actions: ACTIONS,
+  quete: QUETE,
 };
 
 export default chapter;

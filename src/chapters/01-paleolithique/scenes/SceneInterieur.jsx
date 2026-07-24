@@ -11,10 +11,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    À trouver ici : la paroi (l'écran naturel) et le silex.
    ============================================================ */
 
-export default function SceneInterieur({ collect, action, reveal, made = [] }) {
-  /* le « ? » disparaît quand l'ancienne a eu ce qu'elle voulait :
-     une trace laissée sur la paroi (peinture ou mains négatives) */
-  const traceLaissee = made.includes("msg_peinture") || made.includes("msg_mains");
+export default function SceneInterieur({ collect, action, reveal, made = [], queteQui }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -206,8 +203,9 @@ export default function SceneInterieur({ collect, action, reveal, made = [] }) {
           <path d={`M${x - r * 0.6} ${y - r * 0.3} q${r * 0.6} -${r * 0.4} ${r * 1.2} 0`} stroke="#8a6a48" strokeWidth="1.2" fill="none" opacity="0.5" />
         </g>
       ))}
-      {/* L'ANCIENNE DU CLAN — assise au pied de la paroi, dans le rayon du
-          matin. C'est elle qui pose le problème du lieu : laisser une trace. */}
+      {/* KYAN, LA MÉMOIRE DU CLAN — assise au pied de la paroi sacrée, dans
+          le rayon du matin. C'est elle qui fait entrer les nouveaux dans la
+          famille… et qui raconte l'histoire du clan aux ancêtres. */}
       <g transform="translate(452,486)">
         <ellipse cx="0" cy="18" rx="32" ry="8" fill="#0e0804" opacity="0.75" />
         {/* le corps, enveloppé d'une fourrure, courbé par l'âge */}
@@ -224,8 +222,8 @@ export default function SceneInterieur({ collect, action, reveal, made = [] }) {
         {/* la lumière du matin l'accroche par le dos */}
         <path d="M-8 -24 Q10 -33 24 -18" stroke="#ffe0a8" strokeWidth="2" fill="none" opacity="0.4" />
       </g>
-      {/* le « ? » : il y a quelqu'un à qui parler ici */}
-      {!traceLaissee && (
+      {/* le « ? » doré : c'est au tour de Kyan dans la quête */}
+      {queteQui === "kyan" && (
         <g transform="translate(430,392)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
           <path d="M0 0 q0 -22 22 -22 q22 0 22 18 q0 15 -18 20 l0 7" fill="none" stroke="#ffd166" strokeWidth="4" />
           <circle cx="22" cy="34" r="2.8" fill="#ffd166" />
@@ -243,7 +241,7 @@ export default function SceneInterieur({ collect, action, reveal, made = [] }) {
       {/* zones cliquables — hors couches (décalage max « rayon) */}
       <Hotspot cx={640} cy={270} r={150} label="paroi" item="paroi" support reveal={reveal} onClick={() => collect("paroi")} />
       <Hotspot cx={310} cy={498} r={55} label="silex" item="silex" reveal={reveal} onClick={() => collect("silex")} />
-      <Hotspot cx={452} cy={462} r={48} label="l'ancienne" reveal={reveal} onClick={(p) => action("ancienne", p)} />
+      <Hotspot cx={452} cy={462} r={48} label="Kyan" reveal={reveal} onClick={(p) => action("kyan", p)} />
     </svg>
   );
 }

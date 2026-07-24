@@ -11,7 +11,7 @@ import { Birds } from "./decor.jsx";
    À trouver ici : le cerf et le tronc creux.
    ============================================================ */
 
-export default function SceneRiviere({ collect, action, reveal, flags }) {
+export default function SceneRiviere({ collect, action, reveal, flags, queteQui }) {
   const hunted = flags.hunted;
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
@@ -220,8 +220,8 @@ export default function SceneRiviere({ collect, action, reveal, flags }) {
           ))}
         </g>
       )}
-      {/* LE CHASSEUR — accroupi, immobile, il guette le cerf de l'autre côté.
-          Son problème : l'atteindre DE LOIN. (D'où l'arc.) */}
+      {/* DORU — accroupi, immobile, il guette le cerf de l'autre côté.
+          Son épreuve pour le nouveau : ramener ce cerf… de LOIN. */}
       <g transform="translate(470,486)">
         <ellipse cx="0" cy="22" rx="28" ry="7" fill="#160f08" opacity="0.65" />
         {/* accroupi, tourné vers le cerf (vers la droite) */}
@@ -236,8 +236,8 @@ export default function SceneRiviere({ collect, action, reveal, flags }) {
         {/* le genou replié */}
         <path d="M-14 22 q-2 -14 8 -18" stroke="#4a2e18" strokeWidth="4" fill="none" />
       </g>
-      {/* le « ? » : il y a quelqu'un à qui parler ici (jusqu'à la chasse) */}
-      {!hunted && (
+      {/* le « ? » doré : c'est au tour de Doru dans la quête */}
+      {queteQui === "doru" && (
         <g transform="translate(452,390)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
           <path d="M0 0 q0 -22 22 -22 q22 0 22 18 q0 15 -18 20 l0 7" fill="none" stroke="#ffd166" strokeWidth="4" />
           <circle cx="22" cy="34" r="2.8" fill="#ffd166" />
@@ -258,7 +258,7 @@ export default function SceneRiviere({ collect, action, reveal, flags }) {
       {/* zones cliquables — hors couches (décalage max « rayon) */}
       {!hunted && <Hotspot cx={810} cy={470} r={78} label="cerf" item="cerf" reveal={reveal} onClick={() => collect("cerf")} />}
       <Hotspot cx={240} cy={510} r={70} label="tronc" item="tronc" reveal={reveal} onClick={() => collect("tronc")} />
-      <Hotspot cx={470} cy={464} r={44} label="le chasseur" reveal={reveal} onClick={(p) => action("chasseur", p)} />
+      <Hotspot cx={470} cy={464} r={44} label="Doru" reveal={reveal} onClick={(p) => action("doru", p)} />
     </svg>
   );
 }

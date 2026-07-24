@@ -11,7 +11,7 @@ import { GrassTuft } from "./decor.jsx";
    À trouver ici : le feu, ta voix (le conteur), les branches.
    ============================================================ */
 
-export default function SceneCampement({ collect, action, reveal, made = [] }) {
+export default function SceneCampement({ collect, action, reveal, made = [], queteQui }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -216,8 +216,8 @@ export default function SceneCampement({ collect, action, reveal, made = [] }) {
           <circle cx={x - 4} cy={y - 14} r="1" fill="#d8e8f0" opacity="0.7" />
         </g>
       ))}
-      {/* LE CONTEUR — assis face au feu, il remue les braises. C'est lui qui
-          transmet TOUT le savoir du clan… et qui découvre que ça se déforme. */}
+      {/* RAYA, LE CHEF — assis face au feu, il remue les braises. C'est lui
+          qui accueille, éprouve, et fait entrer les nouveaux dans le clan. */}
       <g transform="translate(300,470)">
         <ellipse cx="0" cy="20" rx="30" ry="8" fill="#160f08" opacity="0.7" />
         {/* le corps, drapé d'une peau, tourné vers le feu (vers la droite) */}
@@ -234,8 +234,8 @@ export default function SceneCampement({ collect, action, reveal, made = [] }) {
         <path d="M-8 -22 Q10 -30 24 -16" stroke="#ffb347" strokeWidth="2" fill="none" opacity="0.45" style={{ animation: "glow 2.6s ease-in-out infinite" }} />
         <circle cx="14" cy="-30" r="7" fill="#ffb347" opacity="0.12" style={{ animation: "glow 2.6s ease-in-out infinite" }} />
       </g>
-      {/* le « ? » : il y a quelqu'un à qui parler ici */}
-      {!made.includes("msg_veillee") && (
+      {/* le « ? » doré : c'est au tour de Raya dans la quête */}
+      {queteQui === "raya" && (
         <g transform="translate(282,372)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
           <path d="M0 0 q0 -22 22 -22 q22 0 22 18 q0 15 -18 20 l0 7" fill="none" stroke="#ffd166" strokeWidth="4" />
           <circle cx="22" cy="34" r="2.8" fill="#ffd166" />
@@ -257,7 +257,7 @@ export default function SceneCampement({ collect, action, reveal, made = [] }) {
       <Hotspot cx={500} cy={440} r={62} label="feu" item="feu" support reveal={reveal} onClick={() => collect("feu")} />
       <Hotspot cx={410} cy={432} r={48} label="toi" item="voix" reveal={reveal} onClick={() => collect("voix")} />
       <Hotspot cx={660} cy={488} r={58} label="branches" item="branche" reveal={reveal} onClick={() => collect("branche")} />
-      <Hotspot cx={300} cy={446} r={44} label="le conteur" reveal={reveal} onClick={(p) => action("conteur", p)} />
+      <Hotspot cx={300} cy={446} r={44} label="Raya, le chef" reveal={reveal} onClick={(p) => action("raya", p)} />
     </svg>
   );
 }
