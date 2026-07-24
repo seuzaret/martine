@@ -119,6 +119,7 @@ export default function App() {
   const [made, setMade] = useState([]);          // tout ce qui a déjà été créé/découvert
   const [flags, setFlags] = useState({});        // drapeaux d'événements (ex. hunted)
   const [quete, setQuete] = useState(0);         // étape en cours de la quête du chapitre (voir data.js)
+  const [portraitOpen, setPortraitOpen] = useState(false); // le gros plan de l'étape est-il affiché ?
   const [modal, setModal] = useState(null);      // fiche documentaire ou carnet
   const [bubble, setBubble] = useState(null);    // phylactère d'un personnage {text, x, y}
   const [shake, setShake] = useState(false);     // animation d'échec (besace)
@@ -349,6 +350,13 @@ export default function App() {
        par défaut). Une étape sans tâche (`attend`) passe aussitôt à la
        suivante : le « ? » doré se déplace. */
     const step = chapter.quete?.[quete];
+    /* étape en GROS PLAN : cliquer le personnage ouvre son portrait
+       (le texte, l'avancée et le `say` passent par le bouton Continuer) */
+    if (step && step.perso === name && step.portrait) {
+      setBubble(null);
+      setPortraitOpen(true);
+      return;
+    }
     let bubbleText = act.bubble, sayText = act.say, mood = act.mood;
     if (step && step.perso === name) {
       bubbleText = step.bubble ?? act.bubble;
@@ -378,6 +386,14 @@ export default function App() {
       if (step.suite) setTimeout(() => say(`➜ ${step.suite}`), 1800);
     }
   }, [made, flags, quete]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* Le gros plan : il s'ouvre TOUT SEUL sur les étapes `auto` (l'accueil
+     d'Ana) et se referme dès que l'étape change — pour les autres, c'est
+     le clic sur le personnage qui l'ouvre (voir `action`). */
+  useEffect(() => {
+    const st = chapter.quete?.[quete];
+    setPortraitOpen(!!(st?.portrait && st.auto));
+  }, [quete, chapterIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* AMBIANCE SONORE : si le tableau courant en déclare une (champ
      `ambience` dans les SCENES du data.js), elle démarre en douceur et
@@ -1089,7 +1105,7 @@ export default function App() {
           `portrait`, le personnage s'avance devant l'écran pour parler
           (ex. Ana qui accueille le joueur). Le bouton fait avancer la
           quête ; s'il y a un `say`, MARTINE enchaîne. */}
-      {screen === "play" && (() => {
+      {screen === "play" && portraitOpen && (() => {
         const st = chapter.quete?.[quete];
         const Portrait = st?.portrait && chapter.portraits?.[st.portrait];
         if (!Portrait) return null;
@@ -1103,7 +1119,9 @@ export default function App() {
                 <div style={{ background: "#f4e8cc", color: "#2a1c10", border: "1px solid #cbb489", borderRadius: 16, padding: "16px 18px", fontFamily: "Palatino, Georgia, serif", fontSize: 16.5, lineHeight: 1.6, boxShadow: "0 12px 40px rgba(0,0,0,0.5)" }}>
                   {st.bubble}
                 </div>
-                <button onClick={() => { setQuete((q) => q + 1); if (st.say) say(st.say, st.mood); }}
+                {/* fermer = avancer si l'étape n'a pas de tâche à accomplir ;
+                    sinon on referme simplement, et MARTINE donne son indice */}
+                <button onClick={() => { setPortraitOpen(false); if (!st.attend) setQuete((q) => q + 1); if (st.say) say(st.say, st.mood); }}
                   style={{ marginTop: 14, width: "100%", background: "#e8934a", color: "#1a0e02", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer", fontSize: 15, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
                   Continuer
                 </button>

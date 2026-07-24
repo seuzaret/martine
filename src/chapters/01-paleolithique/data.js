@@ -11,7 +11,7 @@ import SceneInterieur from "./scenes/SceneInterieur.jsx";
 import SceneExterieur from "./scenes/SceneExterieur.jsx";
 import SceneCampement from "./scenes/SceneCampement.jsx";
 import SceneRiviere from "./scenes/SceneRiviere.jsx";
-import { PortraitAna } from "./scenes/portraits.jsx";
+import { PortraitAna, PortraitRaya, PortraitDoru, PortraitKyan } from "./scenes/portraits.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -249,57 +249,59 @@ const ACTIONS = {
               (elle indique vers qui aller ensuite).
    ------------------------------------------------------------ */
 const QUETE = [
-  /* `portrait: "ana"` : cette étape s'affiche en GROS PLAN — le personnage
-     s'avance devant l'écran pour parler (composant dans scenes/portraits.jsx,
-     déclaré dans `portraits` en bas de ce fichier). */
-  { perso: "ana", portrait: "ana",
+  /* `portrait: "…"` : l'étape s'affiche en GROS PLAN — le personnage
+     s'avance devant l'écran pour parler (dessins dans scenes/portraits.jsx,
+     déclarés dans `portraits` en bas de ce fichier). On l'ouvre en cliquant
+     le personnage dans le décor ; `auto: true` = elle s'ouvre toute seule
+     (l'accueil d'Ana, au tout début). */
+  { perso: "ana", portrait: "ana", auto: true,
     bubble: "Bienvenue au clan de Ceux-qui-marchent-debout ! C'est rare de rencontrer de nouvelles personnes : viens donc passer quelque temps avec nous. Commence par saluer Raya, notre chef — près du grand feu, au campement." },
 
-  { perso: "raya",
+  { perso: "raya", portrait: "raya",
     bubble: "Bienvenue à toi, voyageur. Si tu veux nous aider et être correctement accueilli, va voir Doru, au bord de la rivière : il t'attend.",
     say: "Le chef te met à l'épreuve. Direction la rivière ›." },
 
-  { perso: "doru",
+  { perso: "doru", portrait: "doru",
     bubble: "Doucement, pas de bruit ! Ici, c'est notre terrain de chasse. Trouve de quoi nous ramener ce joli cerf — de loin, sans le faire fuir.",
     say: "Une arme de jet, donc : quelque chose qui plie, quelque chose qui tire, quelque chose qui pique. Fouille les environs.",
     attend: "hunted",
     suite: "Doru siffle, admiratif. Raya veut te voir : retourne au campement." },
 
-  { perso: "raya",
+  { perso: "raya", portrait: "raya",
     bubble: "Parfait, bien visé ! Rien ne sera gaspillé : la viande, la peau, les os. Maintenant va voir Kyan, la mémoire du clan, au fond de la grotte : c'est elle qui fait entrer les nouveaux dans la famille.",
     say: "La grotte est au bout du sentier ‹, et la mémoire du clan t'y attend. Ne la fais pas patienter." },
 
-  { perso: "kyan",
+  { perso: "kyan", portrait: "kyan",
     bubble: "Approche, étranger. Pour faire partie de la famille, chacun laisse une trace de lui dans notre grotte sacrée. Quelque chose qui dise, pour toujours : « moi aussi, j'étais là ».",
     say: "Une trace de TOI… ta main, par exemple ? J'ai vu de l'ocre rouge devant la grotte.",
     attend: "msg_mains",
     suite: "Kyan pose sa main sur la tienne : te voilà du clan. Reparle-lui — elle n'a pas fini." },
 
-  { perso: "kyan",
+  { perso: "kyan", portrait: "kyan",
     bubble: "Te voilà des nôtres ! Il te faut maintenant la tenue que nous portons tous. La peau de ta chasse fera l'affaire… mais il te faudra de bons outils pour la travailler.",
     say: "Des outils fins : dans l'os, taillé au silex — aiguille, poinçon. Puis la peau.",
     attend: "msg_mode",
     suite: "Superbe tenue ! Raya t'appelle près du feu : le repas est prêt." },
 
-  { perso: "raya",
+  { perso: "raya", portrait: "raya",
     bubble: "Te voilà un vrai membre du clan ! Allons manger. Ce soir, nous fêtons ton arrivée : autour du feu, chacun raconte ses chasses.",
     say: "Une veillée ! Ta voix + le feu du clan. C'est comme ça que TOUT se transmettait, avant l'écriture.",
     attend: "msg_veillee",
     suite: "Les récits s'éteignent doucement… Ana te cherche, devant la grotte." },
 
-  { perso: "ana",
+  { perso: "ana", portrait: "ana",
     bubble: "Toi qui viens de loin… n'aurais-tu pas une idée pour embellir la soirée, après ces récits merveilleux ?",
     say: "De la musique ! Un os percé qui chante… ou une peau tendue sur un tronc, qui batte le rythme.",
     attend: ["msg_flute", "msg_tambour"],
     suite: "Le clan danse encore ! Kyan t'attend dans la grotte sacrée, pour finir." },
 
-  { perso: "kyan",
+  { perso: "kyan", portrait: "kyan",
     bubble: "Après ce bon repas, il est temps de rejoindre les ancêtres dans la grotte et de raconter notre histoire — la tienne aussi, désormais. Trouve un moyen d'illustrer mes mots, veux-tu ?",
     say: "Illustrer un récit sur la paroi… il te faut de quoi DESSINER. Le feu laisse du charbon, tu sais.",
     attend: "msg_peinture",
     suite: "Les images dansent à la lueur du feu. Le clan entier s'en souviendra — et le futur aussi. Va saluer Raya." },
 
-  { perso: "raya",
+  { perso: "raya", portrait: "raya",
     bubble: "Tu es arrivé étranger : te voilà de la famille. Ta drôle de noix qui clignote t'appelle, là-bas… Va. Et où que tu ailles, souviens-toi de nous.",
     say: "Ma jauge est pleine grâce à eux. Snif. Le bouton PARTIR n'attend que toi — quand tu seras prêt." },
 ];
@@ -343,7 +345,7 @@ const chapter = {
   intro: INTRO,
   actions: ACTIONS,
   quete: QUETE,
-  portraits: { ana: PortraitAna },
+  portraits: { ana: PortraitAna, raya: PortraitRaya, doru: PortraitDoru, kyan: PortraitKyan },
 };
 
 export default chapter;

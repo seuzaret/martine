@@ -140,26 +140,26 @@ let amb = null; // { timer } : l'ambiance en cours
 
 export function startAmbience(sceneId) {
   if (muted || amb || sceneId !== "grotte") return;
-  try {
-    const c = ensureCtx();
-    /* la mélopée : quatre notes graves qui tournent (sol, la, fa, sol) */
-    const chant = [98, 110, 87.3, 98];
-    let mesure = 0;
-    const timer = setInterval(() => {
-      /* tant que le navigateur n'a pas encore le droit de jouer du son
-         (aucun clic depuis le chargement), on attend sans rien planter */
-      if (muted || c.state !== "running") return;
+  /* ⚠ RÈGLE D'OR : on ne CRÉE JAMAIS le contexte audio ici (on serait
+     hors d'un clic de l'utilisateur, et Firefox bloquerait alors TOUT le
+     son du jeu). L'ambiance attend sagement que le premier effet sonore
+     — déclenché par un clic — ait créé et débloqué le contexte. */
+  const chant = [98, 110, 87.3, 98]; // sol, la, fa, sol — la mélopée
+  let mesure = 0;
+  const timer = setInterval(() => {
+    if (muted || !ctx || ctx.state !== "running") return;
+    try {
       /* le tambour : deux battements, comme un cœur (boum… boum) */
-      tone(c, { f: 92, f1: 50, d: 0.22, type: "sine", v: 0.055 });
-      tone(c, { f: 88, f1: 48, t: 0.34, d: 0.2, type: "sine", v: 0.035 });
+      tone(ctx, { f: 92, f1: 50, d: 0.22, type: "sine", v: 0.055 });
+      tone(ctx, { f: 88, f1: 48, t: 0.34, d: 0.2, type: "sine", v: 0.035 });
       /* une mesure sur deux, la voix psalmodie */
-      if (mesure % 2 === 0) hum(c, chant[(mesure / 2) % chant.length]);
+      if (mesure % 2 === 0) hum(ctx, chant[(mesure / 2) % chant.length]);
       mesure++;
-    }, 1500);
-    amb = { timer };
-  } catch {
-    /* pas d'audio : le jeu continue sans ambiance */
-  }
+    } catch {
+      /* pas d'audio : le jeu continue sans ambiance */
+    }
+  }, 1500);
+  amb = { timer };
 }
 
 export function stopAmbience() {
