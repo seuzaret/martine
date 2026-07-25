@@ -1,61 +1,83 @@
 /* ============================================================
-   CHAPITRE 2 — Néolithique (vers −4500)
+   CHAPITRE 2 — Néolithique : la cité de Göbekli Tepe (refonte)
    ============================================================
-   MÊME STRUCTURE que le chapitre 1 : le moteur (src/engine/)
-   lit ce fichier sans savoir ce qu'il contient. Pour modifier
-   un texte, une recette, une jauge : tout est ici.
-   Les décors sont dans scenes/.
+   5 tableaux + une QUÊTE d'intégration à la cité :
+   Guna (garde) → le roi Tannis → Jala (potière) & Ahmid
+   (marchand) → Imir (prêtre) & Doka (tailleur) → Ötzi (mineur).
+   Le joueur, étranger, gagne sa place en aidant chacun.
+
+   ⚠ Liberté narrative assumée : la cité concentre plusieurs
+   millénaires du Néolithique (poterie, comptage, mégalithes,
+   cuivre, tatouages d'Ötzi). MARTINE le souligne avec humour.
+
+   Tout le contenu est ici ; les décors (simples pour l'instant)
+   sont dans scenes/. Le moteur n'a pas besoin d'être touché.
    ============================================================ */
 
-import SceneVillage from "./scenes/SceneVillage.jsx";
-import SceneLande from "./scenes/SceneLande.jsx";
-import SceneCol from "./scenes/SceneCol.jsx";
+import SceneMuraille from "./scenes/SceneMuraille.jsx";
+import SceneTrone from "./scenes/SceneTrone.jsx";
+import SceneArtisans from "./scenes/SceneArtisans.jsx";
+import ScenePlaine from "./scenes/ScenePlaine.jsx";
+import SceneMontagne from "./scenes/SceneMontagne.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
    ------------------------------------------------------------ */
 const ITEMS = {
-  argile:   { name: "Argile", emoji: "🟫", desc: "Une terre grasse et malléable, au bord de la rivière. Elle garde la forme qu'on lui donne." },
-  /* SUPPORTS (support: true) : fixes, ne vont pas au sac — on leur apporte
-     un objet. Le moteur les repère automatiquement (couleur cyan). */
-  mains:    { name: "Le tour du potier", emoji: "⚙️", support: true, desc: "La roue du potier, qu'on fait tourner du pied. La terre montée dessus prend, toute seule, une belle forme régulière." },
-  four:     { name: "Four de potier", emoji: "🔥", support: true, desc: "Une fosse chauffée à blanc. Ce qui en ressort est dur comme la pierre." },
-  pigments: { name: "Pigments", emoji: "🎨", desc: "Ocres, oxydes, blanc de craie : de quoi peindre des motifs." },
-  minerai:  { name: "Minerai de cuivre", emoji: "🟢", desc: "Une pierre verte (de la malachite). Chauffée très fort, elle « sue » du métal." },
-  troupeau: { name: "Le troupeau", emoji: "🐑", support: true, desc: "Moutons et vaches dans l'enclos. De plus en plus nombreux… qui arrive encore à les compter ?" },
-  cailloux: { name: "Cailloux noirs", emoji: "⚫", desc: "Une poignée de petits cailloux sombres. Un caillou pour chaque bête : le premier moyen de compter sans se tromper… tant qu'on ne les mélange pas et qu'on n'en perd aucun." },
-  dalle:    { name: "Grande dalle", emoji: "🪨", desc: "Un bloc de granit de plusieurs tonnes, couché sur la lande. À dresser." },
-  clan:     { name: "Le clan", emoji: "🧑‍🤝‍🧑", desc: "Tout le village, avec cordes et rondins. À plusieurs, on soulève des montagnes." },
-  aiguille: { name: "Aiguille d'os", emoji: "🦴", desc: "Fine et pointue. Elle pique la peau juste ce qu'il faut." },
-  suie:     { name: "Suie", emoji: "⚫", desc: "Du noir de fumée, dans un petit bol. Frottée dans une piqûre, elle marque à vie." },
-  pierre:   { name: "Pierre à marteler", emoji: "⚒️", support: true, desc: "Une enclume de pierre : pour battre le métal et y graver des signes." },
-  silex:    { name: "Silex", emoji: "🔪", desc: "Un éclat tranchant. Même au Néolithique, rien de tel pour graver la pierre dure." },
+  /* T1 — la muraille et la grève */
+  coquillage: { name: "Coquillage", emoji: "🐚", desc: "Un coquillage nacré ramassé sur la grève. Broyé ou incrusté, il fait la beauté des poteries d'ici." },
+
+  /* T3 — les artisans (supports fixes : le tour, le four, le troupeau) */
+  argile:   { name: "Argile", emoji: "🟫", desc: "Terre grasse du fleuve, malléable. Elle garde la forme qu'on lui donne." },
+  tour:     { name: "Le tour du potier", emoji: "⚙️", support: true, desc: "La roue qu'on fait tourner du pied : la terre y monte en une belle forme régulière." },
+  feu:      { name: "Le four", emoji: "🔥", support: true, desc: "Une fosse chauffée à blanc. Ce qui en sort est dur comme la pierre — et l'on peut y fondre le métal." },
+  pigments: { name: "Pigments", emoji: "🎨", desc: "Ocres, oxydes, blanc de craie : de quoi peindre des motifs éclatants." },
+  troupeau: { name: "Le troupeau", emoji: "🐑", support: true, desc: "Les moutons et bœufs d'Ahmid, à mener au marché. Trop nombreux pour les compter de tête." },
+
+  /* T4 — la plaine aux mégalithes + le fleuve */
+  cailloux:      { name: "Cailloux noirs", emoji: "⚫", desc: "Une poignée de petits cailloux du fleuve. Un par bête : le premier moyen de compter." },
+  grande_pierre: { name: "Grande pierre", emoji: "🪨", desc: "Un bloc de plusieurs tonnes, couché sur la plaine. À graver, puis à dresser." },
+  hommes:        { name: "Les hommes de Doka", emoji: "🧑‍🤝‍🧑", support: true, desc: "Toute l'équipe du tailleur, avec cordes et rondins. À plusieurs, on dresse des montagnes." },
+
+  /* T5 — la montagne et la mine */
+  minerai:  { name: "Minerai de cuivre", emoji: "🟢", desc: "Une pierre verte, de la malachite, arrachée au filon. Chauffée fort, elle « sue » du métal." },
+  pierre_marteler: { name: "Pierre à marteler", emoji: "⚒️", support: true, desc: "Une enclume de pierre : pour battre le cuivre en outils et y graver des signes." },
+  silex:    { name: "Éclat de silex", emoji: "🔪", desc: "Un éclat tranchant. Rien de tel pour percer l'os et tailler de fins outils." },
+  os:       { name: "Os", emoji: "🦴", desc: "Un os de l'animal rôti à la broche. Taillé, il fait de belles aiguilles." },
+  bol:      { name: "Bol d'argile", emoji: "🥣", desc: "Un petit bol de terre. Placé au-dessus du feu, il recueille la suie noire." },
 
   /* fabriqués */
-  pot_cru:     { name: "Pot cru", emoji: "🫙", desc: "Façonné, mais encore fragile : il faut le cuire, sinon il fond à la première pluie." },
-  ceramique:   { name: "Céramique", emoji: "⚱️", desc: "Cuit au four, dur et étanche. Une belle surface… qui attend d'être décorée." },
-  cuivre:      { name: "Cuivre", emoji: "🟠", desc: "Un lingot de métal rougeoyant, tout juste coulé. Mou, brillant, précieux." },
-  dalle_gravee:{ name: "Dalle gravée", emoji: "🗿", desc: "La grande dalle, couverte de spirales et de signes au silex. Reste à la dresser — mais seul, impossible." },
-  compte:      { name: "Compte en cailloux", emoji: "🔢", desc: "Un caillou aligné pour chaque bête : le troupeau est compté ! Mais en vrac, ça roule et ça se mélange. Il faudrait les mettre à l'abri, une bonne fois." },
+  pot_cru:       { name: "Pot cru", emoji: "🫙", desc: "Façonné sur le tour, mais encore mou : il faut le cuire, sinon il fond à la pluie." },
+  ceramique:     { name: "Poterie", emoji: "⚱️", desc: "Cuite au four, dure et étanche. Une belle surface, qui attend d'être décorée." },
+  poterie_peinte:{ name: "Poterie peinte", emoji: "🏺", desc: "Ornée de motifs aux couleurs de la cité. Il ne manque qu'une touche : la nacre." },
+  compte:        { name: "Compte en cailloux", emoji: "🔢", desc: "Un caillou par bête, alignés. Le troupeau est compté ! Mais en vrac, ça roule et se perd…" },
+  cuivre:        { name: "Cuivre", emoji: "🟠", desc: "Un lingot de métal rougeoyant, tout juste coulé. Mou, brillant : à marteler." },
+  burin:         { name: "Burin de cuivre", emoji: "🖋", desc: "Un outil de métal, dur et pointu : de quoi graver la pierre bien mieux que le silex." },
+  pierre_gravee: { name: "Pierre gravée", emoji: "🗿", desc: "La grande pierre, couverte de symboles sacrés au burin. Reste à la dresser — mais seul, impossible." },
+  aiguille:      { name: "Aiguille d'os", emoji: "🪡", desc: "Fine et pointue, taillée au silex. Elle pique la peau juste ce qu'il faut." },
+  suie:          { name: "Suie", emoji: "⚫", desc: "Du noir de fumée recueilli dans le bol. Frotté dans une piqûre, il marque à vie." },
 };
 
 /* ------------------------------------------------------------
    LES TABLEAUX (ordre de navigation ‹ ›)
    ------------------------------------------------------------ */
 const SCENES = [
-  { id: "village", name: "Le village",            Component: SceneVillage },
-  { id: "lande",   name: "La lande aux mégalithes", Component: SceneLande },
-  { id: "col",     name: "Le col de la montagne",   Component: SceneCol },
+  { id: "muraille", name: "La porte de la cité",       Component: SceneMuraille },
+  { id: "trone",    name: "Le roi Tannis",             Component: SceneTrone },
+  { id: "artisans", name: "Les artisans de la cité",   Component: SceneArtisans },
+  { id: "plaine",   name: "La plaine aux mégalithes",  Component: ScenePlaine },
+  { id: "montagne", name: "La mine de cuivre",         Component: SceneMontagne },
 ];
 
-/* Où trouver chaque élément de base (pour les indices). */
+/* Où trouver chaque élément de base (indices ; supports exclus). */
 const WHERE = {
-  argile: "au village",
-  pigments: "au village", cailloux: "au village",
-  dalle: "sur la lande aux mégalithes", clan: "sur la lande aux mégalithes",
-  silex: "sur la lande aux mégalithes",
-  minerai: "au col de la montagne", aiguille: "au col de la montagne",
-  suie: "au col de la montagne",
+  coquillage: "sur la grève, devant la porte de la cité",
+  argile: "chez les artisans, et au bord du fleuve",
+  pigments: "chez la potière",
+  cailloux: "au bord du fleuve, sur la plaine",
+  grande_pierre: "sur la plaine aux mégalithes",
+  minerai: "au filon, dans la montagne",
+  silex: "à la montagne", os: "à la montagne", bol: "à la montagne",
 };
 
 const HIDDEN_BY_FLAG = {};
@@ -64,139 +86,196 @@ const HIDDEN_BY_FLAG = {};
    LES RECETTES
    ------------------------------------------------------------ */
 const RECIPES = [
-  { a: "argile", b: "mains", out: "pot_cru",
-    line: "Sur le tour qui tourne, la terre se centre et les parois montent toutes seules : un POT prend forme. Encore mou, il faut le cuire." },
-  { a: "pot_cru", b: "four", out: "ceramique",
-    line: "Passé au feu, le pot durcit et devient étanche : de la CÉRAMIQUE. Le premier matériau que l'humanité fabrique de toutes pièces." },
-  { a: "ceramique", b: "pigments", out: "msg_poterie", msg: true },
-  /* le mégalithe se fait en 2 temps : on GRAVE la dalle au silex,
-     puis tout le CLAN la dresse. */
-  { a: "silex", b: "dalle", out: "dalle_gravee",
-    line: "Au silex, tu couvres la dalle de spirales et de signes — comme les gravures de Gavrinis. Reste à la dresser." },
-  { a: "clan", b: "dalle_gravee", out: "msg_megalithe", msg: true },
-  { a: "aiguille", b: "suie", out: "msg_tatouage", msg: true },
-  { a: "minerai", b: "four", out: "cuivre",
-    line: "Chauffée à blanc, la pierre verte « sue » du métal rouge : du CUIVRE. Un support tout neuf — mais il faudra le marteler pour y graver." },
-  { a: "cuivre", b: "pierre", out: "msg_hache", msg: true },
-  /* Compter en 2 temps — l'ANCÊTRE DE L'ÉCRITURE :
-     1) un caillou par bête (mais ça roule, ça se perd) ;
-     2) on enferme ces cailloux dans une boule d'argile scellée →
-        impossible de tricher sur le nombre. C'est presque de l'écriture…
-        mais la boule ne dit ni QUELLES bêtes ni le prix → reste un
-        fragment (perdu) qui appelle le chapitre 3. */
+  /* — La poterie de Jala (chaîne en 4 temps) — */
+  { a: "argile", b: "tour", out: "pot_cru",
+    line: "Sur le tour qui tourne, la terre se centre et monte toute seule : un POT prend forme. Encore mou, il faut le cuire." },
+  { a: "pot_cru", b: "feu", out: "ceramique",
+    line: "Passé au four, le pot durcit et devient étanche : de la POTERIE. Le premier matériau que l'humanité fabrique de toutes pièces." },
+  { a: "ceramique", b: "pigments", out: "poterie_peinte",
+    line: "Aux pigments, tu couvres le pot de motifs vifs, aux couleurs du clan. Presque une œuvre… il manque la signature de la cité." },
+  { a: "poterie_peinte", b: "coquillage", out: "msg_poterie", msg: true },
+
+  /* — Le compte d'Ahmid (calculi) — */
   { a: "troupeau", b: "cailloux", out: "compte",
-    line: "Tu poses un caillou par bête : ton troupeau est compté ! Mais ces cailloux en vrac, un coup de vent, une main maladroite… et le compte est faux. Il faut les mettre à l'abri." },
-  { a: "compte", b: "argile", out: "msg_comptage", msg: true, perdu: true },
+    line: "Tu poses un caillou par bête : le troupeau est compté ! Mais ces cailloux en vrac, un coup de vent, une main maladroite… et le compte est faux." },
+  { a: "compte", b: "argile", out: "msg_calculi", msg: true },
+
+  /* — Le cuivre et le mégalithe (Doka) — */
+  { a: "minerai", b: "feu", out: "cuivre",
+    line: "Chauffée à blanc, la pierre verte « sue » du métal rouge : du CUIVRE. Un support tout neuf — mais il faudra le marteler." },
+  { a: "cuivre", b: "pierre_marteler", out: "burin",
+    line: "Sur l'enclume, tu martèles le cuivre en un BURIN dur et pointu : de quoi graver la pierre bien mieux qu'au silex." },
+  { a: "burin", b: "grande_pierre", out: "pierre_gravee",
+    line: "Au burin de cuivre, tu couvres la grande pierre de symboles sacrés. Reste à la dresser — mais seul, impossible." },
+  { a: "pierre_gravee", b: "hommes", out: "msg_megalithe", msg: true },
+
+  /* — Les tatouages d'Ötzi — */
+  { a: "os", b: "silex", out: "aiguille",
+    line: "Au silex, tu tailles l'os en une AIGUILLE fine et solide. De quoi coudre… ou piquer la peau." },
+  { a: "bol", b: "feu", out: "suie",
+    line: "Le bol au-dessus des flammes se tapisse de noir : tu récupères de la SUIE. Le premier pigment à faire entrer sous la peau." },
+  { a: "suie", b: "aiguille", out: "msg_tatouage", msg: true },
 ];
 
 /* ------------------------------------------------------------
    LES MESSAGES (fiches documentaires + jauges 1 à 5)
-   Échelle commune à tous les chapitres (voir data.js du ch.1).
    ------------------------------------------------------------ */
 const MESSAGES = {
-  msg_poterie: { title: "Poterie décorée", emoji: "🏺",
+  msg_poterie: { title: "Poterie ornée de la cité", emoji: "🏺",
     jauges: { vitesse: 2, portee: 2, capacite: 2, durabilite: 4 },
-    fact: "Un pot cuit, orné de motifs peints ou incisés : chaque village, chaque culture a ses dessins. Ces motifs ne « disent » rien avec des mots, mais ils signent : « c'est nous qui l'avons fait ». C'est l'ancêtre lointain de la marque et du logo. Et pour les archéologues, une aubaine : en suivant les styles de poterie, on date les sites et on « trace » les peuples sur des milliers de kilomètres. La terre cuite, elle, ne pourrit pas — cassée en tessons, elle traverse les millénaires.",
+    fact: "Un pot cuit, peint de motifs et incrusté de nacre : chaque cité, chaque clan a ses dessins. Ces motifs ne « disent » rien avec des mots, mais ils SIGNENT : « c'est nous qui l'avons fait ». C'est l'ancêtre lointain de la marque et du logo. Et pour les archéologues, une aubaine : en suivant les styles de poterie, on date les sites et on « trace » les peuples sur des milliers de kilomètres. La terre cuite, cassée en tessons, traverse les millénaires.",
     wiki: "https://fr.wikipedia.org/wiki/Poterie" },
-  msg_megalithe: { title: "Mégalithe", emoji: "🗿",
-    jauges: { vitesse: 1, portee: 3, capacite: 1, durabilite: 5 },
-    fact: "Des dizaines d'hommes tirent une dalle de plusieurs tonnes pour la dresser. Un mégalithe, c'est un message monumental : pour les morts qu'on y enterre, pour les dieux, et pour les voisins — « ce territoire est à nous ». Le cairn de Barnenez, en Bretagne, date de ~−4500 : plus vieux que les pyramides d'Égypte ! Visible de loin, presque éternel… mais muet : sans écriture, nous ignorons encore ce que ses bâtisseurs voulaient exactement nous dire.",
-    wiki: "https://fr.wikipedia.org/wiki/Cairn_de_Barnenez" },
-  msg_tatouage: { title: "Tatouage", emoji: "✒️",
-    jauges: { vitesse: 1, portee: 1, capacite: 2, durabilite: 4 },
-    fact: "En 1991, deux randonneurs découvrent dans un glacier des Alpes un homme mort il y a ~5300 ans : « Ötzi ». Sa peau porte 61 tatouages, faits en frottant de la suie dans de fines incisions. Le corps devient support : un message qu'on porte à vie — identité, appartenance à un groupe, peut-être même des points de soin sur les articulations douloureuses. La glace l'a conservé cinq millénaires… mais un tatouage disparaît avec celui qui le porte." },
-  msg_hache: { title: "Hache de cuivre gravée", emoji: "🪓",
-    jauges: { vitesse: 2, portee: 2, capacite: 2, durabilite: 3 },
-    fact: "Fondre le minerai, couler le métal, le marteler, le graver : le cuivre est un support tout neuf, brillant, précieux. On y grave des signes de propriété, de prestige. Mais le métal a un secret : on peut le refondre. Un message gravé dans le cuivre peut être effacé pour toujours — puis le métal resservira pour un autre objet. Durable et pourtant effaçable : le premier support « recyclable »… et falsifiable." },
-  /* MESSAGE PERDU — mais surtout : l'ANCÊTRE DE L'ÉCRITURE */
-  msg_comptage: { title: "L'ancêtre de l'écriture", emoji: "🔘", perdu: true,
-    jauges: { vitesse: 1, portee: 1, capacite: 2, durabilite: 2 },
-    fact: "Trop de bêtes pour compter de tête ! Le berger trouve mieux que le sac : il enferme un petit caillou par bête dans une boule d'argile, qu'il scelle. Impossible, désormais, de tricher sur le nombre. Ce geste porte un nom : un « calcul » — du latin calculus, « petit caillou » (c'est de là que vient notre mot CALCULER). Et c'est presque de l'écriture ! Presque, car la boule dit COMBIEN, mais pas QUELLES bêtes, ni le prix convenu ; et si elle se casse, tout est perdu. Il manque le dernier pas : dessiner les signes sur l'argile au lieu d'y cacher des cailloux. Ce sera l'affaire du prochain saut — la Mésopotamie.",
+  msg_calculi: { title: "Les calculi (compter dans l'argile)", emoji: "🔘",
+    jauges: { vitesse: 1, portee: 1, capacite: 2, durabilite: 3 },
+    fact: "Ahmid enferme un petit caillou par bête dans une boule d'argile, qu'il scelle. Impossible de tricher sur le nombre ! Ce geste porte un nom : un « calcul » — du latin calculus, « petit caillou » (c'est de là que vient CALCULER). C'est presque de l'écriture : la boule dit COMBIEN. Bientôt, on dessinera les signes SUR l'argile au lieu d'y cacher des cailloux — et ce sera l'écriture. Rendez-vous en Mésopotamie…",
     wiki: "https://fr.wikipedia.org/wiki/Bulle-enveloppe" },
+  msg_megalithe: { title: "Mégalithe gravé", emoji: "🗿",
+    jauges: { vitesse: 1, portee: 3, capacite: 2, durabilite: 5 },
+    fact: "Des dizaines d'hommes tirent une pierre de plusieurs tonnes pour la dresser, gravée de symboles au burin de cuivre. Un mégalithe, c'est un message MONUMENTAL : pour les dieux, pour le roi, et pour les voisins — « ce territoire est à nous ». Le cairn de Barnenez, en Bretagne, date de ~−4500 : plus vieux que les pyramides ! Visible de loin, presque éternel… mais sans écriture complète, nous ignorons encore ce que ses bâtisseurs voulaient exactement nous dire.",
+    wiki: "https://fr.wikipedia.org/wiki/Cairn_de_Barnenez" },
+  msg_tatouage: { title: "Tatouages de soin (Ötzi)", emoji: "✒️",
+    jauges: { vitesse: 1, portee: 1, capacite: 2, durabilite: 4 },
+    fact: "En 1991, deux randonneurs découvrent dans un glacier des Alpes un homme mort il y a ~5300 ans : « Ötzi ». Sa peau porte 61 tatouages, faits en frottant de la suie dans de fines piqûres — souvent placés sur des articulations douloureuses : peut-être des soins, un « dossier médical » à même la peau. Le corps devient support : un message qu'on porte à vie. La glace l'a conservé cinq millénaires… mais un tatouage disparaît avec celui qui le porte." },
 };
 
 /* ------------------------------------------------------------
    LES INDICES (bouton 💡)
    ------------------------------------------------------------ */
 const HINTS = [
-  { needs: ["argile", "mains"], out: "pot_cru", text: "De l'argile molle sur le tour du potier qui tourne : façonne un pot." },
-  { needs: ["pot_cru", "four"], out: "ceramique", text: "Ton pot est encore fragile. Que se passe-t-il quand on le met au feu ?" },
-  { needs: ["ceramique", "pigments"], out: "msg_poterie", text: "Une belle surface cuite, des pigments… et si tu la décorais aux couleurs de ton village ?" },
-  { needs: ["silex", "dalle"], out: "dalle_gravee", text: "Avant de dresser cette dalle, marque-la : un silex tranchant, et tu peux y graver spirales et signes." },
-  { needs: ["clan", "dalle_gravee"], out: "msg_megalithe", text: "La dalle est gravée mais pèse des tonnes. Seul, impossible. Tout le village, avec cordes et rondins…" },
-  { needs: ["aiguille", "suie"], out: "msg_tatouage", text: "Une aiguille fine, de la suie noire… un message qu'on porte directement sur la peau ?" },
-  { needs: ["minerai", "four"], out: "cuivre", text: "Cette pierre verte cache du métal. Il lui faut une chaleur extrême — le four du potier, poussé à fond." },
-  { needs: ["cuivre", "pierre"], out: "msg_hache", text: "Le cuivre est mou. Sur une enclume de pierre, tu peux le marteler en forme… et y graver des signes." },
-  { needs: ["troupeau", "cailloux"], out: "compte", text: "Un caillou noir par bête : c'est la plus vieille façon de compter un troupeau. Pose-les côte à côte." },
-  { needs: ["compte", "argile"], out: "msg_comptage", text: "Tes cailloux roulent et se perdent ? Enferme-les dans une boule d'argile scellée : personne ne pourra plus tricher. C'est ainsi qu'est née l'écriture." },
+  { needs: ["argile", "tour"], out: "pot_cru", text: "De l'argile molle sur le tour du potier qui tourne : façonne un pot." },
+  { needs: ["pot_cru", "feu"], out: "ceramique", text: "Ton pot est encore fragile. Que se passe-t-il au four ?" },
+  { needs: ["ceramique", "pigments"], out: "poterie_peinte", text: "Une belle surface cuite, des pigments… décore-la aux couleurs de la cité." },
+  { needs: ["poterie_peinte", "coquillage"], out: "msg_poterie", text: "La signature d'ici, c'est la nacre : incruste un coquillage ramassé sur la grève." },
+  { needs: ["troupeau", "cailloux"], out: "compte", text: "Un caillou noir par bête : compte le troupeau d'Ahmid." },
+  { needs: ["compte", "argile"], out: "msg_calculi", text: "Tes cailloux se perdent ? Enferme-les dans une boule d'argile scellée : plus moyen de tricher." },
+  { needs: ["minerai", "feu"], out: "cuivre", text: "Cette pierre verte cache du métal. Il lui faut la chaleur du four, poussée à fond." },
+  { needs: ["cuivre", "pierre_marteler"], out: "burin", text: "Le cuivre est mou. Sur l'enclume, martèle-le en un outil pointu : un burin." },
+  { needs: ["burin", "grande_pierre"], out: "pierre_gravee", text: "Avec le burin de cuivre, grave les symboles sacrés sur la grande pierre." },
+  { needs: ["pierre_gravee", "hommes"], out: "msg_megalithe", text: "La pierre est gravée mais pèse des tonnes. Seul, impossible — appelle les hommes de Doka." },
+  { needs: ["os", "silex"], out: "aiguille", text: "Un os, un silex tranchant : taille une aiguille fine." },
+  { needs: ["bol", "feu"], out: "suie", text: "Place le bol au-dessus des flammes : il se couvre de suie noire." },
+  { needs: ["suie", "aiguille"], out: "msg_tatouage", text: "Une aiguille, de la suie : marque les points de douleur d'Ötzi, pour toujours." },
 ];
 
 /* Répliques « presque ! » (erreurs logiques) */
 const NEAR_MISS = [
-  { pair: ["argile", "four"], line: "Enfourner de l'argile encore molle et informe ? Tu obtiens une brique tordue. Façonne-la d'abord entre tes mains." },
-  { pair: ["troupeau", "pigments"], line: "Peindre un numéro sur chaque mouton ? Malin… mais la pluie lave tout en une nuit. Il te faut un vrai support durable." },
-  { pair: ["cuivre", "four"], line: "Oui, le cuivre refond au four — et tu tournes en rond. Pour laisser un message, il faut le GRAVER : direction l'enclume." },
-  { pair: ["dalle", "mains"], line: "Un tour de potier pour dresser une dalle de plusieurs tonnes ? Ça n'a rien à voir. Il te faut tout le clan, avec cordes et rondins." },
-  { pair: ["argile", "pigments"], line: "Peindre de l'argile crue ? Les couleurs partiront à la cuisson. Cuis d'abord, décore ensuite." },
+  { pair: ["argile", "feu"], line: "Enfourner de l'argile molle et informe ? Tu obtiens une brique tordue. Façonne-la d'abord sur le tour." },
+  { pair: ["cuivre", "feu"], line: "Le cuivre refond au four — et tu tournes en rond. Pour un outil, il faut le MARTELER sur l'enclume." },
+  { pair: ["silex", "grande_pierre"], line: "Graver ce granit au silex ? Ta lame s'émousse en un instant. Il te faut du métal : un burin de cuivre." },
+  { pair: ["troupeau", "pigments"], line: "Peindre un numéro sur chaque mouton ? La pluie lave tout en une nuit. Il te faut un vrai compte durable." },
 ];
 
 /* Répliques d'échec génériques */
 const FAIL_LINES = [
-  "Bzzt. Le Néolithique n'a pas retenu cette idée-là.",
+  "Bzzt. La cité de Tannis n'a pas retenu cette idée-là.",
   "Combinaison rejetée. Reviens aux bases : un support + un outil.",
-  "Hmm. Créatif… mais mes archives historiques restent muettes. Réessaie.",
+  "Hmm. Créatif… mais mes archives restent muettes. Réessaie.",
   "Erreur : ces deux-là ne feront pas un message.",
-  "Mes capteurs ne voient venir aucune invention. On tente autre chose ?",
 ];
 
 /* Intro de MARTINE à l'arrivée */
 const INTRO = [
-  "Impact numéro deux. Cette fois les humains se sont POSÉS : des maisons, des champs, des bêtes… et déjà des voisins qu'on redoute.",
-  "Tout le village a le même souci : ne plus rien perdre. La potière veut signer ses pots, le berger n'arrive plus à compter son troupeau, Ötzi cherche une marque qui ne s'efface jamais.",
-  "Et le chef vit dans la peur des guerriers d'en face : il veut une tombe ÉNORME pour ses rois, visible de loin — « cette terre est à nous, et pour toujours ».",
-  "Aide-les à laisser leur trace : chaque réussite remplit ma jauge. Trois suffiront. Fouille le village, la lande et la montagne.",
+  "Impact numéro deux. Et cette fois… une VILLE. Une vraie : muraille de bois, porte gardée, toits carrés bien blancs. On se croirait à Göbekli Tepe.",
+  "Un garde vient vers toi, lance à la main. Pas franchement un comité d'accueil chaleureux. Gagne la confiance de cette cité, aide ses habitants — chaque trace laissée remplit ma jauge.",
+  "Le « ? » doré te montre toujours QUI attend quelque chose de toi. Commence par ce garde… et suis-le jusqu'au roi.",
 ];
 
-/* Actions spéciales des décors (zones qui ne ramassent rien) */
+/* ------------------------------------------------------------
+   ACTIONS — répliques « par défaut » des personnages (hors quête)
+   + l'épave. `bubble` = paroles du perso · `say` = MARTINE.
+   ------------------------------------------------------------ */
 const ACTIONS = {
-  wreck: { mood: "vexe", say: "Oui, je me suis encore plantée dans un champ. Non, je ne veux pas en parler. Ramasse, combine, recharge — dans cet ordre." },
+  wreck: { mood: "vexe", say: "Oui, je me suis encore plantée. Non merci, pas de garde pour m'aider à me relever. Aide plutôt les habitants — dans cet ordre." },
 
-  /* LES GENS DU NÉOLITHIQUE — `bubble` = leurs paroles, `say` = MARTINE. */
-  potiere: { mood: "neutre",
-    bubble: "Nos pots sont beaux. Mais ceux du village d'en face aussi, et ils leur ressemblent. À la foire, quand tout est mélangé, plus personne ne sait qui a fait quoi. Et si je traçais dessus des motifs, toujours les mêmes, qu'on reconnaîtrait comme les NÔTRES ?",
-    say: "Un dessin qui dit « c'est nous » : la toute première marque, l'ancêtre du logo. Donne-lui de quoi décorer." },
-
-  berger: { mood: "vexe",
-    bubble: "Demain, je descends tout le troupeau au marché pour le vendre. Mais ils sont trop nombreux ! Hier encore je me suis trompé en comptant, et l'acheteur a failli m'avoir. Comment être sûr de mon compte — et savoir combien j'ai vendu, et à qui ?",
-    say: "Un petit caillou noir par bête, d'abord : voilà ton compte. Puis enferme-les dans une boule d'argile scellée, et plus personne ne peut tricher. Regarde bien, pilote : tu es en train d'assister à la naissance de l'écriture." },
-
-  chef: { mood: "neutre",
-    bubble: "De l'autre côté de la lande, un clan de guerriers nous guette — j'ai peur pour les miens. Mes rois reposent sous cette terre : je veux leur dresser une tombe ÉNORME, visible de très loin, qu'on ne puisse ni brûler, ni emporter, ni effacer. Que ces guerriers sachent que cette terre est la nôtre, pour toujours.",
-    say: "Un message monumental : visible de loin, presque éternel. Il te faudra du monde pour dresser ça." },
-
-  otzi: { mood: "neutre",
-    bubble: "J'ai mal, ici, et aux genoux. Le guérisseur dit qu'il faut marquer les points, et que la marque doit rester. Mais tout s'efface : la boue, l'ocre, la peinture… Comment faire une marque qui ne partira JAMAIS, même en me lavant ?",
-    say: "Le corps devient support : un message qu'on porte à vie. Il faut le faire ENTRER dans la peau." },
+  guna: { mood: "neutre",
+    bubble: "Je garde cette porte jour et nuit. Personne n'entre sans l'accord du roi.",
+    say: "Guna, le garde. Peu causant, mais c'est lui qui ouvre la porte de la cité." },
+  tannis: { mood: "neutre",
+    bubble: "Une cité, ça se mérite : du grain engrangé, des impôts, des murs. Rends-toi utile, étranger.",
+    say: "Le roi Tannis. Un chef, des impôts, une cité fortifiée : au Néolithique, l'humanité s'organise pour de bon." },
+  jala: { mood: "content",
+    bubble: "Nos poteries sont les plus belles du pays. Chaque motif dit : « ça vient de chez nous ».",
+    say: "Jala, la potière. Ses motifs sont la « marque » de la cité — l'ancêtre du logo." },
+  ahmid: { mood: "vexe",
+    bubble: "Compter des bêtes de tête, c'est se faire voler à coup sûr. Il me faut mieux.",
+    say: "Ahmid, le marchand. Son problème de comptes va faire naître… l'écriture. Rien que ça." },
+  imir: { mood: "neutre",
+    bubble: "Nous dressons des pierres pour honorer le roi et les dieux. Elles nous survivront de mille ans.",
+    say: "Imir, le prêtre. Le mégalithe : un message monumental, pour l'éternité." },
+  doka: { mood: "neutre",
+    bubble: "Le silex, ça casse. Depuis qu'on connaît le métal, plus rien ne m'arrête… si j'en ai.",
+    say: "Doka, le tailleur de pierre. Il lui faut des outils de cuivre, solides." },
+  otzi: { mood: "vexe",
+    bubble: "Cette mine me ronge les os. Le froid, l'humidité… j'ai mal partout.",
+    say: "L'homme des glaces — notre Ötzi. Il cherche des tatouages de soin qui ne s'effacent jamais." },
 };
+
+/* ------------------------------------------------------------
+   LA QUÊTE — l'histoire du chapitre, étape par étape.
+   perso : qui parle (le « ? » doré se pose sur lui)
+   attend : ce qu'il faut accomplir (id de message/objet, ou drapeau)
+   suite : phrase de MARTINE quand l'étape est réussie (vers qui aller)
+   ------------------------------------------------------------ */
+const QUETE = [
+  { perso: "guna",
+    bubble: "Halte, étranger ! On n'entre pas dans la cité du roi Tannis comme dans un moulin. Suis-moi : je te mène à lui. C'est lui qui décidera si tu restes.",
+    say: "Un accueil… au bout d'une lance. Restons polis. Le roi t'attend plus loin ›." },
+
+  { perso: "tannis",
+    bubble: "Bienvenue dans ma cité de Göbekli Tepe. Si tu ne viens pas voler mon grain ni fuir mes impôts, tu seras bien traité. Prouve ta valeur : va donner un coup de main à mes artisans et à mes marchands.",
+    say: "Un roi qui parle d'impôts et de grain à engranger… nous voilà en pleine révolution néolithique ! File aider le petit peuple ›." },
+
+  { perso: "jala",
+    bubble: "Ah, un coup de main ! On façonne ici les plus belles poteries du pays. Aide-moi à en faire une, digne de notre cité : trouve tout ce qu'il faut.",
+    say: "La chaîne du potier : la terre sur le tour, la cuisson, les couleurs… et la touche d'ici, la nacre du coquillage.",
+    attend: "msg_poterie",
+    suite: "Jala serre la poterie contre elle, ravie. À côté, le marchand Ahmid se ronge les sangs — va le voir." },
+
+  { perso: "ahmid",
+    bubble: "Toi qui aides si bien, sauve-moi ! Je dois mener tout ce bétail à la cité voisine, mais mes hommes sont des filous… Comment prouver à l'acheteur le nombre EXACT de bêtes ?",
+    say: "Un caillou par bête, scellés dans l'argile : impossible de tricher. Ni plus ni moins que l'ancêtre de l'écriture.",
+    attend: "msg_calculi",
+    suite: "Ahmid t'embrasse : son compte est en sûreté. On te réclame sur la plaine, là où l'on dresse les pierres ›." },
+
+  { perso: "imir",
+    bubble: "Approche, ami du roi. Ici, nous honorons Tannis et nos dieux en dressant des pierres géantes, gravées de symboles. Prête-nous tes bras et ton adresse.",
+    say: "Un prêtre, des mégalithes pour le roi et les dieux : la pierre qui parle aux siècles. Son tailleur, Doka, va te dire comment." },
+
+  { perso: "doka",
+    bubble: "Avant de dresser cette pierre, je dois y graver les symboles sacrés. Mais le silex s'émousse trop vite… il me faut des outils de MÉTAL. Trouve-moi de quoi les forger.",
+    say: "Du cuivre ! Il y a un filon dans la montagne, plus haut ›. Fonds-le au four, martèle-le en burin, grave la pierre, puis dresse-la avec les hommes.",
+    attend: "msg_megalithe",
+    suite: "La pierre gravée se dresse enfin vers le ciel. Doka t'acclame. Il reste un blessé, à la mine…" },
+
+  { perso: "otzi",
+    bubble: "Étranger… cette mine me ronge les os. Le guérisseur dit qu'il faut marquer les points de douleur — des tatouages, qui ne s'effacent jamais. M'aideras-tu ?",
+    say: "Une aiguille d'os, de la suie noire frottée sous la peau : les 61 tatouages de soin d'Ötzi. Le corps comme support.",
+    attend: "msg_tatouage",
+    suite: "Ötzi respire, soulagé. Tu as aidé toute la cité : ma jauge déborde. Le roi voudra te saluer avant ton départ." },
+
+  { perso: "tannis",
+    bubble: "Tu es entré en étranger : te voilà l'ami de Göbekli Tepe. Ta drôle de machine qui clignote t'appelle. Va — et raconte au monde ce que tu as vu ici.",
+    say: "Rechargée à bloc, merci ces braves gens. Le bouton PARTIR t'emmène en Mésopotamie… là où ces petits cailloux d'argile vont devenir l'ÉCRITURE." },
+];
 
 /* ------------------------------------------------------------
    LA FICHE DU CHAPITRE
    ------------------------------------------------------------ */
 const chapter = {
   id: "02-neolithique",
-  bandeau: "CHAPITRE 2 · −4500",
-  date: "−4500",
+  bandeau: "CHAPITRE 2 · NÉOLITHIQUE",
+  date: "−5000",
   epoque: "Néolithique",
-  emoji: "🌾",
+  emoji: "🏛️",
 
   titre: "MARTINE",
   sousTitre: "Machine À Remonter le Temps Intelligente Néanmoins Excellente",
   presentationTitre: "Chapitre 2 — Néolithique.",
-  presentation: "Les humains se sont posés : villages, champs, troupeaux. De nouveaux besoins de communication apparaissent — marquer son identité, son territoire, ses morts, ses biens. Explore le village, la lande aux mégalithes et le col de la montagne.",
-  accroche: "Cuis la première céramique 🏺 · dresse un mégalithe 🗿 · tatoue Ötzi ✒️ · forge le cuivre 🪓",
+  presentation: "Les humains se sont posés : villages, champs, troupeaux… et même une cité fortifiée, avec son roi. Gagne ta place dans la cité de Göbekli Tepe en aidant ses habitants — la potière, le marchand, le prêtre, le tailleur et un mineur souffrant.",
+  accroche: "Deviens l'ami de la cité : poterie 🏺 · calculi 🔘 · mégalithe 🗿 · tatouages ✒️",
 
   finTitre: "SAUT TEMPOREL RÉUSSI",
-  finTexte: "« Circuits rechargés à {pct} %. Le Néolithique t'a montré des messages de pierre, de terre, de peau, de métal… et surtout la LIMITE de la mémoire : trop de bêtes à compter, trop d'échanges à retenir. La prochaine invention va tout changer — un système de petits signes pour NOTER. On appellera ça l'écriture. Prochain saut : la Mésopotamie… » — MARTINE",
+  finTexte: "« Circuits rechargés à {pct} %. Tu as vu naître la CITÉ, la marque, le compte durable, le monument… et surtout, chez Ahmid, ces cailloux d'argile qui appellent déjà autre chose. La prochaine invention va tout changer : un système de petits signes pour NOTER. On appellera ça l'écriture. Prochain saut : la Mésopotamie… » — MARTINE",
 
   required: 3,
   startScene: 0,
@@ -213,6 +292,7 @@ const chapter = {
   failLines: FAIL_LINES,
   intro: INTRO,
   actions: ACTIONS,
+  quete: QUETE,
 };
 
 export default chapter;
