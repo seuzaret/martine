@@ -151,6 +151,20 @@ export default function SceneCol({ collect, action, reveal, made = [] }) {
           <ellipse cx="-6" cy="-2" rx="4" ry="3" fill="#7ad8a0" opacity="0.7" />
         </g>
 
+        {/* RÉSULTAT (msg_hache) : la HACHE DE CUIVRE, coulée et martelée, posée
+            sur l'enclume — brillante, gravée de signes de propriété */}
+        {made.includes("msg_hache") && (
+          <g transform="translate(620,496)" style={{ animation: "fadein 1s ease-out" }}>
+            <path d="M-30 12 L28 -14" stroke="#7a5230" strokeWidth="6" strokeLinecap="round" />
+            <path d="M-30 12 L28 -14" stroke="#9a6c40" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+            <path d="M22 -20 L41 -11 L34 3 L17 -8 Z" fill="#c87838" />
+            <path d="M22 -20 L41 -11 L34 3 L17 -8 Z" fill="none" stroke="#e0a860" strokeWidth="1.2" />
+            <path d="M25 -16 L37 -9" stroke="#f0c890" strokeWidth="1.4" opacity="0.7" />
+            <path d="M26 -7 l6 3 M28 -11 l6 3" stroke="#7a4a20" strokeWidth="1" opacity="0.8" />
+            <path d="M19 -12 q4 4 8 2" stroke="#5a3f24" strokeWidth="2.5" fill="none" />
+          </g>
+        )}
+
         {/* rochers qui cadrent les coins du bas */}
         <path d="M0 560 L0 512 Q46 502 86 522 Q54 540 18 544 Q4 546 0 560 Z" fill="#3e372c" />
         <path d="M1000 560 L1000 508 Q950 500 916 520 Q956 538 986 542 Q998 544 1000 560 Z" fill="#3a342a" />

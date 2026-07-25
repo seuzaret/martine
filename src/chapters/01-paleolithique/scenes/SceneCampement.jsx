@@ -246,7 +246,7 @@ export default function SceneCampement({ collect, action, reveal, made = [], que
           du feu, le soir, et les histoires passent de bouche à oreille */}
       {made.includes("msg_veillee") && (
         <g style={{ animation: "fadein 1.2s ease-out" }}>
-          <ellipse cx="500" cy="470" rx="280" ry="94" fill="#ff9540" opacity="0.10" style={{ animation: "glow 3s ease-in-out infinite" }} />
+          <ellipse cx="500" cy="466" rx="300" ry="82" fill="url(#c1fire)" opacity="0.55" filter="url(#c1blur)" style={{ animation: "glow 3s ease-in-out infinite" }} />
           {[[572, 486, 1, "#4a2e1a"], [620, 476, 0.9, "#3e2818"], [540, 496, 0.85, "#432a18"]].map(([x, y, s, c], i) => (
             <g key={i} transform={`translate(${x},${y}) scale(${s})`}>
               <path d="M-14 12 Q-16 -10 0 -14 Q16 -10 14 12 Z" fill={c} />

@@ -163,6 +163,21 @@ export default function SceneImprimerie({ collect, action, reveal, made = [] }) 
           <circle cx="13" cy="-27" r="2.3" fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
           <path d="M8 -20 q6 -8 13 -6" stroke="#8a94a8" strokeWidth="2.3" fill="none" strokeLinecap="round" />
         </g>
+
+        {/* RÉSULTAT (msg_gazettes) : un ÉVENTAIL de gazettes se répand — mille
+            feuilles identiques en une nuit, que nul ne peut plus arrêter */}
+        {made.includes("msg_gazettes") && (
+          <g transform="translate(602,512)" style={{ animation: "fadein 1s ease-out" }}>
+            <ellipse cx="0" cy="12" rx="48" ry="8" fill="#140b06" opacity="0.4" />
+            {[-28, -14, 0, 14, 28].map((rot, i) => (
+              <g key={i} transform={`rotate(${rot})`}>
+                <rect x="-13" y="-42" width="26" height="46" rx="1" fill="#efe6ce" stroke="#c8bda0" strokeWidth="0.6" />
+                <rect x="-13" y="-42" width="26" height="9" fill="#d8cdb0" />
+                <path d="M-9 -29 h18 M-9 -24 h14 M-9 -19 h18 M-9 -14 h12 M-9 -9 h16" stroke="#5a4a3a" strokeWidth="0.9" opacity="0.6" />
+              </g>
+            ))}
+          </g>
+        )}
       </PLayer>
 
       {/* voile de grain global */}

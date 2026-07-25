@@ -137,6 +137,23 @@ export default function SceneRelais({ collect, action, reveal, made = [] }) {
 
         {/* auge d'eau + botte de foin */}
         <g transform="translate(880,510)"><path d="M-20 -6 L20 -6 L16 10 L-16 10 Z" fill="#5a3f24" /><ellipse cx="0" cy="-6" rx="20" ry="4" fill="#5a7278" /></g>
+
+        {/* RÉSULTAT (msg_poste) : un COURRIER part au galop sur la route,
+            la lettre dans sa sacoche — le relais fait son office */}
+        {made.includes("msg_poste") && (
+          <g transform="translate(468,432)" style={{ animation: "fadein 1s ease-out" }}>
+            <ellipse cx="20" cy="18" rx="28" ry="6" fill="#c8b088" opacity="0.35" style={{ animation: "drift 3s ease-in-out infinite" }} />
+            <g fill="#3a2c20">
+              <path d="M-18 6 Q-20 -6 -8 -8 L14 -8 Q22 -8 24 -2 Q26 4 18 6 Q0 8 -18 6 Z" />
+              <path d="M14 -8 Q24 -12 28 -22 L34 -20 Q30 -8 20 -6 Z" />
+              <path d="M-14 4 l-8 12 M-4 5 l-2 14 M14 4 l8 12 M20 2 l10 8" stroke="#3a2c20" strokeWidth="3" strokeLinecap="round" />
+              <path d="M-18 0 q-10 2 -14 10" stroke="#3a2c20" strokeWidth="4" fill="none" strokeLinecap="round" />
+            </g>
+            <path d="M-4 -10 Q-2 -22 6 -22 Q12 -20 10 -10 Z" fill="#3a4a8a" />
+            <circle cx="4" cy="-24" r="4" fill="#c8a882" />
+            <rect x="-9" y="-6" width="8" height="8" rx="1.5" fill="#6e4c2e" />
+          </g>
+        )}
       </PLayer>
 
       {/* voile de grain global */}

@@ -148,6 +148,20 @@ export default function SceneChappe({ collect, action, reveal, made = [] }) {
         </g>
       </PLayer>
 
+      {/* RÉSULTAT (msg_chappe) : au loin, sur une colline, une TOUR-RELAIS
+          reprend le signal — le message saute de colline en colline, plus
+          vite qu'aucun cheval */}
+      {made.includes("msg_chappe") && (
+        <g transform="translate(812,166)" style={{ animation: "fadein 1s ease-out" }}>
+          <rect x="-6" y="0" width="12" height="36" fill="#4a5260" opacity="0.85" />
+          <rect x="-9" y="-6" width="18" height="8" fill="#3e4652" opacity="0.85" />
+          <path d="M0 -6 v-24" stroke="#2e3540" strokeWidth="3" />
+          <path d="M0 -26 l-16 -8" stroke="#2e3540" strokeWidth="3.5" strokeLinecap="round" />
+          <path d="M0 -22 l14 10" stroke="#2e3540" strokeWidth="3.5" strokeLinecap="round" />
+          <circle cx="0" cy="-30" r="3" fill="#ffe9a0" style={{ animation: "glow 1.6s ease-in-out infinite" }} />
+        </g>
+      )}
+
       {/* voile de grain global */}
       <rect width="1000" height="560" fill="#201810" opacity="0.06" style={{ pointerEvents: "none" }} />
 
