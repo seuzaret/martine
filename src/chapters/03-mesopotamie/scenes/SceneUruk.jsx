@@ -186,6 +186,22 @@ export default function SceneUruk({ collect, action, reveal, made = [] }) {
           <circle cx="13" cy="-27" r="2.3" fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
           <path d="M8 -20 q6 -8 13 -6" stroke="#8a94a8" strokeWidth="2.3" fill="none" strokeLinecap="round" />
         </g>
+
+        {/* RÉSULTAT (msg_cuneiforme) : la tablette CUITE, dure comme la
+            pierre, couverte de signes cunéiformes — l'Histoire commence */}
+        {made.includes("msg_cuneiforme") && (
+          <g transform="translate(700,512)" style={{ animation: "fadein 1s ease-out" }}>
+            <ellipse cx="0" cy="22" rx="36" ry="8" fill="#20140a" opacity="0.4" />
+            <path d="M-30 -22 Q-35 -2 -30 18 Q0 25 30 18 Q35 -2 30 -22 Q0 -29 -30 -22 Z" fill="#c9a878" />
+            <path d="M-30 -22 Q-35 -2 -30 18 Q0 25 30 18 Q35 -2 30 -22 Q0 -29 -30 -22 Z" fill="#8a6a44" opacity="0.18" />
+            <path d="M-30 -22 Q0 -14 30 -22" stroke="#a98858" strokeWidth="1.6" fill="none" opacity="0.6" />
+            {/* signes cunéiformes : petits coins impressionnés, en lignes */}
+            {[-14, -5, 4, 13].map((ry, r) => [-22, -13, -4, 5, 14].map((rx, c) => (
+              <path key={`${r}-${c}`} d={`M${rx} ${ry - 2} l5 2 l-5 2 Z`} fill="#4a3420"
+                transform={`rotate(${((r + c) % 3) * 22 - 22} ${rx} ${ry})`} />
+            )))}
+          </g>
+        )}
       </PLayer>
 
       {/* voile de grain global */}

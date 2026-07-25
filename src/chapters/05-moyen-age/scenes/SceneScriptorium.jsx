@@ -153,6 +153,30 @@ export default function SceneScriptorium({ collect, action, reveal, made = [] })
           <circle cx="13" cy="-27" r="2.3" fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
           <path d="M8 -20 q6 -8 13 -6" stroke="#8a94a8" strokeWidth="2.3" fill="none" strokeLinecap="round" />
         </g>
+
+        {/* RÉSULTAT (msg_manuscrit) : la page ENLUMINÉE — lettrine ornée d'or
+            et de rouge, rinceaux, une petite miniature. Des mois de travail. */}
+        {made.includes("msg_manuscrit") && (
+          <g transform="translate(440,500)" style={{ animation: "fadein 1s ease-out" }}>
+            <ellipse cx="0" cy="46" rx="34" ry="8" fill="#100a06" opacity="0.5" />
+            <rect x="-30" y="-40" width="60" height="82" rx="2" fill="#efe4c8" />
+            <rect x="-30" y="-40" width="60" height="82" rx="2" fill="none" stroke="#c9a860" strokeWidth="2" />
+            <rect x="-25" y="-35" width="50" height="72" fill="none" stroke="#b8923a" strokeWidth="1.4" />
+            <path d="M-25 -35 q-4 20 0 40 q4 20 0 32" stroke="#3a6a4a" strokeWidth="1.4" fill="none" />
+            {[[-25, -24, "#a83028"], [-25, -4, "#2a6ab0"], [-25, 16, "#e0b040"], [25, -14, "#a83028"], [25, 12, "#2a6ab0"]].map(([x, y, c], i) => (
+              <circle key={i} cx={x} cy={y} r="2.4" fill={c} />
+            ))}
+            {/* la lettrine ornée */}
+            <rect x="-22" y="-31" width="17" height="19" fill="#a83028" />
+            <rect x="-22" y="-31" width="17" height="19" fill="none" stroke="#e0b040" strokeWidth="1.4" />
+            <text x="-13.5" y="-16" textAnchor="middle" fontSize="15" fill="#f0e4c4" fontFamily="Palatino, Georgia, serif" style={{ fontWeight: 700 }}>D</text>
+            {/* lignes de texte + petite miniature */}
+            <path d="M-3 -28 h25 M-3 -22 h22 M-3 -16 h25 M-20 -6 h42 M-20 0 h38 M-20 6 h42 M-20 24 h40 M-20 30 h32" stroke="#5a4632" strokeWidth="1.2" opacity="0.7" />
+            <rect x="2" y="12" width="18" height="14" fill="#2a5a7a" />
+            <rect x="2" y="12" width="18" height="14" fill="none" stroke="#e0b040" strokeWidth="1" />
+            <circle cx="11" cy="18" r="3" fill="#e0b040" />
+          </g>
+        )}
       </PLayer>
 
       {/* voile de grain global */}

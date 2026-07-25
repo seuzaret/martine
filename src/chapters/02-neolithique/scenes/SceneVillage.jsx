@@ -232,6 +232,22 @@ export default function SceneVillage({ collect, action, reveal, made = [] }) {
           <path d="M9 -22 q6 -8 13 -6" stroke="#8a94a8" strokeWidth="2.5" fill="none" strokeLinecap="round" />
         </g>
 
+        {/* RÉSULTAT (msg_poterie) : un beau pot cuit, PEINT de motifs
+            géométriques — la « marque » du village, reconnaissable entre tous */}
+        {made.includes("msg_poterie") && (
+          <g transform="translate(248,500)" style={{ animation: "fadein 1s ease-out" }}>
+            <ellipse cx="0" cy="36" rx="30" ry="8" fill="#20180c" opacity="0.4" />
+            <path d="M-24 -10 Q-30 4 -22 26 Q-14 38 0 38 Q14 38 22 26 Q30 4 24 -10 Q14 -20 0 -20 Q-14 -20 -24 -10 Z" fill="#b5623a" />
+            <path d="M-24 -10 Q0 -2 24 -10" stroke="#7a3f24" strokeWidth="2" fill="none" opacity="0.5" />
+            <path d="M-16 -18 Q0 -24 16 -18 L14 -10 Q0 -15 -14 -10 Z" fill="#9a5030" />
+            {/* motifs peints : zigzags + bandes */}
+            <path d="M-22 -4 h44" stroke="#2c1810" strokeWidth="1.6" opacity="0.6" />
+            <path d="M-22 3 l7 -6 l7 6 l7 -6 l7 6 l7 -6" stroke="#2c1810" strokeWidth="2" fill="none" />
+            <path d="M-22 13 h44" stroke="#efe0c4" strokeWidth="2.5" opacity="0.85" />
+            <path d="M-20 21 l6 6 l6 -6 l6 6 l6 -6 l6 6" stroke="#efe0c4" strokeWidth="2" fill="none" opacity="0.8" />
+          </g>
+        )}
+
         {/* herbes qui cadrent le bas */}
         <g opacity="0.9">
           <path d="M-4 560 q10 -30 4 -46 M18 560 q3 -24 14 -38 M40 560 q-6 -20 2 -34" stroke="#241a10" strokeWidth="4" fill="none" />

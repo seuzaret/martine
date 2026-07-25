@@ -128,6 +128,20 @@ export default function SceneGutenberg({ collect, action, reveal, made = [] }) {
           </g>
         </g>
 
+        {/* RÉSULTAT (msg_imprimerie) : une PILE de feuilles toutes IDENTIQUES,
+            tout juste sorties de la presse — la production en série. */}
+        {made.includes("msg_imprimerie") && (
+          <g transform="translate(606,548)" style={{ animation: "fadein 1s ease-out" }}>
+            <ellipse cx="0" cy="8" rx="34" ry="8" fill="#160f08" opacity="0.5" />
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <g key={i} transform={`translate(${(i % 2 ? 3 : -3)},${-i * 5}) rotate(${i % 2 ? -1.6 : 1.6})`}>
+                <rect x="-26" y="-34" width="52" height="40" fill="#efe6ce" />
+                <path d="M-18 -27 h36 M-18 -21 h28 M-18 -15 h34 M-18 -9 h24 M-18 -3 h32" stroke="#5a4a3a" strokeWidth="1" opacity="0.6" />
+              </g>
+            ))}
+          </g>
+        )}
+
         {/* GUTENBERG — il tient un bloc de bois gravé, fendu : sa page ratée.
             C'est ce ratage qui va lui donner l'idée des lettres séparées. */}
         <g transform="translate(486,478)">
