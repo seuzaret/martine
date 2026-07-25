@@ -71,10 +71,10 @@ export default function SceneTrone({ collect, action, reveal, queteQui }) {
         {/* les torches murales */}
         {[196, 804].map((x, i) => (
           <g key={i} transform={`translate(${x},220)`}>
-            <ellipse cx="0" cy="-24" rx="46" ry="52" fill="url(#tr-torch)" style={{ animation: "glow 2.6s ease-in-out infinite" }} />
+            <ellipse cx="0" cy="-24" rx="46" ry="52" fill="url(#tr-torch)" style={{ animation: "glow 4.5s ease-in-out infinite" }} />
             <rect x="-4" y="0" width="8" height="120" fill="#4a3018" />
             <path d="M-8 -4 q4 -6 8 -8 q4 6 8 8 Z" fill="#5a3f24" />
-            <g style={{ transformOrigin: `${x}px 194px`, transformBox: "view-box", animation: "flick 0.9s ease-in-out infinite" }}>
+            <g style={{ transformOrigin: `${x}px 194px`, transformBox: "view-box", animation: "flick 3.2s ease-in-out infinite" }}>
               <path d="M0 -6 Q-12 -26 0 -46 Q12 -26 0 -6 Z" fill="#ff8a3c" />
               <path d="M0 -8 Q-6 -22 0 -36 Q6 -22 0 -8 Z" fill="#ffd36a" />
               <path d="M0 -10 Q-3 -18 0 -26 Q3 -18 0 -10 Z" fill="#fff2c4" />

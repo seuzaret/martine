@@ -92,18 +92,33 @@ export default function SceneMuraille({ collect, action, reveal, queteQui }) {
             </g>
           );
         })}
-        {/* la tour de guet, au-dessus de la porte */}
-        <rect x="548" y="196" width="164" height="20" fill="#6e4c2e" />
-        <rect x="548" y="196" width="164" height="20" fill="#221408" opacity="0.3" filter="url(#mu-grain)" />
-        <rect x="564" y="150" width="132" height="48" fill="#5a3f24" />
-        {[566, 588, 610, 632, 654, 676].map((x, i) => <rect key={i} x={x} y="138" width="14" height="14" fill="#4a3018" />)}
-        {/* les deux battants de la porte, ouverts sur l'ombre */}
-        <rect x="562" y="270" width="66" height="160" fill="#3a2614" />
-        <rect x="632" y="270" width="66" height="160" fill="#3a2614" />
-        <path d="M562 270 v160 M628 270 v160 M632 270 v160 M698 270 v160" stroke="#241608" strokeWidth="3" />
-        {[300, 340, 380].map((y, i) => <path key={i} d={`M566 ${y} h58 M636 ${y} h58`} stroke="#241608" strokeWidth="2" opacity="0.6" />)}
-        {/* l'ombre profonde de l'entrée */}
-        <path d="M628 276 q6 60 0 150 l6 0 q-4 -80 0 -150 Z" fill="#0e0805" opacity="0.7" />
+        {/* le linteau : grosse poutre en travers, posée au sommet de la palissade */}
+        <rect x="556" y="212" width="186" height="24" fill="url(#mu-wood)" />
+        <rect x="556" y="212" width="186" height="24" fill="#221408" opacity="0.4" filter="url(#mu-grain)" />
+        <path d="M560 217 h178" stroke="#a8865c" strokeWidth="1.4" opacity="0.35" />
+        {/* la tour de guet, assise sur le linteau */}
+        <rect x="580" y="158" width="138" height="56" fill="#5a3f24" />
+        <rect x="580" y="158" width="138" height="56" fill="#221408" opacity="0.3" filter="url(#mu-grain)" />
+        {[584, 608, 632, 656, 680, 704].map((x, i) => <rect key={i} x={x} y="146" width="14" height="14" fill="#4a3018" />)}
+        <rect x="635" y="174" width="28" height="26" fill="#241608" />
+        <path d="M635 187 h28" stroke="#3a2614" strokeWidth="1.4" opacity="0.6" />
+        {/* les deux grands battants de la porte, sous le linteau */}
+        <rect x="572" y="236" width="154" height="194" fill="#3a2614" />
+        <rect x="572" y="236" width="154" height="194" fill="#221408" opacity="0.32" filter="url(#mu-grain)" />
+        <path d="M649 236 v194" stroke="#1c1006" strokeWidth="4" />
+        <path d="M572 236 v194 M726 236 v194" stroke="#241608" strokeWidth="3" />
+        {[236, 430].map((y, i) => <path key={i} d={`M572 ${y} h154`} stroke="#241608" strokeWidth="3" />)}
+        {/* deux traverses de renfort ferrées + clous */}
+        {[296, 384].map((y, i) => (
+          <g key={i}>
+            <path d={`M576 ${y} h146`} stroke="#2a180c" strokeWidth="7" />
+            {[584, 616, 642, 656, 690, 718].map((x, j) => <circle key={j} cx={x} cy={y} r="2.4" fill="#1c1006" />)}
+          </g>
+        ))}
+        {/* planches verticales sur chaque battant */}
+        {[588, 610, 632, 668, 690, 712].map((x, i) => <path key={i} d={`M${x} 240 v186`} stroke="#241608" strokeWidth="1.6" opacity="0.5" />)}
+        {/* fente d'ombre entre les battants */}
+        <rect x="645" y="240" width="8" height="186" fill="#0e0805" opacity="0.6" />
       </PLayer>
 
       {/* ═══ premier plan : la grève, Guna, le coquillage ═══ */}

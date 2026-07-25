@@ -42,7 +42,18 @@ export default function SceneMontagne({ collect, action, reveal, made = [], quet
       {/* ═══ sommets lointains, enneigés ═══ */}
       <PLayer depth={1}>
         <path d="M0 300 L160 140 L300 280 L460 110 L640 290 L820 150 L1000 300 L1000 360 L0 360 Z" fill="url(#mo-far)" opacity="0.85" />
-        <path d="M460 110 L436 172 L500 162 L482 118 Z M160 140 L142 190 L192 184 Z M820 150 L802 200 L850 194 Z" fill="url(#mo-snow)" opacity="0.95" />
+        {/* les calottes de neige : le haut blanc, qui épouse chaque sommet */}
+        <g fill="#f6f9fb">
+          <path d="M160 140 L114 186 L150 176 L188 184 L205 186 Z" />
+          <path d="M460 110 L406 168 L442 156 L472 166 L516 170 Z" />
+          <path d="M820 150 L760 196 L800 186 L838 194 L876 196 Z" />
+        </g>
+        {/* ombre douce sur le versant droit de chaque calotte */}
+        <g fill="#cdd6dc" opacity="0.8">
+          <path d="M160 140 L188 184 L205 186 L176 168 Z" />
+          <path d="M460 110 L472 166 L516 170 L478 150 Z" />
+          <path d="M820 150 L838 194 L876 196 L836 176 Z" />
+        </g>
         <path d="M0 300 L160 140 L300 280 L460 110 L640 290 L820 150 L1000 300" stroke="#4a5464" strokeWidth="1.4" fill="none" opacity="0.3" />
       </PLayer>
 
