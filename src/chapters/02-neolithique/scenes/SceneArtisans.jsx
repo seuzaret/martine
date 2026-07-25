@@ -26,6 +26,18 @@ export default function SceneArtisans({ collect, action, reveal, made = [], quet
       {Array.from({ length: 20 }).map((_, i) => <rect key={i} x={i * 52} y="138" width="30" height="14" fill="#a88a5a" />)}
       <rect x="470" y="96" width="70" height="56" fill="#b09466" /><rect x="470" y="88" width="70" height="12" fill="#9a7e52" />
 
+      {/* MAISONS BLANCHES aux toits carrés (la cité vue derrière la place
+          du marché) — petites échelles sur les toits, façon Çatalhöyük */}
+      {[[110, 316, 0.95], [200, 304, 1.1], [292, 320, 0.85], [720, 310, 1.0], [812, 320, 0.9], [896, 308, 0.8]].map(([x, y, s], i) => (
+        <g key={i} transform={`translate(${x},${y}) scale(${s})`}>
+          <rect x="-30" y="0" width="60" height="52" fill="#e8e2d4" />
+          <rect x="-30" y="0" width="60" height="8" fill="#d0c8b6" />
+          <rect x="-30" y="0" width="60" height="52" fill="none" stroke="#c8bfa8" strokeWidth="1" />
+          <rect x="-8" y="28" width="16" height="24" fill="#5a4a36" />
+          <path d="M-20 0 l4 -13 M-14 0 l4 -13 M-19 -3 h5 M-18 -7 h5" stroke="#8a7a5a" strokeWidth="1.2" />
+        </g>
+      ))}
+
       {/* sol */}
       <rect y="350" width="1000" height="210" fill="url(#ar-ground)" />
       <ellipse cx="500" cy="470" rx="460" ry="60" fill="#6e5636" opacity="0.22" />

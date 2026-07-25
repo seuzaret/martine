@@ -53,10 +53,15 @@ export default function SceneMontagne({ collect, action, reveal, made = [], quet
         <ellipse cx="0" cy="30" rx="70" ry="20" fill="url(#mo-fire)" style={{ animation: "glow 2.6s ease-in-out infinite" }} />
         {/* fourche gauche + droite */}
         <path d="M-46 30 l-4 -30 M-50 0 l8 6 M-50 0 l0 -8 M46 30 l4 -30 M50 0 l-8 6 M50 0 l0 -8" stroke="#4a3018" strokeWidth="3" strokeLinecap="round" />
-        {/* la broche + l'animal */}
+        {/* la broche + LE GIGOT qui rôtit (viande + os qui dépasse) */}
         <path d="M-54 -2 L54 -2" stroke="#8a8c92" strokeWidth="2.4" />
-        <ellipse cx="0" cy="-2" rx="26" ry="12" fill="#7a4a2e" />
-        <path d="M-18 -2 q18 -6 36 0" stroke="#5a3520" strokeWidth="1.4" fill="none" opacity="0.6" />
+        <path d="M-22 -2 Q-26 -14 -8 -16 Q16 -18 22 -4 Q26 6 14 10 Q-8 14 -22 -2 Z" fill="#8a3e28" />
+        <path d="M-22 -2 Q-26 -14 -8 -16 Q16 -18 22 -4 Q26 6 14 10 Q-8 14 -22 -2 Z" fill="#5a241a" opacity="0.35" />
+        <path d="M-8 -12 q10 -2 18 4" stroke="#a85040" strokeWidth="1.6" fill="none" opacity="0.6" />
+        {/* l'os qui sort du gigot, côté droit */}
+        <path d="M18 -4 L52 -8" stroke="#e8e0cc" strokeWidth="6" strokeLinecap="round" />
+        <circle cx="54" cy="-8" r="4.5" fill="#efe6d2" />
+        <circle cx="52" cy="-5" r="3.5" fill="#efe6d2" />
         {/* flammes */}
         <g style={{ transformOrigin: "0px 24px", transformBox: "view-box", animation: "flick 0.9s ease-in-out infinite" }}>
           <path d="M0 26 Q-16 6 -4 -18 Q0 -4 5 -14 Q16 4 8 24 Z" fill="#ff7f24" />
@@ -93,9 +98,6 @@ export default function SceneMontagne({ collect, action, reveal, made = [], quet
         </g>
       )}
 
-      {/* une hache de silex + un os posés au sol */}
-      <g transform="translate(470,516)"><path d="M-12 2 L8 -2" stroke="#6e4c2e" strokeWidth="4" strokeLinecap="round" /><path d="M6 -6 L16 -3 L13 5 L4 2 Z" fill="#8d8d97" stroke="#dfe3ec" strokeWidth="1" /></g>
-      <g transform="translate(640,520)"><path d="M-14 0 q14 -6 28 0" stroke="#e8e0cc" strokeWidth="6" fill="none" strokeLinecap="round" /></g>
       {/* le bol d'argile d'Ötzi, posé au sol à côté de lui */}
       <g transform="translate(588,514)">
         <ellipse cx="0" cy="8" rx="16" ry="4" fill="#241c12" opacity="0.4" />
@@ -112,8 +114,7 @@ export default function SceneMontagne({ collect, action, reveal, made = [], quet
       <Hotspot cx={380} cy={498} r={38} label="pierre à marteler" item="pierre_marteler" reveal={reveal} onClick={() => collect("pierre_marteler")} />
       <Hotspot cx={760} cy={484} r={50} label="le feu" item="feu" reveal={reveal} onClick={() => collect("feu")} />
       <Hotspot cx={588} cy={510} r={24} label="bol d'argile" item="bol" reveal={reveal} onClick={() => collect("bol")} />
-      <Hotspot cx={470} cy={514} r={28} label="éclat de silex" item="silex" reveal={reveal} onClick={() => collect("silex")} />
-      <Hotspot cx={640} cy={518} r={26} label="os" item="os" reveal={reveal} onClick={() => collect("os")} />
+      <Hotspot cx={814} cy={478} r={24} label="os (le gigot)" item="os" reveal={reveal} onClick={() => collect("os")} />
     </svg>
   );
 }

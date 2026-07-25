@@ -7,7 +7,7 @@ import Hotspot from "../../../engine/Hotspot.jsx";
    le roi, à écouter. (Art « premier jet ».)
    ============================================================ */
 
-export default function SceneTrone({ action, reveal, queteQui }) {
+export default function SceneTrone({ collect, action, reveal, queteQui }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -84,10 +84,36 @@ export default function SceneTrone({ action, reveal, queteQui }) {
         </g>
       ))}
 
+      {/* L'ARMURERIE DU ROI — des haches de silex, l'emblème du guerrier */}
+      {/* deux haches croisées au mur, au-dessus du trône */}
+      <g transform="translate(500,158)">
+        {[24, -24].map((rot, i) => (
+          <g key={i} transform={`rotate(${rot})`}>
+            <path d="M0 -52 L0 50" stroke="#6e4c2e" strokeWidth="6" strokeLinecap="round" />
+            <path d="M-4 -50 L-20 -60 L-13 -76 L1 -64 Z" fill="#8d8d97" stroke="#dfe3ec" strokeWidth="1.2" />
+          </g>
+        ))}
+        <circle cx="0" cy="0" r="5" fill="#a8842a" />
+      </g>
+      {/* le râtelier d'armes, à droite du trône (le silex se prend ici) */}
+      <g transform="translate(772,452)">
+        <ellipse cx="0" cy="50" rx="48" ry="9" fill="#3a2c1c" opacity="0.4" />
+        <rect x="-42" y="34" width="84" height="8" fill="#5a3f24" />
+        <rect x="-42" y="-14" width="84" height="6" fill="#6e4c2e" />
+        {[-26, -2, 22].map((dx, i) => (
+          <g key={i} transform={`translate(${dx},0) rotate(${(i - 1) * 3})`}>
+            <path d="M0 42 L0 -40" stroke="#6e4c2e" strokeWidth="6" strokeLinecap="round" />
+            <path d="M-4 -38 L-20 -48 L-13 -64 L1 -52 Z" fill="#8d8d97" stroke="#dfe3ec" strokeWidth="1.2" />
+            <path d="M-4 -40 q4 -4 8 -2" stroke="#5a3f24" strokeWidth="2.5" fill="none" />
+          </g>
+        ))}
+      </g>
+
       <rect width="1000" height="560" fill="#1a1208" opacity="0.06" style={{ pointerEvents: "none" }} />
 
-      {/* zone cliquable : le roi */}
+      {/* zones cliquables : le roi + l'armurerie */}
       <Hotspot cx={500} cy={370} r={54} label="le roi Tannis" reveal={reveal} onClick={(p) => action("tannis", p)} />
+      <Hotspot cx={772} cy={430} r={46} label="hache de silex" item="silex" reveal={reveal} onClick={() => collect("silex")} />
     </svg>
   );
 }

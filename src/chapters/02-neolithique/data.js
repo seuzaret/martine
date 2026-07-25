@@ -42,7 +42,7 @@ const ITEMS = {
   /* T5 — la montagne et la mine */
   minerai:  { name: "Minerai de cuivre", emoji: "🟢", desc: "Une pierre verte, de la malachite, arrachée au filon. Chauffée fort, elle « sue » du métal." },
   pierre_marteler: { name: "Pierre à marteler", emoji: "⚒️", support: true, desc: "Une enclume de pierre : pour battre le cuivre en outils et y graver des signes." },
-  silex:    { name: "Éclat de silex", emoji: "🔪", desc: "Un éclat tranchant. Rien de tel pour percer l'os et tailler de fins outils." },
+  silex:    { name: "Hache de silex", emoji: "🔪", desc: "Une belle hache de silex, empruntée à l'armurerie du roi. Tranchante comme un rasoir : rien de tel pour percer l'os et tailler de fins outils." },
   os:       { name: "Os", emoji: "🦴", desc: "Un os de l'animal rôti à la broche. Taillé, il fait de belles aiguilles." },
   bol:      { name: "Bol d'argile", emoji: "🥣", desc: "Un petit bol de terre. Placé au-dessus du feu, il recueille la suie noire." },
 
@@ -77,7 +77,7 @@ const WHERE = {
   cailloux: "au bord du fleuve, sur la plaine",
   grande_pierre: "sur la plaine aux mégalithes",
   minerai: "au filon, dans la montagne",
-  silex: "à la montagne", os: "à la montagne", bol: "à la montagne",
+  silex: "dans la salle du roi Tannis (son armurerie)", os: "à la montagne", bol: "à la montagne",
 };
 
 const HIDDEN_BY_FLAG = {};
