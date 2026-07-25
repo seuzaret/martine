@@ -62,8 +62,6 @@ export default function SceneMontagne({ collect, action, reveal, made = [], quet
           <path d="M0 26 Q-16 6 -4 -18 Q0 -4 5 -14 Q16 4 8 24 Z" fill="#ff7f24" />
           <path d="M0 24 Q-7 8 -2 -8 Q1 0 3 -6 Q9 4 3 22 Z" fill="#ffd36a" />
         </g>
-        {/* le bol d'argile posé DANS la fumée, qui recueille la suie */}
-        <g transform="translate(0,-28)"><path d="M-10 -4 Q-11 6 0 7 Q11 6 10 -4 Z" fill="#8a6a4a" /><ellipse cx="0" cy="-4" rx="9" ry="3.5" fill="#5a4636" /></g>
       </g>
 
       {/* ÖTZI, accroupi, sa hache de cuivre, épuisé (ou soulagé) */}
@@ -98,6 +96,13 @@ export default function SceneMontagne({ collect, action, reveal, made = [], quet
       {/* une hache de silex + un os posés au sol */}
       <g transform="translate(470,516)"><path d="M-12 2 L8 -2" stroke="#6e4c2e" strokeWidth="4" strokeLinecap="round" /><path d="M6 -6 L16 -3 L13 5 L4 2 Z" fill="#8d8d97" stroke="#dfe3ec" strokeWidth="1" /></g>
       <g transform="translate(640,520)"><path d="M-14 0 q14 -6 28 0" stroke="#e8e0cc" strokeWidth="6" fill="none" strokeLinecap="round" /></g>
+      {/* le bol d'argile d'Ötzi, posé au sol à côté de lui */}
+      <g transform="translate(588,514)">
+        <ellipse cx="0" cy="8" rx="16" ry="4" fill="#241c12" opacity="0.4" />
+        <path d="M-12 -4 Q-13 8 0 9 Q13 8 12 -4 Z" fill="#8a6a4a" />
+        <ellipse cx="0" cy="-4" rx="11" ry="4" fill="#5a4636" />
+        <path d="M-9 -4 q9 4 18 0" stroke="#6e5238" strokeWidth="1.2" fill="none" opacity="0.6" />
+      </g>
 
       <rect width="1000" height="560" fill="#141810" opacity="0.06" style={{ pointerEvents: "none" }} />
 
@@ -106,7 +111,7 @@ export default function SceneMontagne({ collect, action, reveal, made = [], quet
       <Hotspot cx={220} cy={468} r={44} label="filon de cuivre" item="minerai" reveal={reveal} onClick={() => collect("minerai")} />
       <Hotspot cx={380} cy={498} r={38} label="pierre à marteler" item="pierre_marteler" reveal={reveal} onClick={() => collect("pierre_marteler")} />
       <Hotspot cx={760} cy={484} r={50} label="le feu" item="feu" reveal={reveal} onClick={() => collect("feu")} />
-      <Hotspot cx={760} cy={456} r={22} label="bol d'argile" item="bol" reveal={reveal} onClick={() => collect("bol")} />
+      <Hotspot cx={588} cy={510} r={24} label="bol d'argile" item="bol" reveal={reveal} onClick={() => collect("bol")} />
       <Hotspot cx={470} cy={514} r={28} label="éclat de silex" item="silex" reveal={reveal} onClick={() => collect("silex")} />
       <Hotspot cx={640} cy={518} r={26} label="os" item="os" reveal={reveal} onClick={() => collect("os")} />
     </svg>

@@ -72,7 +72,7 @@ const SCENES = [
 /* Où trouver chaque élément de base (indices ; supports exclus). */
 const WHERE = {
   coquillage: "sur la grève, devant la porte de la cité",
-  argile: "chez les artisans, et au bord du fleuve",
+  argile: "au bord du fleuve, sur la plaine aux mégalithes",
   pigments: "chez la potière",
   cailloux: "au bord du fleuve, sur la plaine",
   grande_pierre: "sur la plaine aux mégalithes",

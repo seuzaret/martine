@@ -30,6 +30,19 @@ export default function SceneArtisans({ collect, action, reveal, made = [], quet
       <rect y="350" width="1000" height="210" fill="url(#ar-ground)" />
       <ellipse cx="500" cy="470" rx="460" ry="60" fill="#6e5636" opacity="0.22" />
 
+      {/* L'ÉCHOPPE de la potière, derrière elle : auvent + étagère de pots */}
+      <g transform="translate(258,398)">
+        <rect x="-54" y="-8" width="6" height="66" fill="#6e4c2e" />
+        <rect x="48" y="-8" width="6" height="66" fill="#6e4c2e" />
+        <path d="M-66 -8 L66 -8 L52 -32 L-52 -32 Z" fill="#a86a3a" />
+        <path d="M-66 -8 L66 -8 L52 -32 L-52 -32 Z" fill="#8a5630" opacity="0.35" />
+        {[-44, -22, 0, 22, 44].map((x, i) => <path key={i} d={`M${x} -8 l4 -22`} stroke="#e6dcc4" strokeWidth="4" opacity="0.5" />)}
+        <rect x="-50" y="20" width="100" height="6" fill="#5a3f24" />
+        {[-38, -14, 12, 36].map((x, i) => (
+          <g key={i} transform={`translate(${x},12)`}><path d="M-7 -2 Q-8 6 0 7 Q8 6 7 -2 Z" fill="#b5623a" /><ellipse cx="0" cy="-2" rx="6" ry="2.5" fill="#9a5030" /></g>
+        ))}
+      </g>
+
       {/* ═══ CÔTÉ POTIÈRE (gauche) ═══ */}
       {/* le four */}
       <g transform="translate(150,452)">
@@ -39,12 +52,13 @@ export default function SceneArtisans({ collect, action, reveal, made = [], quet
         <path d="M-14 40 Q-16 14 0 10 Q16 14 14 40 Z" fill="#ff8a3c" style={{ animation: "glow 1.8s ease-in-out infinite" }} />
         <circle cx="0" cy="26" r="4" fill="#fff2c4" />
       </g>
-      {/* le tour du potier + un pot en cours */}
-      <g transform="translate(330,470)">
-        <ellipse cx="0" cy="30" rx="30" ry="8" fill="#2a1c10" opacity="0.4" />
-        <rect x="-6" y="0" width="12" height="30" fill="#5a3f24" />
-        <ellipse cx="0" cy="2" rx="28" ry="8" fill="#8a6a42" style={{ animation: "spin 4s linear infinite", transformOrigin: "330px 472px", transformBox: "view-box" }} />
-        <path d="M-12 -2 Q-14 -20 0 -24 Q14 -20 12 -2 Z" fill="#a86a3a" />
+      {/* le tour du potier (plateau + pied, sans rien dessus) */}
+      <g transform="translate(330,472)">
+        <ellipse cx="0" cy="32" rx="30" ry="8" fill="#2a1c10" opacity="0.4" />
+        <rect x="-5" y="6" width="10" height="28" fill="#5a3f24" />
+        <ellipse cx="0" cy="6" rx="27" ry="8" fill="#6e4c2e" />
+        <ellipse cx="0" cy="3" rx="27" ry="8" fill="#9a7a52" />
+        <ellipse cx="0" cy="2" rx="10" ry="3" fill="#7a5a3a" opacity="0.6" />
       </g>
       {/* pots de pigments */}
       <g transform="translate(430,506)">
@@ -52,9 +66,6 @@ export default function SceneArtisans({ collect, action, reveal, made = [], quet
           <g key={i} transform={`translate(${dx},0)`}><path d="M-8 -2 Q-9 8 0 9 Q9 8 8 -2 Z" fill="#7a5636" /><ellipse cx="0" cy="-2" rx="7" ry="3" fill={c} /></g>
         ))}
       </g>
-      {/* un tas d'argile */}
-      <g transform="translate(486,512)"><path d="M-18 4 Q-16 -12 0 -12 Q16 -12 18 4 Z" fill="#8a6a4a" /><ellipse cx="0" cy="4" rx="18" ry="5" fill="#7a5a3a" /></g>
-
       {/* JALA la potière */}
       <g transform="translate(258,470)">
         <ellipse cx="0" cy="26" rx="20" ry="6" fill="#2a1c10" opacity="0.4" />
@@ -122,7 +133,6 @@ export default function SceneArtisans({ collect, action, reveal, made = [], quet
       <Hotspot cx={330} cy={456} r={40} label="le tour du potier" item="tour" reveal={reveal} onClick={() => collect("tour")} />
       <Hotspot cx={150} cy={452} r={48} label="le four" item="feu" reveal={reveal} onClick={() => collect("feu")} />
       <Hotspot cx={430} cy={500} r={40} label="pigments" item="pigments" reveal={reveal} onClick={() => collect("pigments")} />
-      <Hotspot cx={486} cy={508} r={30} label="argile" item="argile" reveal={reveal} onClick={() => collect("argile")} />
       <Hotspot cx={810} cy={474} r={72} label="le troupeau" item="troupeau" reveal={reveal} onClick={() => collect("troupeau")} />
     </svg>
   );
