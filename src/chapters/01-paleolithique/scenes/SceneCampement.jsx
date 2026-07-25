@@ -242,6 +242,24 @@ export default function SceneCampement({ collect, action, reveal, made = [], que
         </g>
       )}
 
+      {/* RÉSULTAT (msg_veillee) : LA VEILLÉE — le clan se rassemble autour
+          du feu, le soir, et les histoires passent de bouche à oreille */}
+      {made.includes("msg_veillee") && (
+        <g style={{ animation: "fadein 1.2s ease-out" }}>
+          <ellipse cx="500" cy="470" rx="280" ry="94" fill="#ff9540" opacity="0.10" style={{ animation: "glow 3s ease-in-out infinite" }} />
+          {[[572, 486, 1, "#4a2e1a"], [620, 476, 0.9, "#3e2818"], [540, 496, 0.85, "#432a18"]].map(([x, y, s, c], i) => (
+            <g key={i} transform={`translate(${x},${y}) scale(${s})`}>
+              <path d="M-14 12 Q-16 -10 0 -14 Q16 -10 14 12 Z" fill={c} />
+              <circle cx="-2" cy="-16" r="7" fill={c} />
+              <path d="M-14 6 Q-16 -8 -6 -13" stroke="#ff9540" strokeWidth="2" fill="none" opacity="0.5" />
+            </g>
+          ))}
+          {[[520, 418], [500, 398], [540, 408]].map(([x, y], i) => (
+            <circle key={i} cx={x} cy={y} r="1.6" fill="#ffd166" opacity="0.7" style={{ animation: `spark ${2 + i * 0.6}s linear infinite` }} />
+          ))}
+        </g>
+      )}
+
       {/* herbes sombres qui cadrent le bas */}
       <g opacity="0.9">
         <path d="M-4 560 q10 -32 4 -50 M16 560 q3 -26 14 -42 M38 560 q-6 -22 2 -38 M64 560 q8 -24 0 -36" stroke="#1c1810" strokeWidth="4" fill="none" />

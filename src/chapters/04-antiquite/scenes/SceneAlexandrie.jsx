@@ -147,6 +147,26 @@ export default function SceneAlexandrie({ collect, action, reveal, made = [] }) 
           <path d="M-20 -2 h38 M-20 3 h30" stroke="#a89060" strokeWidth="1.2" />
         </g>
       </g>
+
+      {/* RÉSULTAT (msg_bibliotheque) : un CASIER plein de rouleaux rangés —
+          le savoir du monde, classé sous un seul toit (bouts ronds visibles,
+          chacun étiqueté) */}
+      {made.includes("msg_bibliotheque") && (
+        <g transform="translate(792,462)" style={{ animation: "fadein 1s ease-out" }}>
+          <ellipse cx="0" cy="46" rx="54" ry="10" fill="#241c10" opacity="0.4" />
+          <rect x="-50" y="-40" width="100" height="84" rx="2" fill="#6e4c2e" />
+          <rect x="-45" y="-35" width="90" height="74" fill="#3f2a16" />
+          <path d="M-45 -11 h90 M-45 13 h90" stroke="#6e4c2e" strokeWidth="4" />
+          {[-30, -15, 0, 15, 30].map((x, col) => [-23, 1, 25].map((y, row) => (
+            <g key={`${col}-${row}`} transform={`translate(${x},${y})`}>
+              <circle cx="0" cy="0" r="6.4" fill="#e8dcb8" stroke="#c8b888" strokeWidth="1" />
+              <circle cx="0" cy="0" r="2.4" fill="#c2a86a" />
+              <rect x="-2" y="6" width="4" height="3.5" fill={["#a83028", "#2a6a9a", "#3a8a4a"][(col + row) % 3]} />
+            </g>
+          )))}
+        </g>
+      )}
+
       {/* le « ? » du bibliothécaire : tout le savoir sous un seul toit… */}
       {!made.includes("msg_bibliotheque") && (
         <>

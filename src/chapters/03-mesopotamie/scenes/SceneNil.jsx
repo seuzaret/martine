@@ -148,6 +148,29 @@ export default function SceneNil({ collect, action, reveal, made = [] }) {
         </g>
       </PLayer>
 
+      {/* RÉSULTAT (msg_hieroglyphes) : une feuille de PAPYRUS légère,
+          couverte de hiéroglyphes tracés au roseau et à l'encre */}
+      {made.includes("msg_hieroglyphes") && (
+        <g transform="translate(720,508)" style={{ animation: "fadein 1s ease-out" }}>
+          <ellipse cx="0" cy="24" rx="42" ry="8" fill="#20140a" opacity="0.4" />
+          <path d="M-38 -20 Q-44 -1 -38 18 L38 18 Q44 -1 38 -20 Z" fill="#e6d09a" />
+          <path d="M-38 -20 Q-44 -1 -38 18" stroke="#c8a860" strokeWidth="4" fill="none" />
+          <path d="M38 -20 Q44 -1 38 18" stroke="#c8a860" strokeWidth="4" fill="none" />
+          <path d="M-34 -8 h68 M-34 1 h68 M-34 10 h68" stroke="#d0b878" strokeWidth="0.8" opacity="0.4" />
+          {/* hiéroglyphes stylisés (œil, eau, oiseau, jambes, soleil…) */}
+          <g stroke="#3a2a14" strokeWidth="1.5" fill="none" strokeLinecap="round">
+            <path d="M-30 -11 q4 -4 9 0 q-4 4 -9 0 M-26 -9 v3" />
+            <path d="M-14 -12 q3 -3 6 0 t6 0" />
+            <path d="M4 -13 q4 -3 9 -1 l-3 3 M13 -11 l3 -1" />
+            <path d="M24 -13 v5 l-3 3 M24 -8 l3 3" />
+            <circle cx="-28" cy="7" r="3" />
+            <path d="M-14 11 v-9 M-14 3 l3 -2" />
+            <path d="M2 10 h7 v-5" />
+            <path d="M20 10 q4 -4 8 0 q-4 4 -8 0" />
+          </g>
+        </g>
+      )}
+
       {/* voile de grain global */}
       <rect width="1000" height="560" fill="#2a1c10" opacity="0.07" style={{ pointerEvents: "none" }} />
 
