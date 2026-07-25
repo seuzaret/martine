@@ -19,6 +19,7 @@ import SceneTrone from "./scenes/SceneTrone.jsx";
 import SceneArtisans from "./scenes/SceneArtisans.jsx";
 import ScenePlaine from "./scenes/ScenePlaine.jsx";
 import SceneMontagne from "./scenes/SceneMontagne.jsx";
+import { PortraitGuna, PortraitTannis, PortraitJala, PortraitAhmid, PortraitImir, PortraitDoka, PortraitOtzi } from "./scenes/portraits.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -217,43 +218,43 @@ const ACTIONS = {
    suite : phrase de MARTINE quand l'étape est réussie (vers qui aller)
    ------------------------------------------------------------ */
 const QUETE = [
-  { perso: "guna",
+  { perso: "guna", portrait: "guna", auto: true,
     bubble: "Halte, étranger ! On n'entre pas dans la cité du roi Tannis comme dans un moulin. Suis-moi : je te mène à lui. C'est lui qui décidera si tu restes.",
     say: "Un accueil… au bout d'une lance. Restons polis. Le roi t'attend plus loin ›." },
 
-  { perso: "tannis",
+  { perso: "tannis", portrait: "tannis",
     bubble: "Bienvenue dans ma cité de Göbekli Tepe. Si tu ne viens pas voler mon grain ni fuir mes impôts, tu seras bien traité. Prouve ta valeur : va donner un coup de main à mes artisans et à mes marchands.",
     say: "Un roi qui parle d'impôts et de grain à engranger… nous voilà en pleine révolution néolithique ! File aider le petit peuple ›." },
 
-  { perso: "jala",
+  { perso: "jala", portrait: "jala",
     bubble: "Ah, un coup de main ! On façonne ici les plus belles poteries du pays. Aide-moi à en faire une, digne de notre cité : trouve tout ce qu'il faut.",
     say: "La chaîne du potier : la terre sur le tour, la cuisson, les couleurs… et la touche d'ici, la nacre du coquillage.",
     attend: "msg_poterie",
     suite: "Jala serre la poterie contre elle, ravie. À côté, le marchand Ahmid se ronge les sangs — va le voir." },
 
-  { perso: "ahmid",
+  { perso: "ahmid", portrait: "ahmid",
     bubble: "Toi qui aides si bien, sauve-moi ! Je dois mener tout ce bétail à la cité voisine, mais mes hommes sont des filous… Comment prouver à l'acheteur le nombre EXACT de bêtes ?",
     say: "Un caillou par bête, scellés dans l'argile : impossible de tricher. Ni plus ni moins que l'ancêtre de l'écriture.",
     attend: "msg_calculi",
     suite: "Ahmid t'embrasse : son compte est en sûreté. On te réclame sur la plaine, là où l'on dresse les pierres ›." },
 
-  { perso: "imir",
+  { perso: "imir", portrait: "imir",
     bubble: "Approche, ami du roi. Ici, nous honorons Tannis et nos dieux en dressant des pierres géantes, gravées de symboles. Prête-nous tes bras et ton adresse.",
     say: "Un prêtre, des mégalithes pour le roi et les dieux : la pierre qui parle aux siècles. Son tailleur, Doka, va te dire comment." },
 
-  { perso: "doka",
+  { perso: "doka", portrait: "doka",
     bubble: "Avant de dresser cette pierre, je dois y graver les symboles sacrés. Mais le silex s'émousse trop vite… il me faut des outils de MÉTAL. Trouve-moi de quoi les forger.",
     say: "Du cuivre ! Il y a un filon dans la montagne, plus haut ›. Fonds-le au four, martèle-le en burin, grave la pierre, puis dresse-la avec les hommes.",
     attend: "msg_megalithe",
     suite: "La pierre gravée se dresse enfin vers le ciel. Doka t'acclame. Il reste un blessé, à la mine…" },
 
-  { perso: "otzi",
+  { perso: "otzi", portrait: "otzi",
     bubble: "Étranger… cette mine me ronge les os. Le guérisseur dit qu'il faut marquer les points de douleur — des tatouages, qui ne s'effacent jamais. M'aideras-tu ?",
     say: "Une aiguille d'os, de la suie noire frottée sous la peau : les 61 tatouages de soin d'Ötzi. Le corps comme support.",
     attend: "msg_tatouage",
     suite: "Ötzi respire, soulagé. Tu as aidé toute la cité : ma jauge déborde. Le roi voudra te saluer avant ton départ." },
 
-  { perso: "tannis",
+  { perso: "tannis", portrait: "tannis",
     bubble: "Tu es entré en étranger : te voilà l'ami de Göbekli Tepe. Ta drôle de machine qui clignote t'appelle. Va — et raconte au monde ce que tu as vu ici.",
     say: "Rechargée à bloc, merci ces braves gens. Le bouton PARTIR t'emmène en Mésopotamie… là où ces petits cailloux d'argile vont devenir l'ÉCRITURE." },
 ];
@@ -293,6 +294,7 @@ const chapter = {
   intro: INTRO,
   actions: ACTIONS,
   quete: QUETE,
+  portraits: { guna: PortraitGuna, tannis: PortraitTannis, jala: PortraitJala, ahmid: PortraitAhmid, imir: PortraitImir, doka: PortraitDoka, otzi: PortraitOtzi },
 };
 
 export default chapter;
