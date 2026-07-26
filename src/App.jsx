@@ -678,10 +678,6 @@ export default function App() {
           <h1 style={{ fontFamily: TITRE_FONT, fontSize: "clamp(38px,9.5vw,72px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", margin: "4px 0 0", lineHeight: 1.08, background: "linear-gradient(100deg, #e8a24a 0%, #ffd166 40%, #e86a4a 80%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", textShadow: "0 2px 22px rgba(232,150,74,0.3)" }}>
             Les fils du temps
           </h1>
-          {/* la date de destination, comme l'afficheur de bord de MARTINE */}
-          <div style={{ color: "#5eff9e", fontFamily: "ui-monospace,monospace", fontSize: "clamp(15px,4vw,22px)", fontWeight: 700, letterSpacing: 4, marginTop: 8, textShadow: "0 0 14px rgba(94,255,158,0.45)" }}>
-            {chapter.date}
-          </div>
           {/* MARTINE, désormais la compagne de voyage */}
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 10, marginTop: 10 }}>
             <div style={{ animation: "floaty 4s ease-in-out infinite" }}>
@@ -1002,6 +998,10 @@ export default function App() {
         <span style={{ fontFamily: TITRE_FONT, fontSize: 19, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", background: "linear-gradient(100deg, #e8a24a, #ffd166 45%, #e86a4a)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
           Les fils du temps
         </span>
+        {/* la date de destination, sous le titre, en vert MARTINE (afficheur de bord) */}
+        <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 12.5, fontWeight: 700, letterSpacing: 3, color: "#5eff9e", textShadow: "0 0 10px rgba(94,255,158,0.45)", marginTop: 1 }}>
+          {chapter.date}
+        </div>
       </div>
 
       {/* le lieu · compteur · boutons · saut temporel */}
