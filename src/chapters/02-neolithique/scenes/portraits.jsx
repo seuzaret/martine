@@ -7,6 +7,23 @@
    accessoire caractéristique. Libres de droits.
    ============================================================ */
 
+/* Bouche qui « parle » : la lèvre haute reste fixe ; l'ouverture et la
+   lèvre basse s'animent (le personnage cause dans son gros plan). Réglable
+   en position (y), largeur (w), couleurs, et sourire éventuel. */
+function Mouth({ y = 180, dark = "#7a4a34", light = "#b0785a", w = 14, smile = false }) {
+  const corner = smile ? y - 4 : y;      // coins relevés si sourire
+  const dip = smile ? y + 9 : y + 4;     // creux central de la lèvre haute
+  return (
+    <g>
+      <path d={`M${150 - w} ${corner} Q150 ${dip} ${150 + w} ${corner}`} stroke={dark} strokeWidth="3" fill="none" strokeLinecap="round" />
+      <g style={{ transformOrigin: `150px ${y + 1}px`, transformBox: "view-box", animation: "talk 0.6s ease-in-out infinite" }}>
+        <path d={`M${150 - w + 3} ${y + 1} Q150 ${y + 9} ${150 + w - 3} ${y + 1} Q150 ${y + 4} ${150 - w + 3} ${y + 1} Z`} fill="#5a2a20" />
+        <path d={`M${150 - w + 4} ${y + 7} Q150 ${y + 11} ${150 + w - 4} ${y + 7}`} stroke={light} strokeWidth="2.2" fill="none" strokeLinecap="round" opacity="0.6" />
+      </g>
+    </g>
+  );
+}
+
 /* GUNA — le garde de la porte. Casque de cuir, courte barbe,
    la hampe de sa lance sur l'épaule, le bord de son bouclier
    rond : sévère mais pas méchant. */
@@ -22,9 +39,14 @@ export function PortraitGuna() {
       </defs>
       <circle cx="150" cy="138" r="130" fill="url(#pGunaHalo)" />
 
-      {/* la hampe de la lance, en travers derrière l'épaule */}
-      <path d="M52 300 L232 96" stroke="#6e4c2e" strokeWidth="9" strokeLinecap="round" />
-      <path d="M232 96 l-12 6 l6 10 l12 -4 Z" fill="#8d8d97" stroke="#dfe3ec" strokeWidth="1.4" />
+      {/* LA LANCE, en travers derrière l'épaule : hampe de bois, liure de
+          cuir, et un grand fer de lance en feuille — pour qu'on la lise bien */}
+      <path d="M52 306 L212 120" stroke="#6e4c2e" strokeWidth="9" strokeLinecap="round" />
+      <path d="M52 306 L212 120" stroke="#8a6a44" strokeWidth="2.5" strokeLinecap="round" opacity="0.5" />
+      <g stroke="#4a2f18" strokeWidth="2.4" strokeLinecap="round"><path d="M204 130 l14 -12 M208 136 l14 -12 M212 142 l14 -12" /></g>
+      <path d="M212 122 Q200 104 214 84 Q226 66 240 46 Q250 70 244 100 Q239 118 226 130 Q218 132 212 122 Z" fill="#9aa0ac" stroke="#e2e6ee" strokeWidth="1.6" />
+      <path d="M218 120 L238 60" stroke="#e2e6ee" strokeWidth="1.6" opacity="0.85" />
+      <path d="M222 116 Q227 98 235 80" stroke="#6a707c" strokeWidth="1.2" fill="none" opacity="0.6" />
 
       {/* LE BUSTE : cuirasse de cuir sur les épaules */}
       <path d="M42 340 Q44 258 92 236 Q122 224 150 226 Q178 224 208 236 Q256 258 258 340 Z" fill="url(#pGunaLeather)" />
@@ -56,12 +78,11 @@ export function PortraitGuna() {
       <circle cx="131.4" cy="136.5" r="1.3" fill="#fff" /><circle cx="171.4" cy="136.5" r="1.3" fill="#fff" />
       <path d="M119 137 Q130 131 142 136 M158 136 Q170 131 181 137" stroke="#3a2818" strokeWidth="2.4" fill="none" strokeLinecap="round" />
 
-      {/* NEZ droit */}
-      <path d="M150 137 Q147 153 144 160 Q142 166 150 167" stroke="#96684a" strokeWidth="2.6" fill="none" strokeLinecap="round" />
-      {/* BOUCHE ferme + courte barbe qui encadre */}
-      <path d="M108 150 Q104 186 130 206 Q150 216 170 206 Q196 186 192 150 Q182 176 150 182 Q118 176 108 150 Z" fill="#3a2a1a" />
-      <path d="M134 176 Q150 181 166 176" stroke="#5a3524" strokeWidth="3" fill="none" strokeLinecap="round" />
-      <path d="M120 150 q6 20 18 30 M180 150 q-6 20 -18 30" stroke="#241811" strokeWidth="1.6" fill="none" opacity="0.5" />
+      {/* NEZ discret : juste le dessous, sans trait sur l'arête */}
+      <path d="M145 157 Q150 161 155 157 M145 157 Q143 152 147 150 M155 157 Q157 152 153 150" stroke="#96684a" strokeWidth="2" fill="none" strokeLinecap="round" />
+      {/* BOUCHE qui parle (rasé de près) */}
+      <path d="M150 168 q-2 6 0 8" stroke="#96684a" strokeWidth="1.4" fill="none" opacity="0.3" />
+      <Mouth y={180} dark="#7a4a34" light="#b0785a" w={15} />
 
       {/* LE CASQUE de cuir, ajusté, avec une jugulaire */}
       <path d="M100 128 Q92 58 150 52 Q208 58 200 128 Q192 96 172 86 Q160 82 150 82 Q140 82 128 86 Q108 96 100 128 Z" fill="url(#pGunaLeather)" />
@@ -121,14 +142,11 @@ export function PortraitTannis() {
       <circle cx="131.4" cy="136.5" r="1.3" fill="#fff" /><circle cx="171.4" cy="136.5" r="1.3" fill="#fff" />
       <path d="M119 137 Q130 131 142 137 M158 137 Q170 131 181 137" stroke="#3a2818" strokeWidth="2.4" fill="none" strokeLinecap="round" />
 
-      {/* NEZ */}
-      <path d="M150 137 Q147 154 143 161 Q141 167 150 168" stroke="#96684a" strokeWidth="2.6" fill="none" strokeLinecap="round" />
-      {/* BARBE soignée en pointe + moustache */}
-      <path d="M112 150 Q108 190 138 214 Q150 222 162 214 Q192 190 188 150 Q178 178 150 184 Q122 178 112 150 Z" fill="#4a3322" />
-      <path d="M112 150 Q108 190 138 214 Q150 224 150 232 Q150 224 162 214 Q192 190 188 150 Q178 178 150 184 Q122 178 112 150 Z" fill="#4a3322" />
-      <path d="M132 168 q18 -8 36 0" stroke="#2e2014" strokeWidth="2.4" fill="none" opacity="0.6" />
-      <path d="M138 178 Q150 183 162 178" stroke="#6a4a30" strokeWidth="2.6" fill="none" strokeLinecap="round" />
-      <g stroke="#2e2014" strokeWidth="1.4" fill="none" opacity="0.5"><path d="M124 158 q4 24 16 40 M176 158 q-4 24 -16 40 M150 186 v40" /></g>
+      {/* NEZ discret : juste le dessous, sans trait sur l'arête */}
+      <path d="M145 158 Q150 162 155 158 M145 158 Q143 153 147 151 M155 158 Q157 153 153 151" stroke="#96684a" strokeWidth="2" fill="none" strokeLinecap="round" />
+      {/* BOUCHE qui parle (rasé de près) */}
+      <path d="M150 168 q-2 6 0 8" stroke="#96684a" strokeWidth="1.4" fill="none" opacity="0.3" />
+      <Mouth y={181} dark="#7a4a34" light="#b0785a" w={15} />
 
       {/* LA COURONNE d'or à pointes + gemme rouge */}
       <path d="M98 120 Q92 78 118 74 L118 60 L131 76 L140 54 L150 78 L160 54 L169 76 L182 60 L182 74 Q208 78 202 120 Q188 98 168 92 Q158 90 150 90 Q142 90 132 92 Q112 98 98 120 Z" fill="url(#pTanGold)" stroke="#a8842a" strokeWidth="1.6" />
@@ -183,10 +201,9 @@ export function PortraitJala() {
       <circle cx="131.6" cy="133.4" r="1.4" fill="#fff" /><circle cx="171.6" cy="133.4" r="1.4" fill="#fff" />
       <path d="M118 135 Q129 127 141 134 M159 134 Q171 127 182 135" stroke="#4a3322" strokeWidth="2.2" fill="none" strokeLinecap="round" />
 
-      {/* NEZ + large SOURIRE */}
-      <path d="M150 136 Q147 150 144 157 Q142 163 149 164" stroke="#a87b54" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-      <path d="M126 172 Q150 190 174 172" stroke="#8a4a34" strokeWidth="3.4" fill="none" strokeLinecap="round" />
-      <path d="M133 178 Q150 190 167 178" stroke="#c07a5a" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.7" />
+      {/* NEZ discret + large SOURIRE */}
+      <path d="M145 154 Q150 158 155 154 M145 154 Q143 149 147 147 M155 154 Q157 149 153 147" stroke="#a87b54" strokeWidth="1.9" fill="none" strokeLinecap="round" />
+      <Mouth y={178} dark="#8a4a34" light="#c07a5a" w={16} smile />
       <ellipse cx="119" cy="156" rx="9" ry="5.5" fill="#e8b98c" opacity="0.4" /><ellipse cx="181" cy="156" rx="9" ry="5.5" fill="#e8b98c" opacity="0.4" />
       {/* la trace d'argile sur la joue */}
       <path d="M176 150 q10 4 12 12" stroke="#c8b090" strokeWidth="5" fill="none" strokeLinecap="round" opacity="0.6" />
@@ -248,13 +265,11 @@ export function PortraitAhmid() {
       {/* pattes d'oie du sourire */}
       <path d="M114 138 l-6 -3 M114 141 l-6 2 M186 138 l6 -3 M186 141 l6 2" stroke="#96684a" strokeWidth="1.5" opacity="0.55" />
 
-      {/* NEZ */}
-      <path d="M150 136 Q147 152 144 159 Q142 165 150 166" stroke="#946638" strokeWidth="2.6" fill="none" strokeLinecap="round" />
-      {/* BARBE fournie + moustache, sourire dedans */}
-      <path d="M106 148 Q102 194 140 216 Q150 222 160 216 Q198 194 194 148 Q182 178 150 184 Q118 178 106 148 Z" fill="#2e2013" />
-      <path d="M128 166 q22 -8 44 0" stroke="#1e150c" strokeWidth="2.4" fill="none" opacity="0.6" />
-      <path d="M134 176 Q150 184 166 176" stroke="#7a4a30" strokeWidth="2.8" fill="none" strokeLinecap="round" />
-      <g stroke="#1e150c" strokeWidth="1.4" fill="none" opacity="0.5"><path d="M118 156 q6 26 22 42 M182 156 q-6 26 -22 42 M150 186 v42" /></g>
+      {/* NEZ discret : juste le dessous, sans trait sur l'arête */}
+      <path d="M145 156 Q150 160 155 156 M145 156 Q143 151 147 149 M155 156 Q157 151 153 149" stroke="#946638" strokeWidth="2" fill="none" strokeLinecap="round" />
+      {/* BOUCHE qui parle (rasé de près) */}
+      <path d="M150 167 q-2 6 0 8" stroke="#946638" strokeWidth="1.4" fill="none" opacity="0.3" />
+      <Mouth y={180} dark="#7a4a30" light="#a8785a" w={15} />
 
       {/* LA COIFFE de tissu, ceinte d'un cordon */}
       <path d="M96 130 Q86 56 150 50 Q214 56 204 130 Q196 100 178 90 Q160 82 150 82 Q140 82 122 90 Q104 100 96 130 Z" fill="url(#pAhmCloth)" />
@@ -310,10 +325,9 @@ export function PortraitImir() {
       <circle cx="131.2" cy="136.3" r="1.1" fill="#fff" /><circle cx="171.2" cy="136.3" r="1.1" fill="#fff" />
       <path d="M119 136 Q130 131 141 136 M159 136 Q170 131 181 136" stroke="#5c4630" strokeWidth="2.2" fill="none" strokeLinecap="round" />
 
-      {/* NEZ + bouche digne */}
-      <path d="M150 137 Q147 153 144 160 Q142 166 150 167" stroke="#9c704a" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-      <path d="M134 178 Q150 183 166 178" stroke="#7a4630" strokeWidth="3" fill="none" strokeLinecap="round" />
-      <path d="M139 184 Q150 187 161 184" stroke="#a06a4e" strokeWidth="2.2" fill="none" strokeLinecap="round" opacity="0.6" />
+      {/* NEZ discret + bouche digne qui parle */}
+      <path d="M145 157 Q150 161 155 157 M145 157 Q143 152 147 150 M155 157 Q157 152 153 150" stroke="#9c704a" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <Mouth y={180} dark="#7a4630" light="#a06a4e" w={14} />
 
       {/* CRÂNE RASÉ + léger voile clair par-dessus l'arrière du crâne */}
       <path d="M101 128 Q98 66 150 60 Q202 66 199 128 Q188 96 168 86 Q158 82 150 82 Q142 82 132 86 Q112 96 101 128 Z" fill="url(#pImirSkin)" />
@@ -374,13 +388,11 @@ export function PortraitDoka() {
       <circle cx="131.4" cy="136.6" r="1.3" fill="#fff" /><circle cx="171.4" cy="136.6" r="1.3" fill="#fff" />
       <path d="M118 137 Q130 131 142 137 M158 137 Q170 131 182 137" stroke="#3a2818" strokeWidth="2.6" fill="none" strokeLinecap="round" />
 
-      {/* NEZ fort */}
-      <path d="M150 137 Q147 154 143 161 Q141 167 150 168" stroke="#946638" strokeWidth="2.8" fill="none" strokeLinecap="round" />
-      {/* BOUCHE serrée, effort + barbe courte et drue */}
-      <path d="M108 152 Q106 186 132 206 Q150 216 168 206 Q194 186 192 152 Q182 176 150 182 Q118 176 108 152 Z" fill="#2e2013" />
-      <path d="M134 178 Q150 182 166 178" stroke="#5a3524" strokeWidth="3" fill="none" strokeLinecap="round" />
-      {/* la barbe est courte : on la suggère par des hachures */}
-      <g stroke="#1e150c" strokeWidth="1.3" fill="none" opacity="0.5"><path d="M116 158 q6 22 20 38 M184 158 q-6 22 -20 38 M150 184 v34 M134 176 l-3 10 M166 176 l3 10" /></g>
+      {/* NEZ discret : juste le dessous, sans trait sur l'arête */}
+      <path d="M144 158 Q150 162 156 158 M144 158 Q142 153 146 151 M156 158 Q158 153 154 151" stroke="#946638" strokeWidth="2.1" fill="none" strokeLinecap="round" />
+      {/* BOUCHE qui parle (rasé de près) */}
+      <path d="M150 168 q-2 6 0 8" stroke="#946638" strokeWidth="1.4" fill="none" opacity="0.3" />
+      <Mouth y={181} dark="#7a4a34" light="#a8785a" w={14} />
 
       {/* LE BANDEAU de cuir, cheveux ras dessous */}
       <path d="M100 126 Q94 66 150 60 Q206 66 200 126 Q190 100 172 92 Q160 88 150 88 Q140 88 128 92 Q110 100 100 126 Z" fill="#2e2013" />
@@ -445,13 +457,11 @@ export function PortraitOtzi() {
       {/* les deux traits de tatouage à la tempe */}
       <path d="M108 132 l-10 -2 M108 137 l-10 0" stroke="#20202a" strokeWidth="2.6" strokeLinecap="round" opacity="0.7" />
 
-      {/* NEZ + bouche fatiguée, un début d'espoir */}
-      <path d="M150 140 Q147 156 144 163 Q142 169 150 170" stroke="#94663c" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-      <path d="M135 180 Q150 185 165 180" stroke="#7a4630" strokeWidth="3" fill="none" strokeLinecap="round" />
-      <path d="M140 185 q10 3 20 0" stroke="#a06a4e" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.55" />
-
-      {/* la barbe grisonnante, courte */}
-      <g stroke="#5a4a38" strokeWidth="1.4" fill="none" opacity="0.6"><path d="M120 168 q6 20 20 34 M180 168 q-6 20 -20 34 M150 186 v30 M132 178 l-2 8 M168 178 l2 8" /></g>
+      {/* NEZ discret : juste le dessous, sans trait sur l'arête */}
+      <path d="M145 160 Q150 164 155 160 M145 160 Q143 155 147 153 M155 160 Q157 155 153 153" stroke="#94663c" strokeWidth="2" fill="none" strokeLinecap="round" />
+      {/* BOUCHE qui parle, fatiguée (rasé de près) */}
+      <path d="M150 170 q-2 6 0 8" stroke="#94663c" strokeWidth="1.4" fill="none" opacity="0.3" />
+      <Mouth y={182} dark="#7a4630" light="#b07a5a" w={13} />
 
       {/* LE CAPUCHON de fourrure, serré autour du visage */}
       <path d="M96 138 Q84 54 150 48 Q216 54 204 138 Q206 108 196 90 Q178 66 150 66 Q122 66 104 90 Q94 108 96 138 Z" fill="url(#pOtziHood)" />
