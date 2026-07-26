@@ -44,9 +44,9 @@ export function PortraitGuna() {
       <path d="M52 306 L212 120" stroke="#6e4c2e" strokeWidth="9" strokeLinecap="round" />
       <path d="M52 306 L212 120" stroke="#8a6a44" strokeWidth="2.5" strokeLinecap="round" opacity="0.5" />
       <g stroke="#4a2f18" strokeWidth="2.4" strokeLinecap="round"><path d="M204 130 l14 -12 M208 136 l14 -12 M212 142 l14 -12" /></g>
-      <path d="M212 122 Q200 104 214 84 Q226 66 240 46 Q250 70 244 100 Q239 118 226 130 Q218 132 212 122 Z" fill="#9aa0ac" stroke="#e2e6ee" strokeWidth="1.6" />
-      <path d="M218 120 L238 60" stroke="#e2e6ee" strokeWidth="1.6" opacity="0.85" />
-      <path d="M222 116 Q227 98 235 80" stroke="#6a707c" strokeWidth="1.2" fill="none" opacity="0.6" />
+      <path d="M205 114 L221 130 L250 74 Z" fill="#9aa0ac" stroke="#e2e6ee" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M213 122 L247 80" stroke="#e2e6ee" strokeWidth="1.4" opacity="0.85" />
+      <path d="M210 120 L238 86" stroke="#6a707c" strokeWidth="1.1" fill="none" opacity="0.55" />
 
       {/* LE BUSTE : cuirasse de cuir sur les épaules */}
       <path d="M42 340 Q44 258 92 236 Q122 224 150 226 Q178 224 208 236 Q256 258 258 340 Z" fill="url(#pGunaLeather)" />

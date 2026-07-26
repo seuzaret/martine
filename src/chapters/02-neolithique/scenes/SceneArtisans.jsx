@@ -183,8 +183,9 @@ export default function SceneArtisans({ collect, action, reveal, made = [], quet
           <path d="M-14 8 q14 7 28 0" stroke="#6a4420" strokeWidth="3" fill="none" />
           <path d="M-13 26 Q-16 2 -2 -20" stroke="#e0c090" strokeWidth="2" fill="none" opacity="0.4" />
           <circle cx="0" cy="-30" r="10" fill="#b0855c" />
-          <path d="M-10 -32 q10 -11 20 0 q-3 9 -10 9 q-7 0 -10 -9 Z" fill="#2c1c12" />
-          <path d="M-6 -24 q6 8 12 0" stroke="#2c1c12" strokeWidth="3" fill="none" />
+          {/* coiffe de tissu clair (au lieu d'un capuchon sombre) */}
+          <path d="M-11 -30 Q-11 -43 0 -43 Q11 -43 11 -30 Q4 -37 0 -37 Q-4 -37 -11 -30 Z" fill="#e6dcc4" />
+          <path d="M-11 -30 q11 4 22 0" stroke="#c4b493" strokeWidth="1.4" fill="none" opacity="0.7" />
           <path d="M14 -6 q15 -2 22 6" stroke="#b0855c" strokeWidth="4.5" fill="none" strokeLinecap="round" />
         </g>
         {queteQui === "ahmid" && (
