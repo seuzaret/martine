@@ -17,7 +17,7 @@ const navBtn = (side) => ({
   backdropFilter: "blur(2px)", lineHeight: 1,
 });
 
-export default function Scene({ scenes, tab, onTab, sceneProps, sparkle }) {
+export default function Scene({ scenes, tab, onTab, sceneProps, sparkle, linear = false }) {
   const Current = scenes[tab].Component;
 
   /* sens du travelling : on arrive par la droite si on avance,
@@ -35,19 +35,22 @@ export default function Scene({ scenes, tab, onTab, sceneProps, sparkle }) {
         <Current {...sceneProps} />
       </div>
 
-      {/* flèches de déplacement */}
-      {tab > 0 && (
+      {/* flèches de déplacement — masquées en mode LINÉAIRE (on n'avance
+          que par le signal « on peut partir », géré par App ; pas de retour) */}
+      {!linear && tab > 0 && (
         <button onClick={() => onTab(tab - 1)} style={navBtn("left")} title={scenes[tab - 1].name}>‹</button>
       )}
-      {tab < scenes.length - 1 && (
+      {!linear && tab < scenes.length - 1 && (
         <button onClick={() => onTab(tab + 1)} style={navBtn("right")} title={scenes[tab + 1].name}>›</button>
       )}
 
-      {/* mini-carte : un point par lieu */}
+      {/* mini-carte : un point par lieu (cliquable en libre, simple repère en linéaire) */}
       <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 6, background: "rgba(0,0,0,0.4)", padding: "5px 10px", borderRadius: 20 }}>
         {scenes.map((s, i) => (
-          <button key={s.id} onClick={() => onTab(i)} title={s.name}
-            style={{ width: 9, height: 9, borderRadius: "50%", border: "none", cursor: "pointer", background: i === tab ? "#ffd166" : "rgba(255,255,255,0.35)", padding: 0 }} />
+          linear
+            ? <span key={s.id} title={s.name} style={{ width: 9, height: 9, borderRadius: "50%", background: i === tab ? "#ffd166" : "rgba(255,255,255,0.3)" }} />
+            : <button key={s.id} onClick={() => onTab(i)} title={s.name}
+                style={{ width: 9, height: 9, borderRadius: "50%", border: "none", cursor: "pointer", background: i === tab ? "#ffd166" : "rgba(255,255,255,0.35)", padding: 0 }} />
         ))}
       </div>
     </ParallaxRoot>

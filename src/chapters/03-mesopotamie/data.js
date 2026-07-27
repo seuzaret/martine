@@ -51,8 +51,11 @@ const ITEMS = {
    LES TABLEAUX
    ------------------------------------------------------------ */
 const SCENES = [
-  { id: "uruk",     name: "La cité d'Ur",        Component: SceneUruk },
-  { id: "nil",      name: "Les bords du Nil",     Component: SceneNil },
+  /* `nextWhen` : ce qu'il faut avoir transmis pour pouvoir PARTIR au lieu
+     suivant (mode linéaire : pas de flèches, un signal apparaît près de
+     MARTINE quand ces messages sont faits). */
+  { id: "uruk",     name: "La cité d'Ur",        Component: SceneUruk, nextWhen: ["msg_cuneiforme", "msg_sceau"] },
+  { id: "nil",      name: "Les bords du Nil",     Component: SceneNil, nextWhen: ["msg_hieroglyphes"] },
   { id: "phenicie", name: "La côte phénicienne",  Component: ScenePhenicie },
 ];
 
@@ -74,7 +77,7 @@ const RECIPES = [
   { a: "roseaux", b: "couteau", out: "calame",
     line: "Tu tailles le roseau en biseau : voilà un CALAME, la pointe du scribe. Enfoncé dans l'argile, il laissera des marques en forme de coins." },
   { a: "calame", b: "argile", out: "tablette_vierge",
-    line: "Tu aplatis l'argile en une belle galette lisse : une TABLETTE, prête à écrire. Reste à y porter le registre du collecteur." },
+    line: "Tu aplatis l'argile en une belle galette lisse : une TABLETTE, prête à écrire. Reste à y porter le registre du collecteur. ⚠ Tant qu'elle n'est pas cuite, garde-la LOIN de l'eau : molle, elle fondrait !" },
   /* MESSAGE PERDU : la tablette laissée à l'eau avant d'être cuite. */
   { a: "tablette_vierge", b: "eau", out: "msg_effacee", msg: true, perdu: true },
   { a: "sceau", b: "argile", out: "msg_sceau", msg: true },
@@ -216,6 +219,7 @@ const chapter = {
   required: 3,
   startScene: 0,
   destination: "ANTIQUITÉ",
+  linear: true,   // navigation guidée : pas de flèches, on avance au signal de MARTINE
 
   items: ITEMS,
   scenes: SCENES,

@@ -112,9 +112,9 @@ export default function SceneUruk({ collect, action, reveal, made = [], queteQui
       {/* ═══ premier plan : la cour, le canal, les gens ═══ */}
       <PLayer depth={3}>
         <rect y="400" width="1000" height="160" fill="url(#uk-ground)" />
-        <ellipse cx="500" cy="470" rx="440" ry="60" fill="#8a6c40" opacity="0.4" />
-        <rect y="402" width="1000" height="158" fill="#3c2c18" opacity="0.32" filter="url(#uk-mottle)" />
-        <rect y="402" width="1000" height="158" fill="#2c1c10" opacity="0.45" filter="url(#uk-grain)" />
+        <ellipse cx="500" cy="482" rx="440" ry="48" fill="#8a6c40" opacity="0.2" />
+        <rect y="402" width="1000" height="158" fill="#3c2c18" opacity="0.16" filter="url(#uk-mottle)" />
+        <rect y="402" width="1000" height="158" fill="#2c1c10" opacity="0.2" filter="url(#uk-grain)" />
 
         {/* LE CANAL (eau) en bas à gauche + les roseaux */}
         <g>

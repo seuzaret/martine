@@ -8,6 +8,23 @@
    fasse briller le bon lieu.
    ============================================================ */
 
+/* Mini-carte toujours visible, dockée sur le côté de la zone de jeu.
+   Un aperçu réduit de la carte du chapitre (le lieu courant brille) ;
+   un clic ouvre la grande carte. */
+export function MiniMap({ Carte, tab, label, onOpen }) {
+  if (!Carte) return null;
+  return (
+    <button onClick={onOpen} title="Voir la carte du voyage"
+      style={{ marginTop: 8, flex: "0 0 auto", width: "100%", background: "linear-gradient(180deg,#141b28,#0c1220)", border: "1px solid #26324a", borderRadius: 10, padding: 5, cursor: "pointer", display: "flex", flexDirection: "column", gap: 3 }}>
+      <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 8, letterSpacing: 1, color: "#7fd8ff", textAlign: "center" }}>🗺 OÙ SUIS-JE ?</div>
+      <div style={{ borderRadius: 6, overflow: "hidden", border: "1px solid #2a3648", lineHeight: 0 }}>
+        <Carte tab={tab} />
+      </div>
+      {label && <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, color: "#ffd166", textAlign: "center", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>◉ {label}</div>}
+    </button>
+  );
+}
+
 export function WorldMap({ Carte, tab, titre = "Où sommes-nous ?", onClose }) {
   return (
     <div onClick={onClose}

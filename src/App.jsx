@@ -14,7 +14,7 @@ import { CHAPTERS } from "./chapters/index.js";
 import { ILLUSTRATIONS } from "./chapters/illustrations.jsx";
 import { AlphabetGame } from "./chapters/alphabet.jsx";
 import { TabletteGame } from "./chapters/mesopotamie-tablette.jsx";
-import { WorldMap } from "./engine/WorldMap.jsx";
+import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 
 /* Police « épique » du titre : on tente d'abord de belles polices gravées
@@ -1036,13 +1036,15 @@ export default function App() {
         {large && (
           <div style={{ width: 104, flex: "0 0 auto", display: "flex", flexDirection: "column", minHeight: 0 }}>
             <InventoryBar items={chapter.items} inv={inv} shake={shake} vertical />
+            {/* mini-carte dockée sous la besace (si le chapitre a une carte) */}
+            {chapter.carte && <MiniMap Carte={chapter.carte} tab={tab} label={chapter.scenes[tab].name} onOpen={() => setModal({ type: "carte" })} />}
           </div>
         )}
         <div ref={decorCellRef} style={{ flex: 1, minWidth: 0, display: "flex", justifyContent: "center", alignItems: "center", overflow: "hidden" }}>
           {/* taille exacte calculée (le plus grand cadre 1000/560 qui tient
               dans la cellule) → jamais rogné, jamais de débordement. */}
           <div style={{ width: decorBox ? decorBox.w : "100%", height: decorBox ? decorBox.h : "100%", position: "relative" }}>
-            <Scene scenes={chapter.scenes} tab={tab} onTab={setTab} sceneProps={sceneProps} sparkle={sparkle} />
+            <Scene scenes={chapter.scenes} tab={tab} onTab={setTab} sceneProps={sceneProps} sparkle={sparkle} linear={chapter.linear} />
           </div>
         </div>
         {/* écran large : la jauge temporelle à droite */}
@@ -1052,9 +1054,24 @@ export default function App() {
         )}
       </div>
 
-      {/* console MARTINE */}
+      {/* console MARTINE + le SIGNAL D'AVANCÉE (mode linéaire) : en l'absence
+          de flèches, un repère lumineux clignote près de MARTINE dès que le
+          tableau courant est bouclé, et emmène au lieu suivant. */}
       <div style={{ padding: "8px 12px 6px", display: "flex", justifyContent: "center" }}>
-        <div style={{ width: "100%", maxWidth: 980 }}>
+        <div style={{ width: "100%", maxWidth: 980, position: "relative" }}>
+          {(() => {
+            const next = chapter.scenes[tab + 1];
+            const ready = chapter.linear && next
+              && (chapter.scenes[tab].nextWhen || []).every((id) => made.includes(id));
+            if (!ready) return null;
+            return (
+              <button onClick={() => setTab(tab + 1)} title={`Partir pour ${next.name}`}
+                style={{ position: "absolute", left: "50%", top: -18, transform: "translateX(-50%)", zIndex: 6, display: "flex", alignItems: "center", gap: 8, background: "#5eff9e", color: "#06110b", border: "none", borderRadius: 20, padding: "7px 16px", fontFamily: "ui-monospace,monospace", fontWeight: 800, fontSize: 13, letterSpacing: 1, cursor: "pointer", boxShadow: "0 0 20px rgba(94,255,158,0.65)", whiteSpace: "nowrap", animation: "floaty 1.7s ease-in-out infinite" }}>
+                <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#06110b", animation: "pulse 1s infinite" }} />
+                ➜ Partir pour {next.name}
+              </button>
+            );
+          })()}
           <Martine lines={dialog.lines} idx={dialog.idx} mood={dialog.mood} date={chapter.date} onNext={() => setDialog((d) => ({ ...d, idx: d.idx + 1 }))} />
         </div>
       </div>
