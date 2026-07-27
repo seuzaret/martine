@@ -45,7 +45,7 @@ export default function SceneUruk({ collect, action, reveal, made = [], queteQui
 
       {/* ═══ couche lointaine : la ziggourat + palmiers ═══ */}
       <PLayer depth={1}>
-        <path d="M0 300 Q250 288 500 298 Q750 308 1000 296 L1000 420 L0 420 Z" fill="#b89660" />
+        <path d="M0 300 Q250 288 500 298 Q750 308 1000 296 L1000 445 L0 445 Z" fill="#b89660" />
         <g transform="translate(250,300)">
           <path d="M-130 0 L130 0 L96 -40 L-96 -40 Z" fill="url(#uk-brick2)" />
           <path d="M-96 -40 L96 -40 L66 -78 L-66 -78 Z" fill="url(#uk-brick)" />
@@ -101,7 +101,7 @@ export default function SceneUruk({ collect, action, reveal, made = [], queteQui
         </g>
 
         {/* maison de briques (gauche, derrière le roi) */}
-        <g transform="translate(120,384)">
+        <g transform="translate(120,364)">
           <rect x="-56" y="-10" width="112" height="80" rx="4" fill="url(#uk-brick2)" />
           <rect x="-56" y="-10" width="112" height="80" rx="4" fill="#5c3f22" opacity="0.3" filter="url(#uk-grain)" />
           <path d="M-56 12 h112 M-56 36 h112" stroke="#6e4c28" strokeWidth="1.5" opacity="0.35" />
@@ -111,10 +111,10 @@ export default function SceneUruk({ collect, action, reveal, made = [], queteQui
 
       {/* ═══ premier plan : la cour, le canal, les gens ═══ */}
       <PLayer depth={3}>
-        <rect y="400" width="1000" height="160" fill="url(#uk-ground)" />
-        <ellipse cx="500" cy="482" rx="440" ry="48" fill="#8a6c40" opacity="0.2" />
-        <rect y="402" width="1000" height="158" fill="#3c2c18" opacity="0.16" filter="url(#uk-mottle)" />
-        <rect y="402" width="1000" height="158" fill="#2c1c10" opacity="0.2" filter="url(#uk-grain)" />
+        <rect y="435" width="1000" height="125" fill="url(#uk-ground)" />
+        <ellipse cx="500" cy="500" rx="440" ry="50" fill="#8a6c40" opacity="0.35" />
+        <rect y="437" width="1000" height="123" fill="#3c2c18" opacity="0.3" filter="url(#uk-mottle)" />
+        <rect y="437" width="1000" height="123" fill="#2c1c10" opacity="0.4" filter="url(#uk-grain)" />
 
         {/* LE CANAL (eau) en bas à gauche + les roseaux */}
         <g>
