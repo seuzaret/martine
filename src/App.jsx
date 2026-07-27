@@ -13,6 +13,8 @@ import { lastHotspotClick } from "./engine/Hotspot.jsx";
 import { CHAPTERS } from "./chapters/index.js";
 import { ILLUSTRATIONS } from "./chapters/illustrations.jsx";
 import { AlphabetGame } from "./chapters/alphabet.jsx";
+import { TabletteGame } from "./chapters/mesopotamie-tablette.jsx";
+import { WorldMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 
 /* Police « épique » du titre : on tente d'abord de belles polices gravées
@@ -1012,6 +1014,7 @@ export default function App() {
           <button onClick={toggleMute} title={muted ? "Réactiver le son" : "Couper le son"} style={{ ...headBtn, color: muted ? "#5a6678" : "#c8d4e2" }}>{muted ? "🔇" : "🔊"}</button>
           <button onClick={hint} style={{ ...headBtn, color: "#ffd166" }}>💡</button>
           <button onClick={doReveal} title="Révéler brièvement les zones" style={headBtn}>👁</button>
+          {chapter.carte && <button onClick={() => setModal({ type: "carte" })} title="Où sommes-nous ? (carte)" style={headBtn}>🗺</button>}
           <button onClick={() => setModal({ type: "journal" })} style={headBtn}>📔</button>
           <button onClick={() => setModal({ type: "settings" })} title="Réglages · sauvegarde" style={headBtn}>⚙</button>
           {/* sur écran large, le saut est dans la jauge temporelle à droite ;
@@ -1167,6 +1170,14 @@ export default function App() {
 
       {modal?.type === "alphabet" && (
         <AlphabetGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_alphabet")} />
+      )}
+
+      {modal?.type === "tablette" && (
+        <TabletteGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_cuneiforme")} />
+      )}
+
+      {modal?.type === "carte" && (
+        <WorldMap Carte={chapter.carte} tab={tab} titre={chapter.epoque} onClose={() => setModal(null)} />
       )}
 
       {modal?.type === "journal" && (

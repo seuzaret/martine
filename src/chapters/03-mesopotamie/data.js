@@ -1,23 +1,33 @@
 /* ============================================================
    CHAPITRE 3 — Mésopotamie & Égypte : naître de l'écriture (−3300)
    ============================================================
-   Même structure que les chapitres précédents. Le moteur lit ce
-   fichier sans connaître son contenu. Voir docs/AJOUTER-UN-CHAPITRE.md.
+   Tableau 1 (Ur) : QUÊTE narrative — le roi Mesannepada accueille
+   l'étranger ; son collecteur d'impôt Narâm-Sîn ne retient plus les
+   comptes → on invente l'ÉCRITURE (mini-jeu du registre), puis le
+   roi la fait sceller. On file ensuite en Égypte (le Nil), puis en
+   Phénicie (l'alphabet) — le voyage est montré par la CARTE (🗺).
+
+   ⚠ Liberté narrative assumée : Ur, Mesannepada et Narâm-Sîn ne
+   sont pas exactement contemporains de −3300. MARTINE le sait et en
+   sourit ; l'essentiel est vrai : l'écriture naît pour COMPTER.
    ============================================================ */
 
 import SceneUruk from "./scenes/SceneUruk.jsx";
 import SceneNil from "./scenes/SceneNil.jsx";
 import ScenePhenicie from "./scenes/ScenePhenicie.jsx";
+import CarteMesopotamie from "./scenes/CarteMesopotamie.jsx";
+import { PortraitMesannepada, PortraitNaram } from "./scenes/portraits.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
    ------------------------------------------------------------ */
 const ITEMS = {
-  /* Uruk */
+  /* Ur */
+  roseaux:  { name: "Roseaux du fleuve", emoji: "🌾", desc: "Des tiges droites et creuses, coupées au bord du canal. Taillées en pointe, elles écrivent." },
+  couteau:  { name: "Couteau de silex", emoji: "🔪", desc: "Une lame tranchante. De quoi tailler un roseau en biseau — la pointe du scribe." },
   argile:   { name: "Argile fraîche", emoji: "🟤", desc: "Une motte de terre du fleuve, molle et docile. Elle garde tout ce qu'on y presse." },
-  jetons:   { name: "Jetons-comptes", emoji: "🔴", desc: "De petits jetons d'argile : un par mouton, un par sac de grain. Comment les garder en mémoire ?" },
   calame:   { name: "Calame", emoji: "🖊", desc: "Un roseau taillé en biseau. Enfoncé dans l'argile, il laisse une marque en forme de coin." },
-  sceau:    { name: "Sceau-cylindre", emoji: "🔷", desc: "Un petit cylindre de pierre gravé. Roulé sur l'argile, il imprime une image unique — ta marque." },
+  sceau:    { name: "Sceau-cylindre", emoji: "🔷", desc: "Un petit cylindre de pierre gravé, celui du roi. Roulé sur l'argile, il imprime une image unique — sa signature." },
   /* SUPPORTS (support: true) : fixes, ne vont pas au sac — repérés en cyan
      par le moteur ; on leur APPORTE un objet (glisser dessus). */
   four:     { name: "Four à tablettes", emoji: "🔥", support: true, desc: "La chaleur transforme l'argile molle en pierre. Ce qui en sort peut défier les millénaires." },
@@ -33,8 +43,7 @@ const ITEMS = {
   navires:  { name: "Navires marchands", emoji: "⛵", desc: "Les bateaux phéniciens sillonnent la Méditerranée. Ils transportent des marchandises… et des idées." },
 
   /* fabriqués */
-  calculi:       { name: "Bulle scellée", emoji: "🟠", desc: "Les jetons enfermés dans une boule d'argile scellée : le tout premier « registre » comptable." },
-  tablette_crue: { name: "Tablette crue", emoji: "🟫", desc: "Une tablette d'argile couverte de signes… mais encore molle. Il faut la cuire, ou tout est perdu." },
+  tablette_vierge: { name: "Tablette d'argile", emoji: "🟫", desc: "Une galette d'argile aplatie, lisse, prête à recevoir des signes. Il ne manque que la main du scribe." },
   feuille_papyrus:{ name: "Feuille de papyrus", emoji: "📄", desc: "Lisse, légère, souple : on peut la rouler, la transporter, l'offrir. Prête à recevoir l'écriture." },
 };
 
@@ -42,14 +51,14 @@ const ITEMS = {
    LES TABLEAUX
    ------------------------------------------------------------ */
 const SCENES = [
-  { id: "uruk",     name: "La cité d'Uruk",       Component: SceneUruk },
-  { id: "nil",      name: "Les bords du Nil",      Component: SceneNil },
-  { id: "phenicie", name: "La côte phénicienne",   Component: ScenePhenicie },
+  { id: "uruk",     name: "La cité d'Ur",        Component: SceneUruk },
+  { id: "nil",      name: "Les bords du Nil",     Component: SceneNil },
+  { id: "phenicie", name: "La côte phénicienne",  Component: ScenePhenicie },
 ];
 
 const WHERE = {
-  argile: "dans la cité d'Uruk", jetons: "dans la cité d'Uruk", calame: "dans la cité d'Uruk",
-  sceau: "dans la cité d'Uruk",
+  roseaux: "au bord du canal, dans la cité d'Ur", couteau: "dans la cité d'Ur",
+  argile: "au bord du canal, dans la cité d'Ur", sceau: "auprès du roi, dans la cité d'Ur",
   papyrus_tiges: "sur les bords du Nil", encre: "sur les bords du Nil",
   signes: "sur la côte phénicienne", navires: "sur la côte phénicienne",
 };
@@ -58,15 +67,16 @@ const HIDDEN_BY_FLAG = {};
 
 /* ------------------------------------------------------------
    LES RECETTES
+   (le cunéiforme n'est PAS ici : il s'obtient par le mini-jeu du
+   registre — voir chapters/mesopotamie-tablette.jsx)
    ------------------------------------------------------------ */
 const RECIPES = [
-  { a: "argile", b: "jetons", out: "calculi",
-    line: "Tu enfermes les jetons-comptes dans une boule d'argile scellée : le premier REGISTRE. On sait enfin combien de moutons, sans compter de tête." },
-  { a: "calculi", b: "calame", out: "tablette_crue",
-    line: "Idée lumineuse : plutôt que cacher les jetons, on IMPRIME leur forme sur l'argile plate, au calame. Une tablette naît — mais encore molle." },
-  { a: "tablette_crue", b: "four", out: "msg_cuneiforme", msg: true },
-  /* MESSAGE PERDU : la même tablette, mais laissée à l'eau. */
-  { a: "tablette_crue", b: "eau", out: "msg_effacee", msg: true, perdu: true },
+  { a: "roseaux", b: "couteau", out: "calame",
+    line: "Tu tailles le roseau en biseau : voilà un CALAME, la pointe du scribe. Enfoncé dans l'argile, il laissera des marques en forme de coins." },
+  { a: "calame", b: "argile", out: "tablette_vierge",
+    line: "Tu aplatis l'argile en une belle galette lisse : une TABLETTE, prête à écrire. Reste à y porter le registre du collecteur." },
+  /* MESSAGE PERDU : la tablette laissée à l'eau avant d'être cuite. */
+  { a: "tablette_vierge", b: "eau", out: "msg_effacee", msg: true, perdu: true },
   { a: "sceau", b: "argile", out: "msg_sceau", msg: true },
   { a: "papyrus_tiges", b: "pierre", out: "feuille_papyrus",
     line: "Fendues, pressées, séchées : les tiges se collent en une FEUILLE de papyrus, légère et souple." },
@@ -80,7 +90,7 @@ const RECIPES = [
 const MESSAGES = {
   msg_cuneiforme: { title: "Écriture cunéiforme", emoji: "🔠",
     jauges: { vitesse: 2, portee: 2, capacite: 4, durabilite: 5 },
-    fact: "Vers −3300, à Uruk, on ne compte plus les moutons de tête : trop nombreux. On presse dans l'argile molle, avec un roseau taillé (le calame), des signes en forme de coins : l'écriture cunéiforme. Elle naît pour la COMPTABILITÉ — stocks de grain, impôts, contrats. Détail énorme : le message survit désormais à celui qui l'a émis, sans se déformer. Fini le récit qui s'abîme d'oreille en oreille (le chapitre 1 !) — l'Histoire, avec un grand H, commence là. Et cuite (souvent par accident, dans l'incendie d'un palais), l'argile devient presque éternelle : on a retrouvé des centaines de milliers de tablettes.",
+    fact: "Vers −3300, dans les cités de Sumer (Uruk, Ur…), on ne compte plus les moutons de tête : trop nombreux. On presse dans l'argile molle, avec un roseau taillé (le calame), des signes en forme de coins : l'écriture cunéiforme. Elle naît pour la COMPTABILITÉ — stocks de grain, impôts, contrats. Détail énorme : le message survit désormais à celui qui l'a émis, sans se déformer. Fini le récit qui s'abîme d'oreille en oreille (le chapitre 1 !) — l'Histoire, avec un grand H, commence là. Et cuite (souvent par accident, dans l'incendie d'un palais), l'argile devient presque éternelle : on a retrouvé des centaines de milliers de tablettes.",
     wiki: "https://fr.wikipedia.org/wiki/Écriture_cunéiforme" },
   msg_sceau: { title: "Sceau / signature", emoji: "🔏",
     jauges: { vitesse: 2, portee: 2, capacite: 1, durabilite: 5 },
@@ -101,19 +111,18 @@ const MESSAGES = {
    LES INDICES (bouton 💡)
    ------------------------------------------------------------ */
 const HINTS = [
-  { needs: ["argile", "jetons"], out: "calculi", text: "Trop de jetons à retenir. Et si tu les scellais tous ensemble dans une boule d'argile ?" },
-  { needs: ["calculi", "calame"], out: "tablette_crue", text: "Pourquoi cacher les jetons dans une boule ? Aplatis l'argile et imprimes-y leur forme au calame." },
-  { needs: ["tablette_crue", "four"], out: "msg_cuneiforme", text: "Ta tablette est couverte de signes mais encore molle. Passe-la au feu pour qu'elle traverse le temps." },
-  { needs: ["tablette_crue", "eau"], out: "msg_effacee", text: "Surtout, ne laisse pas cette tablette molle dehors : l'eau la guette…" },
-  { needs: ["sceau", "argile"], out: "msg_sceau", text: "Ton cylindre gravé, roule-le sur un peu d'argile fraîche : il y laissera ta marque." },
+  { needs: ["roseaux", "couteau"], out: "calame", text: "Ces roseaux sont creux et droits. Taille-en un en pointe avec le couteau : tu auras un calame." },
+  { needs: ["calame", "argile"], out: "tablette_vierge", text: "Aplatis une motte d'argile en galette lisse : une tablette, prête pour ton calame." },
+  { needs: ["tablette_vierge", "eau"], out: "msg_effacee", text: "Surtout, ne laisse pas cette tablette molle près de l'eau : elle fondrait…" },
+  { needs: ["sceau", "argile"], out: "msg_sceau", text: "Le cylindre gravé du roi : roule-le sur un peu d'argile fraîche, il y laissera sa marque." },
   { needs: ["papyrus_tiges", "pierre"], out: "feuille_papyrus", text: "Ces tiges de papyrus : fends-les, puis écrase-les bien sous une pierre lourde." },
   { needs: ["feuille_papyrus", "encre"], out: "msg_hieroglyphes", text: "Une belle feuille lisse, un roseau, de l'encre… trace tes hiéroglyphes." },
   { needs: ["signes", "navires"], out: "msg_alphabet", text: "Ces 22 signes si simples : confie-les aux navires marchands, ils les porteront de port en port." },
 ];
 
 const NEAR_MISS = [
-  { pair: ["jetons", "calame"], line: "Graver des jetons un par un ? Tu y passerais la nuit. Il te faut d'abord les rassembler dans l'argile." },
-  { pair: ["argile", "four"], line: "Cuire de l'argile vierge te donne… une brique. Jolie, mais elle ne raconte rien. Écris D'ABORD." },
+  { pair: ["roseaux", "argile"], line: "Planter des roseaux bruts dans l'argile ? Taille-les d'abord en calame, sinon ça ne marque rien." },
+  { pair: ["tablette_vierge", "four"], line: "Cuire une tablette VIERGE ? Tu obtiendrais une jolie brique muette. Écris D'ABORD ton registre dessus." },
   { pair: ["papyrus_tiges", "encre"], line: "Écrire sur des tiges brutes ? L'encre coule entre les fibres. Fabrique d'abord une vraie feuille." },
   { pair: ["sceau", "four"], line: "Cuire ton sceau de pierre ? Il ne craint pas le feu — mais ce n'est pas là qu'il laisse un message. Roule-le sur l'argile." },
   { pair: ["navires", "argile"], line: "Charger des tonnes d'argile sur un navire ? Il coule. Les Phéniciens, eux, transportent quelque chose de bien plus léger : une idée." },
@@ -128,30 +137,62 @@ const FAIL_LINES = [
 ];
 
 const INTRO = [
-  "Enfin ! Ici, on ne compte plus les moutons de tête : on ÉCRIT. Uruk, vers −3300 — et devine pourquoi l'écriture est née : pour les impôts, pas pour la poésie.",
-  "Trois personnes, trois murs à briser. Le comptable du temple n'arrive plus à suivre les livraisons. Le scribe du pharaon veut un support léger pour porter ses ordres au loin. Le marchand phénicien rêve d'un code si simple qu'on l'apprend en un jour.",
-  "Aide-les : chaque écriture inventée recharge ma jauge. Trois, et on file vers l'Antiquité. Argile d'Uruk, papyrus du Nil, côte des Phéniciens — à toi.",
+  "Ur, vers −3300 ! Une vraie cité : des murs, un roi, un temple… et surtout des IMPÔTS. Or, devine pourquoi l'écriture est sur le point de naître ici : pas pour la poésie — pour compter le grain et les bêtes.",
+  "Le roi Mesannepada t'accueille. Son collecteur, Narâm-Sîn, se noie dans les comptes : impossible de tout retenir de tête. Aide-le à INVENTER une trace qu'on ne puisse pas discuter.",
+  "Puis le roi voudra sa signature dans l'argile, et tu descendras le fleuve vers l'Égypte, et la côte des Phéniciens. Suis la carte 🗺 — et recharge-moi une écriture après l'autre.",
 ];
 
 const ACTIONS = {
   wreck: { mood: "vexe", say: "Oui, encore un atterrissage « créatif ». Note-le sur une tablette si tu veux, mais recharge-moi d'abord." },
 
-  /* LES GENS DE L'ÉCRITURE NAISSANTE — `bubble` = leurs paroles, `say` = MARTINE. */
-  comptable: { mood: "vexe",
-    bubble: "Ce matin, le berger jure qu'il a livré vingt moutons. Le prêtre en a noté dix-huit. Aucun des deux ne ment : ils ont juste OUBLIÉ ! Le temple reçoit de l'orge, de l'huile, des bêtes toute la journée. Il me faudrait une trace qu'on ne puisse pas discuter.",
-    say: "Et c'est comme ça, pour compter, que naît l'écriture. Donne-lui de l'argile et un roseau taillé." },
+  /* LE ROI ET SON COLLECTEUR — `bubble` = leurs paroles, `say` = MARTINE.
+     Leurs vraies répliques d'étape sont dans QUETE ; ceci sert de repli. */
+  mesannepada: { mood: "neutre",
+    bubble: "Je suis Mesannepada, roi d'Ur. Rends-toi utile, étranger, et tu seras traité en ami.",
+    say: "Un vrai roi, dans une vraie cité. On est loin de la grotte du chapitre 1 !" },
+  naram: { mood: "vexe",
+    bubble: "Le berger jure vingt bêtes, le prêtre en note dix-huit… et moi, je perds la tête ! Il me faut une trace SÛRE.",
+    say: "Et c'est comme ça, pour compter, que va naître l'écriture. Fabrique-lui de quoi noter." },
 
+  /* ouvre le mini-jeu du registre (« 6 bœufs et 3 blés dans l'étable ») */
+  tablette: { modal: "tablette" },
+
+  /* Nil & Phénicie (inchangés) */
   scribe: { mood: "neutre",
     bubble: "L'argile, c'est solide : ça durera mille ans. Mais le pharaon veut que son ordre parte à l'autre bout du royaume, et ce pauvre âne n'en porte que vingt tablettes ! Il me faudrait un support LÉGER. Quelque chose qui pousse ici, au bord de l'eau…",
     say: "Léger et transportable : le papyrus. Plus pratique que l'argile… mais bien plus fragile. On n'a rien sans rien." },
-
   marchand: { mood: "neutre",
     bubble: "J'ai appris le cunéiforme : sept cents signes ! Des années de travail. Mes marins, eux, ne savent pas écrire — et dans chaque port, il faut noter la cargaison. Il me faudrait un code si SIMPLE qu'on l'apprenne en quelques jours. Vingt signes, trente au plus.",
     say: "Un code simple se répand plus vite qu'un code compliqué : c'est tout le secret de l'alphabet. Tiens, touche la tablette du scribe pour l'essayer toi-même !" },
-
-  /* ouvre le mini-jeu « Écris MARTINE dans le premier alphabet » */
   alphabet: { modal: "alphabet" },
 };
+
+/* ------------------------------------------------------------
+   LA QUÊTE — l'histoire d'Ur, étape par étape (façon ch.2).
+   perso : qui parle · portrait : gros plan · attend : ce qu'il faut
+   accomplir · suite : phrase de MARTINE quand c'est réussi.
+   ------------------------------------------------------------ */
+const QUETE = [
+  { perso: "mesannepada", portrait: "mesannepada", auto: true,
+    bubble: "Étranger, te voilà devant Ur, ma cité entre les fleuves. Je suis le roi Mesannepada. Ici, on ne vole ni le grain ni les impôts — et on se rend utile. Va donc voir Narâm-Sîn, mon collecteur : il se noie dans ses comptes. Aide-le, et tu seras des nôtres.",
+    say: "Un roi, des murs, des impôts… nous voilà en pleine cité ! Et c'est justement pour compter ces impôts qu'on va inventer l'écriture. File voir le collecteur ›." },
+
+  { perso: "naram", portrait: "naram",
+    bubble: "Ah, un peu d'aide ! Écoute mon malheur : je dois noter ce qui entre à l'étable du roi — aujourd'hui, SIX bœufs et TROIS ballots de blé. Mais de mémoire, tout se mélange, et chacun me ment ! Trouve-moi un moyen de garder une trace qu'on ne puisse pas discuter.",
+    say: "Voilà l'acte de naissance de l'écriture. Il te faut un calame (taille un roseau au couteau), puis une tablette d'argile — et grave le registre : 6 bœufs, 3 blés.",
+    attend: "msg_cuneiforme",
+    suite: "Le registre est gravé, cuit dans l'Histoire ! Le roi Mesannepada a eu vent de ton exploit : retourne le voir." },
+
+  { perso: "mesannepada", portrait: "mesannepada",
+    bubble: "Magnifique ! Voilà des comptes qu'on ne peut plus contester. Mais pour qu'on sache que ce registre vient de MOI, il y manque ma marque. Prends mon sceau-cylindre et scelle l'argile.",
+    say: "Le sceau-cylindre du roi, roulé sur l'argile fraîche : sa signature. L'ancêtre du cachet officiel — et du certificat numérique.",
+    attend: "msg_sceau",
+    suite: "Ta marque royale est dans l'argile. Le roi te laisse partir — vers l'Égypte, en descendant le fleuve." },
+
+  { perso: "mesannepada", portrait: "mesannepada",
+    bubble: "Tu es venu étranger, tu repars scribe honoraire d'Ur. Ta drôle de machine t'appelle. Descends le fleuve vers l'Égypte : là-bas, on écrit sur une plante du bord de l'eau. Et souviens-toi d'Ur.",
+    say: "Cap sur le Nil (tableau 2 › ou la carte 🗺). Le papyrus t'y attend — léger, transportable… et bien plus fragile que l'argile." },
+];
 
 /* ------------------------------------------------------------
    LA FICHE DU CHAPITRE
@@ -166,8 +207,8 @@ const chapter = {
   titre: "MARTINE",
   sousTitre: "Machine À Remonter le Temps Intelligente Néanmoins Excellente",
   presentationTitre: "Chapitre 3 — Naissance de l'écriture.",
-  presentation: "Vers −3300, les humains inventent un outil qui va tout changer : l'écriture. Elle naît de la comptabilité, à Uruk, dans l'argile. Explore la cité d'Uruk, les bords du Nil et la côte phénicienne pour découvrir le cunéiforme, les hiéroglyphes et l'alphabet.",
-  accroche: "Grave le cunéiforme 🔠 · scelle ta signature 🔏 · trace des hiéroglyphes 📜 · diffuse l'alphabet 🔤",
+  presentation: "Vers −3300, dans la cité d'Ur, les humains inventent un outil qui va tout changer : l'écriture. Elle naît de la comptabilité, dans l'argile. Aide le roi Mesannepada et son collecteur d'impôt, puis descends le fleuve vers l'Égypte et la côte phénicienne pour découvrir hiéroglyphes et alphabet.",
+  accroche: "Grave le cunéiforme 🔠 · scelle le sceau du roi 🔏 · trace des hiéroglyphes 📜 · diffuse l'alphabet 🔤",
 
   finTitre: "SAUT TEMPOREL RÉUSSI",
   finTexte: "« Circuits rechargés à {pct} %. Tu viens d'assister au grand basculement : l'Histoire commence quand on écrit. Un message peut désormais survivre à son auteur, voyager loin, se copier. Mais tout est encore rare, réservé aux scribes… Prochain saut : l'Antiquité — Grèce, Rome, Pompéi. Là-bas, on va stocker le savoir par centaines de milliers de rouleaux. Que peut-il bien arriver à une bibliothèque ? » — MARTINE",
@@ -187,6 +228,9 @@ const chapter = {
   failLines: FAIL_LINES,
   intro: INTRO,
   actions: ACTIONS,
+  quete: QUETE,
+  portraits: { mesannepada: PortraitMesannepada, naram: PortraitNaram },
+  carte: CarteMesopotamie,
 };
 
 export default chapter;
