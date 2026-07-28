@@ -84,10 +84,13 @@ export function TabletteGame({ onClose, onWin }) {
 
   const okB = reg.boeuf === OBJECTIF.boeuf, okBle = reg.ble === OBJECTIF.ble;
 
-  /* petite ligne de pictogrammes inscrits sur la tablette */
+  /* petite ligne de pictogrammes inscrits sur la tablette.
+     À GAUCHE : le MODÈLE à reproduire, en BLEU dans un cadre → pour ne pas
+     le confondre avec les marques qu'on presse (en brun d'argile). */
   const Ligne = ({ type, n, ok }) => (
-    <div style={{ display: "flex", alignItems: "center", gap: 6, minHeight: 40 }}>
-      <div style={{ width: 26, height: 26, flex: "0 0 auto", opacity: 0.9 }}><Picto type={type} stroke="#4a3420" sw={3} /></div>
+    <div style={{ display: "flex", alignItems: "center", gap: 7, minHeight: 40 }}>
+      <div style={{ width: 30, height: 30, flex: "0 0 auto", padding: 3, border: "1px dashed #3a6a9a", borderRadius: 6, background: "rgba(47,106,154,0.12)" }}><Picto type={type} stroke="#2f6a9a" sw={3} /></div>
+      <span style={{ color: "#3a6a9a", fontFamily: "ui-monospace,monospace", fontSize: 15, fontWeight: 700, flex: "0 0 auto" }}>→</span>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 3, flex: 1 }}>
         {Array.from({ length: n }).map((_, i) => (
           <div key={i} style={{ width: 22, height: 22, animation: "popIn .25s ease-out" }}><Picto type={type} stroke="#3a2614" sw={3.4} /></div>
@@ -115,8 +118,8 @@ export function TabletteGame({ onClose, onWin }) {
               {/* LA TABLETTE */}
               <div style={{ flex: "1 1 240px", background: "linear-gradient(160deg,#cda878,#a9814f)", border: "3px solid #8a6a44", borderRadius: "14px 16px 12px 15px", padding: "12px 14px", boxShadow: "inset 0 2px 10px rgba(255,255,255,0.25), inset 0 -6px 14px rgba(60,40,20,0.4)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, borderBottom: "1px solid #7a5a3a66", paddingBottom: 6, marginBottom: 6 }}>
-                  <div style={{ width: 30, height: 30 }}><Picto type="etable" stroke="#3a2614" sw={3} /></div>
-                  <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, color: "#4a3420", fontWeight: 700 }}>é — l'étable</span>
+                  <div style={{ width: 30, height: 30 }}><Picto type="etable" stroke="#2f6a9a" sw={3} /></div>
+                  <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, color: "#3a6a9a", fontWeight: 700 }}>é — l'étable</span>
                 </div>
                 <Ligne type="boeuf" n={reg.boeuf} ok={okB} />
                 <Ligne type="ble" n={reg.ble} ok={okBle} />

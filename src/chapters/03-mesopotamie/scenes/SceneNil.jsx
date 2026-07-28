@@ -12,7 +12,6 @@ import { PLayer } from "../../../engine/Parallax.jsx";
 
 export default function SceneNil({ collect, action, reveal, made = [], queteQui }) {
   const ecrit = made.includes("msg_hieroglyphes");
-  const pretAEcrire = made.includes("encre") && made.includes("calame_nil") && made.includes("feuille_papyrus");
   const seve = made.includes("seve");
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
@@ -92,8 +91,8 @@ export default function SceneNil({ collect, action, reveal, made = [], queteQui 
           {seve && <g style={{ animation: "fadein 1s ease-out" }}><circle cx="2" cy="-10" r="2.6" fill="#e0a83a" /><circle cx="3" cy="-2" r="2" fill="#e0a83a" opacity="0.8" /></g>}
         </g>
 
-        {/* massif de PAPYRUS (tiges à ombelles) */}
-        <g transform="translate(180,472)">
+        {/* massif de PAPYRUS (tiges à ombelles), poussant DANS le Nil */}
+        <g transform="translate(150,392)">
           {[[-26, 0, 1], [-10, 6, 1.1], [8, -2, 0.95], [24, 8, 1.05], [0, 10, 0.9]].map(([dx, dy, s], i) => (
             <g key={i} transform={`translate(${dx},${dy}) scale(${s})`}>
               <path d={`M0 40 q${i % 2 ? 4 : -4} -40 0 -78`} stroke="#5c7a30" strokeWidth="4" fill="none" style={{ animation: `sway ${3 + i * 0.5}s ease-in-out infinite`, transformOrigin: "0px 40px", transformBox: "view-box" }} />
@@ -104,12 +103,35 @@ export default function SceneNil({ collect, action, reveal, made = [], queteQui 
           ))}
         </g>
 
-        {/* touffe de ROSEAUX du Nil, au bord de l'eau */}
-        <g transform="translate(300,500)">
-          <ellipse cx="0" cy="12" rx="24" ry="6" fill="#241608" opacity="0.35" />
-          {[-12, -6, 0, 6, 12].map((x, i) => (
-            <path key={i} d={`M${x} 10 q${i % 2 ? 4 : -4} -30 ${i % 2 ? 5 : -3} -52`} stroke="#7a9a3e" strokeWidth="3" fill="none" style={{ animation: `sway ${3 + i * 0.3}s ease-in-out infinite`, transformOrigin: `${x}px 10px`, transformBox: "view-box" }} />
+        {/* touffe de ROSEAUX à MASSETTES (quenouilles) — bien identifiables :
+            grande tige + épi brun en forme de saucisse + pointe. Poussent
+            DANS le Nil, à l'écart du papyrus. */}
+        <g transform="translate(345,398)">
+          {/* reflet dans l'eau */}
+          <ellipse cx="0" cy="10" rx="22" ry="5" fill="#3a5a5a" opacity="0.3" />
+          {/* feuilles fines rubanées à la base */}
+          <path d="M-18 8 q-8 -24 -4 -46 M18 8 q8 -24 4 -46 M-8 8 q-4 -20 -1 -40" stroke="#6a8a3a" strokeWidth="2.4" fill="none" opacity="0.85" />
+          {[-16, -5, 6, 16].map((x, i) => (
+            <g key={i} style={{ animation: `sway ${3 + i * 0.4}s ease-in-out infinite`, transformOrigin: `${345 + x}px 408px`, transformBox: "view-box" }}>
+              <path d={`M${x} 10 L${x} ${-50 + (i % 2) * 6}`} stroke="#6a8a3a" strokeWidth="3.4" strokeLinecap="round" />
+              {/* la massette brune (l'épi) */}
+              <rect x={x - 4} y={-48 + (i % 2) * 6} width="8" height="18" rx="4" fill="#8a5a2e" />
+              <rect x={x - 4} y={-48 + (i % 2) * 6} width="8" height="18" rx="4" fill="#5a3418" opacity="0.35" />
+              {/* la petite pointe verte au-dessus */}
+              <path d={`M${x} ${-48 + (i % 2) * 6} l0 -12`} stroke="#7a9a3e" strokeWidth="1.6" strokeLinecap="round" />
+            </g>
           ))}
+        </g>
+
+        {/* la PIERRE À PRESSER (support) : dalle plate + lamelles croisées dessus */}
+        <g transform="translate(250,472)">
+          <ellipse cx="0" cy="14" rx="34" ry="8" fill="#241608" opacity="0.35" />
+          <path d="M-30 10 Q-34 -2 -14 -6 L18 -6 Q34 -4 32 8 Q30 14 12 14 L-16 14 Q-30 14 -30 10 Z" fill="#9a938a" />
+          <path d="M-30 10 Q-34 -2 -14 -6 L18 -6 Q34 -4 32 8 Q30 14 12 14 L-16 14 Q-30 14 -30 10 Z" fill="#3a342c" opacity="0.2" filter="url(#nl-grain)" />
+          <ellipse cx="2" cy="-4" rx="20" ry="6" fill="#b0a89c" />
+          <g stroke="#9aaa4a" strokeWidth="2" opacity="0.7">
+            <path d="M-12 -4 h26 M-12 -1 h26 M-6 -7 v12 M2 -7 v12 M10 -7 v12" />
+          </g>
         </g>
 
         {/* L'ATELIER : une natte avec le COUTEAU et le BOL */}
@@ -168,24 +190,6 @@ export default function SceneNil({ collect, action, reveal, made = [], queteQui 
           </g>
         )}
 
-        {/* LE PAPYRUS À ÉCRIRE : n'apparaît qu'une fois encre + calame + feuille prêts */}
-        {pretAEcrire && !ecrit && (
-          <g transform="translate(640,508)">
-            <g style={{ animation: "glow 2.4s ease-in-out infinite" }}>
-              <g transform="translate(-18,-92)">
-                <path d="M0 0 q0 -18 18 -18 q18 0 18 15 q0 13 -16 16 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
-                <circle cx="18" cy="27" r="2.4" fill="#ffd166" />
-              </g>
-            </g>
-            <ellipse cx="0" cy="14" rx="34" ry="9" fill="#241608" opacity="0.35" />
-            {/* feuille vierge roulée + calame + pot d'encre */}
-            <rect x="-30" y="-8" width="52" height="26" rx="3" fill="#e6d09a" stroke="#c8a860" strokeWidth="1.4" />
-            <path d="M-26 0 h44 M-26 8 h44" stroke="#d0b878" strokeWidth="0.8" opacity="0.5" />
-            <g transform="translate(26,-6) rotate(28)"><rect x="-1" y="-14" width="2.4" height="24" rx="1" fill="#c9a86a" /><path d="M-1 -14 h2.4 l-1.2 -3 Z" fill="#3a3a3a" /></g>
-            <g transform="translate(30,12)"><path d="M-6 -2 Q-7 6 0 7 Q7 6 6 -2 Z" fill="#5a4636" /><ellipse cx="0" cy="-2" rx="5" ry="2.4" fill="#14141a" /></g>
-          </g>
-        )}
-
         {/* herbes de berge */}
         <g opacity="0.9">
           <path d="M-4 560 q10 -28 4 -44 M18 560 q3 -22 14 -36 M960 560 q-6 -22 2 -36 M984 560 q4 -18 12 -28" stroke="#3a4a1c" strokeWidth="4" fill="none" />
@@ -221,13 +225,10 @@ export default function SceneNil({ collect, action, reveal, made = [], queteQui 
 
       {/* ═══ zones cliquables ═══ */}
       <Hotspot cx={730} cy={444} r={40} label="le pharaon Snéfrou" reveal={reveal} onClick={(p) => action("snefrou", p)} />
-      {/* le mini-jeu du cartouche : seulement quand encre + calame + feuille sont prêts */}
-      {pretAEcrire && !ecrit && (
-        <Hotspot cx={640} cy={505} r={40} label="écrire le cartouche de Snéfrou" reveal={reveal} onClick={() => action("cartouche")} />
-      )}
-      {/* objets & supports */}
-      <Hotspot cx={180} cy={452} r={52} label="tiges de papyrus" item="papyrus_tiges" reveal={reveal} onClick={() => collect("papyrus_tiges")} />
-      <Hotspot cx={300} cy={478} r={34} label="roseaux du Nil" item="roseau_nil" reveal={reveal} onClick={() => collect("roseau_nil")} />
+      {/* objets & supports (le cartouche se lance en posant le calame encré sur la feuille) */}
+      <Hotspot cx={150} cy={372} r={50} label="tiges de papyrus" item="papyrus_tiges" reveal={reveal} onClick={() => collect("papyrus_tiges")} />
+      <Hotspot cx={345} cy={372} r={34} label="roseaux du Nil (à massettes)" item="roseau_nil" reveal={reveal} onClick={() => collect("roseau_nil")} />
+      <Hotspot cx={250} cy={464} r={34} label="pierre à presser" item="pierre" reveal={reveal} onClick={() => collect("pierre")} />
       <Hotspot cx={70} cy={410} r={46} label="l'acacia (sa sève)" item="acacia" reveal={reveal} onClick={() => collect("acacia")} />
       <Hotspot cx={430} cy={514} r={28} label="couteau" item="couteau" reveal={reveal} onClick={() => collect("couteau")} />
       <Hotspot cx={496} cy={516} r={26} label="bol de terre" item="bol" reveal={reveal} onClick={() => collect("bol")} />

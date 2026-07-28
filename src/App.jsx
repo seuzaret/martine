@@ -105,9 +105,12 @@ export default function App() {
   /* Un élément est-il encore utile ? (au moins une recette pas
      encore réalisée l'utilise) — utilise le chapitre courant.
      Les objets « héritage » (heirloom) ne sont JAMAIS nettoyés :
-     ils ne servent pas dans ce chapitre, mais voyageront au suivant. */
+     ils ne servent pas dans ce chapitre, mais voyageront au suivant.
+     `keep` : objet à conserver dans la besace même si aucune RECETTE ne
+     l'utilise (ex. ingrédients d'un mini-jeu : encre, calame, papyrus). */
   const isUseful = (id, made) =>
     chapter.items[id]?.heirloom ||
+    chapter.items[id]?.keep ||
     chapter.recipes.some((r) => (r.a === id || r.b === id) && !made.includes(r.out));
   const cleanup = (invArr, made) => invArr.filter((id) => isUseful(id, made));
 
@@ -440,6 +443,15 @@ export default function App() {
   const combinePair = (a, b, point) => {
     const rec = findRecipe(chapter.recipes, a, b);
     if (rec) {
+      /* recette qui OUVRE un mini-jeu (ex. encre + papyrus → cartouche).
+         `needsInv` : objets qu'il faut AUSSI avoir en main (ex. le calame). */
+      if (rec.opens) {
+        const manque = (rec.needsInv || []).find((id) => !inv.includes(id));
+        if (manque) { setShake(true); setTimeout(() => setShake(false), 500); playSfx("fail"); say(rec.needMsg || `Il te manque : ${chapter.items[manque]?.name}.`, "vexe"); return; }
+        boom(point); playSfx("craft");
+        setModal({ type: rec.opens });
+        return;
+      }
       /* déjà réalisé ? pas de doublon */
       if (made.includes(rec.out)) {
         say(rec.perdu

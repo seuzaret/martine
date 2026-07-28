@@ -39,6 +39,7 @@ const ITEMS = {
   bol:           { name: "Bol de terre", emoji: "🥣", desc: "Un petit bol. Passé au feu, son fond se couvre d'une suie noire — le noir de l'encre." },
   acacia:        { name: "Acacia", emoji: "🌳", support: true, desc: "Un arbre du désert. Entaille son écorce et il pleure une sève collante : le liant de l'encre." },
   feu:           { name: "Feu de camp", emoji: "🔥", support: true, desc: "Un feu vif. On y noircit le bol pour récolter la suie." },
+  pierre:        { name: "Pierre à presser", emoji: "🪨", support: true, desc: "Une pierre plate et lourde. On y presse les lamelles de papyrus pour qu'elles se collent et sèchent en feuille." },
 
   /* Phénicie */
   signes:   { name: "Les 22 signes", emoji: "🅰️", desc: "L'idée géniale des marchands : à peine 22 signes, un pour chaque son. Simple. Rapide à apprendre." },
@@ -46,11 +47,13 @@ const ITEMS = {
 
   /* fabriqués */
   tablette_vierge: { name: "Tablette d'argile", emoji: "🟫", desc: "Une galette d'argile aplatie, lisse, prête à recevoir des signes. Il ne manque que la main du scribe." },
-  feuille_papyrus:{ name: "Feuille de papyrus", emoji: "📄", desc: "Lisse, légère, souple : on peut la rouler, la transporter, l'offrir. Prête à recevoir l'écriture." },
+  papyrus_coupe: { name: "Lamelles de papyrus", emoji: "🎋", desc: "Les tiges tranchées en fines lamelles. Croisées et pressées, elles se colleront en une feuille." },
+  feuille_papyrus:{ name: "Feuille de papyrus", emoji: "📄", keep: true, desc: "Lisse, légère, souple : on peut la rouler, la transporter, l'offrir. Prête à recevoir l'écriture." },
   seve:          { name: "Sève d'acacia", emoji: "💧", desc: "Une gomme collante tirée de l'écorce. Mélangée à la suie, elle fait tenir l'encre." },
   suie:          { name: "Suie noire", emoji: "⚫", desc: "Le noir de fumée récolté au fond du bol. Il ne demande qu'un liant pour devenir de l'encre." },
-  encre:         { name: "Encre noire", emoji: "🖤", desc: "Suie + sève : une belle encre noire. Avec un calame, on peut enfin tracer des signes." },
+  encre:         { name: "Encre noire", emoji: "🖤", desc: "Suie + sève : une belle encre noire. Trempes-y ton calame pour tracer des signes." },
   calame_nil:    { name: "Calame", emoji: "🖊", desc: "Un roseau du Nil taillé en pointe fine, la plume du scribe égyptien." },
+  calame_encre:  { name: "Calame encré", emoji: "🖋", keep: true, desc: "Le calame trempé dans l'encre noire : prêt à tracer les hiéroglyphes sur la feuille." },
 };
 
 /* ------------------------------------------------------------
@@ -91,16 +94,22 @@ const RECIPES = [
   /* ── Égypte (le Nil) : fabriquer papyrus + encre, puis écrire ── */
   { a: "couteau", b: "acacia", out: "seve",
     line: "Tu entailles l'écorce de l'acacia : une sève collante perle. Ce sera le LIANT de l'encre." },
-  { a: "couteau", b: "papyrus_tiges", out: "feuille_papyrus",
-    line: "Tu tranches les tiges en fines lamelles, croisées et pressées : elles se collent en une FEUILLE de papyrus, légère et souple." },
+  { a: "couteau", b: "papyrus_tiges", out: "papyrus_coupe",
+    line: "Tu tranches les tiges de papyrus en fines LAMELLES. Il reste à les presser pour qu'elles se collent." },
+  { a: "papyrus_coupe", b: "pierre", out: "feuille_papyrus",
+    line: "Tu croises les lamelles et tu les presses sous la pierre lourde : la sève les colle, elles sèchent en une FEUILLE de papyrus, légère et souple." },
   { a: "couteau", b: "roseau_nil", out: "calame_nil",
     line: "Tu tailles un roseau du Nil en pointe fine : un CALAME, la plume du scribe égyptien." },
   { a: "bol", b: "feu", out: "suie",
     line: "Tu noircis le fond du bol au-dessus des flammes : tu récoltes une belle SUIE noire." },
   { a: "suie", b: "seve", out: "encre",
     line: "Suie + sève d'acacia : tu obtiens une ENCRE noire qui accroche au papyrus." },
-  /* le papyrus écrit (hiéroglyphes) s'obtient par le MINI-JEU du cartouche,
-     débloqué quand on a l'encre, le calame ET la feuille de papyrus. */
+  { a: "encre", b: "calame_nil", out: "calame_encre",
+    line: "Tu trempes le calame dans l'encre : voilà un CALAME ENCRÉ, prêt à tracer les hiéroglyphes." },
+  /* poser le calame encré sur la feuille LANCE le mini-jeu du cartouche
+     (on y écrit le nom de Snéfrou → msg_hieroglyphes). */
+  { a: "calame_encre", b: "feuille_papyrus", opens: "cartouche",
+    needMsg: "Il te faut d'abord une feuille de papyrus ET un calame trempé dans l'encre." },
 
   { a: "signes", b: "navires", out: "msg_alphabet", msg: true },
 ];
@@ -136,9 +145,11 @@ const HINTS = [
   { needs: ["calame", "argile"], out: "tablette_vierge", text: "Aplatis une motte d'argile en galette lisse : une tablette, prête pour ton calame." },
   { needs: ["tablette_vierge", "eau"], out: "msg_effacee", text: "Surtout, ne laisse pas cette tablette molle près de l'eau : elle fondrait…" },
   { needs: ["sceau", "argile"], out: "msg_sceau", text: "Le cylindre gravé du roi : roule-le sur un peu d'argile fraîche, il y laissera sa marque." },
-  { needs: ["encre", "calame_nil", "feuille_papyrus"], out: "msg_hieroglyphes", text: "Tu as l'encre, le calame et la feuille : va écrire le nom du pharaon Snéfrou dans son cartouche !" },
+  { needs: ["calame_encre", "feuille_papyrus"], out: "msg_hieroglyphes", text: "Pose ton calame encré sur la feuille de papyrus : tu vas écrire le nom de Snéfrou dans son cartouche !" },
+  { needs: ["encre", "calame_nil"], out: "calame_encre", text: "Trempe le calame dans l'encre noire : tu auras un calame encré." },
   { needs: ["suie", "seve"], out: "encre", text: "Mélange la suie noire à la sève collante de l'acacia : tu obtiendras une belle encre." },
-  { needs: ["couteau", "papyrus_tiges"], out: "feuille_papyrus", text: "Ces tiges de papyrus : tranche-les au couteau en fines lamelles, puis presse-les." },
+  { needs: ["couteau", "papyrus_tiges"], out: "papyrus_coupe", text: "Tranche les tiges de papyrus au couteau, en fines lamelles." },
+  { needs: ["papyrus_coupe", "pierre"], out: "feuille_papyrus", text: "Croise les lamelles et presse-les sous la pierre lourde : elles sécheront en une feuille." },
   { needs: ["couteau", "roseau_nil"], out: "calame_nil", text: "Taille un roseau du Nil en pointe fine avec le couteau : un calame de scribe." },
   { needs: ["bol"], out: "suie", text: "Passe le bol au-dessus du feu : son fond se couvrira d'une suie noire (le noir de l'encre)." },
   { needs: ["couteau"], out: "seve", text: "Entaille l'écorce de l'acacia avec le couteau : il pleure une sève collante." },
@@ -149,6 +160,7 @@ const NEAR_MISS = [
   { pair: ["roseaux", "argile"], line: "Planter des roseaux bruts dans l'argile ? Taille-les d'abord en calame, sinon ça ne marque rien." },
   { pair: ["tablette_vierge", "four"], line: "Cuire une tablette VIERGE ? Tu obtiendrais une jolie brique muette. Écris D'ABORD ton registre dessus." },
   { pair: ["papyrus_tiges", "encre"], line: "Écrire sur des tiges brutes ? L'encre coule entre les fibres. Fabrique d'abord une vraie feuille." },
+  { pair: ["papyrus_tiges", "pierre"], line: "Presser les tiges ENTIÈRES ? Ça ne colle pas. Coupe-les d'abord en fines lamelles au couteau." },
   { pair: ["feuille_papyrus", "feu"], line: "Le papyrus près du feu ? Il part en fumée ! C'est toute sa faiblesse : léger et pratique… mais bien fragile." },
   { pair: ["sceau", "four"], line: "Cuire ton sceau de pierre ? Il ne craint pas le feu — mais ce n'est pas là qu'il laisse un message. Roule-le sur l'argile." },
   { pair: ["navires", "argile"], line: "Charger des tonnes d'argile sur un navire ? Il coule. Les Phéniciens, eux, transportent quelque chose de bien plus léger : une idée." },
@@ -223,7 +235,7 @@ const QUETE = [
 
   { perso: "snefrou", portrait: "snefrou",
     bubble: "Sois le bienvenu en Égypte, voyageur. Je suis Snéfrou, fils du Soleil. Le Nil nous offre une plante magique, le papyrus, sur laquelle on écrit. Rends-moi un service digne d'un roi : fabrique-moi une feuille et de l'encre, et grave mon NOM pour qu'il traverse les millénaires.",
-    say: "Un pharaon qui veut son nom éternel ! Il te faut : une feuille de papyrus (couteau + tiges), un calame (couteau + roseau), et de l'encre (suie du bol au feu + sève d'acacia). Puis écris son cartouche.",
+    say: "Un pharaon qui veut son nom éternel ! Fabrique : une feuille de papyrus (couteau puis pierre), un calame (couteau + roseau), et de l'encre (suie du bol au feu + sève d'acacia). Trempe le calame dans l'encre, pose-le sur la feuille — et écris son cartouche.",
     attend: "msg_hieroglyphes",
     suite: "Le nom de Snéfrou file vers l'éternité, tracé sur son papyrus ! Il ne te reste qu'un dernier port : la côte des Phéniciens." },
 

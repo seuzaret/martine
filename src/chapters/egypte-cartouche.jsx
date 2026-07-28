@@ -20,11 +20,13 @@ const NOM = [
   { son: "R", type: "bouche", sens: "la bouche" },
   { son: "OU", type: "caille", sens: "le poussin" },
 ];
-/* pièges (n'entrent pas dans le nom) */
+/* pièges — de VRAIES lettres (mais qui ne sont pas dans « Snéfrou »),
+   pour que le choix ne soit pas trop simple */
 const PIEGES = [
-  { son: "?", type: "soleil", sens: "le soleil" },
-  { son: "?", type: "jambe", sens: "la jambe" },
-  { son: "?", type: "pain", sens: "le pain" },
+  { son: "B", type: "jambe", sens: "la jambe" },
+  { son: "T", type: "pain", sens: "le pain" },
+  { son: "M", type: "chouette", sens: "la chouette" },
+  { son: "D", type: "main", sens: "la main" },
 ];
 
 function Glyphe({ type, stroke = "#e8dcc0", sw = 3 }) {
@@ -51,14 +53,19 @@ function Glyphe({ type, stroke = "#e8dcc0", sw = 3 }) {
     case "jambe": // piège — la jambe
       return (<svg viewBox="0 0 48 48" width="100%" height="100%"><g {...g}>
         <path d="M18 8 L18 32 L38 38" /><path d="M18 32 L10 40" /></g></svg>);
-    case "pain": // piège — le pain
+    case "pain": // piège — le pain (t)
       return (<svg viewBox="0 0 48 48" width="100%" height="100%"><g {...g}>
         <path d="M8 32 Q8 16 24 16 Q40 16 40 32 Z" /></g></svg>);
+    case "chouette": // piège — la chouette (m)
+      return (<svg viewBox="0 0 48 48" width="100%" height="100%"><g {...g}>
+        <path d="M18 12 l-3 -5 M30 12 l3 -5" /><circle cx="24" cy="17" r="9" /><circle cx="20.5" cy="16" r="1.6" fill={stroke} stroke="none" /><circle cx="27.5" cy="16" r="1.6" fill={stroke} stroke="none" /><path d="M24 18 l-2 3 l4 0 Z" fill={stroke} stroke="none" /><path d="M15 24 Q24 44 33 24" /><path d="M20 42 v-3 M28 42 v-3" /></g></svg>);
+    case "main": // piège — la main (d)
+      return (<svg viewBox="0 0 48 48" width="100%" height="100%"><g {...g}>
+        <path d="M10 44 L18 26" /><path d="M18 26 q-3 -8 -1 -15 M18 26 q2 -9 7 -12 M20 26 q6 -6 12 -6 M21 29 q6 -2 12 2" /></g></svg>);
     default: return null;
   }
 }
 
-const PALETTE = [...NOM, ...PIEGES];
 const RATE = [
   "Ce signe-là n'est pas dans le nom du roi. Écoute le son suivant.",
   "Non : dans un cartouche, chaque signe compte, et dans l'ORDRE.",
@@ -69,6 +76,12 @@ export function CartoucheGame({ onClose, onWin }) {
   const [places, setPlaces] = useState([]);   // index de NOM déjà écrits, dans l'ordre
   const [flash, setFlash] = useState(null);
   const [won, setWon] = useState(false);
+  /* la palette est MÉLANGÉE une fois au démarrage (bons signes + pièges) */
+  const [palette] = useState(() => {
+    const a = [...NOM, ...PIEGES];
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+  });
 
   useEffect(() => { if (won) onWin?.(); }, [won]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -107,11 +120,10 @@ export function CartoucheGame({ onClose, onWin }) {
                   const done = i < places.length;
                   const active = i === places.length;
                   return (
-                    <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "2px 0" }}>
-                      <div style={{ width: 46, height: 46, opacity: done ? 1 : 0.25, filter: active ? "drop-shadow(0 0 6px #ffd166)" : "none" }}>
+                    <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "3px 0" }}>
+                      <div style={{ width: 46, height: 46, opacity: done ? 1 : 0.22, filter: active ? "drop-shadow(0 0 6px #ffd166)" : "none" }}>
                         <Glyphe type={n.type} stroke={done ? "#2c1c0e" : "#5c4326"} sw={3.4} />
                       </div>
-                      <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, color: done ? "#2c1c0e" : "#7a5a34", fontWeight: 700 }}>{n.son}</span>
                     </div>
                   );
                 })}
@@ -120,11 +132,14 @@ export function CartoucheGame({ onClose, onWin }) {
               {/* LA PALETTE de hiéroglyphes */}
               <div style={{ flex: "1 1 250px" }}>
                 <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10.5, letterSpacing: 1, color: "#8fa3bd", marginBottom: 6 }}>LES SIGNES — touche dans l'ordre</div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 7 }}>
-                  {PALETTE.map((p, i) => (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 7 }}>
+                  {palette.map((p, i) => (
                     <button key={i} onClick={() => taper(p)}
-                      style={{ background: "#1a130c", border: "1px solid #3a2c1c", borderRadius: 10, padding: "6px 3px 4px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
-                      <div style={{ width: 38, height: 38 }}><Glyphe type={p.type} /></div>
+                      style={{ background: "#1a130c", border: "1px solid #3a2c1c", borderRadius: 10, padding: "5px 3px 4px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 1 }}>
+                      {/* la lettre est portée par le hiéroglyphe à toucher (toutes
+                          de la même couleur : au joueur de reconnaître S·N·F·R·OU) */}
+                      <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 15, fontWeight: 800, lineHeight: 1, color: "#e6d29a" }}>{p.son}</div>
+                      <div style={{ width: 36, height: 36 }}><Glyphe type={p.type} /></div>
                       <div style={{ fontSize: 8.5, fontFamily: "ui-monospace,monospace", color: "#8a97ad", textAlign: "center", lineHeight: 1.1 }}>{p.sens}</div>
                     </button>
                   ))}
