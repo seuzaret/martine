@@ -34,30 +34,37 @@ export default function SceneBibliotheque({ collect, action, reveal, made = [] }
       <path d="M0 392 h1000" stroke="#5a4026" strokeWidth="3" opacity="0.5" />
       {[...Array(14)].map((_, i) => <path key={i} d={`M${40 + i * 74} 392 L${20 + i * 84} 560`} stroke="#5a4026" strokeWidth="1" opacity="0.25" />)}
 
-      {/* ═══ LA GRANDE FENÊTRE (droite) : Pompéi + le Vésuve ═══ */}
-      <g transform="translate(720,60)">
-        <rect x="-18" y="-18" width="248" height="286" rx="6" fill="#8a6a40" />
-        <path d="M-6 -6 h224 v262 h-224 Z" fill="url(#bi-sky)" />
-        <clipPath id="bi-win"><path d="M-6 -6 h224 v262 h-224 Z" /></clipPath>
+      {/* ═══ LA FENÊTRE (droite) : le soleil, le Vésuve et 3 maisons ═══ */}
+      <g transform="translate(730,96)">
+        {/* encadrement + rebord */}
+        <rect x="-16" y="-16" width="192" height="184" rx="6" fill="#8a6a40" />
+        <rect x="-24" y="164" width="208" height="12" rx="3" fill="#7a5a34" />
+        <path d="M-4 -4 h168 v156 h-168 Z" fill="url(#bi-sky)" />
+        <clipPath id="bi-win"><path d="M-4 -4 h168 v156 h-168 Z" /></clipPath>
         <g clipPath="url(#bi-win)">
-          <circle cx="30" cy="40" r="20" fill="#fff4d0" opacity="0.8" />
+          {/* le SOLEIL */}
+          <circle cx="28" cy="34" r="18" fill="#fff4d0" opacity="0.9" />
           {/* mer + horizon */}
-          <rect x="-6" y="150" width="224" height="110" fill="#5a92a0" opacity="0.7" />
-          <path d="M-6 150 h224" stroke="#cfe0da" strokeWidth="1.4" opacity="0.5" />
-          {/* le Vésuve qui fume */}
-          <g transform="translate(140,150)">
-            <path d="M-70 0 L-20 -78 Q0 -90 20 -78 L70 0 Z" fill="#63634a" />
-            <path d="M-20 -78 Q0 -90 20 -78 L11 -70 Q0 -78 -11 -70 Z" fill="#454534" />
-            <ellipse cx="0" cy="-78" rx="10" ry="3" fill="#e0762e" opacity="0.6" style={{ animation: "pulse 3.2s ease-in-out infinite" }} />
-            <path d="M0 -84 q-8 -20 6 -34 q-10 4 -4 -20" stroke="#c8bcae" strokeWidth="7" fill="none" opacity="0.4" style={{ animation: "drift 7s ease-in-out infinite" }} filter="url(#bi-blur)" />
+          <rect x="-4" y="96" width="168" height="60" fill="#5a92a0" opacity="0.7" />
+          <path d="M-4 96 h168" stroke="#cfe0da" strokeWidth="1.4" opacity="0.5" />
+          {/* le VÉSUVE qui fume, au centre */}
+          <g transform="translate(108,96)">
+            <path d="M-56 0 L-16 -62 Q0 -72 16 -62 L56 0 Z" fill="#63634a" />
+            <path d="M-16 -62 Q0 -72 16 -62 L9 -55 Q0 -62 -9 -55 Z" fill="#454534" />
+            <ellipse cx="0" cy="-62" rx="8" ry="2.6" fill="#e0762e" opacity="0.6" style={{ animation: "pulse 3.2s ease-in-out infinite" }} />
+            <path d="M0 -66 q-8 -18 6 -30 q-10 4 -4 -18" stroke="#c8bcae" strokeWidth="6" fill="none" opacity="0.4" style={{ animation: "drift 7s ease-in-out infinite" }} filter="url(#bi-blur)" />
           </g>
-          {/* petites maisons à toits rouges */}
-          {[[30, 150], [64, 152], [200, 150]].map(([x, y], i) => (
-            <g key={i} transform={`translate(${x},${y})`}><rect x="-12" y="-16" width="24" height="16" fill="#e4dcc8" /><path d="M-14 -16 L0 -26 L14 -16 Z" fill="#a8462e" /></g>
+          {/* exactement 3 MAISONS à toits rouges */}
+          {[[24, 96], [58, 98], [138, 96]].map(([x, y], i) => (
+            <g key={i} transform={`translate(${x},${y})`}>
+              <rect x="-13" y="-18" width="26" height="18" fill="#e4dcc8" />
+              <path d="M-15 -18 L0 -28 L15 -18 Z" fill="#a8462e" />
+              <rect x="-4" y="-10" width="8" height="10" fill="#6a5238" />
+            </g>
           ))}
         </g>
         {/* croisillon de la fenêtre */}
-        <path d="M106 -6 v262 M-6 126 h224" stroke="#8a6a40" strokeWidth="7" />
+        <path d="M80 -4 v156 M-4 74 h168" stroke="#8a6a40" strokeWidth="6" />
       </g>
 
       {/* ═══ LE MUR À FRESQUE (gauche) : panneau d'enduit frais ═══ */}

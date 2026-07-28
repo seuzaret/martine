@@ -3,10 +3,11 @@ import { PLayer } from "../../../engine/Parallax.jsx";
 import { PompeiDefs, PompeiFond } from "./fond.jsx";
 
 /* ============================================================
-   CHAPITRE 4 · Tableau 1 — L'entrée de la villa de Caius
-   Colonnes, une belle dalle à graver, la foule sur la place, le
-   Vésuve au fond. Caius accueille l'étranger ; Argos, son esclave,
-   attend pour lancer les invitations.
+   CHAPITRE 4 · Tableau 1 — Devant la villa de Caius
+   À DROITE : l'entrée de la villa, vue en perspective (portique
+   à colonnes qui recule, fronton, la belle dalle à graver). À
+   GAUCHE : une rue de Pompéi bordée de bâtiments romains, la
+   foule, et le Vésuve au fond. Caius accueille ; Argos attend.
    ============================================================ */
 
 export default function SceneEntree({ collect, action, reveal, made = [], queteQui }) {
@@ -16,50 +17,90 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
       <defs>
         <PompeiDefs />
         <linearGradient id="e4-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#c8b48a" /><stop offset="100%" stopColor="#8a7452" /></linearGradient>
-        <linearGradient id="e4-col" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#e8dcc4" /><stop offset="50%" stopColor="#d4c4a4" /><stop offset="100%" stopColor="#b0a080" /></linearGradient>
+        <linearGradient id="e4-col" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#efe6d2" /><stop offset="55%" stopColor="#d8c8a8" /><stop offset="100%" stopColor="#b0a080" /></linearGradient>
+        <linearGradient id="e4-wall" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#c69a5a" /><stop offset="100%" stopColor="#a8804a" /></linearGradient>
         <linearGradient id="e4-red" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#a83a2c" /><stop offset="100%" stopColor="#7e2a20" /></linearGradient>
       </defs>
 
       <PompeiFond />
 
-      {/* ═══ couche intermédiaire : la façade de la villa ═══ */}
+      {/* ═══ couche intermédiaire : la RUE romaine (gauche) + la VILLA (droite) ═══ */}
       <PLayer depth={2}>
-        {/* mur rouge pompéien à gauche */}
-        <rect x="40" y="176" width="150" height="234" fill="url(#e4-red)" />
-        <rect x="40" y="176" width="150" height="234" fill="#4e1a14" opacity="0.25" filter="url(#pf-grain)" />
-        <rect x="56" y="196" width="118" height="150" fill="none" stroke="#e8c86a" strokeWidth="3" />
-        {/* le grand porche : deux colonnes + fronton */}
-        <g>
-          <path d="M300 176 L700 176 L660 130 L340 130 Z" fill="#d8cdb4" />
-          <path d="M300 176 L700 176 L660 130 L340 130 Z" fill="#8a7a58" opacity="0.15" filter="url(#pf-grain)" />
-          <path d="M500 118 L340 130 L660 130 Z" fill="#c8462e" />
-          {[360, 640].map((x, i) => (
-            <g key={i}>
-              <rect x={x - 18} y="176" width="36" height="234" fill="url(#e4-col)" />
-              {[...Array(5)].map((_, k) => <path key={k} d={`M${x - 14 + k * 6} 184 v224`} stroke="#a89870" strokeWidth="1" opacity="0.4" />)}
-              <rect x={x - 24} y="176" width="48" height="16" fill="#d8c8a8" />
-              <rect x={x - 22} y="404" width="44" height="10" fill="#c0b088" />
-            </g>
-          ))}
-          {/* la porte, dans l'ombre */}
-          <rect x="452" y="230" width="96" height="180" fill="#2c1c12" />
-          <path d="M500 230 v180 M452 230 h96" stroke="#160f08" strokeWidth="3" />
+        {/* — la rue de Pompéi : plusieurs bâtiments romains — */}
+        {[[40, 190, 150, 220, "#c8462e"], [180, 210, 120, 200, "#a8462e"], [300, 175, 140, 235, "#b8502e"], [430, 205, 110, 205, "#a8462e"]].map(([x, y, w, h, roof], i) => (
+          <g key={i}>
+            <rect x={x} y={y} width={w} height={h} fill="#e4dcc8" />
+            <rect x={x} y={y} width={w} height={h} fill="#8a7a58" opacity="0.14" filter="url(#pf-grain)" />
+            <path d={`M${x - 8} ${y} L${x + w / 2} ${y - 22} L${x + w + 8} ${y} Z`} fill={roof} />
+            {/* étage : fenêtres */}
+            {[...Array(Math.floor(w / 44))].map((_, k) => (
+              <g key={k}>
+                <rect x={x + 14 + k * 44} y={y + 24} width="20" height="26" fill="#5a4230" />
+                <rect x={x + 14 + k * 44} y={y + 70} width="20" height="26" fill="#6a5238" />
+              </g>
+            ))}
+            {/* auvent de boutique au rez-de-chaussée */}
+            <rect x={x + 6} y={y + h - 44} width={w - 12} height="6" fill="#8a5a34" />
+            <path d={`M${x + 6} ${y + h - 44} l-6 14 M${x + w - 6} ${y + h - 44} l6 14`} stroke="#8a5a34" strokeWidth="3" />
+            <rect x={x + 20} y={y + h - 34} width="26" height="34" fill="#3a2818" />
+          </g>
+        ))}
+        {/* un petit temple à colonnes dans la rue */}
+        <g transform="translate(520,412)">
+          <path d="M-40 -46 L0 -66 L40 -46 Z" fill="#c8462e" />
+          <rect x="-38" y="-46" width="76" height="8" fill="#e4dcc8" />
+          {[-32, -18, -4, 10, 24].map((x, i) => <rect key={i} x={x} y="-38" width="7" height="38" fill="#d8cdb4" />)}
         </g>
+
+        {/* — LA VILLA DE CAIUS, en perspective (droite) — */}
+        {/* le mur / la façade de la villa (bloc de droite) */}
+        <path d="M872 150 L1000 138 L1000 452 L872 452 Z" fill="url(#e4-wall)" />
+        <path d="M872 150 L1000 138 L1000 452 L872 452 Z" fill="#5a3f22" opacity="0.18" filter="url(#pf-grain)" />
+        {/* le fronton (pediment) triangulaire de la villa */}
+        <path d="M840 172 L928 116 L1000 138 L1000 172 Z" fill="#d8cdb4" />
+        <path d="M840 172 L928 116 L1000 172 Z" fill="#c8462e" />
+        <path d="M840 172 L1000 172" stroke="#b0a080" strokeWidth="4" />
+        {/* l'entrée : une porte à double battant dans le mur, en retrait */}
+        <rect x="908" y="238" width="74" height="214" fill="#2c1c12" />
+        <path d="M945 238 v214 M908 238 h74" stroke="#160f08" strokeWidth="3" />
+        {[268, 316, 364].map((y, i) => <path key={i} d={`M912 ${y} h30 M948 ${y} h30`} stroke="#160f08" strokeWidth="2" opacity="0.6" />)}
+        <circle cx="939" cy="352" r="3" fill="#c8a860" /><circle cx="951" cy="352" r="3" fill="#c8a860" />
+
+        {/* le PORTIQUE : 4 colonnes qui reculent (perspective) + architrave en pente */}
+        <path d="M596 236 L872 168 L872 196 L596 262 Z" fill="#e0d4b8" />
+        <path d="M596 262 L872 196 L872 208 L596 274 Z" fill="#c4b48c" />
+        {[[620, 20], [700, 24], [782, 28], [858, 33]].map(([x, w], i) => {
+          const yTop = 262 - (x - 620) / 238 * 62;   // le chapiteau
+          const yBase = 452 - (x - 620) / 238 * 22;  // le pied, sur le podium
+          return (
+            <g key={i}>
+              <rect x={x - w / 2} y={yTop} width={w} height={yBase - yTop} fill="url(#e4-col)" />
+              {[...Array(4)].map((_, k) => <path key={k} d={`M${x - w / 2 + 4 + k * (w - 8) / 3} ${yTop + 6} v${yBase - yTop - 12}`} stroke="#a89870" strokeWidth="1" opacity="0.4" />)}
+              <rect x={x - w / 2 - 4} y={yTop - 8} width={w + 8} height="10" fill="#e8dcc0" />
+              <rect x={x - w / 2 - 3} y={yBase - 6} width={w + 6} height="8" fill="#c0b088" />
+            </g>
+          );
+        })}
       </PLayer>
 
-      {/* ═══ premier plan : le parvis, la dalle, les gens ═══ */}
+      {/* ═══ premier plan : le parvis, le podium, la dalle, les gens ═══ */}
       <PLayer depth={3}>
-        <rect y="400" width="1000" height="160" fill="url(#e4-floor)" />
-        <rect y="402" width="1000" height="158" fill="#3c2c18" opacity="0.26" filter="url(#pf-mottle)" />
-        <g opacity="0.32" stroke="#6e5836" strokeWidth="1"><path d="M0 446 h1000 M0 496 h1000" />{[...Array(18)].map((_, i) => <path key={i} d={`M${i * 58} 410 v150`} />)}</g>
-        <ellipse cx="500" cy="474" rx="450" ry="54" fill="#7a6240" opacity="0.28" />
+        <rect y="410" width="1000" height="150" fill="url(#e4-floor)" />
+        <rect y="412" width="1000" height="148" fill="#3c2c18" opacity="0.26" filter="url(#pf-mottle)" />
+        <g opacity="0.3" stroke="#6e5836" strokeWidth="1"><path d="M0 456 h1000 M0 504 h1000" />{[...Array(18)].map((_, i) => <path key={i} d={`M${i * 58} 418 v142`} />)}</g>
+        <ellipse cx="480" cy="484" rx="470" ry="52" fill="#7a6240" opacity="0.26" />
 
-        {/* LA DALLE À GRAVER, à l'entrée (support) */}
-        <g transform="translate(150,470)">
-          <ellipse cx="0" cy="34" rx="60" ry="12" fill="#241608" opacity="0.35" />
-          <rect x="-52" y="-24" width="104" height="58" rx="4" fill="#d8cdb4" />
+        {/* les MARCHES du podium de la villa (droite) */}
+        <path d="M700 452 L1000 452 L1000 470 L680 470 Z" fill="#d8cdb4" />
+        <path d="M680 470 L1000 470 L1000 490 L660 490 Z" fill="#c4b48c" />
+        <path d="M660 490 L1000 490 L1000 512 L638 512 Z" fill="#b0a080" />
+
+        {/* LA DALLE À GRAVER, au pied de l'entrée (support) */}
+        <g transform="translate(786,486)">
+          <ellipse cx="0" cy="34" rx="58" ry="11" fill="#241608" opacity="0.35" />
+          <rect x="-52" y="-24" width="104" height="58" rx="4" fill="#e4dcc8" />
           <rect x="-52" y="-24" width="104" height="58" rx="4" fill="#8a7a58" opacity="0.2" filter="url(#pf-grain)" />
-          <rect x="-52" y="-24" width="104" height="8" fill="#e8e0cc" />
+          <rect x="-52" y="-24" width="104" height="8" fill="#efe6d2" />
           {grave ? (
             <g style={{ animation: "fadein 1s ease-out" }} fill="#4a3826">
               <text x="0" y="-6" textAnchor="middle" fontSize="12" fontFamily="'Cinzel','Trajan Pro',Georgia,serif" letterSpacing="1">CAIVS · POMPEIS</text>
@@ -71,9 +112,9 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
           )}
         </g>
 
-        {/* LA FOULE sur la place (support) : petites silhouettes */}
-        <g transform="translate(800,486)">
-          {[[-40, 0, "#8a5a3a"], [-18, 6, "#9a6a4a"], [4, -2, "#7a4a34"], [26, 8, "#a86a4a"], [46, 2, "#8a5a3a"], [10, 14, "#6a4a34"]].map(([x, y, c], i) => (
+        {/* LA FOULE sur la rue (support) */}
+        <g transform="translate(300,494)">
+          {[[-40, 0, "#8a5a3a"], [-18, 6, "#9a6a4a"], [4, -2, "#7a4a34"], [26, 8, "#a86a4a"], [46, 2, "#8a5a3a"], [12, 14, "#6a4a34"], [-30, 12, "#9a6a4a"]].map(([x, y, c], i) => (
             <g key={i} transform={`translate(${x},${y})`}>
               <path d="M-8 24 Q-10 -2 0 -12 Q10 -2 8 24 Z" fill={c} />
               <circle cx="0" cy="-18" r="6" fill="#c89868" />
@@ -81,8 +122,8 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
           ))}
         </g>
 
-        {/* CAIUS le marchand, en toge, au centre */}
-        <g transform="translate(430,478)">
+        {/* CAIUS le marchand, en toge, devant sa villa */}
+        <g transform="translate(640,484)">
           <ellipse cx="0" cy="28" rx="24" ry="7" fill="#241608" opacity="0.4" />
           <path d="M-16 28 Q-22 -6 0 -20 Q22 -6 16 28 Z" fill="#efe7d2" />
           <path d="M-14 6 q14 8 28 0 M-12 18 q12 6 24 0" stroke="#c4b898" strokeWidth="2" fill="none" opacity="0.6" />
@@ -90,30 +131,28 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
           <circle cx="0" cy="-30" r="9.5" fill="#c89868" />
           <path d="M-9 -33 q9 -8 18 0 q-2 -7 -9 -7 q-7 0 -9 7 Z" fill="#4a3020" />
           <path d="M-11 -30 q11 -8 22 0" stroke="#6a8a3a" strokeWidth="2" fill="none" opacity="0.7" />
-          {/* bras ouvert, accueillant */}
           <path d="M14 -6 q16 2 20 14" stroke="#c89868" strokeWidth="4.5" fill="none" strokeLinecap="round" />
         </g>
         {queteQui === "caius" && (
-          <g transform="translate(412,378)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+          <g transform="translate(622,384)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
             <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
           </g>
         )}
 
-        {/* ARGOS l'esclave, tunique courte, près de la foule */}
-        <g transform="translate(640,486)">
+        {/* ARGOS l'esclave, près de la foule */}
+        <g transform="translate(430,492)">
           <ellipse cx="0" cy="24" rx="20" ry="6" fill="#241608" opacity="0.4" />
           <path d="M-12 24 Q-15 -2 0 -15 Q15 -2 12 24 Z" fill="#b89a6a" />
           <path d="M-10 6 q10 4 20 0" stroke="#96784a" strokeWidth="2" fill="none" />
           <circle cx="0" cy="-24" r="8" fill="#b0855c" />
           <path d="M-8 -26 q8 -7 16 0 q-2 -6 -8 -6 q-6 0 -8 6 Z" fill="#3a2a1c" />
-          {/* main en porte-voix vers la foule */}
           <path d="M11 -8 q10 -4 16 2" stroke="#b0855c" strokeWidth="4" fill="none" strokeLinecap="round" />
           <path d="M27 -8 q6 2 6 8 q-6 -1 -8 3" fill="none" stroke="#b0855c" strokeWidth="2.4" strokeLinecap="round" />
         </g>
 
         {/* épave de MARTINE dans un coin */}
-        <g transform="translate(920,506) rotate(8)">
+        <g transform="translate(70,506) rotate(-8)">
           <ellipse cx="0" cy="12" rx="26" ry="6" fill="#140b06" opacity="0.5" />
           <path d="M0 -20 Q18 -18 20 -4 Q22 8 11 11 L-11 11 Q-22 8 -20 -4 Q-18 -18 0 -20 Z" fill="#8a6240" />
           <circle cx="-1" cy="-4" r="5.5" fill="#cfeaff" stroke="#5c3a22" strokeWidth="1.4" />
@@ -127,12 +166,12 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
       <rect width="1000" height="560" fill="#231a10" opacity="0.06" style={{ pointerEvents: "none" }} />
 
       {/* zones cliquables */}
-      <Hotspot cx={430} cy={452} r={40} label="Caius, le marchand" reveal={reveal} onClick={(p) => action("caius", p)} />
-      <Hotspot cx={640} cy={462} r={34} label="Argos, l'esclave" reveal={reveal} onClick={(p) => action("argos", p)} />
-      <Hotspot cx={600} cy={452} r={26} label="ta voix" item="voix" reveal={reveal} onClick={() => collect("voix")} />
-      <Hotspot cx={800} cy={472} r={60} label="la foule" item="foule" reveal={reveal} onClick={() => collect("foule")} />
-      <Hotspot cx={150} cy={468} r={54} label="la dalle à graver" item="pierre" reveal={reveal} onClick={() => collect("pierre")} />
-      <Hotspot cx={920} cy={502} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
+      <Hotspot cx={640} cy={456} r={40} label="Caius, le marchand" reveal={reveal} onClick={(p) => action("caius", p)} />
+      <Hotspot cx={430} cy={470} r={34} label="Argos, l'esclave" reveal={reveal} onClick={(p) => action("argos", p)} />
+      <Hotspot cx={392} cy={470} r={26} label="ta voix" item="voix" reveal={reveal} onClick={() => collect("voix")} />
+      <Hotspot cx={300} cy={480} r={64} label="la foule" item="foule" reveal={reveal} onClick={() => collect("foule")} />
+      <Hotspot cx={786} cy={484} r={54} label="la dalle à graver" item="pierre" reveal={reveal} onClick={() => collect("pierre")} />
+      <Hotspot cx={70} cy={502} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
     </svg>
   );
 }
