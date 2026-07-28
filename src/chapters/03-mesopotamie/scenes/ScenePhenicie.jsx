@@ -144,21 +144,20 @@ export default function ScenePhenicie({ collect, action, reveal, made = [] }) {
       <rect width="1000" height="560" fill="#231a10" opacity="0.06" style={{ pointerEvents: "none" }} />
 
       {/* zones cliquables */}
-      {/* le « ? » du marchand : un code simple, apprenable en quelques jours */}
+      {/* le « ? » d'Assurbanipal : un code simple, apprenable en quelques jours */}
       {!made.includes("msg_alphabet") && (
         <>
           <g transform="translate(552,414)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
             <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
           </g>
-          <Hotspot cx={572} cy={424} r={28} label="parler au marchand" reveal={reveal} onClick={() => action("marchand")} />
+          <Hotspot cx={572} cy={424} r={28} label="parler à Assurbanipal" reveal={reveal} onClick={() => action("assurbanipal")} />
         </>
       )}
 
-      <Hotspot cx={462} cy={492} r={46} label="22 signes" item="signes" reveal={reveal} onClick={() => collect("signes")} />
-      <Hotspot cx={470} cy={356} r={70} label="navires" item="navires" reveal={reveal} onClick={() => collect("navires")} />
-      {/* la tablette : ouvre le mini-jeu de l'alphabet (bonus, toujours dispo) */}
-      <Hotspot cx={300} cy={494} r={46} label="graver l'alphabet" reveal={reveal} onClick={() => action("alphabet")} />
+      {/* la tablette : APPRENDRE l'alphabet (mini-jeu) → on gagne les 22 signes */}
+      <Hotspot cx={300} cy={494} r={46} label="apprendre l'alphabet" reveal={reveal} onClick={() => action("alphabet")} />
+      <Hotspot cx={470} cy={356} r={70} label="navires marchands" item="navires" reveal={reveal} onClick={() => collect("navires")} />
     </svg>
   );
 }

@@ -431,6 +431,18 @@ export default function App() {
     say(`◆ « ${m.title} » transmis au futur ! Tu l'as gagné en l'écrivant toi-même. Mes circuits se rechargent.`, "content");
   };
 
+  /* Octroyer un OBJET (dans la besace) — pour les mini-jeux qui font GAGNER
+     un ingrédient à combiner ensuite (ex. l'alphabet, à mettre sur les navires). */
+  const grantItem = (id) => {
+    if (inv.includes(id)) return;
+    const it = chapter.items[id];
+    if (!it) return;
+    setMade((v) => (v.includes(id) ? v : [...v, id]));
+    setInv((v) => (v.includes(id) ? v : [...v, id]));
+    flash(); playSfx("craft");
+    say(`✨ Tu as gagné : ${it.emoji} ${it.name}. ${it.desc}`, "content");
+  };
+
   const doReveal = () => { setReveal(true); setTimeout(() => setReveal(false), 2200); };
 
   /* Un élément est-il caché par un drapeau ? (ex. le cerf après la chasse) */
@@ -1199,7 +1211,7 @@ export default function App() {
       {modal?.type === "settings" && <SettingsModal />}
 
       {modal?.type === "alphabet" && (
-        <AlphabetGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_alphabet")} />
+        <AlphabetGame onClose={() => setModal(null)} onWin={() => grantItem("signes")} />
       )}
 
       {modal?.type === "tablette" && (

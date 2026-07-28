@@ -128,11 +128,11 @@ export function AlphabetGame({ onClose, onWin }) {
           <div style={{ marginTop: 16 }}>
             <div style={{ background: "#101827", border: "1px solid #2a3648", borderRadius: 12, padding: "14px 16px" }}>
               <p style={{ fontSize: 15, lineHeight: 1.65, color: "#e8eef5", margin: 0 }}>
-                « Tu viens d'écrire mon nom dans l'alphabet des Phéniciens ! Regarde : chacune de nos lettres n'est, au départ, que le dessin d'une chose. Un bœuf, l'eau, une main… Ce code est si SIMPLE qu'on l'apprend en quelques jours — et c'est pour ça qu'il a fait le tour du monde, jusqu'à cet écran. » — MARTINE
+                « Tu viens d'écrire mon nom dans l'alphabet des Phéniciens ! Regarde : chacune de nos lettres n'est, au départ, que le dessin d'une chose. Un bœuf, l'eau, une main… Ce code est si SIMPLE qu'on l'apprend en quelques jours. Maintenant que tu le TIENS, confie-le aux navires marchands : c'est le commerce qui le portera de port en port, tout autour de la mer. » — MARTINE
               </p>
             </div>
             <p style={{ textAlign: "center", margin: "12px 0 0", color: "#7fe0a8", fontSize: 13, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
-              ◆ « Alphabet phénicien » transmis au futur !
+              ✨ Tu as appris l'ALPHABET — mets-le sur les navires pour le diffuser !
             </p>
             <button onClick={onClose}
               style={{ marginTop: 10, width: "100%", background: "#e8934a", color: "#1a0e02", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer", fontSize: 15, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>

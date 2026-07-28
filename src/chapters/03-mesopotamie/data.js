@@ -42,7 +42,7 @@ const ITEMS = {
   pierre:        { name: "Pierre à presser", emoji: "🪨", support: true, desc: "Une pierre plate et lourde. On y presse les lamelles de papyrus pour qu'elles se collent et sèchent en feuille." },
 
   /* Phénicie */
-  signes:   { name: "Les 22 signes", emoji: "🅰️", desc: "L'idée géniale des marchands : à peine 22 signes, un pour chaque son. Simple. Rapide à apprendre." },
+  signes:   { name: "L'alphabet (22 signes)", emoji: "🅰️", desc: "L'alphabet que tu viens d'apprendre : 22 signes, un pour chaque son. Confie-le aux navires pour qu'il fasse le tour de la mer." },
   navires:  { name: "Navires marchands", emoji: "⛵", desc: "Les bateaux phéniciens sillonnent la Méditerranée. Ils transportent des marchandises… et des idées." },
 
   /* fabriqués */
@@ -72,7 +72,7 @@ const WHERE = {
   roseaux: "au bord du canal, dans la cité d'Ur", couteau: "près des artisans (à Ur comme au bord du Nil)",
   argile: "au bord du canal, dans la cité d'Ur", sceau: "auprès du roi, dans la cité d'Ur",
   papyrus_tiges: "au bord du Nil", roseau_nil: "au bord du Nil", bol: "au bord du Nil",
-  signes: "sur la côte phénicienne", navires: "sur la côte phénicienne",
+  navires: "sur la côte phénicienne",
 };
 
 const HIDDEN_BY_FLAG = {};
@@ -205,9 +205,9 @@ const ACTIONS = {
   scribe: { mood: "neutre",
     bubble: "L'argile, c'est solide : ça durera mille ans. Mais le pharaon veut que son ordre parte à l'autre bout du royaume, et ce pauvre âne n'en porte que vingt tablettes ! Il me faudrait un support LÉGER. Quelque chose qui pousse ici, au bord de l'eau…",
     say: "Léger et transportable : le papyrus. Plus pratique que l'argile… mais bien plus fragile. On n'a rien sans rien." },
-  marchand: { mood: "neutre",
-    bubble: "J'ai appris le cunéiforme : sept cents signes ! Des années de travail. Mes marins, eux, ne savent pas écrire — et dans chaque port, il faut noter la cargaison. Il me faudrait un code si SIMPLE qu'on l'apprenne en quelques jours. Vingt signes, trente au plus.",
-    say: "Un code simple se répand plus vite qu'un code compliqué : c'est tout le secret de l'alphabet. Tiens, touche la tablette du scribe pour l'essayer toi-même !" },
+  assurbanipal: { mood: "neutre",
+    bubble: "Je suis Assurbanipal, roi et grand amasseur de tablettes : j'ai réuni tout le savoir du monde en cunéiforme… sept cents signes ! Mais regarde ces marchands : avec seulement 22 signes, un par son, leurs mousses apprennent à écrire en quelques jours. Apprends ce code simple, toi aussi.",
+    say: "Un code SIMPLE se répand plus vite qu'un code savant : tout le secret de l'alphabet. Grave-le sur la tablette pour l'apprendre — puis confie-le aux navires marchands." },
   alphabet: { modal: "alphabet" },
 };
 
