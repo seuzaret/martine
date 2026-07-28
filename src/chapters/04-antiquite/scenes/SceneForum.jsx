@@ -1,184 +1,124 @@
 import Hotspot from "../../../engine/Hotspot.jsx";
 import { PLayer } from "../../../engine/Parallax.jsx";
+import { PompeiDefs, PompeiFond } from "./fond.jsx";
 
 /* ============================================================
-   CHAPITRE 4 — Tableau : le forum romain
-   Peinture fine — plein soleil, marbre et colonnes, une grande
-   stèle gravée, l'atelier du parcheminier-copiste. À trouver :
-   marbre, burin, peau, chaux & ponce, plume, grattoir.
+   CHAPITRE 4 · Tableau 3 — Le jardin & l'atelier de la villa
+   Fontaine, arbres et oliviers, une vache, les ruches, et un
+   petit atelier avec planches, outils, burin et épée. Le Vésuve
+   veille au fond.
    ============================================================ */
 
-export default function SceneForum({ collect, action, reveal, made = [] }) {
+export default function SceneJardin({ collect, action, reveal, made = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
-        <linearGradient id="fo-sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#4a86bc" />
-          <stop offset="60%" stopColor="#9cc0d4" />
-          <stop offset="100%" stopColor="#eadcb8" />
-        </linearGradient>
-        <linearGradient id="fo-marble" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#f0ece2" /><stop offset="55%" stopColor="#d8d2c4" /><stop offset="100%" stopColor="#b4ac9c" /></linearGradient>
-        <linearGradient id="fo-col" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#eae4d6" /><stop offset="50%" stopColor="#d2c8b4" /><stop offset="100%" stopColor="#aca290" /></linearGradient>
-        <linearGradient id="fo-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#cabfa4" /><stop offset="100%" stopColor="#8a7c60" /></linearGradient>
-        <filter id="fo-grain" x="0%" y="0%" width="100%" height="100%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" />
-          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.45 0" result="a" />
-          <feComposite in="a" in2="SourceGraphic" operator="in" />
-        </filter>
-        <filter id="fo-mottle" x="0%" y="0%" width="100%" height="100%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" result="n" />
-          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0" result="a" />
-          <feComposite in="a" in2="SourceGraphic" operator="in" />
-        </filter>
+        <PompeiDefs />
+        <linearGradient id="ja-grass" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8a9a52" /><stop offset="100%" stopColor="#5a6a34" /></linearGradient>
+        <linearGradient id="ja-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#a8ccd0" /><stop offset="100%" stopColor="#5a808a" /></linearGradient>
+        <radialGradient id="ja-tree" cx="45%" cy="40%" r="60%"><stop offset="0%" stopColor="#6a8a3a" /><stop offset="100%" stopColor="#3a5226" /></radialGradient>
       </defs>
 
-      {/* ═══ ciel romain ═══ */}
-      <rect width="1000" height="560" fill="url(#fo-sky)" />
-      <circle cx="820" cy="120" r="36" fill="#fff6da" opacity="0.85" />
-      <path d="M120 110 q8 -8 16 0 M180 132 q6 -6 12 0" stroke="#4a5464" strokeWidth="2.2" fill="none" opacity="0.5" />
+      <PompeiFond />
 
-      {/* ═══ couche lointaine : basilique + arc de triomphe ═══ */}
-      <PLayer depth={1}>
-        <rect y="288" width="1000" height="60" fill="#b0a488" />
-        {/* rangée de colonnes de la basilique */}
-        {[60, 110, 160, 210, 260].map((x, i) => (
-          <g key={i}><rect x={x - 8} y="150" width="16" height="140" fill="url(#fo-col)" /><rect x={x - 12} y="142" width="24" height="10" fill="#d8cdb4" /></g>
-        ))}
-        <rect x="44" y="132" width="240" height="14" fill="#c2b48e" />
-        <path d="M44 132 L164 104 L284 132 Z" fill="#cbbf9c" />
-        {/* arc de triomphe (droite) */}
-        <g transform="translate(860,290)">
-          <rect x="-70" y="-130" width="140" height="130" fill="url(#fo-marble)" />
-          <path d="M-40 0 v-70 Q0 -100 40 -70 v70 Z" fill="#7a746a" />
-          <rect x="-70" y="-146" width="140" height="18" fill="#d8d2c4" />
-          <rect x="-56" y="-124" width="16" height="94" fill="#cfc7b8" /><rect x="40" y="-124" width="16" height="94" fill="#cfc7b8" />
-        </g>
-      </PLayer>
-
-      {/* ═══ couche intermédiaire : la grande stèle gravée + colonne ═══ */}
-      <PLayer depth={2}>
-        {/* colonne isolée (gauche) */}
-        <g transform="translate(120,400)">
-          <rect x="-14" y="-230" width="28" height="230" fill="url(#fo-col)" />
-          {[...Array(5)].map((_, k) => <path key={k} d={`M${-10 + k * 5} -224 v224`} stroke="#a89e86" strokeWidth="1" opacity="0.4" />)}
-          <rect x="-20" y="-244" width="40" height="16" fill="#e0d6c2" />
-          <path d="M-20 -244 q-6 -10 6 -14 q6 8 14 4 q-4 10 6 10 Z" fill="#d0c6b0" />
-        </g>
-        {/* la GRANDE STÈLE de marbre, couverte de lettres romaines */}
-        <g transform="translate(430,404)">
-          <rect x="-96" y="-190" width="192" height="190" fill="url(#fo-marble)" />
-          <rect x="-96" y="-190" width="192" height="190" fill="#8a8478" opacity="0.18" filter="url(#fo-grain)" />
-          <rect x="-96" y="-190" width="192" height="190" fill="none" stroke="#a89e86" strokeWidth="3" />
-          {/* fronton */}
-          <path d="M-104 -190 L0 -222 L104 -190 Z" fill="#e0dacc" />
-          {/* AVANT gravure : la stèle est VIERGE — juste des lignes-repères
-              tracées à la craie, prêtes pour le graveur */}
-          {!made.includes("msg_inscription") && [-156, -122, -88, -56].map((y, i) => (
-            <line key={i} x1="-78" y1={y} x2="78" y2={y} stroke="#b8ae9a" strokeWidth="1" strokeDasharray="4 4" opacity="0.5" />
-          ))}
-          {/* APRÈS (résultat de msg_inscription) : les CAPITALES ROMAINES se
-              gravent — ombre du creux + rehaut de pierre fraîchement taillée */}
-          {made.includes("msg_inscription") && (
-            <g style={{ animation: "fadein 1s ease-out" }}>
-              {["SENATVS", "POPVLVSQVE", "ROMANVS", "·  S P Q R  ·"].map((t, i) => (
-                <g key={i}>
-                  <text x="0" y={-150 + i * 34} textAnchor="middle" fontSize={i === 3 ? 15 : 20} fill="#5a5348" fontFamily="Palatino, Georgia, serif" letterSpacing="2" style={{ fontWeight: 700 }}>{t}</text>
-                  <text x="-1" y={-151 + i * 34} textAnchor="middle" fontSize={i === 3 ? 15 : 20} fill="#f4efe2" fontFamily="Palatino, Georgia, serif" letterSpacing="2" style={{ fontWeight: 700 }} opacity="0.5">{t}</text>
-                </g>
-              ))}
-            </g>
-          )}
-        </g>
-      </PLayer>
-
-      {/* ═══ premier plan : dallage, tailleur de pierre, atelier du copiste ═══ */}
+      {/* ═══ le jardin (premier plan) ═══ */}
       <PLayer depth={3}>
-        <rect y="400" width="1000" height="160" fill="url(#fo-floor)" />
-        <rect y="402" width="1000" height="158" fill="#3c3220" opacity="0.28" filter="url(#fo-mottle)" />
-        <path d="M0 448 h1000 M0 506 h1000 M240 410 v150 M520 410 v150 M760 410 v150" stroke="#5c503a" strokeWidth="1.6" opacity="0.4" />
-        <ellipse cx="500" cy="474" rx="440" ry="52" fill="#7a6c4a" opacity="0.3" />
+        <rect y="360" width="1000" height="200" fill="url(#ja-grass)" />
+        <rect y="362" width="1000" height="198" fill="#2e3a18" opacity="0.24" filter="url(#pf-mottle)" />
+        {/* allée dallée */}
+        <path d="M380 560 L470 380 L540 380 L640 560 Z" fill="#c2a877" opacity="0.85" />
+        <path d="M380 560 L470 380 M640 560 L540 380" stroke="#8a6e46" strokeWidth="1.6" opacity="0.4" />
 
-        {/* petit BLOC DE MARBRE au sol + burin du tailleur */}
-        <g transform="translate(190,470)">
-          <ellipse cx="0" cy="26" rx="52" ry="12" fill="#241608" opacity="0.35" />
-          <path d="M-42 26 L-38 -18 L40 -26 L46 20 Z" fill="url(#fo-marble)" />
-          <path d="M-38 -18 L40 -26 L46 20 L-42 26 Z" fill="#8a8478" opacity="0.15" filter="url(#fo-grain)" />
-          <path d="M-30 0 h50 M-28 10 h44" stroke="#8a8072" strokeWidth="2" opacity="0.5" />
-          {/* burin + maillet posés dessus */}
-          <g transform="translate(6,-24) rotate(-24)"><rect x="-2" y="-16" width="4" height="24" fill="#6a6c72" /><rect x="-3" y="8" width="6" height="6" fill="#4a4c52" /></g>
-          <g transform="translate(30,-16)"><rect x="-8" y="-6" width="16" height="12" rx="2" fill="#8a5a34" /><rect x="-2" y="4" width="4" height="14" fill="#5a3f24" /></g>
-        </g>
-
-        {/* L'ATELIER DU PARCHEMINIER-COPISTE (droite) */}
-        {/* peau tendue sur un cadre */}
-        <g transform="translate(590,458)">
-          <path d="M-36 20 L-36 -50 M36 20 L36 -50 M-40 -46 L40 -46" stroke="#5a3f24" strokeWidth="5" strokeLinecap="round" />
-          <path d="M-28 -42 Q0 -50 28 -42 L24 12 Q0 20 -24 12 Z" fill="#e6d8bc" />
-          <path d="M-28 -42 Q0 -50 28 -42 L24 12 Q0 20 -24 12 Z" fill="#8a7a56" opacity="0.2" filter="url(#fo-grain)" />
-          <path d="M-20 -34 q20 -6 40 0 M-22 -14 q22 -6 44 0" stroke="#c9b892" strokeWidth="1.4" fill="none" opacity="0.6" />
-        </g>
-        {/* seau de chaux + pierre ponce */}
-        <g transform="translate(660,512)">
-          <path d="M-14 -8 L14 -8 L11 12 L-11 12 Z" fill="#7a6e5a" />
-          <ellipse cx="0" cy="-8" rx="14" ry="4.5" fill="#e8e4da" />
-          <ellipse cx="20" cy="8" rx="10" ry="7" fill="#d0ccc0" /><path d="M14 6 q6 -4 12 0" stroke="#b0aca0" strokeWidth="1" fill="none" />
-        </g>
-        {/* pupitre du copiste : parchemin, plume & encrier, grattoir */}
-        <g transform="translate(740,500)">
-          <path d="M-46 14 L46 14 L40 -2 L-52 -2 Z" fill="#6e4c2e" />
-          <rect x="-52" y="14" width="8" height="26" fill="#5a3f24" /><rect x="40" y="14" width="8" height="26" fill="#5a3f24" />
-          {/* parchemin en cours */}
-          <g transform="translate(-6,-2)"><rect x="-30" y="-16" width="60" height="22" rx="2" fill="#efe6ce" transform="rotate(-6)" /><path d="M-22 -8 h44 M-22 -2 h36" stroke="#c9b892" strokeWidth="1" opacity="0.7" transform="rotate(-6)" /></g>
-          {/* plume + encrier */}
-          <g transform="translate(30,-6)"><path d="M-6 4 Q-7 -4 0 -6 Q7 -4 6 4 Z" fill="#3a3a4a" /><g transform="translate(2,-6) rotate(28)"><path d="M0 0 q-3 -20 2 -30 q4 10 1 30 Z" fill="#e8e4da" /></g></g>
-          {/* grattoir (lame courbe) */}
-          <g transform="translate(-30,6) rotate(-8)"><path d="M-10 0 q10 -6 20 -2" stroke="#9a9ca4" strokeWidth="3" fill="none" strokeLinecap="round" /><rect x="8" y="-3" width="8" height="6" rx="2" fill="#6e4c2e" /></g>
+        {/* GRAND ARBRE (gauche) — on y taille une branche */}
+        <g transform="translate(130,360)">
+          <path d="M0 8 L-6 -70 M0 8 L6 -70" stroke="#5a3f24" strokeWidth="14" strokeLinecap="round" />
+          <path d="M0 -40 l-24 -14 M0 -50 l24 -16 M0 -60 l-20 -20" stroke="#5a3f24" strokeWidth="6" strokeLinecap="round" />
+          <ellipse cx="0" cy="-90" rx="66" ry="52" fill="url(#ja-tree)" />
+          <ellipse cx="-30" cy="-70" rx="34" ry="28" fill="#6a8a3a" opacity="0.7" />
+          <ellipse cx="34" cy="-96" rx="34" ry="28" fill="#5a7a32" opacity="0.7" />
+          {/* une branche cassée qui pend (à ramasser) */}
+          <path d="M-40 -60 q-24 6 -34 26" stroke="#6a4a2c" strokeWidth="4" fill="none" strokeLinecap="round" />
         </g>
 
-        {/* herbes entre les dalles */}
-        <g opacity="0.85"><path d="M-4 560 q8 -20 2 -30 M980 560 q-6 -18 2 -28 M470 558 q-4 -14 2 -22" stroke="#4a4426" strokeWidth="3.5" fill="none" /></g>
+        {/* OLIVIERS (au fond du jardin) + paniers d'olives */}
+        {[[300, 372, 0.8], [700, 374, 0.9]].map(([x, y, s], i) => (
+          <g key={i} transform={`translate(${x},${y}) scale(${s})`}>
+            <path d="M0 0 q-6 -30 0 -46 q6 16 0 46" stroke="#6e5236" strokeWidth="8" fill="none" strokeLinecap="round" />
+            <ellipse cx="-2" cy="-52" rx="30" ry="22" fill="#8a9a6a" />
+            <ellipse cx="8" cy="-44" rx="20" ry="16" fill="#7a8a5a" />
+            {[...Array(6)].map((_, k) => <circle key={k} cx={-16 + k * 6} cy={-48 + (k % 2) * 8} r="2" fill="#3a4a22" />)}
+          </g>
+        ))}
+        {/* panier d'olives (récolte) */}
+        <g transform="translate(300,480)">
+          <path d="M-20 -8 Q-22 14 0 16 Q22 14 20 -8 Z" fill="#a87a44" />
+          <path d="M-20 -8 q20 -6 40 0" stroke="#7a5230" strokeWidth="2" fill="none" />
+          {[...Array(9)].map((_, k) => <circle key={k} cx={-13 + (k % 5) * 6.5} cy={-6 + Math.floor(k / 5) * 7} r="3" fill="#3a4a22" />)}
+        </g>
+
+        {/* LA FONTAINE (centre) */}
+        <g transform="translate(500,468)">
+          <ellipse cx="0" cy="30" rx="70" ry="16" fill="#241608" opacity="0.3" />
+          <path d="M-64 24 Q-70 -2 0 -8 Q70 -2 64 24 Z" fill="#b0a488" />
+          <ellipse cx="0" cy="-8" rx="60" ry="16" fill="url(#ja-water)" />
+          <path d="M-44 -8 q44 -6 88 0" stroke="#cfe0e0" strokeWidth="1.6" fill="none" opacity="0.5" style={{ animation: "ripple 3.4s ease-in-out infinite" }} />
+          {/* jet central */}
+          <rect x="-4" y="-40" width="8" height="34" fill="#9a8e78" />
+          <path d="M0 -40 q-10 -14 0 -26 q10 12 0 26" fill="#bfe0e0" opacity="0.6" style={{ animation: "pulse 2.2s ease-in-out infinite" }} />
+        </g>
+
+        {/* LES RUCHES (cire d'abeille), près de l'arbre */}
+        <g transform="translate(220,498)">
+          {[[-18, 0], [16, 4]].map(([x, y], i) => (
+            <g key={i} transform={`translate(${x},${y})`}>
+              <path d="M-14 8 Q-16 -8 0 -12 Q16 -8 14 8 Z" fill="#c8a24a" />
+              <path d="M-13 0 q13 4 26 0 M-11 -6 q11 3 22 0" stroke="#9a7a2a" strokeWidth="1.6" fill="none" />
+            </g>
+          ))}
+          {/* abeilles */}
+          {[[-6, -18], [8, -22], [0, -14]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.6" fill="#3a2a10" style={{ animation: `drift ${2 + i}s ease-in-out infinite` }} />)}
+        </g>
+
+        {/* LA VACHE (droite, support) */}
+        <g transform="translate(840,476)">
+          <ellipse cx="0" cy="30" rx="40" ry="8" fill="#241608" opacity="0.35" />
+          <path d="M-34 22 Q-40 -14 -14 -18 L20 -18 Q40 -14 36 18 L36 30 L26 30 L26 24 L-24 24 L-24 30 L-34 30 Z" fill="#d8cdbc" />
+          <path d="M-34 22 Q-40 -14 -14 -18 L20 -18 Q40 -14 36 18" fill="#8a7a68" opacity="0.2" filter="url(#pf-grain)" />
+          {/* taches */}
+          <ellipse cx="-8" cy="2" rx="12" ry="9" fill="#5a4636" opacity="0.6" /><ellipse cx="18" cy="8" rx="8" ry="6" fill="#5a4636" opacity="0.6" />
+          {/* tête */}
+          <path d="M-34 -8 Q-52 -10 -50 6 Q-48 16 -36 14 Z" fill="#d8cdbc" />
+          <path d="M-50 -6 q-6 -6 -3 -12 M-44 -10 q-2 -8 3 -12" stroke="#c8b8a0" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <circle cx="-46" cy="2" r="2" fill="#2a1c10" />
+        </g>
+
+        {/* L'ATELIER (avant-plan gauche-centre) : établi + outils */}
+        <g transform="translate(600,500)">
+          <ellipse cx="0" cy="30" rx="100" ry="14" fill="#241608" opacity="0.35" />
+          <rect x="-96" y="-6" width="192" height="16" rx="3" fill="#7a5230" />
+          <rect x="-96" y="-6" width="192" height="16" rx="3" fill="#3a2414" opacity="0.3" filter="url(#pf-grain)" />
+          <rect x="-88" y="10" width="14" height="30" fill="#5a3f24" /><rect x="74" y="10" width="14" height="30" fill="#5a3f24" />
+          {/* planches empilées (gauche de l'établi) */}
+          <g transform="translate(-64,-14)"><rect x="-24" y="0" width="48" height="7" rx="1.5" fill="#a8865a" /><rect x="-20" y="-7" width="42" height="7" rx="1.5" fill="#b89a6a" /></g>
+          {/* épée posée */}
+          <g transform="translate(-14,-12) rotate(-10)"><rect x="-4" y="6" width="8" height="8" rx="1" fill="#6a4a2c" /><path d="M0 6 L2 -34 L-2 -34 Z" fill="#c8c8d0" stroke="#9a9aa6" strokeWidth="0.8" /><path d="M-8 6 h16" stroke="#8a7a4a" strokeWidth="2.4" /></g>
+          {/* burin + maillet */}
+          <g transform="translate(34,-10)"><rect x="-2" y="-16" width="5" height="20" rx="1.5" fill="#9a9aa6" /><rect x="-4" y="4" width="9" height="6" rx="1.5" fill="#5a3f24" /><rect x="14" y="-6" width="16" height="12" rx="2" fill="#8a5a34" /><rect x="20" y="6" width="4" height="12" fill="#5a3f24" /></g>
+          {/* grattoir + ponce */}
+          <g transform="translate(70,-12)"><path d="M-8 4 L8 0 L8 4 L-8 8 Z" fill="#c8c0b4" stroke="#8a8478" strokeWidth="0.8" /><rect x="-12" y="4" width="10" height="5" rx="2" fill="#6e4c2e" /><ellipse cx="16" cy="4" rx="7" ry="5" fill="#b8b0a0" /></g>
+        </g>
       </PLayer>
 
-      {/* voile de grain global */}
-      <rect width="1000" height="560" fill="#231c10" opacity="0.05" style={{ pointerEvents: "none" }} />
+      <rect width="1000" height="560" fill="#231a10" opacity="0.06" style={{ pointerEvents: "none" }} />
 
       {/* zones cliquables */}
-      {/* LE MAGISTRAT — toge à bande, une tablette à la main, excédé */}
-      <g transform="translate(322,476)">
-        <ellipse cx="0" cy="28" rx="24" ry="7" fill="#241c10" opacity="0.4" />
-        {/* la toge, avec la bande pourpre du magistrat */}
-        <path d="M-15 28 Q-19 -2 0 -18 Q19 -2 15 28 Z" fill="#f0ead8" />
-        <path d="M-15 28 Q-9 4 -2 -17" stroke="#8a2438" strokeWidth="3.5" fill="none" />
-        <path d="M12 28 Q7 8 1 -14" stroke="#c8bfa8" strokeWidth="2" fill="none" />
-        {/* la tête, coupe romaine */}
-        <circle cx="0" cy="-27" r="9" fill="#c89a6e" />
-        <path d="M-9 -30 q1 -10 9 -10 q10 0 9 10 q-4 -4 -9 -4 q-6 0 -9 4 Z" fill="#4a3a2c" />
-        {/* le poing levé, l'autre main tenant la tablette */}
-        <path d="M14 -8 q14 -4 16 -16" stroke="#c89a6e" strokeWidth="4.5" fill="none" strokeLinecap="round" />
-        <circle cx="32" cy="-26" r="4.5" fill="#c89a6e" />
-        <path d="M-14 -4 q-12 6 -12 14" stroke="#c89a6e" strokeWidth="4.5" fill="none" strokeLinecap="round" />
-        <g transform="translate(-30,12) rotate(-10)">
-          <rect x="-9" y="-7" width="18" height="14" rx="1.5" fill="#8a6a3a" />
-          <rect x="-7" y="-5" width="14" height="10" fill="#2c2418" />
-        </g>
-      </g>
-      {/* le « ? » du magistrat : afficher la loi pour que nul ne l'ignore */}
-      {!made.includes("msg_inscription") && (
-        <>
-          <g transform="translate(314,378)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
-            <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
-            <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
-          </g>
-          <Hotspot cx={334} cy={388} r={28} label="parler au magistrat" reveal={reveal} onClick={() => action("magistrat")} />
-        </>
-      )}
-
-      <Hotspot cx={430} cy={310} r={90} label="marbre" item="marbre" reveal={reveal} onClick={() => collect("marbre")} />
-      <Hotspot cx={196} cy={452} r={44} label="burin" item="burin" reveal={reveal} onClick={() => collect("burin")} />
-      <Hotspot cx={590} cy={440} r={44} label="peau" item="peau" reveal={reveal} onClick={() => collect("peau")} />
-      <Hotspot cx={660} cy={512} r={30} label="chaux" item="chaux" reveal={reveal} onClick={() => collect("chaux")} />
-      <Hotspot cx={772} cy={494} r={26} label="plume" item="plume" reveal={reveal} onClick={() => collect("plume")} />
-      <Hotspot cx={710} cy={506} r={24} label="grattoir" item="grattoir" reveal={reveal} onClick={() => collect("grattoir")} />
+      <Hotspot cx={840} cy={468} r={48} label="la vache" item="vache" reveal={reveal} onClick={() => collect("vache")} />
+      <Hotspot cx={220} cy={492} r={40} label="cire d'abeille (ruches)" item="cire_abeille" reveal={reveal} onClick={() => collect("cire_abeille")} />
+      <Hotspot cx={104} cy={318} r={40} label="branche taillée" item="branche" reveal={reveal} onClick={() => collect("branche")} />
+      <Hotspot cx={536} cy={484} r={30} label="planche de bois" item="planche" reveal={reveal} onClick={() => collect("planche")} />
+      <Hotspot cx={586} cy={484} r={26} label="épée" item="epee" reveal={reveal} onClick={() => collect("epee")} />
+      <Hotspot cx={634} cy={484} r={26} label="burin" item="burin" reveal={reveal} onClick={() => collect("burin")} />
+      <Hotspot cx={670} cy={484} r={26} label="grattoir & ponce" item="grattoir" reveal={reveal} onClick={() => collect("grattoir")} />
     </svg>
   );
 }

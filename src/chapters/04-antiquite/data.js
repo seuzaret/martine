@@ -1,59 +1,66 @@
 /* ============================================================
-   CHAPITRE 4 — Antiquité : Grèce, Rome, Pompéi (an 79)
+   CHAPITRE 4 — Antiquité : la villa de Caius, à Pompéi (an 79)
    ============================================================
-   Même structure que les chapitres précédents. Voir
-   docs/AJOUTER-UN-CHAPITRE.md.
+   3 tableaux, tous à Pompéi (même fond : la ville + le Vésuve) :
+   l'entrée de la villa · la bibliothèque · le jardin & l'atelier.
+   QUÊTE : Caius, marchand d'olives, rénove sa villa et prépare
+   une grande fête ; il fait venir l'étranger (toi) et ses artisans.
+   On note, on invite, on peint, on grave, on écrit — et le Vésuve
+   couve, que personne ne regarde…
    ============================================================ */
 
-import ScenePompei from "./scenes/ScenePompei.jsx";
-import SceneAlexandrie from "./scenes/SceneAlexandrie.jsx";
-import SceneForum from "./scenes/SceneForum.jsx";
+import SceneEntree from "./scenes/ScenePompei.jsx";
+import SceneBibliotheque from "./scenes/SceneAlexandrie.jsx";
+import SceneJardin from "./scenes/SceneForum.jsx";
+import { PortraitCaius } from "./scenes/portraits.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
    ------------------------------------------------------------ */
 const ITEMS = {
-  /* Villa de Pompéi */
-  /* SUPPORT (support: true) : le mur est fixe — on ne le met pas au sac,
-     on peint DESSUS (le moteur l'affiche en cyan). */
-  enduit:   { name: "Enduit frais", emoji: "🧱", support: true, desc: "Un mur tout juste plâtré, encore humide. Peint maintenant, la couleur entrera DANS le mur." },
+  /* Tableau 1 — l'entrée de la villa */
+  voix:     { name: "Ta voix", emoji: "🗣️", desc: "Ta voix peut porter une nouvelle… à condition qu'il y ait du monde pour l'entendre." },
+  foule:    { name: "La foule", emoji: "👥", support: true, desc: "La foule de Pompéi, sur la place. Une annonce criée ici fait vite le tour de la ville — mais rien n'en restera demain." },
+  pierre:   { name: "Dalle de pierre", emoji: "🪨", support: true, desc: "Une belle dalle à l'entrée de la villa. De quoi graver des lettres que tous verront… pour très longtemps." },
+
+  /* Tableau 2 — la bibliothèque */
+  mur:      { name: "Mur enduit frais", emoji: "🧱", support: true, desc: "Un pan de mur tout juste plâtré, encore humide. Peint maintenant, la couleur entrera DANS le mur." },
   pigments: { name: "Pigments", emoji: "🎨", desc: "Rouge cinabre, bleu égyptien, ocres : les couleurs des maîtres de Pompéi." },
-  cire:     { name: "Tablette de cire", emoji: "🟨", desc: "Une planchette de bois remplie de cire. On y écrit… et on peut tout lisser pour recommencer." },
-  stylet:   { name: "Stylet", emoji: "✒️", desc: "Pointu d'un côté pour écrire, plat de l'autre pour effacer. L'outil du parfait brouillon." },
+  encre:    { name: "Encre", emoji: "🖤", desc: "Un encrier sur le bureau. Avec une bonne page, on peut copier un texte entier." },
+  ombilicus:{ name: "Umbilicus", emoji: "🪄", desc: "Le bâton central autour duquel on enroule une page pour en faire un rouleau (volumen)." },
+  bibliotheque: { name: "La bibliothèque", emoji: "📚", support: true, desc: "Les rayonnages de Caius. Comme à Alexandrie, on y range les rouleaux pour garder le savoir en un seul lieu." },
 
-  /* Bibliothèque d'Alexandrie */
-  papyrus:   { name: "Feuille de papyrus", emoji: "📄", desc: "Une belle feuille lisse, prête à devenir un livre." },
-  umbilicus: { name: "Umbilicus", emoji: "🪄", desc: "Le bâton central autour duquel on enroule le papyrus pour en faire un rouleau." },
-  batiment:  { name: "La grande bibliothèque", emoji: "🏛", support: true, desc: "Le bâtiment d'Alexandrie : des centaines de milliers de rouleaux y dorment déjà. Ton rouleau y a sa place." },
-
-  /* Forum romain */
-  marbre:   { name: "Bloc de marbre", emoji: "⬜", support: true, desc: "Blanc, dense, éternel. De quoi graver ce qui ne doit jamais s'effacer." },
+  /* Tableau 3 — le jardin & l'atelier */
+  cire_abeille: { name: "Cire d'abeille", emoji: "🍯", desc: "De la cire tiède, prise aux ruches du jardin. Coulée sur une planche, elle fait une surface où écrire." },
+  planche:  { name: "Planche de bois", emoji: "🪵", desc: "Une planchette bien plane, prise à l'atelier. Creusée et remplie de cire, elle devient une tablette." },
+  branche:  { name: "Branche taillée", emoji: "🖊", desc: "Une branchette taillée en pointe : de quoi tracer dans la cire, et lisser pour effacer." },
+  vache:    { name: "La vache", emoji: "🐄", support: true, desc: "La vache du jardin. Sa peau, bien préparée, deviendra un support solide : le parchemin." },
+  epee:     { name: "Épée", emoji: "⚔️", desc: "Une lame de l'atelier. De quoi prélever et parer une peau." },
   burin:    { name: "Burin", emoji: "🔨", desc: "Un ciseau et un maillet : pour entailler la pierre, lettre après lettre." },
-  peau:     { name: "Peau d'animal", emoji: "🟫", desc: "Une peau brute. Bien préparée, elle deviendra un support solide et durable." },
-  chaux:    { name: "Chaux & ponce", emoji: "⚪", desc: "De la chaux pour nettoyer la peau, une pierre ponce pour la lisser : la recette du parchemin." },
-  plume:    { name: "Plume & encre", emoji: "🪶", desc: "Une plume taillée et de l'encre : de quoi copier un texte entier." },
-  grattoir: { name: "Grattoir", emoji: "🔪", desc: "Une lame pour racler le parchemin. Le parchemin coûte cher : autant le réutiliser…" },
+  grattoir: { name: "Grattoir & ponce", emoji: "🔪", desc: "Une lame et une pierre ponce : pour racler et lisser la peau jusqu'à obtenir un parchemin." },
 
   /* fabriqués */
-  volumen:   { name: "Volumen (rouleau)", emoji: "📜", desc: "Une longue bande de papyrus enroulée : on la lit en la déroulant peu à peu. Impossible de « sauter à la page 50 »." },
-  parchemin: { name: "Parchemin", emoji: "📃", desc: "Une peau devenue page : lisse, solide, réutilisable… et coûteuse." },
+  tablette_cire: { name: "Tablette de cire", emoji: "🟨", desc: "Une planche remplie de cire : on y écrit au stylet… et on lisse tout pour recommencer. Le brouillon de l'Antiquité." },
+  peau:     { name: "Peau brute", emoji: "🟫", desc: "Une peau fraîche. Grattée et poncée, elle deviendra un parchemin." },
+  parchemin:{ name: "Parchemin", emoji: "📃", desc: "Une peau devenue page : lisse, solide, durable… mais chère (un troupeau pour un gros livre)." },
+  ode:      { name: "L'ode manuscrite", emoji: "📝", desc: "Le poème de Caius, copié à l'encre sur le parchemin. Reste à l'enrouler pour en faire un rouleau." },
+  volumen:  { name: "Volumen (rouleau)", emoji: "📜", desc: "Le parchemin enroulé autour de son bâton : un rouleau, qu'on lit en le déroulant. Sa place est à la bibliothèque." },
 };
 
 /* ------------------------------------------------------------
-   LES TABLEAUX
+   LES TABLEAUX  (tous à Pompéi ; navigation libre dans la villa)
    ------------------------------------------------------------ */
 const SCENES = [
-  { id: "pompei",     name: "La villa de Pompéi",         Component: ScenePompei },
-  { id: "alexandrie", name: "La bibliothèque d'Alexandrie", Component: SceneAlexandrie },
-  { id: "forum",      name: "Le forum romain",             Component: SceneForum },
+  { id: "entree",       name: "L'entrée de la villa", Component: SceneEntree },
+  { id: "bibliotheque", name: "La bibliothèque",      Component: SceneBibliotheque },
+  { id: "jardin",       name: "Le jardin & l'atelier", Component: SceneJardin },
 ];
 
 const WHERE = {
-  pigments: "dans la villa de Pompéi",
-  cire: "dans la villa de Pompéi", stylet: "dans la villa de Pompéi",
-  papyrus: "à la bibliothèque d'Alexandrie", umbilicus: "à la bibliothèque d'Alexandrie",
-  burin: "sur le forum romain", peau: "sur le forum romain",
-  chaux: "sur le forum romain", plume: "sur le forum romain", grattoir: "sur le forum romain",
+  voix: "à l'entrée de la villa, près d'Argos",
+  pigments: "dans la bibliothèque", encre: "sur le bureau de la bibliothèque", ombilicus: "dans la bibliothèque",
+  cire_abeille: "aux ruches du jardin", planche: "à l'atelier du jardin", branche: "près de l'arbre du jardin",
+  epee: "à l'atelier du jardin", burin: "à l'atelier du jardin", grattoir: "à l'atelier du jardin",
 };
 
 const HIDDEN_BY_FLAG = {};
@@ -62,64 +69,74 @@ const HIDDEN_BY_FLAG = {};
    LES RECETTES
    ------------------------------------------------------------ */
 const RECIPES = [
-  { a: "enduit", b: "pigments", out: "msg_fresque", msg: true },
-  { a: "cire", b: "stylet", out: "msg_cire", msg: true },
-  { a: "papyrus", b: "umbilicus", out: "volumen",
-    line: "Enroulé autour de son bâton, le papyrus devient un VOLUMEN : un rouleau. On le lit en le déroulant — pas moyen de sauter des pages." },
-  { a: "volumen", b: "batiment", out: "msg_bibliotheque", msg: true },
-  { a: "peau", b: "chaux", out: "parchemin",
-    line: "Nettoyée à la chaux, grattée, poncée : la peau devient PARCHEMIN. Solide, durable… mais il en faut un troupeau pour un gros livre." },
-  { a: "parchemin", b: "plume", out: "msg_manuscrit", msg: true },
-  /* MESSAGE PERDU : le même parchemin, mais gratté pour être réutilisé. */
-  { a: "parchemin", b: "grattoir", out: "msg_palimpseste", msg: true, perdu: true },
-  { a: "marbre", b: "burin", out: "msg_inscription", msg: true },
+  /* Noter les travaux : la tablette de cire (support effaçable) */
+  { a: "cire_abeille", b: "planche", out: "tablette_cire",
+    line: "Tu coules la cire tiède sur la planche creusée : une TABLETTE DE CIRE, prête à écrire." },
+  { a: "tablette_cire", b: "branche", out: "msg_cire", msg: true },
+
+  /* Lancer les invitations : la voix + la foule (annonce publique) */
+  { a: "voix", b: "foule", out: "invites", gives: [], consume: ["voix"], flag: "invited",
+    line: "Tu cries l'invitation de Caius sur la place : la foule se la répète de bouche à oreille, et toute la ville est au courant avant midi. Rapide et large… mais demain, il n'en restera rien." },
+
+  /* La fresque sur le mur frais */
+  { a: "pigments", b: "mur", out: "msg_fresque", msg: true },
+
+  /* Graver la gloire de Rome dans la pierre */
+  { a: "burin", b: "pierre", out: "msg_inscription", msg: true },
+
+  /* L'ode : peau → parchemin → écrit → rouleau → bibliothèque */
+  { a: "vache", b: "epee", out: "peau",
+    line: "Tu prélèves et pares une peau sur la bête : brute et poilue, elle ne vaut encore rien pour écrire." },
+  { a: "grattoir", b: "peau", out: "parchemin",
+    line: "Grattée à la lame, lissée à la ponce : la peau devient PARCHEMIN. Solide et durable… mais il en faut un troupeau pour un gros livre." },
+  { a: "parchemin", b: "encre", out: "ode",
+    line: "À l'encre, tu copies l'ode de Caius sur le parchemin : un vrai manuscrit. Cher — le savoir écrit redevient un luxe de riches." },
+  { a: "ode", b: "ombilicus", out: "volumen",
+    line: "Tu enroules le parchemin autour de son bâton : un VOLUMEN. On le lira en le déroulant — impossible de sauter à la page 50." },
+  { a: "volumen", b: "bibliotheque", out: "msg_bibliotheque", msg: true },
 ];
 
 /* ------------------------------------------------------------
    LES MESSAGES (fiches + jauges 1 à 5)
    ------------------------------------------------------------ */
 const MESSAGES = {
-  msg_fresque: { title: "Fresque de Pompéi", emoji: "🖼️",
-    jauges: { vitesse: 1, portee: 3, capacite: 3, durabilite: 4 },
-    fact: "Sur un enduit encore frais, on peint à même le mur : les couleurs pénètrent le plâtre et deviennent le mur lui-même — la fresque. À Pompéi, figée par la cendre du Vésuve en l'an 79, les villas en sont couvertes. Et sur les murs des rues, des milliers de GRAFFITIS — publicités électorales, insultes, déclarations d'amour, comptes de taverne : les « réseaux sociaux » de l'Antiquité, gelés d'un coup par la lave. L'image qui décore, qui vend, qui bavarde." },
   msg_cire: { title: "Tablette de cire", emoji: "🪧",
     jauges: { vitesse: 2, portee: 1, capacite: 2, durabilite: 1 },
-    fact: "Une planchette de bois remplie de cire : on y écrit au stylet, puis d'un coup du dos plat on LISSE tout pour recommencer. C'est le premier support réinscriptible de l'Histoire — le brouillon, la liste, l'exercice d'écolier. Il ne dure pas, et c'est justement le but. Son lointain descendant ? L'ardoise… et la mémoire réinscriptible de nos ordinateurs (la RAM), qu'on efface et réécrit des milliards de fois." },
-  msg_bibliotheque: { title: "Bibliothèque d'Alexandrie", emoji: "📚",
-    jauges: { vitesse: 1, portee: 3, capacite: 5, durabilite: 2 },
-    fact: "Rassembler en un seul lieu TOUT le savoir du monde : le rêve d'Alexandrie, jusqu'à ~700 000 rouleaux. Une capacité de stockage inouïe. Mais tout est réuni au même endroit, sur un support fragile… et la bibliothèque disparaît. La leçon-mère de l'archivage, encore vraie aujourd'hui : un stock UNIQUE qui brûle, et tout est perdu. Il faut des copies, des sauvegardes réparties — jamais tous ses œufs dans le même panier." },
-  msg_manuscrit: { title: "Manuscrit sur parchemin", emoji: "📖",
-    jauges: { vitesse: 2, portee: 2, capacite: 4, durabilite: 4 },
-    fact: "Une peau d'animal traitée à la chaux, grattée, poncée : le parchemin. Bien plus solide que le papyrus, il ne craint pas l'humidité et dure des siècles. Mais il coûte cher — parfois un troupeau entier pour un gros livre. Résultat : le savoir écrit redevient un LUXE, réservé à ceux qui peuvent payer. Un meilleur support, oui — mais pour beaucoup moins de gens." },
+    fact: "Une planchette de bois remplie de cire : on y écrit au stylet, puis d'un coup du dos plat on LISSE tout pour recommencer. C'est le premier support réinscriptible de l'Histoire — le brouillon, la liste de courses, l'exercice d'écolier. Il ne dure pas, et c'est justement le but. Son lointain descendant ? L'ardoise… et la mémoire réinscriptible de nos ordinateurs (la RAM), qu'on efface et réécrit des milliards de fois." },
+  msg_fresque: { title: "Fresque de Pompéi", emoji: "🖼️",
+    jauges: { vitesse: 1, portee: 3, capacite: 3, durabilite: 4 },
+    fact: "Sur un enduit encore frais, on peint à même le mur : les couleurs pénètrent le plâtre et deviennent le mur lui-même — la fresque. À Pompéi, figée par la cendre du Vésuve en l'an 79, les villas en sont couvertes. Et sur les murs des rues, des milliers de GRAFFITIS — publicités électorales, insultes, déclarations d'amour, comptes de taverne : les « réseaux sociaux » de l'Antiquité, gelés d'un coup par la lave. L'image qui décore, qui vend, qui bavarde.",
+    wiki: "https://fr.wikipedia.org/wiki/Peinture_romaine" },
   msg_inscription: { title: "Inscription monumentale", emoji: "🏛",
     jauges: { vitesse: 1, portee: 3, capacite: 2, durabilite: 5 },
-    fact: "Graver la loi dans le marbre, sur le forum, là où tout le monde passe : voilà comment on PUBLIE officiellement dans l'Antiquité. « Nul n'est censé ignorer la loi » prend ici son sens littéral. Lent à produire, immobile… mais public, solennel et quasi éternel. Aujourd'hui encore, on grave dans la pierre ce qu'on veut rendre incontestable : monuments, plaques, mémoriaux." },
-  /* MESSAGE PERDU */
-  msg_palimpseste: { title: "Palimpseste", emoji: "📜", perdu: true,
-    jauges: { vitesse: 1, portee: 1, capacite: 4, durabilite: 1 },
-    fact: "Le parchemin est si rare qu'on le RÉUTILISE : on gratte un vieux texte pour en écrire un neuf par-dessus. Le nouveau texte est sauvé… mais l'ancien a disparu, effacé pour récupérer le support. Des œuvres entières de l'Antiquité se sont ainsi évanouies sous d'autres textes. (Parfois, la lumière ultraviolette fait resurgir le texte gratté : le passé qui refait surface.)" },
+    fact: "Graver la gloire (ou la loi) dans la pierre, à l'entrée, là où tout le monde passe : voilà comment on PUBLIE officiellement dans l'Antiquité. « Nul n'est censé ignorer la loi » prend ici son sens littéral. Lent à produire, immobile… mais public, solennel et quasi éternel. Aujourd'hui encore, on grave dans la pierre ce qu'on veut rendre incontestable : monuments, plaques, mémoriaux." },
+  msg_bibliotheque: { title: "Le rouleau à la bibliothèque", emoji: "📚",
+    jauges: { vitesse: 1, portee: 3, capacite: 5, durabilite: 2 },
+    fact: "Peau → parchemin → manuscrit → rouleau : un vrai livre antique, rangé à la bibliothèque. Le rêve d'Alexandrie était de rassembler en un seul lieu TOUT le savoir du monde — jusqu'à ~700 000 rouleaux. Une capacité de stockage inouïe… mais tout au même endroit, sur un support fragile. Et Alexandrie a brûlé. La leçon-mère de l'archivage, encore vraie aujourd'hui : un stock UNIQUE qui disparaît, et tout est perdu. Il faut des COPIES, réparties — jamais tous ses œufs dans le même panier." },
 };
 
 /* ------------------------------------------------------------
    LES INDICES (bouton 💡)
    ------------------------------------------------------------ */
 const HINTS = [
-  { needs: ["enduit", "pigments"], out: "msg_fresque", text: "Le mur est encore frais. Peins-le MAINTENANT : les couleurs entreront dans le plâtre." },
-  { needs: ["cire", "stylet"], out: "msg_cire", text: "Une tablette de cire, un stylet pointu : écris — et souviens-toi que tu pourras tout effacer." },
-  { needs: ["papyrus", "umbilicus"], out: "volumen", text: "Cette feuille de papyrus : enroule-la autour du bâton pour en faire un rouleau." },
-  { needs: ["volumen", "batiment"], out: "msg_bibliotheque", text: "Ton rouleau mérite une place parmi les autres. Direction le grand bâtiment d'Alexandrie." },
-  { needs: ["peau", "chaux"], out: "parchemin", text: "Cette peau : traite-la à la chaux et ponce-la bien pour en faire un parchemin." },
-  { needs: ["parchemin", "plume"], out: "msg_manuscrit", text: "Un beau parchemin, une plume : copie un texte entier, page après page." },
-  { needs: ["parchemin", "grattoir"], out: "msg_palimpseste", text: "Le parchemin coûte cher… tu pourrais gratter l'ancien texte pour réécrire dessus. Mais que devient l'ancien ?" },
-  { needs: ["marbre", "burin"], out: "msg_inscription", text: "Ce bloc de marbre, ce burin : grave-y ce qui doit durer pour l'éternité." },
+  { needs: ["cire_abeille", "planche"], out: "tablette_cire", text: "Coule la cire d'abeille sur la planche : tu auras une tablette où écrire." },
+  { needs: ["tablette_cire", "branche"], out: "msg_cire", text: "Une tablette de cire, une branche taillée en pointe : note la liste des travaux — et souviens-toi qu'on peut tout effacer." },
+  { needs: ["voix", "foule"], out: "invites", text: "Va sur la place avec Argos : crie l'invitation de Caius à toute la foule." },
+  { needs: ["pigments", "mur"], out: "msg_fresque", text: "Le mur de la bibliothèque est encore frais : peins-le MAINTENANT avec les pigments." },
+  { needs: ["burin", "pierre"], out: "msg_inscription", text: "Cette dalle à l'entrée, ce burin : grave la gloire de Rome pour que tous la voient — et pour l'éternité." },
+  { needs: ["vache", "epee"], out: "peau", text: "Pour un parchemin, il faut d'abord une peau : la vache du jardin, une lame…" },
+  { needs: ["grattoir", "peau"], out: "parchemin", text: "Gratte et ponce la peau jusqu'à la rendre lisse : un beau parchemin." },
+  { needs: ["parchemin", "encre"], out: "ode", text: "Sur ce parchemin, à l'encre du bureau, copie l'ode de Caius." },
+  { needs: ["ode", "ombilicus"], out: "volumen", text: "Enroule ton manuscrit autour du bâton (umbilicus) : ça fait un rouleau." },
+  { needs: ["volumen", "bibliotheque"], out: "msg_bibliotheque", text: "Range ton rouleau à la bibliothèque, parmi les autres — comme à Alexandrie." },
 ];
 
 const NEAR_MISS = [
-  { pair: ["marbre", "plume"], line: "Écrire sur le marbre à la plume ? L'encre glisse et sèche mal. Le marbre, ça se GRAVE — prends un burin." },
-  { pair: ["peau", "plume"], line: "Écrire sur une peau brute, encore poilue ? Prépare-la d'abord : chaux, grattoir, ponce." },
-  { pair: ["cire", "burin"], line: "Un burin sur de la cire ? Tu vas traverser la planche. Un simple stylet suffit." },
-  { pair: ["papyrus", "plume"], line: "Une feuille volante, ça se perd. Fais-en d'abord un rouleau bien tenu autour de son bâton." },
-  { pair: ["volumen", "grattoir"], line: "Gratter un rouleau de papyrus ? Il se déchire. C'est le parchemin, lui, qu'on réutilise." },
+  { pair: ["pierre", "encre"], line: "Écrire sur la pierre à l'encre ? Ça glisse et ça sèche mal. La pierre, ça se GRAVE — prends un burin." },
+  { pair: ["peau", "encre"], line: "Écrire sur une peau brute et poilue ? Prépare-la d'abord : gratte-la et ponce-la en parchemin." },
+  { pair: ["tablette_cire", "burin"], line: "Un burin sur la cire ? Tu traverses la planche. Une simple branche taillée suffit." },
+  { pair: ["parchemin", "ombilicus"], line: "Enrouler un parchemin VIERGE ? Écris d'abord l'ode dessus, sinon ton rouleau ne raconte rien." },
+  { pair: ["voix", "pierre"], line: "Crier vers une pierre ? Elle n'écoute pas. Pour une annonce, il te faut une FOULE." },
 ];
 
 const FAIL_LINES = [
@@ -131,27 +148,63 @@ const FAIL_LINES = [
 ];
 
 const INTRO = [
-  "Du marbre, des colonnes… on a changé de standing. Nous voilà à Pompéi, l'an 79. Ne regarde pas trop la montagne, là, au fond : le Vésuve couve — et personne ici ne le sait encore.",
-  "Ironie du sort : dans cette ville qui va disparaître, tout le monde veut que ça DURE. Le peintre doit faire parler un mur sans un mot. Le bibliothécaire d'Alexandrie garde tout le savoir du monde sous un seul toit — et n'en dort plus. Le magistrat veut afficher la loi pour que nul ne puisse dire qu'il l'ignorait.",
-  "Aide-les à peindre, graver, conserver : chaque message remplit ma jauge. Trois suffiront. Et devine laquelle de ces belles idées va très mal finir…",
+  "Du marbre, des colonnes, une villa cossue… on a changé de standing ! Nous voilà à Pompéi, l'an 79, chez Caius, marchand d'olives. Ne regarde pas trop la montagne, là, au fond : le Vésuve couve — et personne ici ne le sait encore.",
+  "Caius rénove sa maison et prépare une grande fête. Il a fait venir des artisans… dont toi, l'étranger. Il va falloir tout noter, inviter la ville, peindre, graver, écrire.",
+  "Aide-le : chaque support inventé remplit ma jauge. Trois suffiront pour repartir. Et devine laquelle de ces belles idées va très mal finir…",
 ];
 
 const ACTIONS = {
-  wreck: { mood: "vexe", say: "Oui, je me suis posée dans l'atrium. Non, ce n'était pas prévu. Et non, tu ne graveras pas ça sur le forum." },
+  wreck: { mood: "vexe", say: "Oui, je me suis posée dans l'atrium. Non, ce n'était pas prévu. Et non, tu ne graveras pas ça sur la dalle de Caius." },
 
-  /* LES GENS DE L'ANTIQUITÉ — `bubble` = leurs paroles, `say` = MARTINE. */
-  pictor: { mood: "neutre",
-    bubble: "Mon maître veut que ses invités, en entrant, sachent TOUT de suite qu'il est riche et cultivé. Sans un mot, juste en regardant les murs ! Alors dis-moi : comment on fait parler un mur ? Et comment éviter que ça ne s'écaille dès l'hiver prochain ?",
-    say: "Une image qui frime pour son propriétaire… la publicité existait déjà. Peins-la dans l'enduit FRAIS, elle tiendra." },
+  /* Caius (repli ; ses vraies répliques sont dans QUETE) */
+  caius: { mood: "neutre",
+    bubble: "Ma villa doit être la plus belle de Pompéi pour ma fête ! Aide mes artisans, l'étranger.",
+    say: "Un riche marchand qui veut éblouir ses invités. À Pompéi, comme partout : montrer qu'on a réussi." },
 
-  bibliothecaire: { mood: "vexe",
-    bubble: "Le roi veut TOUS les livres du monde, ici, sous un seul toit. Chaque navire qui entre au port est fouillé, et le moindre rouleau recopié pour nous. Mais c'est ça qui m'empêche de dormir : tout le savoir du monde dans UN seul bâtiment… Il suffirait d'une flamme.",
-    say: "Il a raison d'avoir peur : Alexandrie a brûlé. La grande leçon ? Toujours faire des COPIES de sauvegarde." },
-
-  magistrat: { mood: "vexe",
-    bubble: "J'ai fait proclamer la loi par un crieur, sur cette place, devant tout le monde. Le lendemain, la moitié de la ville jurait ne l'avoir jamais entendue ! Il me faut l'afficher pour que PERSONNE ne puisse dire qu'il l'ignorait. Quelque chose que tous voient, et qui ne bouge plus jamais.",
-    say: "« Nul n'est censé ignorer la loi. » Pour ça, il faut la graver dans une matière qui dure : le marbre." },
+  /* Argos, l'esclave, à l'entrée (contexte des invitations) */
+  argos: { mood: "neutre",
+    bubble: "Je suis Argos, l'homme de confiance de Caius. Pour la fête, il faut prévenir toute la ville — mais je n'ai pas de quoi écrire mille invitations ! Le plus simple : la crier sur la place.",
+    say: "Pas de papier pour mille personnes ? On CRIE l'annonce à la foule. Vite et large… mais ça ne laisse aucune trace : demain, plus rien." },
 };
+
+/* ------------------------------------------------------------
+   LA QUÊTE — Caius commande les préparatifs de sa fête.
+   ------------------------------------------------------------ */
+const QUETE = [
+  { perso: "caius", portrait: "caius", auto: true,
+    bubble: "Bienvenue chez moi, l'étranger ! Je suis Caius, le plus gros marchand d'olives de Pompéi, et je rénove ma villa pour une fête inoubliable. J'ai fait venir des artisans — sers-toi de leurs outils. Commençons par le commencement : trouve-moi de quoi NOTER toutes les courses et tous les travaux à faire.",
+    say: "De quoi noter, effacer, recommencer : une TABLETTE DE CIRE. Cire d'abeille + planche (à l'atelier du jardin), puis une branche taillée en pointe pour écrire dedans.",
+    attend: "msg_cire",
+    suite: "Parfait, tout est noté ! Maintenant, préviens la ville : va sur la place avec mon esclave Argos pour lancer les invitations." },
+
+  { perso: "caius", portrait: "caius",
+    bubble: "Il me faut du MONDE à ma fête ! Accompagne Argos sur la place et lance les invitations à tout Pompéi.",
+    say: "Pas le temps d'écrire mille cartons : on CRIE l'annonce. Ta voix + la foule sur la place.",
+    attend: "invited",
+    suite: "Toute la ville est invitée ! Maintenant, place au décor : je veux d'abord une belle FRESQUE sur mon mur." },
+
+  { perso: "caius", portrait: "caius",
+    bubble: "Que mes invités, en entrant, voient tout de suite mon goût et ma richesse ! Je veux une belle fresque sur le mur frais de ma bibliothèque.",
+    say: "Une image qui frime pour son propriétaire… la pub existait déjà ! Peins les pigments sur le mur ENCORE FRAIS : la couleur entrera dans le plâtre et tiendra des siècles.",
+    attend: "msg_fresque",
+    suite: "Splendide fresque ! Puis je veux graver la GLOIRE DE ROME à mon entrée, que tout le monde la voie." },
+
+  { perso: "caius", portrait: "caius",
+    bubble: "À l'entrée, sur la belle dalle de pierre, grave la gloire de Rome — et la mienne au passage ! Que tous ceux qui passent la lisent, aujourd'hui et dans mille ans.",
+    say: "« Nul n'est censé l'ignorer » : on grave dans la pierre, à l'entrée, là où tout le monde passe. Burin (à l'atelier) + la dalle de l'entrée.",
+    attend: "msg_inscription",
+    suite: "Magnifique, c'est gravé pour l'éternité ! Dernière chose : une ODE à la montagne, écrite et rangée dans ma bibliothèque." },
+
+  { perso: "caius", portrait: "caius",
+    bubble: "J'ai composé une ode à cette belle montagne qui domine la baie (le Vésuve, oui). Va me chercher du PARCHEMIN, copie mon poème, et range-le bien dans ma bibliothèque, comme à Alexandrie.",
+    say: "Le parchemin, c'est de la peau : la vache + une épée → peau ; grattoir → parchemin ; encre → l'ode écrite ; umbilicus → rouleau ; puis range-le à la bibliothèque.",
+    attend: "msg_bibliotheque",
+    suite: "Mon ode est en sûreté dans ma bibliothèque ! Tout est prêt pour la fête. Va donc te reposer, l'étranger — moi je surveille cette montagne, elle fume drôlement aujourd'hui…" },
+
+  { perso: "caius", portrait: "caius",
+    bubble: "Grâce à toi, ma villa est prête et ma fête sera la plus belle de Pompéi ! Ta drôle de machine t'appelle… File, l'étranger. Et si un jour on parle encore de moi, ce sera grâce à ce que tu as gravé et écrit ici.",
+    say: "Il ne le sait pas, mais c'est le Vésuve qui gardera Pompéi pour l'éternité, sous la cendre… Ma jauge est pleine : le bouton PARTIR nous emmène au Moyen Âge." },
+];
 
 /* ------------------------------------------------------------
    LA FICHE DU CHAPITRE
@@ -165,12 +218,12 @@ const chapter = {
 
   titre: "MARTINE",
   sousTitre: "Machine À Remonter le Temps Intelligente Néanmoins Excellente",
-  presentationTitre: "Chapitre 4 — L'Antiquité classique.",
-  presentation: "De la Grèce à Rome (−500 à 500), l'écrit se diversifie : l'image qui décore les murs, le support qu'on efface et réécrit, et surtout le rêve de tout stocker en un seul lieu. Explore la villa de Pompéi, la bibliothèque d'Alexandrie et le forum romain.",
-  accroche: "Peins une fresque 🖼️ · gratte la cire 🪧 · remplis Alexandrie 📚 · grave le marbre 🏛",
+  presentationTitre: "Chapitre 4 — L'Antiquité, à Pompéi.",
+  presentation: "An 79, à Pompéi : le marchand Caius rénove sa villa pour une grande fête. Aide ses artisans à tout noter (la tablette de cire), inviter la ville, peindre une fresque, graver la pierre et copier un manuscrit à ranger dans sa bibliothèque. Le tout à l'ombre d'un Vésuve qui couve…",
+  accroche: "Note sur la cire 🪧 · peins une fresque 🖼️ · grave le marbre 🏛 · copie un manuscrit 📚",
 
   finTitre: "SAUT TEMPOREL RÉUSSI",
-  finTexte: "« Circuits rechargés à {pct} %. Tu as vu le meilleur et le pire : la bibliothèque qui rêve de tout garder… et qui brûle. La grande leçon : un savoir sans COPIES ne tient qu'à un fil. Justement, au prochain saut, les humains vont changer le FORMAT du livre (des pages !), puis inventer une machine qui copie tout par centaines : l'imprimerie. Direction le Moyen Âge et Gutenberg. » — MARTINE",
+  finTexte: "« Circuits rechargés à {pct} %. Tu as vu le meilleur et le pire : la bibliothèque qui rêve de tout garder… sur un support fragile, au même endroit. La grande leçon : un savoir sans COPIES ne tient qu'à un fil. Au prochain saut, les humains vont changer le FORMAT du livre (des pages !), puis inventer une machine qui copie tout par centaines : l'imprimerie. Direction le Moyen Âge et Gutenberg. » — MARTINE",
 
   required: 3,
   startScene: 0,
@@ -187,6 +240,8 @@ const chapter = {
   failLines: FAIL_LINES,
   intro: INTRO,
   actions: ACTIONS,
+  quete: QUETE,
+  portraits: { caius: PortraitCaius },
 };
 
 export default chapter;
