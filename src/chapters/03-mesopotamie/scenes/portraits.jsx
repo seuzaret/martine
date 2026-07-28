@@ -146,3 +146,84 @@ export function PortraitNaram() {
     </svg>
   );
 }
+
+/* SNÉFROU — pharaon d'Égypte. Coiffe némès rayée bleu-or, cobra
+   uraeus au front, barbe postiche tressée, large collier ousekh :
+   le fils du Soleil qui veut son nom pour l'éternité. */
+export function PortraitSnefrou() {
+  return (
+    <svg viewBox="0 0 300 340" style={{ display: "block", width: "100%", height: "auto" }}>
+      <defs>
+        <radialGradient id="pSneHalo" cx="50%" cy="38%" r="62%">
+          <stop offset="0%" stopColor="#ffe6b0" stopOpacity="0.5" /><stop offset="60%" stopColor="#f0c890" stopOpacity="0.16" /><stop offset="100%" stopColor="#f0c890" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="pSneSkin" x1="0" y1="0" x2="1" y2="0.3"><stop offset="0%" stopColor="#d29a5e" /><stop offset="55%" stopColor="#c08a4e" /><stop offset="100%" stopColor="#9e6c38" /></linearGradient>
+        <linearGradient id="pSneGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#f2cf6a" /><stop offset="100%" stopColor="#c89a2a" /></linearGradient>
+      </defs>
+      <circle cx="150" cy="138" r="130" fill="url(#pSneHalo)" />
+
+      {/* les PANS du némès (rayés bleu/or) qui tombent sur la poitrine */}
+      {[-1, 1].map((s) => (
+        <g key={s} transform={`translate(${150 + s * 66},0)`}>
+          <path d={`M${-22 * s} 128 L${26 * s} 128 L${20 * s} 300 L${-16 * s} 300 Z`} fill="#e8c04a" />
+          {[140, 156, 172, 188, 204, 220, 236, 252, 268, 284].map((y, i) => (
+            <path key={i} d={`M${-22 * s + s * (y - 128) * 0.03} ${y} L${26 * s - s * (y - 128) * 0.03} ${y}`} stroke={i % 2 ? "#2f6a9a" : "#b8902a"} strokeWidth="6" opacity="0.9" />
+          ))}
+        </g>
+      ))}
+
+      {/* LE COLLIER OUSEKH large (rangées de perles) sur les épaules */}
+      <path d="M40 340 Q42 250 92 236 Q122 224 150 226 Q178 224 208 236 Q258 250 260 340 Z" fill="#e8c04a" />
+      <g fill="none" strokeLinecap="round">
+        <path d="M96 252 Q150 292 204 252" stroke="#2f6a9a" strokeWidth="7" opacity="0.85" />
+        <path d="M92 268 Q150 314 208 268" stroke="#c8382e" strokeWidth="6" opacity="0.8" />
+        <path d="M88 284 Q150 334 212 284" stroke="#3a8a6a" strokeWidth="6" opacity="0.8" />
+      </g>
+      {[110, 128, 146, 164, 182, 200].map((x, i) => <path key={i} d={`M${x} 244 L${x} 250`} stroke="#8a6a1a" strokeWidth="2" />)}
+
+      {/* LE COU */}
+      <path d="M134 196 L166 196 L169 240 Q150 248 131 240 Z" fill="url(#pSneSkin)" />
+
+      {/* LE VISAGE : jeune, régulier */}
+      <path d="M150 70 C184 70 198 96 197 128 C196 160 182 190 150 198 C118 190 104 160 103 128 C102 96 116 70 150 70 Z" fill="url(#pSneSkin)" />
+      <path d="M110 118 Q106 150 123 178" stroke="#ffe6b0" strokeWidth="5" fill="none" opacity="0.35" strokeLinecap="round" />
+      <ellipse cx="106" cy="142" rx="6.5" ry="10" fill="#c08a4e" /><ellipse cx="194" cy="142" rx="6.5" ry="10" fill="#c08a4e" />
+
+      {/* SOURCILS + GRANDS YEUX au khôl allongé (code égyptien) */}
+      <path d="M116 128 Q130 121 144 128" stroke="#241812" strokeWidth="4" fill="none" strokeLinecap="round" />
+      <path d="M156 128 Q170 121 184 128" stroke="#241812" strokeWidth="4" fill="none" strokeLinecap="round" />
+      <path d="M117 140 Q130 133 143 139 Q130 147 117 140 Z" fill="#f8efdd" />
+      <path d="M157 139 Q170 133 183 140 Q170 147 157 139 Z" fill="#f8efdd" />
+      <circle cx="130" cy="140" r="4.8" fill="#241812" /><circle cx="170" cy="140" r="4.8" fill="#241812" />
+      <circle cx="131.5" cy="138.2" r="1.5" fill="#fff" /><circle cx="171.5" cy="138.2" r="1.5" fill="#fff" />
+      <path d="M116 140 Q130 132 144 139 M156 139 Q170 132 184 140" stroke="#1c1410" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+      {/* trait de khôl prolongé vers les tempes */}
+      <path d="M116 140 l-9 -1 M184 140 l9 -1" stroke="#1c1410" strokeWidth="2.4" strokeLinecap="round" />
+
+      {/* NEZ discret, sans trait sur l'arête */}
+      <path d="M145 160 Q150 164 155 160 M145 160 Q143 155 147 153 M155 160 Q157 155 153 153" stroke="#9e6c38" strokeWidth="2" fill="none" strokeLinecap="round" />
+      {/* la bouche qui parle */}
+      <Mouth y={178} dark="#8a4a34" light="#c08a5a" w={13} />
+
+      {/* la BARBE POSTICHE tressée (code royal), droite sous le menton */}
+      <g transform="translate(150,196)">
+        <path d="M-8 0 L8 0 L6 44 Q0 52 -6 44 Z" fill="#2e2013" />
+        <path d="M-6 8 h12 M-6 18 h12 M-6 28 h12 M-6 38 h11" stroke="#1e150c" strokeWidth="1.6" opacity="0.6" />
+      </g>
+
+      {/* LE NÉMÈS sur le crâne (calotte or + rayures bleues) + bandeau */}
+      <path d="M99 126 Q92 60 150 56 Q208 60 201 126 Q200 98 150 94 Q100 98 99 126 Z" fill="#e8c04a" />
+      {[-40, -26, -12, 2, 16, 30].map((dx, i) => (
+        <path key={i} d={`M${150 + dx} 96 Q${150 + dx * 0.7} 74 ${150 + dx * 0.5} 60`} stroke="#2f6a9a" strokeWidth="5" fill="none" opacity="0.85" />
+      ))}
+      <path d="M96 122 Q150 100 204 122 L204 132 Q150 110 96 132 Z" fill="url(#pSneGold)" />
+      <path d="M96 122 Q150 100 204 122" stroke="#8a6a1a" strokeWidth="1.6" fill="none" opacity="0.6" />
+      {/* le CObra URAEUS dressé au front */}
+      <g transform="translate(150,110)">
+        <path d="M0 8 Q-7 2 -5 -8 Q-2 -16 3 -14 Q0 -6 2 2 Z" fill="url(#pSneGold)" stroke="#8a6a1a" strokeWidth="1" />
+        <path d="M3 -14 q6 -3 9 1 q-5 1 -7 4 q1 -3 -2 -5 Z" fill="#3a8a6a" />
+        <circle cx="1" cy="-10" r="1.3" fill="#c8382e" />
+      </g>
+    </svg>
+  );
+}

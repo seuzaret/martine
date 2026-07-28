@@ -16,7 +16,7 @@ import SceneUruk from "./scenes/SceneUruk.jsx";
 import SceneNil from "./scenes/SceneNil.jsx";
 import ScenePhenicie from "./scenes/ScenePhenicie.jsx";
 import CarteMesopotamie from "./scenes/CarteMesopotamie.jsx";
-import { PortraitMesannepada, PortraitNaram } from "./scenes/portraits.jsx";
+import { PortraitMesannepada, PortraitNaram, PortraitSnefrou } from "./scenes/portraits.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -33,10 +33,12 @@ const ITEMS = {
   four:     { name: "Four à tablettes", emoji: "🔥", support: true, desc: "La chaleur transforme l'argile molle en pierre. Ce qui en sort peut défier les millénaires." },
   eau:      { name: "Flaque d'eau", emoji: "💧", support: true, desc: "Une flaque, un canal, une averse… l'ennemie jurée de l'argile encore molle." },
 
-  /* Nil */
-  papyrus_tiges: { name: "Tiges de papyrus", emoji: "🌿", desc: "La plante-roi du Nil. Fendue et pressée, elle donne des feuilles." },
-  pierre:        { name: "Pierre à presser", emoji: "🪨", support: true, desc: "Une pierre plate et lourde : de quoi écraser les tiges jusqu'à ce qu'elles se collent." },
-  encre:         { name: "Roseau & encre", emoji: "🪶", desc: "Un pinceau de roseau et de l'encre noire. De quoi tracer de fins signes." },
+  /* Nil (Égypte) */
+  papyrus_tiges: { name: "Tiges de papyrus", emoji: "🌿", desc: "La plante-roi du Nil. Coupée et pressée, elle donne des feuilles." },
+  roseau_nil:    { name: "Roseaux du Nil", emoji: "🌾", desc: "De fines tiges du bord du fleuve. Taillées en pointe, elles deviennent des calames de scribe." },
+  bol:           { name: "Bol de terre", emoji: "🥣", desc: "Un petit bol. Passé au feu, son fond se couvre d'une suie noire — le noir de l'encre." },
+  acacia:        { name: "Acacia", emoji: "🌳", support: true, desc: "Un arbre du désert. Entaille son écorce et il pleure une sève collante : le liant de l'encre." },
+  feu:           { name: "Feu de camp", emoji: "🔥", support: true, desc: "Un feu vif. On y noircit le bol pour récolter la suie." },
 
   /* Phénicie */
   signes:   { name: "Les 22 signes", emoji: "🅰️", desc: "L'idée géniale des marchands : à peine 22 signes, un pour chaque son. Simple. Rapide à apprendre." },
@@ -45,6 +47,10 @@ const ITEMS = {
   /* fabriqués */
   tablette_vierge: { name: "Tablette d'argile", emoji: "🟫", desc: "Une galette d'argile aplatie, lisse, prête à recevoir des signes. Il ne manque que la main du scribe." },
   feuille_papyrus:{ name: "Feuille de papyrus", emoji: "📄", desc: "Lisse, légère, souple : on peut la rouler, la transporter, l'offrir. Prête à recevoir l'écriture." },
+  seve:          { name: "Sève d'acacia", emoji: "💧", desc: "Une gomme collante tirée de l'écorce. Mélangée à la suie, elle fait tenir l'encre." },
+  suie:          { name: "Suie noire", emoji: "⚫", desc: "Le noir de fumée récolté au fond du bol. Il ne demande qu'un liant pour devenir de l'encre." },
+  encre:         { name: "Encre noire", emoji: "🖤", desc: "Suie + sève : une belle encre noire. Avec un calame, on peut enfin tracer des signes." },
+  calame_nil:    { name: "Calame", emoji: "🖊", desc: "Un roseau du Nil taillé en pointe fine, la plume du scribe égyptien." },
 };
 
 /* ------------------------------------------------------------
@@ -60,9 +66,9 @@ const SCENES = [
 ];
 
 const WHERE = {
-  roseaux: "au bord du canal, dans la cité d'Ur", couteau: "dans la cité d'Ur",
+  roseaux: "au bord du canal, dans la cité d'Ur", couteau: "près des artisans (à Ur comme au bord du Nil)",
   argile: "au bord du canal, dans la cité d'Ur", sceau: "auprès du roi, dans la cité d'Ur",
-  papyrus_tiges: "sur les bords du Nil", encre: "sur les bords du Nil",
+  papyrus_tiges: "au bord du Nil", roseau_nil: "au bord du Nil", bol: "au bord du Nil",
   signes: "sur la côte phénicienne", navires: "sur la côte phénicienne",
 };
 
@@ -81,9 +87,21 @@ const RECIPES = [
   /* MESSAGE PERDU : la tablette laissée à l'eau avant d'être cuite. */
   { a: "tablette_vierge", b: "eau", out: "msg_effacee", msg: true, perdu: true },
   { a: "sceau", b: "argile", out: "msg_sceau", msg: true },
-  { a: "papyrus_tiges", b: "pierre", out: "feuille_papyrus",
-    line: "Fendues, pressées, séchées : les tiges se collent en une FEUILLE de papyrus, légère et souple." },
-  { a: "feuille_papyrus", b: "encre", out: "msg_hieroglyphes", msg: true },
+
+  /* ── Égypte (le Nil) : fabriquer papyrus + encre, puis écrire ── */
+  { a: "couteau", b: "acacia", out: "seve",
+    line: "Tu entailles l'écorce de l'acacia : une sève collante perle. Ce sera le LIANT de l'encre." },
+  { a: "couteau", b: "papyrus_tiges", out: "feuille_papyrus",
+    line: "Tu tranches les tiges en fines lamelles, croisées et pressées : elles se collent en une FEUILLE de papyrus, légère et souple." },
+  { a: "couteau", b: "roseau_nil", out: "calame_nil",
+    line: "Tu tailles un roseau du Nil en pointe fine : un CALAME, la plume du scribe égyptien." },
+  { a: "bol", b: "feu", out: "suie",
+    line: "Tu noircis le fond du bol au-dessus des flammes : tu récoltes une belle SUIE noire." },
+  { a: "suie", b: "seve", out: "encre",
+    line: "Suie + sève d'acacia : tu obtiens une ENCRE noire qui accroche au papyrus." },
+  /* le papyrus écrit (hiéroglyphes) s'obtient par le MINI-JEU du cartouche,
+     débloqué quand on a l'encre, le calame ET la feuille de papyrus. */
+
   { a: "signes", b: "navires", out: "msg_alphabet", msg: true },
 ];
 
@@ -118,8 +136,12 @@ const HINTS = [
   { needs: ["calame", "argile"], out: "tablette_vierge", text: "Aplatis une motte d'argile en galette lisse : une tablette, prête pour ton calame." },
   { needs: ["tablette_vierge", "eau"], out: "msg_effacee", text: "Surtout, ne laisse pas cette tablette molle près de l'eau : elle fondrait…" },
   { needs: ["sceau", "argile"], out: "msg_sceau", text: "Le cylindre gravé du roi : roule-le sur un peu d'argile fraîche, il y laissera sa marque." },
-  { needs: ["papyrus_tiges", "pierre"], out: "feuille_papyrus", text: "Ces tiges de papyrus : fends-les, puis écrase-les bien sous une pierre lourde." },
-  { needs: ["feuille_papyrus", "encre"], out: "msg_hieroglyphes", text: "Une belle feuille lisse, un roseau, de l'encre… trace tes hiéroglyphes." },
+  { needs: ["encre", "calame_nil", "feuille_papyrus"], out: "msg_hieroglyphes", text: "Tu as l'encre, le calame et la feuille : va écrire le nom du pharaon Snéfrou dans son cartouche !" },
+  { needs: ["suie", "seve"], out: "encre", text: "Mélange la suie noire à la sève collante de l'acacia : tu obtiendras une belle encre." },
+  { needs: ["couteau", "papyrus_tiges"], out: "feuille_papyrus", text: "Ces tiges de papyrus : tranche-les au couteau en fines lamelles, puis presse-les." },
+  { needs: ["couteau", "roseau_nil"], out: "calame_nil", text: "Taille un roseau du Nil en pointe fine avec le couteau : un calame de scribe." },
+  { needs: ["bol"], out: "suie", text: "Passe le bol au-dessus du feu : son fond se couvrira d'une suie noire (le noir de l'encre)." },
+  { needs: ["couteau"], out: "seve", text: "Entaille l'écorce de l'acacia avec le couteau : il pleure une sève collante." },
   { needs: ["signes", "navires"], out: "msg_alphabet", text: "Ces 22 signes si simples : confie-les aux navires marchands, ils les porteront de port en port." },
 ];
 
@@ -127,6 +149,7 @@ const NEAR_MISS = [
   { pair: ["roseaux", "argile"], line: "Planter des roseaux bruts dans l'argile ? Taille-les d'abord en calame, sinon ça ne marque rien." },
   { pair: ["tablette_vierge", "four"], line: "Cuire une tablette VIERGE ? Tu obtiendrais une jolie brique muette. Écris D'ABORD ton registre dessus." },
   { pair: ["papyrus_tiges", "encre"], line: "Écrire sur des tiges brutes ? L'encre coule entre les fibres. Fabrique d'abord une vraie feuille." },
+  { pair: ["feuille_papyrus", "feu"], line: "Le papyrus près du feu ? Il part en fumée ! C'est toute sa faiblesse : léger et pratique… mais bien fragile." },
   { pair: ["sceau", "four"], line: "Cuire ton sceau de pierre ? Il ne craint pas le feu — mais ce n'est pas là qu'il laisse un message. Roule-le sur l'argile." },
   { pair: ["navires", "argile"], line: "Charger des tonnes d'argile sur un navire ? Il coule. Les Phéniciens, eux, transportent quelque chose de bien plus léger : une idée." },
 ];
@@ -160,6 +183,12 @@ const ACTIONS = {
   /* ouvre le mini-jeu du registre (« 6 bœufs et 3 blés dans l'étable ») */
   tablette: { modal: "tablette" },
 
+  /* Égypte : le pharaon Snéfrou + le mini-jeu du cartouche */
+  snefrou: { mood: "neutre",
+    bubble: "Je suis Snéfrou, fils du Soleil. Fais-moi un papyrus et de l'encre, et grave mon nom pour l'éternité.",
+    say: "Un pharaon qui veut son nom éternel — sur du papyrus, léger mais fragile. Fabrique feuille, calame et encre." },
+  cartouche: { modal: "cartouche" },
+
   /* Nil & Phénicie (inchangés) */
   scribe: { mood: "neutre",
     bubble: "L'argile, c'est solide : ça durera mille ans. Mais le pharaon veut que son ordre parte à l'autre bout du royaume, et ce pauvre âne n'en porte que vingt tablettes ! Il me faudrait un support LÉGER. Quelque chose qui pousse ici, au bord de l'eau…",
@@ -190,11 +219,17 @@ const QUETE = [
     bubble: "Magnifique ! Voilà des comptes qu'on ne peut plus contester. Mais pour qu'on sache que ce registre vient de MOI, il y manque ma marque. Prends mon sceau-cylindre et scelle l'argile.",
     say: "Le sceau-cylindre du roi, roulé sur l'argile fraîche : sa signature. L'ancêtre du cachet officiel — et du certificat numérique.",
     attend: "msg_sceau",
-    suite: "Ta marque royale est dans l'argile. Le roi te laisse partir — vers l'Égypte, en descendant le fleuve." },
+    suite: "Ta marque royale est dans l'argile ! Le roi te laisse partir. Descends le fleuve vers l'Égypte : le pharaon Snéfrou t'y attend." },
 
-  { perso: "mesannepada", portrait: "mesannepada",
-    bubble: "Tu es venu étranger, tu repars scribe honoraire d'Ur. Ta drôle de machine t'appelle. Descends le fleuve vers l'Égypte : là-bas, on écrit sur une plante du bord de l'eau. Et souviens-toi d'Ur.",
-    say: "Cap sur le Nil (tableau 2 › ou la carte 🗺). Le papyrus t'y attend — léger, transportable… et bien plus fragile que l'argile." },
+  { perso: "snefrou", portrait: "snefrou",
+    bubble: "Sois le bienvenu en Égypte, voyageur. Je suis Snéfrou, fils du Soleil. Le Nil nous offre une plante magique, le papyrus, sur laquelle on écrit. Rends-moi un service digne d'un roi : fabrique-moi une feuille et de l'encre, et grave mon NOM pour qu'il traverse les millénaires.",
+    say: "Un pharaon qui veut son nom éternel ! Il te faut : une feuille de papyrus (couteau + tiges), un calame (couteau + roseau), et de l'encre (suie du bol au feu + sève d'acacia). Puis écris son cartouche.",
+    attend: "msg_hieroglyphes",
+    suite: "Le nom de Snéfrou file vers l'éternité, tracé sur son papyrus ! Il ne te reste qu'un dernier port : la côte des Phéniciens." },
+
+  { perso: "snefrou", portrait: "snefrou",
+    bubble: "Tu as écrit mon nom pour l'éternité — les dieux t'en sauront gré. Ta machine scintillante t'appelle. Vogue vers la côte des Phéniciens : on y invente, dit-on, une écriture si simple qu'un enfant l'apprend. Va, et que Rê t'éclaire.",
+    say: "Direction la côte phénicienne : l'ALPHABET nous attend — 22 signes, un par son. Le code le plus simple… et le plus contagieux de l'Histoire." },
 ];
 
 /* ------------------------------------------------------------
@@ -233,7 +268,7 @@ const chapter = {
   intro: INTRO,
   actions: ACTIONS,
   quete: QUETE,
-  portraits: { mesannepada: PortraitMesannepada, naram: PortraitNaram },
+  portraits: { mesannepada: PortraitMesannepada, naram: PortraitNaram, snefrou: PortraitSnefrou },
   carte: CarteMesopotamie,
 };
 

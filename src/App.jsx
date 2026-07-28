@@ -14,6 +14,7 @@ import { CHAPTERS } from "./chapters/index.js";
 import { ILLUSTRATIONS } from "./chapters/illustrations.jsx";
 import { AlphabetGame } from "./chapters/alphabet.jsx";
 import { TabletteGame } from "./chapters/mesopotamie-tablette.jsx";
+import { CartoucheGame } from "./chapters/egypte-cartouche.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 
@@ -1191,6 +1192,10 @@ export default function App() {
 
       {modal?.type === "tablette" && (
         <TabletteGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_cuneiforme")} />
+      )}
+
+      {modal?.type === "cartouche" && (
+        <CartoucheGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_hieroglyphes")} />
       )}
 
       {modal?.type === "carte" && (
