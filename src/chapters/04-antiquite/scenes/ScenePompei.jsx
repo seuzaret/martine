@@ -167,8 +167,7 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
 
       {/* zones cliquables */}
       <Hotspot cx={640} cy={456} r={40} label="Caius, le marchand" reveal={reveal} onClick={(p) => action("caius", p)} />
-      <Hotspot cx={430} cy={470} r={34} label="Argos, l'esclave" reveal={reveal} onClick={(p) => action("argos", p)} />
-      <Hotspot cx={392} cy={470} r={26} label="ta voix" item="voix" reveal={reveal} onClick={() => collect("voix")} />
+      <Hotspot cx={430} cy={470} r={36} label="Argos — prends ta voix" item="voix" reveal={reveal} onClick={() => collect("voix")} />
       <Hotspot cx={300} cy={480} r={64} label="la foule" item="foule" reveal={reveal} onClick={() => collect("foule")} />
       <Hotspot cx={786} cy={484} r={54} label="la dalle à graver" item="pierre" reveal={reveal} onClick={() => collect("pierre")} />
       <Hotspot cx={70} cy={502} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />

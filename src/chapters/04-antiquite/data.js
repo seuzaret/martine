@@ -19,7 +19,7 @@ import { PortraitCaius } from "./scenes/portraits.jsx";
    ------------------------------------------------------------ */
 const ITEMS = {
   /* Tableau 1 — l'entrée de la villa */
-  voix:     { name: "Ta voix", emoji: "🗣️", desc: "Ta voix peut porter une nouvelle… à condition qu'il y ait du monde pour l'entendre." },
+  voix:     { name: "Ta voix (avec Argos)", emoji: "🗣️", desc: "« Pas le temps d'écrire mille invitations ! On va les CRIER sur la place », dit Argos. Ta voix, lancée à la foule : vite et large… mais demain, il n'en restera rien." },
   foule:    { name: "La foule", emoji: "👥", support: true, desc: "La foule de Pompéi, sur la place. Une annonce criée ici fait vite le tour de la ville — mais rien n'en restera demain." },
   pierre:   { name: "Dalle de pierre", emoji: "🪨", support: true, desc: "Une belle dalle à l'entrée de la villa. De quoi graver des lettres que tous verront… pour très longtemps." },
 
@@ -33,7 +33,7 @@ const ITEMS = {
   /* Tableau 3 — le jardin & l'atelier */
   cire_abeille: { name: "Cire d'abeille", emoji: "🍯", desc: "De la cire tiède, prise aux ruches du jardin. Coulée sur une planche, elle fait une surface où écrire." },
   planche:  { name: "Planche de bois", emoji: "🪵", desc: "Une planchette bien plane, prise à l'atelier. Creusée et remplie de cire, elle devient une tablette." },
-  branche:  { name: "Branche taillée", emoji: "🖊", desc: "Une branchette taillée en pointe : de quoi tracer dans la cire, et lisser pour effacer." },
+  branche:  { name: "Stylet (branche taillée)", emoji: "✒️", desc: "Une branchette taillée : la pointe pour écrire dans la cire, le côté plat pour tout lisser et effacer. Le stylet du scribe." },
   vache:    { name: "La vache", emoji: "🐄", support: true, desc: "La vache du jardin. Sa peau, bien préparée, deviendra un support solide : le parchemin." },
   epee:     { name: "Épée", emoji: "⚔️", desc: "Une lame de l'atelier. De quoi prélever et parer une peau." },
   burin:    { name: "Burin", emoji: "🔨", desc: "Un ciseau et un maillet : pour entailler la pierre, lettre après lettre." },
@@ -161,10 +161,6 @@ const ACTIONS = {
     bubble: "Ma villa doit être la plus belle de Pompéi pour ma fête ! Aide mes artisans, l'étranger.",
     say: "Un riche marchand qui veut éblouir ses invités. À Pompéi, comme partout : montrer qu'on a réussi." },
 
-  /* Argos, l'esclave, à l'entrée (contexte des invitations) */
-  argos: { mood: "neutre",
-    bubble: "Je suis Argos, l'homme de confiance de Caius. Pour la fête, il faut prévenir toute la ville — mais je n'ai pas de quoi écrire mille invitations ! Le plus simple : la crier sur la place.",
-    say: "Pas de papier pour mille personnes ? On CRIE l'annonce à la foule. Vite et large… mais ça ne laisse aucune trace : demain, plus rien." },
 };
 
 /* ------------------------------------------------------------
