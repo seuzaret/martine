@@ -4,12 +4,14 @@ import { PompeiDefs, PompeiFond } from "./fond.jsx";
 
 /* ============================================================
    CHAPITRE 4 · Tableau 3 — Le jardin clos de la villa
-   Un jardin de péristyle : mur de clôture au fond (derrière, la
-   ville de Pompéi et le Vésuve), oliviers, un grand arbre où
-   nichent les abeilles, une fontaine, une vache, et l'atelier.
+   Mur de clôture au fond (la ville + le Vésuve dépassent), des
+   oliviers, un grand arbre où pend une ruche, une fontaine, une
+   vache, une cabane à outils (épée, burin) et un établi.
    ============================================================ */
 
 export default function SceneJardin({ collect, action, reveal, made = [] }) {
+  const cire = made.includes("cire_abeille");   // la ruche a-t-elle été décrochée ?
+  const abattu = made.includes("peau");         // le bœuf a-t-il été abattu ?
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -25,7 +27,6 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
 
       {/* ═══ derrière le mur : une ville plus dense ═══ */}
       <PLayer depth={2}>
-        {/* rangée de bâtiments romains (toits rouges), au-dessus du mur */}
         {[[60, 300, 1], [110, 296, 0.9], [175, 300, 1.05], [235, 298, 0.85], [560, 300, 0.9], [620, 296, 1.1], [690, 300, 0.9], [900, 298, 1]].map(([x, y, s], i) => (
           <g key={i} transform={`translate(${x},${y}) scale(${s})`}>
             <rect x="-22" y="-40" width="44" height="40" fill="#e4dcc8" />
@@ -35,7 +36,6 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
             <rect x="-7" y="-14" width="14" height="14" fill="#5a4230" />
           </g>
         ))}
-        {/* un petit temple à colonnes derrière le mur */}
         <g transform="translate(400,300)">
           <path d="M-40 -40 L0 -60 L40 -40 Z" fill="#c8462e" />
           <rect x="-38" y="-40" width="76" height="7" fill="#e4dcc8" />
@@ -54,12 +54,11 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
       <PLayer depth={3}>
         <rect y="356" width="1000" height="204" fill="url(#ja-grass)" />
         <rect y="358" width="1000" height="202" fill="#2e3a18" opacity="0.24" filter="url(#pf-mottle)" />
-        {/* allée dallée vers la fontaine */}
         <path d="M400 560 L472 388 L540 388 L620 560 Z" fill="#c2a877" opacity="0.85" />
         <path d="M400 560 L472 388 M620 560 L540 388" stroke="#8a6e46" strokeWidth="1.6" opacity="0.4" />
 
-        {/* LES OLIVIERS (plusieurs, en rang le long du mur) */}
-        {[[110, 372, 0.95], [250, 376, 0.8], [330, 372, 0.9], [720, 374, 0.85], [820, 372, 1], [900, 376, 0.8]].map(([x, y, s], i) => (
+        {/* LES OLIVIERS (en rang le long du mur) */}
+        {[[250, 376, 0.8], [330, 372, 0.9], [430, 374, 0.8], [720, 374, 0.85], [820, 372, 1], [900, 376, 0.8]].map(([x, y, s], i) => (
           <g key={i} transform={`translate(${x},${y}) scale(${s})`}>
             <path d="M0 4 q-7 -32 -1 -50 q7 18 1 50" stroke="#6e5236" strokeWidth="9" fill="none" strokeLinecap="round" />
             <path d="M0 -30 l-12 -8 M0 -38 l12 -10" stroke="#6e5236" strokeWidth="3" />
@@ -69,28 +68,39 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
           </g>
         ))}
 
-        {/* LE GRAND ARBRE (gauche) — les ABEILLES y nichent, on y taille une branche */}
-        <g transform="translate(150,356)">
+        {/* LE GRAND ARBRE (gauche) — une RUCHE pend à sa branche */}
+        <g transform="translate(140,356)">
           <path d="M0 8 L-6 -74 M0 8 L6 -74" stroke="#5a3f24" strokeWidth="15" strokeLinecap="round" />
           <path d="M0 -44 l-26 -14 M0 -54 l26 -18 M0 -64 l-22 -22" stroke="#5a3f24" strokeWidth="6" strokeLinecap="round" />
           <ellipse cx="0" cy="-96" rx="70" ry="56" fill="url(#ja-tree)" />
           <ellipse cx="-32" cy="-74" rx="36" ry="30" fill="#6a8a3a" opacity="0.7" />
           <ellipse cx="36" cy="-102" rx="36" ry="30" fill="#5a7a32" opacity="0.7" />
-          {/* la branche cassée qui pend (à ramasser) */}
-          <path d="M-44 -64 q-26 6 -36 28" stroke="#6a4a2c" strokeWidth="4" fill="none" strokeLinecap="round" />
-          {/* LA RUCHE nichée dans le tronc (creux) + le miel */}
-          <g transform="translate(2,-30)">
-            <ellipse cx="0" cy="0" rx="13" ry="16" fill="#2a1c10" />
-            <path d="M-9 -6 Q0 -14 9 -6 Q9 8 0 12 Q-9 8 -9 -6 Z" fill="#d8a83a" />
-            <path d="M-7 -2 q7 3 14 0 M-6 4 q6 3 12 0" stroke="#a87a1a" strokeWidth="1.4" fill="none" />
-          </g>
-          {/* les ABEILLES qui tournent autour de l'arbre */}
-          {[[-18, -50], [22, -70], [8, -30], [-30, -90], [40, -40]].map(([x, y], i) => (
-            <g key={i} style={{ animation: `drift ${2 + i * 0.6}s ease-in-out infinite`, transformOrigin: `${150 + x}px ${356 + y}px`, transformBox: "view-box" }}>
-              <ellipse cx={x} cy={y} rx="2.4" ry="1.6" fill="#e0b23a" />
-              <path d={`M${x - 2} ${y} h4`} stroke="#2a1c10" strokeWidth="1.4" />
+          {/* la branche horizontale d'où pend la ruche (puis qu'on ramasse) */}
+          <path d="M-8 -40 q-34 -2 -58 6" stroke="#6a4a2c" strokeWidth="5" fill="none" strokeLinecap="round" />
+          {!cire ? (
+            <g>
+              {/* la corde + la RUCHE (skep de paille) accrochée à la branche */}
+              <path d="M-56 -34 v18" stroke="#8a6a3a" strokeWidth="1.6" />
+              <g transform="translate(-56,10)">
+                <path d="M-16 6 Q-18 -18 0 -22 Q18 -18 16 6 Z" fill="#d8a83a" />
+                <path d="M-15 -2 q15 5 30 0 M-13 -9 q13 4 26 0 M-16 5 q16 5 32 0" stroke="#a87a1a" strokeWidth="1.6" fill="none" />
+                <ellipse cx="0" cy="6" rx="16" ry="4" fill="#a87a1a" opacity="0.5" />
+                <path d="M-4 6 q4 4 8 0" stroke="#3a2a10" strokeWidth="2" fill="none" />
+              </g>
+              {/* les ABEILLES qui tournent autour de la ruche */}
+              {[[-42, 2], [-70, -8], [-58, -20], [-48, -14]].map(([x, y], i) => (
+                <g key={i} style={{ animation: `drift ${2 + i * 0.6}s ease-in-out infinite`, transformOrigin: `${140 + x}px ${356 + y}px`, transformBox: "view-box" }}>
+                  <ellipse cx={x} cy={y} rx="2.4" ry="1.6" fill="#e0b23a" />
+                  <path d={`M${x - 2} ${y} h4`} stroke="#2a1c10" strokeWidth="1.4" />
+                </g>
+              ))}
             </g>
-          ))}
+          ) : (
+            /* ruche décrochée : la branche libre, prête à être taillée en stylet */
+            <g style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+              <path d="M-40 -30 q-14 8 -18 22" stroke="#7a5a34" strokeWidth="4" fill="none" strokeLinecap="round" />
+            </g>
+          )}
         </g>
 
         {/* panier d'olives (récolte) */}
@@ -100,50 +110,81 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
           {[...Array(9)].map((_, k) => <circle key={k} cx={-13 + (k % 5) * 6.5} cy={-6 + Math.floor(k / 5) * 7} r="3" fill="#3a4a22" />)}
         </g>
 
+        {/* LA CABANE À OUTILS : l'épée et le burin y sont accrochés */}
+        <g transform="translate(360,470)">
+          <ellipse cx="0" cy="30" rx="66" ry="10" fill="#241608" opacity="0.3" />
+          {/* mur du fond (planches) */}
+          <rect x="-50" y="-58" width="100" height="88" fill="#a8804a" />
+          <rect x="-50" y="-58" width="100" height="88" fill="#3a2414" opacity="0.28" filter="url(#pf-grain)" />
+          <path d="M-32 -58 v88 M-6 -58 v88 M20 -58 v88" stroke="#7a5230" strokeWidth="1.4" opacity="0.5" />
+          {/* toit en pente */}
+          <path d="M-62 -58 L44 -74 L60 -60 L-46 -44 Z" fill="#8a5a34" />
+          <path d="M-62 -58 L44 -74" stroke="#6a4420" strokeWidth="2" opacity="0.5" />
+          {/* poteaux d'angle */}
+          <rect x="-54" y="-52" width="7" height="82" fill="#6e4c2e" /><rect x="47" y="-58" width="7" height="88" fill="#6e4c2e" />
+          {/* barre à outils + crochets */}
+          <rect x="-44" y="-40" width="88" height="4" fill="#6e4c2e" />
+          {[-30, 0, 30].map((x, i) => <path key={i} d={`M${x} -36 v4`} stroke="#5a3f24" strokeWidth="2" />)}
+          {/* l'ÉPÉE accrochée (gauche) */}
+          <g transform="translate(-30,-34)">
+            <path d="M0 4 L0 40" stroke="#c8c8d0" strokeWidth="4" strokeLinecap="round" />
+            <path d="M-8 4 h16" stroke="#8a7a4a" strokeWidth="3" /><rect x="-2.5" y="-2" width="5" height="8" rx="1" fill="#6a4a2c" />
+          </g>
+          {/* le BURIN + maillet accrochés (droite) */}
+          <g transform="translate(30,-34)">
+            <rect x="-2" y="2" width="5" height="26" rx="1.5" fill="#9a9aa6" /><rect x="-4" y="26" width="9" height="6" rx="1.5" fill="#5a3f24" />
+            <g transform="translate(-18,6)"><rect x="-7" y="-6" width="15" height="11" rx="2" fill="#8a5a34" /><rect x="-1" y="5" width="4" height="20" fill="#5a3f24" /></g>
+          </g>
+        </g>
+
         {/* LA FONTAINE (centre) */}
-        <g transform="translate(500,470)">
-          <ellipse cx="0" cy="30" rx="70" ry="16" fill="#241608" opacity="0.3" />
-          <path d="M-64 24 Q-70 -2 0 -8 Q70 -2 64 24 Z" fill="#b0a488" />
-          <ellipse cx="0" cy="-8" rx="60" ry="16" fill="url(#ja-water)" />
-          <path d="M-44 -8 q44 -6 88 0" stroke="#cfe0e0" strokeWidth="1.6" fill="none" opacity="0.5" style={{ animation: "ripple 3.4s ease-in-out infinite" }} />
-          <rect x="-4" y="-40" width="8" height="34" fill="#9a8e78" />
-          <path d="M0 -40 q-10 -14 0 -26 q10 12 0 26" fill="#bfe0e0" opacity="0.6" style={{ animation: "pulse 2.2s ease-in-out infinite" }} />
+        <g transform="translate(510,472)">
+          <ellipse cx="0" cy="30" rx="64" ry="14" fill="#241608" opacity="0.3" />
+          <path d="M-58 22 Q-64 -2 0 -8 Q64 -2 58 22 Z" fill="#b0a488" />
+          <ellipse cx="0" cy="-8" rx="54" ry="14" fill="url(#ja-water)" />
+          <path d="M-40 -8 q40 -6 80 0" stroke="#cfe0e0" strokeWidth="1.6" fill="none" opacity="0.5" style={{ animation: "ripple 3.4s ease-in-out infinite" }} />
+          <rect x="-4" y="-38" width="8" height="32" fill="#9a8e78" />
+          <path d="M0 -38 q-10 -14 0 -26 q10 12 0 26" fill="#bfe0e0" opacity="0.6" style={{ animation: "pulse 2.2s ease-in-out infinite" }} />
         </g>
 
-        {/* LA VACHE (droite, support) */}
-        <g transform="translate(860,470)">
-          <ellipse cx="0" cy="30" rx="40" ry="8" fill="#241608" opacity="0.35" />
-          <path d="M-34 22 Q-40 -14 -14 -18 L20 -18 Q40 -14 36 18 L36 30 L26 30 L26 24 L-24 24 L-24 30 L-34 30 Z" fill="#d8cdbc" />
-          <path d="M-34 22 Q-40 -14 -14 -18 L20 -18 Q40 -14 36 18" fill="#8a7a68" opacity="0.2" filter="url(#pf-grain)" />
-          <ellipse cx="-8" cy="2" rx="12" ry="9" fill="#5a4636" opacity="0.6" /><ellipse cx="18" cy="8" rx="8" ry="6" fill="#5a4636" opacity="0.6" />
-          <path d="M-34 -8 Q-52 -10 -50 6 Q-48 16 -36 14 Z" fill="#d8cdbc" />
-          <path d="M-50 -6 q-6 -6 -3 -12 M-44 -10 q-2 -8 3 -12" stroke="#c8b8a0" strokeWidth="3" fill="none" strokeLinecap="round" />
-          <circle cx="-46" cy="2" r="2" fill="#2a1c10" />
+        {/* L'ÉTABLI : la planche et le grattoir (espacés de la cabane) */}
+        <g transform="translate(700,504)">
+          <ellipse cx="0" cy="30" rx="78" ry="12" fill="#241608" opacity="0.35" />
+          <rect x="-74" y="-6" width="148" height="15" rx="3" fill="#7a5230" />
+          <rect x="-74" y="-6" width="148" height="15" rx="3" fill="#3a2414" opacity="0.3" filter="url(#pf-grain)" />
+          <rect x="-66" y="9" width="14" height="30" fill="#5a3f24" /><rect x="52" y="9" width="14" height="30" fill="#5a3f24" />
+          {/* planches empilées (gauche) */}
+          <g transform="translate(-38,-14)"><rect x="-26" y="0" width="52" height="7" rx="1.5" fill="#a8865a" /><rect x="-22" y="-7" width="46" height="7" rx="1.5" fill="#b89a6a" /><rect x="-18" y="-14" width="40" height="7" rx="1.5" fill="#a8865a" /></g>
+          {/* grattoir + ponce (droite) */}
+          <g transform="translate(44,-12)"><path d="M-9 4 L9 0 L9 4 L-9 8 Z" fill="#c8c0b4" stroke="#8a8478" strokeWidth="0.8" /><rect x="-14" y="4" width="11" height="5" rx="2" fill="#6e4c2e" /><ellipse cx="20" cy="4" rx="8" ry="5" fill="#b8b0a0" /></g>
         </g>
 
-        {/* L'ATELIER : établi + outils */}
-        <g transform="translate(600,504)">
-          <ellipse cx="0" cy="30" rx="100" ry="14" fill="#241608" opacity="0.35" />
-          <rect x="-96" y="-6" width="192" height="16" rx="3" fill="#7a5230" />
-          <rect x="-96" y="-6" width="192" height="16" rx="3" fill="#3a2414" opacity="0.3" filter="url(#pf-grain)" />
-          <rect x="-88" y="10" width="14" height="30" fill="#5a3f24" /><rect x="74" y="10" width="14" height="30" fill="#5a3f24" />
-          <g transform="translate(-64,-14)"><rect x="-24" y="0" width="48" height="7" rx="1.5" fill="#a8865a" /><rect x="-20" y="-7" width="42" height="7" rx="1.5" fill="#b89a6a" /></g>
-          <g transform="translate(-14,-12) rotate(-10)"><rect x="-4" y="6" width="8" height="8" rx="1" fill="#6a4a2c" /><path d="M0 6 L2 -34 L-2 -34 Z" fill="#c8c8d0" stroke="#9a9aa6" strokeWidth="0.8" /><path d="M-8 6 h16" stroke="#8a7a4a" strokeWidth="2.4" /></g>
-          <g transform="translate(34,-10)"><rect x="-2" y="-16" width="5" height="20" rx="1.5" fill="#9a9aa6" /><rect x="-4" y="4" width="9" height="6" rx="1.5" fill="#5a3f24" /><rect x="14" y="-6" width="16" height="12" rx="2" fill="#8a5a34" /><rect x="20" y="6" width="4" height="12" fill="#5a3f24" /></g>
-          <g transform="translate(70,-12)"><path d="M-8 4 L8 0 L8 4 L-8 8 Z" fill="#c8c0b4" stroke="#8a8478" strokeWidth="0.8" /><rect x="-12" y="4" width="10" height="5" rx="2" fill="#6e4c2e" /><ellipse cx="16" cy="4" rx="7" ry="5" fill="#b8b0a0" /></g>
-        </g>
+        {/* LA VACHE (droite, support) — disparaît une fois abattue (le pauvre) */}
+        {!abattu && (
+          <g transform="translate(870,470)">
+            <ellipse cx="0" cy="30" rx="40" ry="8" fill="#241608" opacity="0.35" />
+            <path d="M-34 22 Q-40 -14 -14 -18 L20 -18 Q40 -14 36 18 L36 30 L26 30 L26 24 L-24 24 L-24 30 L-34 30 Z" fill="#d8cdbc" />
+            <path d="M-34 22 Q-40 -14 -14 -18 L20 -18 Q40 -14 36 18" fill="#8a7a68" opacity="0.2" filter="url(#pf-grain)" />
+            <ellipse cx="-8" cy="2" rx="12" ry="9" fill="#5a4636" opacity="0.6" /><ellipse cx="18" cy="8" rx="8" ry="6" fill="#5a4636" opacity="0.6" />
+            <path d="M-34 -8 Q-52 -10 -50 6 Q-48 16 -36 14 Z" fill="#d8cdbc" />
+            <path d="M-50 -6 q-6 -6 -3 -12 M-44 -10 q-2 -8 3 -12" stroke="#c8b8a0" strokeWidth="3" fill="none" strokeLinecap="round" />
+            <circle cx="-46" cy="2" r="2" fill="#2a1c10" />
+          </g>
+        )}
       </PLayer>
 
       <rect width="1000" height="560" fill="#231a10" opacity="0.06" style={{ pointerEvents: "none" }} />
 
       {/* zones cliquables */}
-      <Hotspot cx={860} cy={462} r={48} label="la vache" item="vache" reveal={reveal} onClick={() => collect("vache")} />
-      <Hotspot cx={152} cy={326} r={26} label="cire d'abeille (la ruche de l'arbre)" item="cire_abeille" reveal={reveal} onClick={() => collect("cire_abeille")} />
-      <Hotspot cx={112} cy={314} r={28} label="branche taillée" item="branche" reveal={reveal} onClick={() => collect("branche")} />
-      <Hotspot cx={536} cy={488} r={30} label="planche de bois" item="planche" reveal={reveal} onClick={() => collect("planche")} />
-      <Hotspot cx={586} cy={488} r={26} label="épée" item="epee" reveal={reveal} onClick={() => collect("epee")} />
-      <Hotspot cx={634} cy={488} r={26} label="burin" item="burin" reveal={reveal} onClick={() => collect("burin")} />
-      <Hotspot cx={670} cy={488} r={26} label="grattoir & ponce" item="grattoir" reveal={reveal} onClick={() => collect("grattoir")} />
+      {!abattu && <Hotspot cx={870} cy={462} r={46} label="la vache" item="vache" reveal={reveal} onClick={() => collect("vache")} />}
+      {/* la ruche (cire) puis, une fois décrochée, la branche */}
+      {!cire
+        ? <Hotspot cx={84} cy={360} r={30} label="la ruche (cire d'abeille)" item="cire_abeille" reveal={reveal} onClick={() => collect("cire_abeille")} />
+        : <Hotspot cx={92} cy={338} r={30} label="la branche (le stylet)" item="branche" reveal={reveal} onClick={() => collect("branche")} />}
+      <Hotspot cx={330} cy={442} r={26} label="l'épée (à la cabane)" item="epee" reveal={reveal} onClick={() => collect("epee")} />
+      <Hotspot cx={390} cy={442} r={26} label="le burin (à la cabane)" item="burin" reveal={reveal} onClick={() => collect("burin")} />
+      <Hotspot cx={662} cy={488} r={30} label="planche de bois" item="planche" reveal={reveal} onClick={() => collect("planche")} />
+      <Hotspot cx={744} cy={488} r={28} label="grattoir & ponce" item="grattoir" reveal={reveal} onClick={() => collect("grattoir")} />
     </svg>
   );
 }

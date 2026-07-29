@@ -103,9 +103,9 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
           <rect x="-52" y="-24" width="104" height="8" fill="#efe6d2" />
           {grave ? (
             <g style={{ animation: "fadein 1s ease-out" }} fill="#4a3826">
-              <text x="0" y="-6" textAnchor="middle" fontSize="12" fontFamily="'Cinzel','Trajan Pro',Georgia,serif" letterSpacing="1">CAIVS · POMPEIS</text>
-              <text x="0" y="10" textAnchor="middle" fontSize="10" fontFamily="'Cinzel','Trajan Pro',Georgia,serif" letterSpacing="1">GLORIA · ROMAE</text>
-              <path d="M-44 20 h88" stroke="#6a5236" strokeWidth="1" opacity="0.6" />
+              <text x="0" y="-7" textAnchor="middle" fontSize="9" fontFamily="'Cinzel','Trajan Pro',Georgia,serif" letterSpacing="0.3">CAIVS · POMPEIS</text>
+              <text x="0" y="6" textAnchor="middle" fontSize="8" fontFamily="'Cinzel','Trajan Pro',Georgia,serif" letterSpacing="0.3">GLORIA · ROMAE</text>
+              <path d="M-42 16 h84" stroke="#6a5236" strokeWidth="1" opacity="0.6" />
             </g>
           ) : (
             <g stroke="#b0a888" strokeWidth="1.2" opacity="0.5"><path d="M-40 -8 h80 M-40 2 h80 M-40 12 h60" /></g>
@@ -150,6 +150,16 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
           <path d="M11 -8 q10 -4 16 2" stroke="#b0855c" strokeWidth="4" fill="none" strokeLinecap="round" />
           <path d="M27 -8 q6 2 6 8 q-6 -1 -8 3" fill="none" stroke="#b0855c" strokeWidth="2.4" strokeLinecap="round" />
         </g>
+        {/* les ONDES de la voix d'Argos qui portent vers la foule (façon wifi),
+            tant que l'invitation n'a pas été lancée */}
+        {!made.includes("invites") && (
+          <g transform="translate(452,468) rotate(-118)" style={{ animation: "glow 1.6s ease-in-out infinite" }}>
+            <circle cx="0" cy="0" r="2.2" fill="#ffd166" />
+            <path d="M-7 -7 a10 10 0 0 1 14 0" fill="none" stroke="#ffd166" strokeWidth="2.4" strokeLinecap="round" opacity="0.85" />
+            <path d="M-13 -13 a18 18 0 0 1 26 0" fill="none" stroke="#ffd166" strokeWidth="2.4" strokeLinecap="round" opacity="0.55" />
+            <path d="M-19 -19 a27 27 0 0 1 38 0" fill="none" stroke="#ffd166" strokeWidth="2.4" strokeLinecap="round" opacity="0.32" />
+          </g>
+        )}
 
         {/* épave de MARTINE dans un coin */}
         <g transform="translate(70,506) rotate(-8)">

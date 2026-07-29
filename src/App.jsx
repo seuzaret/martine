@@ -343,6 +343,9 @@ export default function App() {
     }
     if (!inv.includes(id)) {
       setInv((v) => [...v, id]);
+      /* on garde une trace « obtenu » (même après usage) pour que les décors
+         puissent réagir durablement — ex. la ruche décrochée, le bœuf abattu. */
+      setMade((v) => (v.includes(id) ? v : [...v, id]));
       playSfx("pickup");
       say(`${it.emoji} ${it.name} — ${it.desc}`);
     } else {
