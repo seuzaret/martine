@@ -100,10 +100,13 @@ export default function SceneBibliotheque({ collect, action, reveal, made = [] }
           le meuble fuit vers l'arrière-droite ; les bouts de rouleaux sont
           de petits cylindres logés dans des casiers profonds ═══ */}
       <g transform="translate(430,150)">
+        {/* ombre de contact au sol (ancre le meuble, il ne flotte pas) */}
+        <ellipse cx="30" cy="250" rx="108" ry="13" fill="#1c1006" opacity="0.32" />
         {/* face de dessus (perspective) */}
         <path d="M-70 0 L110 0 L126 -15 L-54 -15 Z" fill="#8a6238" />
-        {/* face de côté droite (plus sombre) */}
-        <path d="M110 0 L126 -15 L126 235 L110 250 Z" fill="#4a3218" />
+        {/* face de côté droite (plus sombre) — sa base redescend au sol
+            (y 246 ≈ ligne de sol) pour que le meuble touche le plancher */}
+        <path d="M110 0 L126 -15 L126 246 L110 250 Z" fill="#4a3218" />
         {/* face avant (le casier) */}
         <rect x="-70" y="0" width="180" height="250" fill="#6e4c2e" />
         <rect x="-70" y="0" width="180" height="250" fill="#3a2414" opacity="0.3" filter="url(#bi-grain)" />
