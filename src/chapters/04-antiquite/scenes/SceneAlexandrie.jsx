@@ -96,23 +96,34 @@ export default function SceneBibliotheque({ collect, action, reveal, made = [] }
         )}
       </g>
 
-      {/* ═══ LES RAYONNAGES À ROULEAUX (bibliothèque, support) ═══ */}
+      {/* ═══ LES RAYONNAGES À ROULEAUX (bibliothèque, support) — vue 3/4 :
+          le meuble fuit vers l'arrière-droite ; les bouts de rouleaux sont
+          de petits cylindres logés dans des casiers profonds ═══ */}
       <g transform="translate(430,150)">
+        {/* face de dessus (perspective) */}
+        <path d="M-70 0 L110 0 L126 -15 L-54 -15 Z" fill="#8a6238" />
+        {/* face de côté droite (plus sombre) */}
+        <path d="M110 0 L126 -15 L126 235 L110 250 Z" fill="#4a3218" />
+        {/* face avant (le casier) */}
         <rect x="-70" y="0" width="180" height="250" fill="#6e4c2e" />
         <rect x="-70" y="0" width="180" height="250" fill="#3a2414" opacity="0.3" filter="url(#bi-grain)" />
         {[0, 62, 124, 186].map((y, r) => <rect key={r} x="-70" y={y} width="180" height="10" fill="#5a3f24" />)}
-        {/* les bouts de rouleaux (cercles) dans les casiers */}
+        {/* les bouts de rouleaux : ellipses (vues de 3/4) dans un casier
+            creusé — le croissant sombre en bas-droite donne la profondeur */}
         {[14, 76, 138].map((y) => [...Array(9)].map((_, c) => (
           <g key={`${y}-${c}`} transform={`translate(${-58 + c * 20},${y + 22})`}>
-            <circle r="7" fill="#e6d8b8" stroke="#b09a6a" strokeWidth="1.2" />
-            <circle r="2.2" fill="#8a7a4a" />
+            <ellipse cx="2" cy="1.6" rx="7.6" ry="6.3" fill="#241608" opacity="0.75" />
+            <ellipse rx="7" ry="6" fill="#e6d8b8" stroke="#b09a6a" strokeWidth="1.1" />
+            <ellipse cx="-1.4" cy="-1.4" rx="2" ry="1.6" fill="#f2ead0" opacity="0.5" />
+            <ellipse rx="2.3" ry="1.9" fill="#8a7a4a" />
           </g>
         )))}
         {/* le rouleau qu'on vient de ranger, en évidence (résultat) */}
         {range && (
           <g transform="translate(-58,200)" style={{ animation: "fadein 1s ease-out" }}>
-            <circle r="8" fill="#f2e6c4" stroke="#c8a860" strokeWidth="1.6" style={{ filter: "drop-shadow(0 0 6px #ffd166)" }} />
-            <circle r="2.4" fill="#a83a2c" />
+            <ellipse cx="2" cy="1.6" rx="8.4" ry="6.8" fill="#241608" opacity="0.6" />
+            <ellipse rx="8" ry="6.6" fill="#f2e6c4" stroke="#c8a860" strokeWidth="1.6" style={{ filter: "drop-shadow(0 0 6px #ffd166)" }} />
+            <ellipse rx="2.6" ry="2.1" fill="#a83a2c" />
           </g>
         )}
       </g>

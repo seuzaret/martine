@@ -98,11 +98,24 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
           ) : null}
         </g>
 
-        {/* panier d'olives (récolte) */}
+        {/* panier d'olives (récolte) — vu de 3/4 : corps tressé conique,
+            ouverture elliptique, olives en tas dedans */}
         <g transform="translate(400,492)">
-          <path d="M-20 -8 Q-22 14 0 16 Q22 14 20 -8 Z" fill="#a87a44" />
-          <path d="M-20 -8 q20 -6 40 0" stroke="#7a5230" strokeWidth="2" fill="none" />
-          {[...Array(9)].map((_, k) => <circle key={k} cx={-13 + (k % 5) * 6.5} cy={-6 + Math.floor(k / 5) * 7} r="3" fill="#3a4a22" />)}
+          {/* corps du panier, légèrement évasé */}
+          <path d="M-19 -3 Q-23 16 0 18 Q23 16 19 -3 Z" fill="#a87a44" />
+          <path d="M-19 -3 Q-23 16 0 18 Q23 16 19 -3 Z" fill="#3a2414" opacity="0.18" filter="url(#pf-grain)" />
+          {/* tressage horizontal */}
+          <path d="M-21 3 q21 6 42 0 M-19 10 q19 5 38 0" stroke="#7a5230" strokeWidth="1.4" fill="none" opacity="0.6" />
+          {/* ouverture elliptique (le rebord vu du dessus) */}
+          <ellipse cx="0" cy="-3" rx="20" ry="7.5" fill="#6e4a28" />
+          <ellipse cx="0" cy="-4" rx="17.5" ry="5.8" fill="#4a3418" />
+          {/* les olives en tas dans l'ouverture */}
+          {[[-10, -4], [-3, -6], [4, -6], [11, -4], [-7, -1], [0, -2], [7, -2], [13, -1], [-3, 1], [4, 1], [-1, -9], [6, -9]].map(([x, y], k) => (
+            <g key={k} transform={`translate(${x},${y})`}>
+              <ellipse rx="3.4" ry="3" fill="url(#ja-olive)" />
+              <ellipse cx="-0.9" cy="-0.9" rx="1" ry="0.8" fill="#c2cc9a" opacity="0.6" />
+            </g>
+          ))}
         </g>
 
         {/* LA CABANE À OUTILS : l'épée et le burin y sont accrochés */}
