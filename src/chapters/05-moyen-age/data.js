@@ -38,6 +38,7 @@ const ITEMS = {
   /* fabriqués */
   codex:      { name: "Codex (livre à pages)", emoji: "📕", desc: "Des feuilles pliées et cousues : un LIVRE À PAGES qu'on feuillette. Fini le rouleau — on saute à la page voulue. Mais il est encore nu : il faut l'enluminer." },
   codex_enlumine: { name: "Codex enluminé", emoji: "📖", desc: "Le livre orné à la main : lettrines dorées, rinceaux, petites scènes peintes à l'or et aux couleurs vives. Des mois de travail — un objet de luxe. Reste à le ranger précieusement." },
+  traite_galien: { name: "Traité de médecine de Galien", emoji: "📗", desc: "La copie payée au prix fort : le remède pour le fils du paysan est écrit là-dedans. Encore faut-il savoir le LIRE… Rapporte-le à quelqu'un d'instruit, au château." },
   caracteres: { name: "Caractères mobiles", emoji: "🔡", desc: "Des centaines de petites lettres de plomb, qu'on assemble en mots, puis en pages, puis qu'on démonte pour recommencer." },
 };
 
@@ -48,6 +49,8 @@ const ITEMS = {
 const SCENES = [
   { id: "chateau",   name: "Le château de Charles Bannister", Component: SceneChateau,  nextWhen: ["accord"] },
   { id: "monastere", name: "Le monastère du frère Jorge",      Component: SceneMonastere, nextWhen: ["paye"] },
+  /* RETOUR au château (même décor) : rapporter le remède au prêtre. */
+  { id: "retour",    name: "Retour au château — le remède",   Component: SceneChateau,  nextWhen: ["remis"] },
   { id: "gutenberg", name: "L'atelier de Gutenberg",           Component: SceneGutenberg },
 ];
 
@@ -75,6 +78,11 @@ const RECIPES = [
   /* MESSAGE PERDU : le manuscrit enluminé UNIQUE, des mois de travail,
      part en fumée pour une bougie renversée. */
   { a: "codex_enlumine", b: "flamme", out: "msg_oeuvre", msg: true, perdu: true },
+
+  /* Retour au château : remettre le traité au PRÊTRE (qui sait lire) →
+     le remède est préparé. Le geste ouvre la route vers Gutenberg. */
+  { a: "traite_galien", b: "pretre", out: "remis", gives: [], consume: ["traite_galien"], flag: "remis",
+    line: "Le prêtre ouvre le traité, lit à mi-voix, hoche la tête : « Fièvre chaude… écorce de saule, repos, tisanes. Je sais quoi faire. Cet enfant vivra. » Le savoir a traversé le pays — mais il fallait quelqu'un pour le LIRE." },
 
   /* Gutenberg : les caractères mobiles + la presse */
   { a: "plomb_fondu", b: "moule", out: "caracteres",
@@ -118,7 +126,9 @@ const FACTURE = {
   ],
   euroParLt: 150,
   note: "30 livres tournois, c'était PLUSIEURS ANNÉES de salaire d'un ouvrier — le prix d'une petite maison. Un seul livre valait un trésor : voilà pourquoi le savoir restait réservé aux riches et à l'Église… jusqu'à l'imprimerie.",
-  coins: [10, 5, 1],
+  /* pièces d'époque aux valeurs « pas rondes » : atteindre EXACTEMENT 30
+     demande de combiner (ex. 12 + 12 + 4 + 2, ou 12 + 7 + 7 + 4). */
+  coins: [12, 7, 4, 2],
 };
 
 /* ------------------------------------------------------------
@@ -137,6 +147,7 @@ const HINTS = [
 const NEAR_MISS = [
   { pair: ["parchemin", "rayon"], line: "Ranger une feuille volante sur l'étagère ? Fais-en d'abord un livre : plie, couds, relie." },
   { pair: ["codex", "rayon"], line: "Ranger un codex encore NU parmi les trésors ? Enlumine-le d'abord — or et couleurs — sinon quel manuscrit précieux ?" },
+  { pair: ["traite_galien", "paysan"], line: "Le paysan baisse les yeux : « Pardon, mon bon seigneur… je n'ai fait que porter des pierres et labourer. Je ne sais pas lire une seule ligne. Portez-le au prêtre, lui saura. » — un livre ne sert qu'à qui sait le lire." },
   { pair: ["fil_laine", "aiguille"], line: "Broder sans support ? Il te faut une grande toile de lin à couvrir." },
   { pair: ["caracteres", "flamme"], line: "Approcher tes lettres de plomb de la flamme ? Le plomb fond ! Garde-les pour la presse." },
   { pair: ["plomb_fondu", "presse"], line: "Écraser du plomb fondu à la presse ? Coule-le d'abord en LETTRES dans le moule." },
@@ -226,7 +237,14 @@ const QUETE = [
     bubble: "Voici ta copie du traité de Galien, recopiée et enluminée à la main pendant près d'un an. Mais un livre ne se donne pas, voyageur : règle d'abord ma note. Tu verras ce que coûte le savoir, en ce temps-là.",
     say: "La note de frais brille près du pupitre : ouvre-la, découvre le prix FOU d'un livre médiéval, et paie la somme exacte avec les pièces.",
     attend: "paye",
-    suite: "Payé ! Tu emportes le traité de Galien : le fils du paysan sera soigné. Reste à découvrir la merveille qui va TOUT changer — l'atelier de Gutenberg. Le signal t'y conduit." },
+    suite: "Payé ! Tu empoches le traité de Galien. Retourne au château (le signal t'y ramène) et remets-le au PRÊTRE : lui saura le lire et préparer le remède." },
+
+  /* de retour au château : remettre le traité à quelqu'un qui sait LIRE */
+  { perso: "pretre",
+    bubble: "Tu rapportes le traité de Galien ? Confie-le-moi, mon enfant : je sais lire le latin des médecins. Je vais préparer le remède pour ce petit — encore fallait-il que le livre arrive… et qu'un lettré le lise.",
+    say: "Remets le traité au PRÊTRE : glisse-le sur lui. (Essaie sur le paysan si tu veux : il t'avouera qu'il ne sait pas lire — un livre ne sert qu'à qui sait le déchiffrer.)",
+    attend: "remis",
+    suite: "L'enfant est sauvé ! Un livre, ET quelqu'un pour le lire : voilà comment le savoir agit. À présent, cap sur la merveille qui va tout changer — l'atelier de Gutenberg." },
 
   { perso: "gutenberg", portrait: null,
     bubble: "Bienvenue dans mon atelier ! Regarde cette merveille : avec mes lettres de plomb et ma presse, je vais copier ce livre non pas une fois en un an… mais MILLE fois, tous pareils. Fonds-moi des caractères et actionne la presse.",

@@ -12,8 +12,11 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    À trouver : la toile de lin (au mur) et le fil de laine coloré.
    ============================================================ */
 
-export default function SceneChateau({ collect, action, reveal, made = [], queteQui }) {
+export default function SceneChateau({ collect, action, reveal, made = [], flags = {}, queteQui }) {
   const brode = made.includes("msg_broderie");
+  /* mode LIVRAISON (2e visite) : on a payé le traité et on doit le remettre.
+     Le prêtre et le paysan deviennent des cibles où déposer le livre. */
+  const livraison = flags.paye && !made.includes("remis");
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -287,21 +290,23 @@ export default function SceneChateau({ collect, action, reveal, made = [], quete
           <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
         </g>
       )}
-      <Hotspot cx={352} cy={484} r={34} label="le paysan suppliant" reveal={reveal} onClick={() => action("paysan")} />
+      <Hotspot cx={352} cy={484} r={34} label={livraison ? "donner le traité au paysan" : "le paysan suppliant"} {...(livraison ? { item: "paysan" } : {})} reveal={reveal} onClick={() => action("paysan")} />
       {queteQui === "pretre" && (
         <g transform="translate(658,424)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
           <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
           <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
         </g>
       )}
-      <Hotspot cx={676} cy={476} r={32} label="le prêtre" reveal={reveal} onClick={() => action("pretre")} />
+      <Hotspot cx={676} cy={476} r={32} label={livraison ? "remettre le traité au prêtre" : "le prêtre"} {...(livraison ? { item: "pretre" } : {})} reveal={reveal} onClick={() => action("pretre")} />
 
       {/* la toile de lin (au mur) — seulement tant que la broderie n'est pas faite */}
       {!brode && (
         <Hotspot cx={500} cy={150} r={92} label="la toile de lin (à broder)" item="toile_lin" reveal={reveal} onClick={() => collect("toile_lin")} />
       )}
-      {/* le fil de laine coloré */}
-      <Hotspot cx={168} cy={508} r={40} label="fil de laine coloré" item="fil_laine" reveal={reveal} onClick={() => collect("fil_laine")} />
+      {/* le fil de laine coloré (seulement tant que la broderie n'est pas faite) */}
+      {!brode && (
+        <Hotspot cx={168} cy={508} r={40} label="fil de laine coloré" item="fil_laine" reveal={reveal} onClick={() => collect("fil_laine")} />
+      )}
       {/* l'épave de MARTINE */}
       <Hotspot cx={918} cy={510} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
     </svg>

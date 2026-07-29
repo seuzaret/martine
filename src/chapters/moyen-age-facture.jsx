@@ -91,7 +91,7 @@ export function FactureGame({ facture, onClose, onWin }) {
           <div style={{ marginTop: 12 }}>
             <div style={{ background: "#101827", border: "1px solid #2a3648", borderRadius: 12, padding: "14px 16px" }}>
               <p style={{ fontSize: 15, lineHeight: 1.65, color: "#e8eef5", margin: 0 }}>
-                « Payé ! Tu tiens la copie du traité de Galien — le remède pour le fils du paysan. Mais tu as vu le prix : une FORTUNE, une année de travail d'un moine, de l'or pour les lettres. Voilà pourquoi, au Moyen Âge, le savoir est un luxe : réservé aux seigneurs, aux évêques, aux riches. Un seul livre, un seul exemplaire… Il faudrait pouvoir en faire mille d'un coup, et pour trois fois rien. Justement, un certain Gutenberg s'y emploie. » — MARTINE
+                « Payé ! Tu empoches la copie du traité de Galien — le remède est dedans. Mais tu as vu le prix : une FORTUNE, une année de travail d'un moine, de l'or pour les lettres. Voilà pourquoi, au Moyen Âge, le savoir est un luxe : réservé aux seigneurs, aux évêques, aux riches. Maintenant, rapporte vite ce livre au château et remets-le au PRÊTRE — car un livre ne soigne personne tant que quelqu'un ne sait pas le LIRE. » — MARTINE
               </p>
             </div>
             <p style={{ textAlign: "center", margin: "12px 0 0", color: "#7fe0a8", fontSize: 13, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>

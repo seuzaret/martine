@@ -1242,7 +1242,8 @@ export default function App() {
       )}
 
       {modal?.type === "facture" && (
-        <FactureGame facture={chapter.facture} onClose={() => setModal(null)} onWin={() => grantFlag("paye")} />
+        <FactureGame facture={chapter.facture} onClose={() => setModal(null)}
+          onWin={() => { grantFlag("paye"); grantItem("traite_galien"); }} />
       )}
 
       {modal?.type === "carte" && (
