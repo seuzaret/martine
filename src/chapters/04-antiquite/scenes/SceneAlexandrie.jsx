@@ -108,22 +108,31 @@ export default function SceneBibliotheque({ collect, action, reveal, made = [] }
         <rect x="-70" y="0" width="180" height="250" fill="#6e4c2e" />
         <rect x="-70" y="0" width="180" height="250" fill="#3a2414" opacity="0.3" filter="url(#bi-grain)" />
         {[0, 62, 124, 186].map((y, r) => <rect key={r} x="-70" y={y} width="180" height="10" fill="#5a3f24" />)}
-        {/* les bouts de rouleaux : ellipses (vues de 3/4) dans un casier
-            creusé — le croissant sombre en bas-droite donne la profondeur */}
+        {/* les rouleaux : de vrais petits CYLINDRES couchés, inclinés dans le
+            MÊME sens que la profondeur de l'armoire (−43°) — corps du rouleau
+            + embout enroulé (spirale) vers le lecteur + ombre au fond du casier */}
         {[14, 76, 138].map((y) => [...Array(9)].map((_, c) => (
-          <g key={`${y}-${c}`} transform={`translate(${-58 + c * 20},${y + 22})`}>
-            <ellipse cx="2" cy="1.6" rx="7.6" ry="6.3" fill="#241608" opacity="0.75" />
-            <ellipse rx="7" ry="6" fill="#e6d8b8" stroke="#b09a6a" strokeWidth="1.1" />
-            <ellipse cx="-1.4" cy="-1.4" rx="2" ry="1.6" fill="#f2ead0" opacity="0.5" />
-            <ellipse rx="2.3" ry="1.9" fill="#8a7a4a" />
+          <g key={`${y}-${c}`} transform={`translate(${-58 + c * 20},${y + 22}) rotate(-43)`}>
+            {/* ombre portée au fond du casier (donne la profondeur) */}
+            <rect x="0" y="-3.6" width="12" height="8.4" rx="3" fill="#1c1006" opacity="0.5" />
+            {/* corps cylindrique du rouleau (le parchemin enroulé) */}
+            <rect x="-2" y="-4.4" width="12" height="8.8" rx="3.5" fill="#e2d3ac" />
+            <rect x="-2" y="-4.4" width="12" height="8.8" rx="3.5" fill="none" stroke="#b09a6a" strokeWidth="0.7" opacity="0.5" />
+            {/* lignes = épaisseur du parchemin roulé */}
+            <path d="M3 -4.4 v8.8 M6.5 -4.4 v8.8" stroke="#b09a6a" strokeWidth="0.7" opacity="0.4" />
+            {/* l'embout enroulé, face au lecteur (ellipse + spirale) */}
+            <ellipse cx="-2" cy="0" rx="2.3" ry="4.6" fill="#efe3c6" stroke="#b09a6a" strokeWidth="1" />
+            <ellipse cx="-2" cy="0" rx="1" ry="2" fill="#8a7a4a" />
           </g>
         )))}
         {/* le rouleau qu'on vient de ranger, en évidence (résultat) */}
         {range && (
-          <g transform="translate(-58,200)" style={{ animation: "fadein 1s ease-out" }}>
-            <ellipse cx="2" cy="1.6" rx="8.4" ry="6.8" fill="#241608" opacity="0.6" />
-            <ellipse rx="8" ry="6.6" fill="#f2e6c4" stroke="#c8a860" strokeWidth="1.6" style={{ filter: "drop-shadow(0 0 6px #ffd166)" }} />
-            <ellipse rx="2.6" ry="2.1" fill="#a83a2c" />
+          <g transform="translate(-58,200) rotate(-43)" style={{ animation: "fadein 1s ease-out" }}>
+            <rect x="0" y="-3.8" width="13" height="9" rx="3" fill="#1c1006" opacity="0.45" />
+            <rect x="-2" y="-4.8" width="13" height="9.6" rx="4" fill="#f2e6c4" style={{ filter: "drop-shadow(0 0 6px #ffd166)" }} />
+            <path d="M3 -4.8 v9.6 M7 -4.8 v9.6" stroke="#c8a860" strokeWidth="0.7" opacity="0.55" />
+            <ellipse cx="-2" cy="0" rx="2.5" ry="4.9" fill="#f6ecce" stroke="#c8a860" strokeWidth="1.3" />
+            <ellipse cx="-2" cy="0" rx="1.1" ry="2.1" fill="#a83a2c" />
           </g>
         )}
       </g>
