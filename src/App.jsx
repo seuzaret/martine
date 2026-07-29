@@ -15,6 +15,7 @@ import { ILLUSTRATIONS } from "./chapters/illustrations.jsx";
 import { AlphabetGame } from "./chapters/alphabet.jsx";
 import { TabletteGame } from "./chapters/mesopotamie-tablette.jsx";
 import { CartoucheGame } from "./chapters/egypte-cartouche.jsx";
+import { FactureGame } from "./chapters/moyen-age-facture.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 
@@ -444,6 +445,15 @@ export default function App() {
     setInv((v) => (v.includes(id) ? v : [...v, id]));
     flash(); playSfx("craft");
     say(`✨ Tu as gagné : ${it.emoji} ${it.name}. ${it.desc}`, "content");
+  };
+
+  /* Poser un DRAPEAU d'événement franchi (ex. « paye » : la note du
+     copiste réglée). On l'inscrit AUSSI dans `made` car les jalons de
+     navigation (nextWhen) et de quête (attend) le cherchent là. */
+  const grantFlag = (id) => {
+    setMade((v) => (v.includes(id) ? v : [...v, id]));
+    setFlags((f) => ({ ...f, [id]: true }));
+    flash(); playSfx("message");
   };
 
   const doReveal = () => { setReveal(true); setTimeout(() => setReveal(false), 2200); };
@@ -1223,6 +1233,10 @@ export default function App() {
 
       {modal?.type === "cartouche" && (
         <CartoucheGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_hieroglyphes")} />
+      )}
+
+      {modal?.type === "facture" && (
+        <FactureGame facture={chapter.facture} onClose={() => setModal(null)} onWin={() => grantFlag("paye")} />
       )}
 
       {modal?.type === "carte" && (

@@ -2,14 +2,18 @@ import Hotspot from "../../../engine/Hotspot.jsx";
 import { PLayer } from "../../../engine/Parallax.jsx";
 
 /* ============================================================
-   CHAPITRE 5 — Tableau : le scriptorium (tableau de départ)
-   Peinture fine — pénombre chaude de bougies, voûtes et pierre,
-   fenêtre en ogive, un moine copiste penché sur une enluminure,
-   parchemins et outils de reliure. À trouver : parchemin,
-   aiguille & fil, le moine, la flamme.
+   CHAPITRE 5 — Tableau 2 : le monastère du frère Jorge
+   Peinture fine — pénombre chaude d'un scriptorium : voûtes,
+   fenêtre en ogive, une grande ARMOIRE À MANUSCRITS (les
+   rayonnages), le frère Jorge penché sur son pupitre à la bougie.
+   On assemble un codex (parchemin + aiguille), on le range aux
+   rayonnages (→ manuscrit enluminé)… ou on l'approche trop de la
+   flamme (→ œuvre perdue). Puis Jorge présente sa NOTE DE FRAIS.
    ============================================================ */
 
-export default function SceneScriptorium({ collect, action, reveal, made = [] }) {
+export default function SceneMonastere({ collect, action, reveal, made = [], flags = {}, queteQui }) {
+  const manuscrit = made.includes("msg_manuscrit");
+  const factureDue = manuscrit && !flags.paye;
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -31,32 +35,29 @@ export default function SceneScriptorium({ collect, action, reveal, made = [] })
 
       {/* ═══ couche lointaine : voûtes, fenêtre en ogive ═══ */}
       <PLayer depth={1}>
-        {/* arcs de la voûte */}
         {[180, 500, 820].map((x, i) => (
           <path key={i} d={`M${x - 130} 200 Q${x} 40 ${x + 130} 200`} fill="none" stroke="#3a322a" strokeWidth="16" opacity="0.7" />
         ))}
-        {/* grande fenêtre en ogive (lumière froide) */}
         <g transform="translate(500,60)">
           <path d="M-58 200 L-58 40 Q0 -30 58 40 L58 200 Z" fill="url(#sc-win)" />
           <path d="M-58 200 L-58 40 Q0 -30 58 40 L58 200 Z" fill="none" stroke="#2c2620" strokeWidth="8" />
-          {/* meneau + petits carreaux */}
           <path d="M0 200 V-10 M-58 90 H58 M-58 140 H58" stroke="#2c2620" strokeWidth="4" />
           <path d="M-30 200 V30 M30 200 V30" stroke="#3a322a" strokeWidth="2.5" opacity="0.7" />
         </g>
-        {/* rai de lumière au sol depuis la fenêtre */}
         <path d="M470 260 L530 260 L580 420 L420 420 Z" fill="#cdd4c0" opacity="0.12" filter="url(#sc-blur)" />
       </PLayer>
 
-      {/* ═══ couche intermédiaire : étagères de livres, pupitres ═══ */}
+      {/* ═══ couche intermédiaire : LES RAYONNAGES, chandelier ═══ */}
       <PLayer depth={2}>
-        {/* armoire à livres (gauche) */}
+        {/* la grande ARMOIRE À MANUSCRITS = les rayonnages (support « rayon ») */}
         <g transform="translate(120,300)">
-          <rect x="-80" y="-120" width="160" height="220" fill="#3a2c1e" />
-          <rect x="-80" y="-120" width="160" height="220" fill="#1c1208" opacity="0.35" filter="url(#sc-grain)" />
+          <rect x="-84" y="-124" width="168" height="228" fill="#3a2c1e" />
+          <rect x="-84" y="-124" width="168" height="228" fill="#1c1208" opacity="0.35" filter="url(#sc-grain)" />
+          <rect x="-84" y="-124" width="168" height="228" fill="none" stroke="#241608" strokeWidth="4" />
           {[-80, -30, 20, 70].map((y, r) => (
             <g key={r}>
-              <rect x="-76" y={y + 40} width="152" height="6" fill="#241608" />
-              {[-64, -44, -24, -4, 16, 36, 56].map((x, c) => (
+              <rect x="-78" y={y + 40} width="156" height="6" fill="#241608" />
+              {[-66, -46, -26, -6, 14, 34, 54].map((x, c) => (
                 <rect key={c} x={x} y={y} width="14" height="40" rx="1.5" fill={["#7a3a2a", "#5a4a2e", "#3a5236", "#6a5230"][(r + c) % 4]} />
               ))}
             </g>
@@ -77,41 +78,38 @@ export default function SceneScriptorium({ collect, action, reveal, made = [] })
         </g>
       </PLayer>
 
-      {/* ═══ premier plan : sol, pupitre du copiste, parchemins ═══ */}
+      {/* ═══ premier plan : sol, Jorge au pupitre, parchemins, note ═══ */}
       <PLayer depth={3}>
         <rect y="400" width="1000" height="160" fill="url(#sc-floor)" />
         <rect y="402" width="1000" height="158" fill="#1c1208" opacity="0.4" filter="url(#sc-grain)" />
-        {/* dalles */}
         <path d="M0 452 h1000 M0 510 h1000 M280 410 v150 M600 410 v150 M820 410 v150" stroke="#241a12" strokeWidth="1.6" opacity="0.5" />
 
         {/* halo de la bougie du copiste */}
         <ellipse cx="640" cy="450" rx="200" ry="110" fill="url(#sc-candle)" style={{ animation: "glow 2.6s ease-in-out infinite" }} />
 
-        {/* PUPITRE incliné + LE MOINE copiste */}
+        {/* LE FRÈRE JORGE au pupitre : coule brune, tonsure, penché */}
         <g transform="translate(560,470)">
-          {/* tabouret + moine en robe */}
           <ellipse cx="0" cy="34" rx="30" ry="7" fill="#160f08" opacity="0.6" />
-          <path d="M-20 6 Q-26 -22 0 -26 Q26 -22 20 6 L16 32 L-16 32 Z" fill="#4a3f30" />
-          <path d="M-20 6 Q0 12 20 6 L17 18 Q0 24 -17 18 Z" fill="#3a3226" />
-          {/* capuche + tonsure */}
-          <path d="M-12 -22 Q0 -34 12 -22 Q14 -12 0 -10 Q-14 -12 -12 -22 Z" fill="#5a4c3a" />
-          <circle cx="0" cy="-22" r="7" fill="#c8a882" />
-          <path d="M-7 -24 q7 -3 14 0" stroke="#8a6a48" strokeWidth="2" fill="none" opacity="0.6" />
+          <path d="M-20 6 Q-26 -22 0 -26 Q26 -22 20 6 L16 32 L-16 32 Z" fill="#5a4632" />
+          <path d="M-20 6 Q0 12 20 6 L17 18 Q0 24 -17 18 Z" fill="#463726" />
+          {/* corde à la taille */}
+          <path d="M-16 4 Q0 12 16 4" stroke="#c8b488" strokeWidth="2" fill="none" opacity="0.7" />
+          {/* tête : couronne de cheveux + tonsure rasée */}
+          <circle cx="0" cy="-22" r="8" fill="#c8a882" />
+          <path d="M-8 -24 Q-9 -32 0 -33 Q9 -32 8 -24 Q4 -28 0 -28 Q-4 -28 -8 -24 Z" fill="#6a5238" />
           {/* bras qui écrit */}
-          <path d="M14 -6 q14 4 18 14" stroke="#4a3f30" strokeWidth="6" fill="none" strokeLinecap="round" />
+          <path d="M14 -6 q14 4 18 14" stroke="#5a4632" strokeWidth="6" fill="none" strokeLinecap="round" />
         </g>
-        {/* le pupitre avec la page enluminée + bougie */}
+        {/* le pupitre + page enluminée + bougie (la flamme = support) */}
         <g transform="translate(620,486)">
           <path d="M-40 20 L40 20 L48 -6 L-32 -6 Z" fill="#5a3f24" />
           <rect x="-40" y="20" width="8" height="24" fill="#3a2814" /><rect x="34" y="20" width="8" height="24" fill="#3a2814" />
-          {/* page avec une lettrine dorée */}
           <g transform="translate(4,6)">
             <rect x="-30" y="-14" width="56" height="22" rx="1" fill="#efe6ce" transform="skewX(-14)" />
             <rect x="-24" y="-10" width="12" height="14" fill="#a8202a" transform="skewX(-14)" />
             <rect x="-22" y="-8" width="8" height="10" fill="#e0b040" transform="skewX(-14)" />
             <path d="M-6 -8 h22 M-8 -3 h22 M-10 2 h20" stroke="#5a4a3a" strokeWidth="1" opacity="0.7" transform="skewX(-14)" />
           </g>
-          {/* bougie sur le coin du pupitre */}
           <g transform="translate(40,-6)">
             <rect x="-3" y="-16" width="6" height="16" fill="#e8dcc0" />
             <g style={{ transformOrigin: "0px -18px", transformBox: "view-box", animation: "flick 0.85s ease-in-out infinite" }}>
@@ -121,9 +119,8 @@ export default function SceneScriptorium({ collect, action, reveal, made = [] })
           </g>
         </g>
 
-        {/* PILE DE PARCHEMINS + outils de reliure (aiguille & fil) */}
+        {/* PILE DE PARCHEMINS (feuilles à plier) */}
         <g transform="translate(220,506)">
-          {/* feuilles empilées */}
           <g transform="rotate(-3)">
             <rect x="-40" y="-8" width="76" height="26" rx="1" fill="#e0d6bc" />
             <rect x="-44" y="-3" width="76" height="26" rx="1" fill="#e8dcc4" />
@@ -131,11 +128,10 @@ export default function SceneScriptorium({ collect, action, reveal, made = [] })
             <path d="M-34 12 h56 M-34 18 h44" stroke="#c9b892" strokeWidth="1" opacity="0.6" />
           </g>
         </g>
-        {/* l'aiguille & le fil, sur un cahier plié */}
+        {/* l'aiguille & le fil à relier, sur un cahier plié */}
         <g transform="translate(320,514)">
           <path d="M-24 4 L24 4 L20 -8 L-20 -8 Z" fill="#c9b892" />
           <path d="M-20 -8 L20 -8 M0 -8 L0 4" stroke="#8a7a56" strokeWidth="1.2" opacity="0.7" />
-          {/* aiguille + fil qui traverse */}
           <g transform="translate(6,-2) rotate(-30)">
             <rect x="-1" y="-14" width="2" height="22" rx="1" fill="#cfcfd6" />
             <circle cx="0" cy="-14" r="1.6" fill="#cfcfd6" />
@@ -154,9 +150,8 @@ export default function SceneScriptorium({ collect, action, reveal, made = [] })
           <path d="M8 -20 q6 -8 13 -6" stroke="#8a94a8" strokeWidth="2.3" fill="none" strokeLinecap="round" />
         </g>
 
-        {/* RÉSULTAT (msg_manuscrit) : la page ENLUMINÉE — lettrine ornée d'or
-            et de rouge, rinceaux, une petite miniature. Des mois de travail. */}
-        {made.includes("msg_manuscrit") && (
+        {/* RÉSULTAT (msg_manuscrit) : la page ENLUMINÉE rangée près du pupitre */}
+        {manuscrit && (
           <g transform="translate(440,500)" style={{ animation: "fadein 1s ease-out" }}>
             <ellipse cx="0" cy="46" rx="34" ry="8" fill="#100a06" opacity="0.5" />
             <rect x="-30" y="-40" width="60" height="82" rx="2" fill="#efe4c8" />
@@ -166,15 +161,36 @@ export default function SceneScriptorium({ collect, action, reveal, made = [] })
             {[[-25, -24, "#a83028"], [-25, -4, "#2a6ab0"], [-25, 16, "#e0b040"], [25, -14, "#a83028"], [25, 12, "#2a6ab0"]].map(([x, y, c], i) => (
               <circle key={i} cx={x} cy={y} r="2.4" fill={c} />
             ))}
-            {/* la lettrine ornée */}
             <rect x="-22" y="-31" width="17" height="19" fill="#a83028" />
             <rect x="-22" y="-31" width="17" height="19" fill="none" stroke="#e0b040" strokeWidth="1.4" />
-            <text x="-13.5" y="-16" textAnchor="middle" fontSize="15" fill="#f0e4c4" fontFamily="Palatino, Georgia, serif" style={{ fontWeight: 700 }}>D</text>
-            {/* lignes de texte + petite miniature */}
+            <text x="-13.5" y="-16" textAnchor="middle" fontSize="15" fill="#f0e4c4" fontFamily="Palatino, Georgia, serif" style={{ fontWeight: 700 }}>G</text>
             <path d="M-3 -28 h25 M-3 -22 h22 M-3 -16 h25 M-20 -6 h42 M-20 0 h38 M-20 6 h42 M-20 24 h40 M-20 30 h32" stroke="#5a4632" strokeWidth="1.2" opacity="0.7" />
             <rect x="2" y="12" width="18" height="14" fill="#2a5a7a" />
             <rect x="2" y="12" width="18" height="14" fill="none" stroke="#e0b040" strokeWidth="1" />
             <circle cx="11" cy="18" r="3" fill="#e0b040" />
+          </g>
+        )}
+
+        {/* LA NOTE DE FRAIS + bourse — apparaît une fois le manuscrit prêt,
+            tant qu'on n'a pas payé. Un rouleau scellé et quelques pièces. */}
+        {factureDue && (
+          <g transform="translate(748,506)" style={{ animation: "fadein 0.8s ease-out" }}>
+            <ellipse cx="0" cy="14" rx="34" ry="7" fill="#100a06" opacity="0.5" />
+            {/* halo d'appel */}
+            <circle cx="-4" cy="-6" r="34" fill="#ffd166" opacity="0.14" style={{ animation: "glow 2.4s ease-in-out infinite" }} />
+            {/* le rouleau (la note) */}
+            <g transform="rotate(-8)">
+              <rect x="-30" y="-14" width="52" height="26" rx="3" fill="#efe6ce" />
+              <path d="M-30 -14 q-6 13 0 26 M22 -14 q6 13 0 26" fill="#e0d4b4" />
+              <path d="M-22 -6 h34 M-22 0 h30 M-22 6 h34" stroke="#7a5a30" strokeWidth="1.2" opacity="0.7" />
+              {/* sceau de cire rouge + ruban */}
+              <circle cx="-4" cy="16" r="6" fill="#a8202a" />
+              <path d="M-4 16 l-6 10 M-4 16 l6 10" stroke="#a8202a" strokeWidth="2" />
+            </g>
+            {/* deux pièces d'or à côté */}
+            {[[26, 8], [34, 12]].map(([x, y], i) => (
+              <g key={i}><circle cx={x} cy={y} r="7" fill="#e6c25a" stroke="#a8801f" strokeWidth="1.2" /><text x={x} y={y + 3} textAnchor="middle" fontSize="6" fill="#7a5a10" fontFamily="ui-monospace,monospace">lt</text></g>
+            ))}
           </g>
         )}
       </PLayer>
@@ -182,23 +198,32 @@ export default function SceneScriptorium({ collect, action, reveal, made = [] })
       {/* voile de grain global */}
       <rect width="1000" height="560" fill="#100a06" opacity="0.1" style={{ pointerEvents: "none" }} />
 
-      {/* zones cliquables */}
-      {/* le « ? » du moine copiste : huit mois pour UN livre… et une bougie */}
-      {!made.includes("msg_manuscrit") && (
+      {/* ═══ zones cliquables ═══ */}
+      {/* le « ? » du frère Jorge (tant qu'il guide, AVANT le manuscrit ;
+          ensuite c'est la note de frais qui appelle l'attention) */}
+      {queteQui === "jorge" && !manuscrit && (
         <>
           <g transform="translate(552,346)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
             <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
           </g>
-          <Hotspot cx={572} cy={356} r={26} label="parler au moine" reveal={reveal} onClick={() => action("copiste")} />
+          <Hotspot cx={572} cy={356} r={28} label="parler au frère Jorge" reveal={reveal} onClick={() => action("jorge")} />
         </>
       )}
 
-      <Hotspot cx={220} cy={504} r={48} label="parchemin" item="parchemin" reveal={reveal} onClick={() => collect("parchemin")} />
-      <Hotspot cx={320} cy={510} r={34} label="aiguille & fil" item="aiguille" reveal={reveal} onClick={() => collect("aiguille")} />
-      <Hotspot cx={560} cy={456} r={46} label="le moine" item="moine" reveal={reveal} onClick={() => collect("moine")} />
-      <Hotspot cx={660} cy={470} r={28} label="flamme" item="flamme" reveal={reveal} onClick={() => collect("flamme")} />
-      <Hotspot cx={900} cy={502} r={34} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
+      {/* la NOTE DE FRAIS à régler (ouvre la facture + le paiement) */}
+      {factureDue && (
+        <Hotspot cx={744} cy={500} r={40} label="la note de frais (à régler)" reveal={reveal} onClick={() => action("facture")} />
+      )}
+
+      {/* les supports (cyan) : les rayonnages et la flamme */}
+      <Hotspot cx={120} cy={300} r={90} label="les rayonnages" item="rayon" reveal={reveal} onClick={() => collect("rayon")} />
+      <Hotspot cx={660} cy={470} r={26} label="la flamme de la bougie" item="flamme" reveal={reveal} onClick={() => collect("flamme")} />
+
+      {/* les éléments à ramasser */}
+      <Hotspot cx={220} cy={504} r={46} label="feuilles de parchemin" item="parchemin" reveal={reveal} onClick={() => collect("parchemin")} />
+      <Hotspot cx={320} cy={510} r={34} label="aiguille & fil à relier" item="aiguille" reveal={reveal} onClick={() => collect("aiguille")} />
+      <Hotspot cx={900} cy={502} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
     </svg>
   );
 }
