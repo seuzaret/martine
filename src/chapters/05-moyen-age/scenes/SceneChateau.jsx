@@ -279,8 +279,21 @@ export default function SceneChateau({ collect, action, reveal, made = [], quete
         </>
       )}
 
-      {/* le paysan et le prêtre : le contexte de la quête de Galien */}
+      {/* le paysan et le prêtre : le contexte de la quête de Galien.
+          Un « ? » doré apparaît sur celui dont c'est le tour dans la quête. */}
+      {queteQui === "paysan" && (
+        <g transform="translate(334,430)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+          <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
+          <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
+        </g>
+      )}
       <Hotspot cx={352} cy={484} r={34} label="le paysan suppliant" reveal={reveal} onClick={() => action("paysan")} />
+      {queteQui === "pretre" && (
+        <g transform="translate(658,424)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+          <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
+          <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
+        </g>
+      )}
       <Hotspot cx={676} cy={476} r={32} label="le prêtre" reveal={reveal} onClick={() => action("pretre")} />
 
       {/* la toile de lin (au mur) — seulement tant que la broderie n'est pas faite */}

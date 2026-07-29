@@ -378,7 +378,13 @@ export default function App() {
       bubbleText = step.bubble ?? act.bubble;
       sayText = step.say ?? act.say;
       mood = step.mood ?? act.mood;
-      if (!step.attend) setQuete((q) => q + 1);
+      if (!step.attend) {
+        setQuete((q) => q + 1);
+        /* une étape peut OCTROYER un drapeau en s'achevant (ex. l'accord
+           du seigneur qui remet la bourse) → jalon de navigation. */
+        if (step.grant) grantFlag(step.grant);
+        if (step.suite) setTimeout(() => say(`➜ ${step.suite}`), 1400);
+      }
     }
     /* un personnage qui a des paroles propres (`bubble`) les affiche en
        phylactère à côté de lui (ancré à la dernière position cliquée) ;
@@ -1189,7 +1195,7 @@ export default function App() {
                 </div>
                 {/* fermer = avancer si l'étape n'a pas de tâche à accomplir ;
                     sinon on referme simplement, et MARTINE donne son indice */}
-                <button onClick={() => { setPortraitOpen(false); if (!st.attend) setQuete((q) => q + 1); if (st.say) say(st.say, st.mood); }}
+                <button onClick={() => { setPortraitOpen(false); if (!st.attend) { setQuete((q) => q + 1); if (st.grant) grantFlag(st.grant); if (st.suite) setTimeout(() => say(`➜ ${st.suite}`), 1400); } if (st.say) say(st.say, st.mood); }}
                   style={{ marginTop: 14, width: "100%", background: "#e8934a", color: "#1a0e02", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer", fontSize: 15, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
                   Continuer
                 </button>

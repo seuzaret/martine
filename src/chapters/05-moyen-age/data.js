@@ -44,7 +44,7 @@ const ITEMS = {
    nextWhen : ce qu'il faut avoir fait pour PARTIR au lieu suivant.
    ------------------------------------------------------------ */
 const SCENES = [
-  { id: "chateau",   name: "Le château de Charles Bannister", Component: SceneChateau,  nextWhen: ["msg_broderie"] },
+  { id: "chateau",   name: "Le château de Charles Bannister", Component: SceneChateau,  nextWhen: ["accord"] },
   { id: "monastere", name: "Le monastère du frère Jorge",      Component: SceneMonastere, nextWhen: ["paye"] },
   { id: "gutenberg", name: "L'atelier de Gutenberg",           Component: SceneGutenberg },
 ];
@@ -163,13 +163,16 @@ const ACTIONS = {
     bubble: "Un moine met un an à copier un livre, et y glisse des fautes. Moi, j'en veux MILLE, tous pareils ! Il me faut des lettres SÉPARÉES, qu'on range et qu'on réutilise.",
     say: "Ça, c'est LA grande idée : les caractères mobiles. Fonds-lui des lettres de plomb, et donne-lui une presse." },
 
-  /* le paysan et le prêtre, devant le trône (contexte de la quête de Galien) */
+  /* le paysan et le prêtre, devant le trône (contexte de la quête de Galien).
+     Ces répliques par DÉFAUT servent HORS séquence de quête ; en cours de
+     quête, ce sont les bulles de QUETE qui priment. Le prêtre, tant qu'on
+     n'a pas d'abord écouté le paysan, ne fait qu'accueillir poliment. */
   paysan: { mood: "vexe",
-    bubble: "Pitié, mon seigneur ! Mon fils brûle de fièvre. Le médecin est parti soigner les pestiférés… Où trouver un remède ?",
+    bubble: "Pitié ! Mon fils brûle de fièvre. Le médecin est parti soigner les pestiférés… Où trouver un remède ?",
     say: "La peste vide les villages, et les médecins manquent. Le savoir qui sauve est enfermé dans de rares livres." },
   pretre: { mood: "neutre",
-    bubble: "Le savoir des médecins anciens — Galien, Hippocrate — dort dans les livres des monastères. Le seigneur en a justement commandé une copie au frère Jorge. Va la chercher… mais prépare ta bourse.",
-    say: "Le remède existe, écrit noir sur blanc dans un traité de Galien. Mais un livre coûte une fortune : direction le monastère." },
+    bubble: "Bienvenue en ce château, étranger. La paix soit avec toi.",
+    say: "Le prêtre t'accueille poliment. Écoute d'abord ce paysan agenouillé devant le trône : il a une requête pressante." },
 
   /* ouvre la FACTURE + le jeu de paiement (quand le codex/manuscrit est prêt) */
   facture: { modal: "facture" },
@@ -183,7 +186,28 @@ const QUETE = [
     bubble: "Approche, l'étranger ! Je suis Charles Bannister, seigneur de ces terres. Aide-moi à tenir mon château et tu seras des nôtres. Pour commencer : je veux que mes exploits guerriers soient racontés à tous, sur une grande tenture — que chacun sache qui je suis, même ceux qui ne lisent pas.",
     say: "Un seigneur qui veut sa gloire en images : la BD géante de l'époque, façon broderie de Bayeux. Fil de laine coloré + la grande toile de lin, au fond de la salle.",
     attend: "msg_broderie",
-    suite: "Superbe tenture ! Mais écoute ce paysan agenouillé : la peste brûle son fils, et le médecin est parti soigner les pestiférés. Le remède dort dans un traité de Galien que j'ai fait copier au monastère. Va le chercher chez le frère Jorge — et prépare ta bourse, un livre ne se donne pas. Le signal t'y mènera." },
+    suite: "Superbe tenture ! Maintenant, écoute ce paysan agenouillé devant mon trône — il te supplie." },
+
+  /* le paysan supplie (clic → on avance) */
+  { perso: "paysan",
+    bubble: "Pitié, noble étranger ! Mon petit garçon brûle de fièvre, la peste le prend. Notre médecin est parti soigner d'autres malades… Sans remède, il va mourir. Aide-moi, je t'en supplie !",
+    say: "Un enfant malade, aucun médecin disponible. Le remède existe pourtant — écrit dans un livre. Va voir ce que le prêtre en sait.",
+    suite: "Écoute à présent le prêtre : lui sait où trouver le savoir des médecins." },
+
+  /* le prêtre oriente vers Galien (seulement à SON tour ; hors tour, il ne
+     fait qu'accueillir — voir ACTIONS.pretre) */
+  { perso: "pretre",
+    bubble: "Le savoir des médecins anciens — Galien, Hippocrate — dort dans les livres des monastères. Le seigneur en a justement commandé une copie au frère Jorge. Il faut aller la chercher… mais un tel livre coûte une fortune : il faudra la bourse du seigneur.",
+    say: "Le remède est écrit noir sur blanc dans un traité de Galien, au monastère. Reste à obtenir de quoi le payer : retourne voir le seigneur.",
+    suite: "Retourne voir le seigneur Bannister : c'est lui qui décide, et lui qui tient la bourse." },
+
+  /* le seigneur donne son accord ET la bourse → drapeau « accord » qui
+     ouvre le départ vers le monastère */
+  { perso: "charles", portrait: "charles",
+    bubble: "Ainsi mon prêtre t'a tout dit. Ce paysan est des miens, je ne le laisserai pas perdre son fils. Voici ma bourse — trente livres tournois, une petite fortune, mais la vie d'un enfant n'a pas de prix. Va au monastère du frère Jorge, rapporte la copie de Galien, et paie-le rubis sur l'ongle.",
+    say: "Le seigneur te confie sa bourse : c'est LUI qui finance le livre. Direction le monastère du frère Jorge (le signal t'y mène) — tu paieras là-bas.",
+    grant: "accord",
+    suite: "Tu as l'accord et l'or du seigneur ! File au monastère du frère Jorge chercher — et payer — le traité de Galien." },
 
   { perso: "jorge", portrait: "jorge",
     bubble: "Bienvenue au monastère, voyageur. Tu viens pour la commande du seigneur ? Elle sera prête — mais d'abord, aide-moi à assembler ce codex : plie les feuilles de parchemin, couds-les, et range-le aux rayonnages. On garde ainsi le savoir du monde, une page à la fois.",
