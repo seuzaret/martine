@@ -100,6 +100,40 @@ export default function SceneGutenberg({ collect, action, reveal, made = [] }) {
           </g>
         </g>
 
+        {/* LA CUVE DU PAPETIER (support) : eau + pâte de chiffons, un tamis */}
+        <g transform="translate(110,490)">
+          <ellipse cx="0" cy="34" rx="42" ry="8" fill="#160f08" opacity="0.5" />
+          {/* cuve en bois */}
+          <path d="M-34 -12 L34 -12 L28 30 L-28 30 Z" fill="#6e4c2e" />
+          <path d="M-34 -12 L34 -12 L28 30 L-28 30 Z" fill="#2a1c10" opacity="0.28" filter="url(#gt-grain)" />
+          <path d="M-20 -12 L-17 30 M0 -12 v42 M20 -12 L17 30" stroke="#5a3f24" strokeWidth="1.2" opacity="0.5" />
+          <path d="M-33 -1 L33 -1 M-31 15 L31 15" stroke="#4a3218" strokeWidth="2" />
+          {/* surface d'eau + pâte de chiffon qui flotte */}
+          <ellipse cx="0" cy="-12" rx="33" ry="8.5" fill="#9aa29a" />
+          <ellipse cx="0" cy="-12" rx="33" ry="8.5" fill="#d8dcd2" opacity="0.28" />
+          {[[-14, -13], [6, -11], [16, -14], [-4, -10], [10, -13]].map(([x, y], i) => (
+            <ellipse key={i} cx={x} cy={y} rx="3.2" ry="1.5" fill="#eef0e8" opacity="0.8" />
+          ))}
+          {/* le tamis (forme) appuyé sur le bord */}
+          <g transform="translate(30,2) rotate(16)">
+            <rect x="-4" y="-30" width="30" height="42" rx="2" fill="#8a6a3a" />
+            <rect x="0" y="-26" width="22" height="34" fill="#cabf90" />
+            <path d="M0 -18 h22 M0 -10 h22 M0 -2 h22 M7 -26 v34 M14 -26 v34" stroke="#9a8a5a" strokeWidth="0.8" opacity="0.7" />
+          </g>
+        </g>
+
+        {/* LE TAS DE VIEUX CHIFFONS (la matière première du papier) */}
+        <g transform="translate(440,520)">
+          <ellipse cx="0" cy="10" rx="28" ry="6" fill="#160f08" opacity="0.5" />
+          <path d="M-26 8 Q-22 -12 0 -9 Q24 -13 26 8 Z" fill="#d8cdb4" />
+          <path d="M-26 8 Q-22 -12 0 -9 Q24 -13 26 8 Z" fill="#2a1c10" opacity="0.1" filter="url(#gt-grain)" />
+          {/* plis de tissu, teintes de lin/chanvre */}
+          <path d="M-18 6 Q-12 -8 2 -6 Q14 -4 18 6" stroke="#b0a488" strokeWidth="2" fill="none" opacity="0.7" />
+          <path d="M-10 8 Q0 -6 14 2" stroke="#c2b89a" strokeWidth="3" fill="none" />
+          <path d="M2 8 q9 -9 18 -3" stroke="#eae2ce" strokeWidth="2.4" fill="none" />
+          <path d="M-22 4 q6 -8 14 -6" stroke="#c8bfa4" strokeWidth="2" fill="none" />
+        </g>
+
         {/* LA GRANDE PRESSE À VIS (la pièce maîtresse) */}
         <g transform="translate(680,430)">
           {/* bâti en bois */}
@@ -183,6 +217,8 @@ export default function SceneGutenberg({ collect, action, reveal, made = [] }) {
 
       <Hotspot cx={200} cy={472} r={40} label="plomb fondu" item="plomb_fondu" reveal={reveal} onClick={() => collect("plomb_fondu")} />
       <Hotspot cx={360} cy={500} r={46} label="moule à lettres" item="moule" reveal={reveal} onClick={() => collect("moule")} />
+      <Hotspot cx={110} cy={496} r={42} label="la cuve du papetier" item="cuve" reveal={reveal} onClick={() => collect("cuve")} />
+      <Hotspot cx={440} cy={520} r={28} label="vieux chiffons de lin" item="chiffons" reveal={reveal} onClick={() => collect("chiffons")} />
       <Hotspot cx={678} cy={470} r={74} label="presse à vis" item="presse" reveal={reveal} onClick={() => collect("presse")} />
     </svg>
   );

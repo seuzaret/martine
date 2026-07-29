@@ -1,6 +1,7 @@
 /* ============================================================
    CHAPITRE 5 — Portraits « gros plan »
-   Charles Bannister (seigneur) et le frère Jorge (moine copiste).
+   Charles Bannister (seigneur), le frère Jorge (moine copiste) et
+   Johannes Gutenberg (imprimeur de Mayence).
    Même cadre que les autres chapitres. Libres de droits.
    ============================================================ */
 
@@ -120,6 +121,71 @@ export function PortraitJorge() {
       <path d="M101 128 Q104 150 112 168 L120 162 Q110 146 111 130 Z" fill="#6a5238" />
       <path d="M199 128 Q196 150 188 168 L180 162 Q190 146 189 130 Z" fill="#6a5238" />
       <path d="M108 122 q42 -14 84 0" stroke="#5a4630" strokeWidth="2" fill="none" opacity="0.4" />
+    </svg>
+  );
+}
+
+/* JOHANNES GUTENBERG — imprimeur de Mayence. Bonnet souple, robe
+   d'artisan-bourgeois à col de fourrure, longue barbe grisonnante. */
+export function PortraitGutenberg() {
+  return (
+    <svg viewBox="0 0 300 340" style={{ display: "block", width: "100%", height: "auto" }}>
+      <defs>
+        <radialGradient id="pGuHalo" cx="50%" cy="38%" r="62%">
+          <stop offset="0%" stopColor="#ffe6b0" stopOpacity="0.45" /><stop offset="60%" stopColor="#e8cfa0" stopOpacity="0.14" /><stop offset="100%" stopColor="#e8cfa0" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="pGuSkin" x1="0" y1="0" x2="1" y2="0.3"><stop offset="0%" stopColor="#d6a678" /><stop offset="55%" stopColor="#c69668" /><stop offset="100%" stopColor="#a67648" /></linearGradient>
+        <linearGradient id="pGuRobe" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#3a5248" /><stop offset="100%" stopColor="#243a32" /></linearGradient>
+      </defs>
+      <circle cx="150" cy="138" r="130" fill="url(#pGuHalo)" />
+
+      {/* robe d'artisan-bourgeois + large col de fourrure brune */}
+      <path d="M34 340 Q38 248 92 230 Q122 218 150 220 Q178 218 208 230 Q262 248 266 340 Z" fill="url(#pGuRobe)" />
+      {/* col de fourrure (deux pans qui descendent) */}
+      <path d="M150 232 Q120 236 96 250 Q84 300 92 340 L128 340 Q126 292 150 268 Z" fill="#6a5238" />
+      <path d="M150 232 Q180 236 204 250 Q216 300 208 340 L172 340 Q174 292 150 268 Z" fill="#6a5238" />
+      {/* moucheté de la fourrure */}
+      {[[104, 288], [116, 316], [186, 288], [196, 314], [110, 262], [190, 262]].map(([x, y], i) => (
+        <path key={i} d={`M${x} ${y} q3 6 6 0`} stroke="#3a2c1e" strokeWidth="2" fill="none" />
+      ))}
+
+      {/* LE COU */}
+      <path d="M134 194 L166 194 L169 242 Q150 250 131 242 Z" fill="url(#pGuSkin)" />
+
+      {/* LE VISAGE : mûr, front dégarni, pommettes marquées */}
+      <path d="M150 66 C188 66 203 94 201 130 C199 166 183 198 150 204 C117 198 101 166 99 130 C97 94 112 66 150 66 Z" fill="url(#pGuSkin)" />
+      <path d="M104 118 Q100 152 118 180" stroke="#ffe6b0" strokeWidth="5" fill="none" opacity="0.32" strokeLinecap="round" />
+      <ellipse cx="99" cy="142" rx="7" ry="10" fill="#c69668" /><ellipse cx="201" cy="142" rx="7" ry="10" fill="#c69668" />
+      {/* rides du front */}
+      <path d="M124 96 q26 -7 52 0 M120 106 q30 -6 60 0" stroke="#a67648" strokeWidth="1.6" fill="none" opacity="0.4" />
+
+      {/* SOURCILS broussailleux + YEUX attentifs */}
+      <path d="M116 126 Q129 119 143 127" stroke="#7a6a54" strokeWidth="4" fill="none" strokeLinecap="round" />
+      <path d="M157 127 Q171 119 184 126" stroke="#7a6a54" strokeWidth="4" fill="none" strokeLinecap="round" />
+      <path d="M118 138 Q129 132 141 138 Q130 145 118 138 Z" fill="#f8efdd" />
+      <path d="M159 138 Q171 132 182 138 Q170 145 159 138 Z" fill="#f8efdd" />
+      <circle cx="130" cy="138" r="4.2" fill="#4a3320" /><circle cx="170" cy="138" r="4.2" fill="#4a3320" />
+      <circle cx="131.4" cy="136.4" r="1.3" fill="#fff" /><circle cx="171.4" cy="136.4" r="1.3" fill="#fff" />
+      <path d="M117 137 Q129 131 142 137 M158 137 Q171 131 183 137" stroke="#5a4633" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+
+      {/* NEZ discret */}
+      <path d="M145 158 Q150 162 155 158 M145 158 Q143 151 147 149 M155 158 Q157 151 153 149" stroke="#a67648" strokeWidth="2" fill="none" strokeLinecap="round" />
+
+      {/* moustache + LONGUE BARBE grisonnante, légèrement fourchue */}
+      <path d="M126 168 q24 -8 48 0" stroke="#8a7c66" strokeWidth="4" fill="none" strokeLinecap="round" />
+      <path d="M108 158 Q104 210 128 240 Q140 252 150 250 Q160 252 172 240 Q196 210 192 158 Q176 184 150 186 Q124 184 108 158 Z" fill="#b6ab96" />
+      <path d="M150 186 q-3 34 -8 58 M150 186 q3 34 8 58" stroke="#8f846e" strokeWidth="1.6" fill="none" opacity="0.6" />
+      <g stroke="#9a8f78" strokeWidth="1.2" fill="none" opacity="0.55"><path d="M122 176 q8 30 26 52 M178 176 q-8 30 -26 52 M136 182 q4 30 14 50 M164 182 q-4 30 -14 50" /></g>
+      <Mouth y={172} dark="#7a3a2e" light="#b0785a" w={12} />
+
+      {/* cheveux gris aux tempes (front dégarni) */}
+      <path d="M99 132 Q96 172 104 200 L118 194 Q108 162 110 134 Z" fill="#8a7c66" />
+      <path d="M201 132 Q204 172 196 200 L182 194 Q192 162 190 134 Z" fill="#8a7c66" />
+
+      {/* LE BONNET souple d'artisan (toque) */}
+      <path d="M100 116 Q98 66 150 60 Q202 66 200 116 Q198 92 176 82 Q162 76 150 77 Q138 76 124 82 Q102 92 100 116 Z" fill="#2c3a34" />
+      <path d="M100 116 Q150 96 200 116 L200 108 Q150 88 100 108 Z" fill="#20302a" />
+      <path d="M150 60 Q168 60 178 70 Q160 66 150 67 Q140 66 122 70 Q132 60 150 60 Z" fill="#3a4a44" />
     </svg>
   );
 }

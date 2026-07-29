@@ -12,7 +12,7 @@
 import SceneChateau from "./scenes/SceneChateau.jsx";
 import SceneMonastere from "./scenes/SceneScriptorium.jsx";
 import SceneGutenberg from "./scenes/SceneGutenberg.jsx";
-import { PortraitCharles, PortraitJorge } from "./scenes/portraits.jsx";
+import { PortraitCharles, PortraitJorge, PortraitGutenberg } from "./scenes/portraits.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -34,12 +34,16 @@ const ITEMS = {
   plomb_fondu: { name: "Plomb fondu", emoji: "🫗", desc: "Un métal en fusion, coulé dans des moules. Il durcit en un instant en petites lettres identiques." },
   moule:       { name: "Moule à lettres", emoji: "🔠", desc: "Une matrice pour couler des caractères tous semblables — et réutilisables à l'infini." },
   presse:      { name: "Presse à vis", emoji: "🗜️", support: true, desc: "Une grosse vis qui écrase la feuille sur les lettres encrées. La même page, encore et encore." },
+  chiffons:    { name: "Vieux chiffons de lin", emoji: "🧵", desc: "Des chiffons de lin et de chanvre usés. En Chine, on sait depuis mille ans qu'en les broyant on obtient… du papier. La recette a voyagé jusqu'ici par les marchands arabes." },
+  cuve:        { name: "Cuve du papetier", emoji: "🪣", support: true, desc: "Une cuve pleine d'eau où l'on broie les chiffons en bouillie. On y puise ensuite la pâte avec un tamis pour former les feuilles." },
 
   /* fabriqués */
   codex:      { name: "Codex (livre à pages)", emoji: "📕", desc: "Des feuilles pliées et cousues : un LIVRE À PAGES qu'on feuillette. Fini le rouleau — on saute à la page voulue. Mais il est encore nu : il faut l'enluminer." },
   codex_enlumine: { name: "Codex enluminé", emoji: "📖", desc: "Le livre orné à la main : lettrines dorées, rinceaux, petites scènes peintes à l'or et aux couleurs vives. Des mois de travail — un objet de luxe. Reste à le ranger précieusement." },
   traite_galien: { name: "Traité de médecine de Galien", emoji: "📗", desc: "La copie payée au prix fort : le remède pour le fils du paysan est écrit là-dedans. Encore faut-il savoir le LIRE… Rapporte-le à quelqu'un d'instruit, au château." },
   caracteres: { name: "Caractères mobiles", emoji: "🔡", desc: "Des centaines de petites lettres de plomb, qu'on assemble en mots, puis en pages, puis qu'on démonte pour recommencer." },
+  papier:      { name: "Feuille de papier de chiffon", emoji: "📄", desc: "Une feuille tirée de la pâte de chiffons. Bien moins chère que le parchemin (fait de peau) : sans ce papier bon marché, imprimer par milliers ne servirait à rien." },
+  forme_encree: { name: "Forme encrée", emoji: "🖤", desc: "Les caractères rangés en page, serrés dans la presse et encrés au tampon. Prête à imprimer : il ne manque que la feuille de papier." },
 };
 
 /* ------------------------------------------------------------
@@ -59,7 +63,7 @@ const SCENES = [
 const WHERE = {
   fil_laine: "au château", toile_lin: "au château",
   parchemin: "au monastère", aiguille: "au monastère", or_enlumine: "au monastère",
-  plomb_fondu: "à l'atelier de Gutenberg", moule: "à l'atelier de Gutenberg",
+  plomb_fondu: "à l'atelier de Gutenberg", moule: "à l'atelier de Gutenberg", chiffons: "à l'atelier de Gutenberg",
 };
 
 const HIDDEN_BY_FLAG = {};
@@ -86,10 +90,18 @@ const RECIPES = [
   { a: "traite_galien", b: "pretre", out: "remis", gives: [], consume: ["traite_galien"], flag: "remis",
     line: "Le prêtre ouvre le traité, lit à mi-voix, hoche la tête : « Fièvre chaude… écorce de saule, repos, tisanes. Je sais quoi faire. Avec ça, ce petit a bien plus de chances de s'en sortir. » Le savoir a traversé le pays — mais il fallait quelqu'un pour le LIRE." },
 
-  /* Gutenberg : les caractères mobiles + la presse */
+  /* Gutenberg : il faut TROIS choses pour imprimer — des caractères, du
+     papier bon marché, et la presse. */
   { a: "plomb_fondu", b: "moule", out: "caracteres",
     line: "Coulé dans le moule, le plomb donne des centaines de lettres identiques : les CARACTÈRES MOBILES. On les assemble, on imprime, on démonte, on recommence." },
-  { a: "caracteres", b: "presse", out: "msg_imprimerie", msg: true },
+  /* le papier de chiffon (la recette venue de Chine) */
+  { a: "chiffons", b: "cuve", out: "papier",
+    line: "On jette les vieux chiffons dans la cuve, on les broie en bouillie, on puise la pâte au tamis, on presse et on sèche : voilà une feuille de PAPIER. La recette vient de Chine (par les Arabes) — et le papier coûte dix fois moins que le parchemin." },
+  /* composer et encrer la forme dans la presse… */
+  { a: "caracteres", b: "presse", out: "forme_encree",
+    line: "Tu ranges les lettres en lignes, tu serres la forme dans la presse, tu l'encres au tampon. La forme est prête — il ne manque que la feuille de papier." },
+  /* …puis presser une feuille dessus : la page est imprimée ! */
+  { a: "forme_encree", b: "papier", out: "msg_imprimerie", msg: true },
 ];
 
 /* ------------------------------------------------------------
@@ -105,7 +117,7 @@ const MESSAGES = {
     fact: "Au scriptorium, des moines copient les livres à la main, un par un, pendant des mois. Ils enluminent les pages : lettrines dorées, miniatures peintes. Le résultat est magnifique… mais chaque livre coûte une fortune et prend une éternité. Le savoir écrit reste rare, cher, et CONTRÔLÉ par l'Église : celui qui copie choisit ce qui sera recopié — donc ce qui survivra." },
   msg_imprimerie: { title: "Imprimerie de Gutenberg", emoji: "🖨️",
     jauges: { vitesse: 3, portee: 5, capacite: 4, durabilite: 3 },
-    fact: "Vers 1450, à Mayence, Gutenberg assemble des lettres de plomb mobiles et une presse à vis : la même page peut être tirée à des centaines d'exemplaires, vite et à bas prix. C'est LE grand basculement de l'histoire des médias. Les livres se multiplient, leur prix s'effondre, les lecteurs explosent — et les idées ÉCHAPPENT au contrôle (la Réforme se diffuse par l'imprimé). Pour la première fois, un message touche des MASSES. Journaux, tracts, affiches : tout en découle." },
+    fact: "Vers 1450, à Mayence, Gutenberg assemble des lettres de plomb mobiles et une presse à vis : la même page peut être tirée à des centaines d'exemplaires, vite et à bas prix. Rien de tout cela ne servirait sans un support bon marché : le PAPIER, inventé en Chine et fait de vieux chiffons broyés, dix fois moins cher que le parchemin. C'est LE grand basculement de l'histoire des médias. Les livres se multiplient, leur prix s'effondre, les lecteurs explosent — et les idées ÉCHAPPENT au contrôle (la Réforme se diffuse par l'imprimé). Pour la première fois, un message touche des MASSES. Journaux, tracts, affiches : tout en découle." },
   /* MESSAGE PERDU */
   msg_oeuvre: { title: "Œuvre disparue", emoji: "📕", perdu: true,
     jauges: { vitesse: 1, portee: 1, capacite: 4, durabilite: 1 },
@@ -143,7 +155,9 @@ const HINTS = [
   { needs: ["codex_enlumine", "rayon"], out: "msg_manuscrit", text: "Ton manuscrit enluminé est fini : range-le précieusement sur les rayonnages, parmi les autres trésors." },
   { needs: ["codex_enlumine", "flamme"], out: "msg_oeuvre", text: "Attention à cette bougie près de ton manuscrit enluminé unique… un rien, et des mois de travail partent en fumée." },
   { needs: ["plomb_fondu", "moule"], out: "caracteres", text: "Coule le plomb fondu dans le moule à lettres : tu obtiendras des caractères tous identiques." },
-  { needs: ["caracteres", "presse"], out: "msg_imprimerie", text: "Range tes caractères en pages, encre-les, et écrase la feuille avec la presse à vis. Encore. Et encore." },
+  { needs: ["chiffons", "cuve"], out: "papier", text: "Ces vieux chiffons : broie-les dans la cuve du papetier pour en faire une feuille de papier — la recette venue de Chine, bien moins chère que le parchemin." },
+  { needs: ["caracteres", "presse"], out: "forme_encree", text: "Range tes caractères en page dans la presse et encre-les : tu obtiens la forme prête à imprimer." },
+  { needs: ["forme_encree", "papier"], out: "msg_imprimerie", text: "Pose une feuille de papier sur la forme encrée et abaisse la vis : la page s'imprime ! Et on recommence, mille fois." },
 ];
 
 const NEAR_MISS = [
@@ -153,6 +167,8 @@ const NEAR_MISS = [
   { pair: ["fil_laine", "aiguille"], line: "Broder sans support ? Il te faut une grande toile de lin à couvrir." },
   { pair: ["caracteres", "flamme"], line: "Approcher tes lettres de plomb de la flamme ? Le plomb fond ! Garde-les pour la presse." },
   { pair: ["plomb_fondu", "presse"], line: "Écraser du plomb fondu à la presse ? Coule-le d'abord en LETTRES dans le moule." },
+  { pair: ["chiffons", "presse"], line: "Écraser des chiffons secs à la presse ne fait pas du papier : il faut d'abord les BROYER dans l'eau de la cuve." },
+  { pair: ["caracteres", "papier"], line: "Poser la feuille sur des lettres nues ? Sans les encrer, rien ne s'imprime : serre-les et encre-les d'abord dans la presse." },
 ];
 
 const FAIL_LINES = [
@@ -248,9 +264,9 @@ const QUETE = [
     attend: "remis",
     suite: "L'enfant a maintenant bien plus de chances de s'en sortir ! Un livre, ET quelqu'un pour le lire : voilà comment le savoir agit. À présent, cap sur la merveille qui va tout changer — l'atelier de Gutenberg." },
 
-  { perso: "gutenberg", portrait: null,
-    bubble: "Bienvenue dans mon atelier ! Regarde cette merveille : avec mes lettres de plomb et ma presse, je vais copier ce livre non pas une fois en un an… mais MILLE fois, tous pareils. Fonds-moi des caractères et actionne la presse.",
-    say: "L'imprimerie : caractères mobiles (plomb fondu + moule) puis la presse. Le grand basculement — le savoir enfin pour tous.",
+  { perso: "gutenberg", portrait: "gutenberg",
+    bubble: "Bienvenue dans mon atelier ! Un moine met un an à copier un livre. Moi, j'en veux MILLE, tous pareils. Il me faut trois choses : des lettres de plomb que je réutilise, une presse… et du papier. Le parchemin coûte trop cher — mais on rapporte de Chine une recette : du papier fait avec de vieux chiffons ! Aide-moi.",
+    say: "L'imprimerie, en trois temps : (1) caractères mobiles (plomb + moule), (2) PAPIER de chiffon (chiffons + cuve — la recette chinoise), (3) compose et encre la forme dans la presse, puis presse une feuille dessus. Le grand basculement : le savoir pour tous.",
     attend: "msg_imprimerie",
     suite: "Mille exemplaires ! Le savoir échappe enfin au monastère et aux riches. Ma jauge déborde : le bouton PARTIR nous emmène aux Temps modernes." },
 ];
@@ -291,7 +307,7 @@ const chapter = {
   intro: INTRO,
   actions: ACTIONS,
   quete: QUETE,
-  portraits: { charles: PortraitCharles, jorge: PortraitJorge },
+  portraits: { charles: PortraitCharles, jorge: PortraitJorge, gutenberg: PortraitGutenberg },
   facture: FACTURE,
 };
 
