@@ -58,7 +58,7 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
         <path d="M400 560 L472 388 M620 560 L540 388" stroke="#8a6e46" strokeWidth="1.6" opacity="0.4" />
 
         {/* LES OLIVIERS (en rang le long du mur) */}
-        {[[250, 376, 0.8], [330, 372, 0.9], [430, 374, 0.8], [720, 374, 0.85], [820, 372, 1], [900, 376, 0.8]].map(([x, y, s], i) => (
+        {[[390, 372, 0.9], [470, 374, 0.8], [560, 376, 0.75], [720, 374, 0.85], [820, 372, 1], [900, 376, 0.8]].map(([x, y, s], i) => (
           <g key={i} transform={`translate(${x},${y}) scale(${s})`}>
             <path d="M0 4 q-7 -32 -1 -50 q7 18 1 50" stroke="#6e5236" strokeWidth="9" fill="none" strokeLinecap="round" />
             <path d="M0 -30 l-12 -8 M0 -38 l12 -10" stroke="#6e5236" strokeWidth="3" />
@@ -95,23 +95,18 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
                 </g>
               ))}
             </g>
-          ) : (
-            /* ruche décrochée : la branche libre, prête à être taillée en stylet */
-            <g style={{ animation: "glow 2.4s ease-in-out infinite" }}>
-              <path d="M-40 -30 q-14 8 -18 22" stroke="#7a5a34" strokeWidth="4" fill="none" strokeLinecap="round" />
-            </g>
-          )}
+          ) : null}
         </g>
 
         {/* panier d'olives (récolte) */}
-        <g transform="translate(300,486)">
+        <g transform="translate(400,492)">
           <path d="M-20 -8 Q-22 14 0 16 Q22 14 20 -8 Z" fill="#a87a44" />
           <path d="M-20 -8 q20 -6 40 0" stroke="#7a5230" strokeWidth="2" fill="none" />
           {[...Array(9)].map((_, k) => <circle key={k} cx={-13 + (k % 5) * 6.5} cy={-6 + Math.floor(k / 5) * 7} r="3" fill="#3a4a22" />)}
         </g>
 
         {/* LA CABANE À OUTILS : l'épée et le burin y sont accrochés */}
-        <g transform="translate(360,470)">
+        <g transform="translate(250,468)">
           <ellipse cx="0" cy="30" rx="66" ry="10" fill="#241608" opacity="0.3" />
           {/* mur du fond (planches) */}
           <rect x="-50" y="-58" width="100" height="88" fill="#a8804a" />
@@ -181,8 +176,8 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
       {!cire
         ? <Hotspot cx={84} cy={360} r={30} label="la ruche (cire d'abeille)" item="cire_abeille" reveal={reveal} onClick={() => collect("cire_abeille")} />
         : <Hotspot cx={92} cy={338} r={30} label="la branche (le stylet)" item="branche" reveal={reveal} onClick={() => collect("branche")} />}
-      <Hotspot cx={330} cy={442} r={26} label="l'épée (à la cabane)" item="epee" reveal={reveal} onClick={() => collect("epee")} />
-      <Hotspot cx={390} cy={442} r={26} label="le burin (à la cabane)" item="burin" reveal={reveal} onClick={() => collect("burin")} />
+      <Hotspot cx={220} cy={438} r={26} label="l'épée (à la cabane)" item="epee" reveal={reveal} onClick={() => collect("epee")} />
+      <Hotspot cx={280} cy={438} r={26} label="le burin (à la cabane)" item="burin" reveal={reveal} onClick={() => collect("burin")} />
       <Hotspot cx={662} cy={488} r={30} label="planche de bois" item="planche" reveal={reveal} onClick={() => collect("planche")} />
       <Hotspot cx={744} cy={488} r={28} label="grattoir & ponce" item="grattoir" reveal={reveal} onClick={() => collect("grattoir")} />
     </svg>

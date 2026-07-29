@@ -150,10 +150,10 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
           <path d="M11 -8 q10 -4 16 2" stroke="#b0855c" strokeWidth="4" fill="none" strokeLinecap="round" />
           <path d="M27 -8 q6 2 6 8 q-6 -1 -8 3" fill="none" stroke="#b0855c" strokeWidth="2.4" strokeLinecap="round" />
         </g>
-        {/* les ONDES de la voix d'Argos qui portent vers la foule (façon wifi),
-            tant que l'invitation n'a pas été lancée */}
-        {!made.includes("invites") && (
-          <g transform="translate(452,468) rotate(-118)" style={{ animation: "glow 1.6s ease-in-out infinite" }}>
+        {/* les ONDES de la voix d'Argos vers la foule (façon wifi) : elles
+            n'apparaissent qu'au moment où l'annonce est lancée, puis s'estompent */}
+        {made.includes("invites") && (
+          <g transform="translate(374,470) rotate(-100)" style={{ animation: "ondes 2.4s ease-out forwards" }}>
             <circle cx="0" cy="0" r="2.2" fill="#ffd166" />
             <path d="M-7 -7 a10 10 0 0 1 14 0" fill="none" stroke="#ffd166" strokeWidth="2.4" strokeLinecap="round" opacity="0.85" />
             <path d="M-13 -13 a18 18 0 0 1 26 0" fill="none" stroke="#ffd166" strokeWidth="2.4" strokeLinecap="round" opacity="0.55" />

@@ -83,6 +83,8 @@ html.a11y-calme *::after {
 @keyframes popIn { from{transform:scale(.92);opacity:0} to{transform:scale(1);opacity:1} }
 /* bouche qui « parle » dans les gros plans (ouverture verticale saccadée) */
 @keyframes talk { 0%{transform:scaleY(.28)} 22%{transform:scaleY(.85)} 44%{transform:scaleY(.4)} 68%{transform:scaleY(1)} 86%{transform:scaleY(.5)} 100%{transform:scaleY(.28)} }
+/* ondes de voix qui apparaissent au moment de l'annonce, puis s'estompent (une fois) */
+@keyframes ondes { 0%{opacity:0} 10%{opacity:1} 55%{opacity:1} 100%{opacity:0} }
 
 /* --- Effets de réussite (jalon M1) --- */
 /* apparition à ressort d'un objet dans la besace */
