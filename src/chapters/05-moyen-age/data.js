@@ -48,7 +48,9 @@ const ITEMS = {
    ------------------------------------------------------------ */
 const SCENES = [
   { id: "chateau",   name: "Le château de Charles Bannister", Component: SceneChateau,  nextWhen: ["accord"] },
-  { id: "monastere", name: "Le monastère du frère Jorge",      Component: SceneMonastere, nextWhen: ["paye"] },
+  /* `retour: true` → depuis ce tableau on REVIENT sur ses pas (au château) :
+     la flèche d'avancée pointe alors vers la GAUCHE. */
+  { id: "monastere", name: "Le monastère du frère Jorge",      Component: SceneMonastere, nextWhen: ["paye"], retour: true },
   /* RETOUR au château (même décor) : rapporter le remède au prêtre. */
   { id: "retour",    name: "Retour au château — le remède",   Component: SceneChateau,  nextWhen: ["remis"] },
   { id: "gutenberg", name: "L'atelier de Gutenberg",           Component: SceneGutenberg },
@@ -82,7 +84,7 @@ const RECIPES = [
   /* Retour au château : remettre le traité au PRÊTRE (qui sait lire) →
      le remède est préparé. Le geste ouvre la route vers Gutenberg. */
   { a: "traite_galien", b: "pretre", out: "remis", gives: [], consume: ["traite_galien"], flag: "remis",
-    line: "Le prêtre ouvre le traité, lit à mi-voix, hoche la tête : « Fièvre chaude… écorce de saule, repos, tisanes. Je sais quoi faire. Cet enfant vivra. » Le savoir a traversé le pays — mais il fallait quelqu'un pour le LIRE." },
+    line: "Le prêtre ouvre le traité, lit à mi-voix, hoche la tête : « Fièvre chaude… écorce de saule, repos, tisanes. Je sais quoi faire. Avec ça, ce petit a bien plus de chances de s'en sortir. » Le savoir a traversé le pays — mais il fallait quelqu'un pour le LIRE." },
 
   /* Gutenberg : les caractères mobiles + la presse */
   { a: "plomb_fondu", b: "moule", out: "caracteres",
@@ -244,7 +246,7 @@ const QUETE = [
     bubble: "Tu rapportes le traité de Galien ? Confie-le-moi, mon enfant : je sais lire le latin des médecins. Je vais préparer le remède pour ce petit — encore fallait-il que le livre arrive… et qu'un lettré le lise.",
     say: "Remets le traité au PRÊTRE : glisse-le sur lui. (Essaie sur le paysan si tu veux : il t'avouera qu'il ne sait pas lire — un livre ne sert qu'à qui sait le déchiffrer.)",
     attend: "remis",
-    suite: "L'enfant est sauvé ! Un livre, ET quelqu'un pour le lire : voilà comment le savoir agit. À présent, cap sur la merveille qui va tout changer — l'atelier de Gutenberg." },
+    suite: "L'enfant a maintenant bien plus de chances de s'en sortir ! Un livre, ET quelqu'un pour le lire : voilà comment le savoir agit. À présent, cap sur la merveille qui va tout changer — l'atelier de Gutenberg." },
 
   { perso: "gutenberg", portrait: null,
     bubble: "Bienvenue dans mon atelier ! Regarde cette merveille : avec mes lettres de plomb et ma presse, je vais copier ce livre non pas une fois en un an… mais MILLE fois, tous pareils. Fonds-moi des caractères et actionne la presse.",

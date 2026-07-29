@@ -17,7 +17,7 @@ const navBtn = (side) => ({
   backdropFilter: "blur(2px)", lineHeight: 1,
 });
 
-export default function Scene({ scenes, tab, onTab, sceneProps, sparkle, linear = false }) {
+export default function Scene({ scenes, tab, onTab, sceneProps, sparkle, linear = false, canAdvance = false }) {
   const Current = scenes[tab].Component;
 
   /* sens du travelling : on arrive par la droite si on avance,
@@ -35,14 +35,27 @@ export default function Scene({ scenes, tab, onTab, sceneProps, sparkle, linear 
         <Current {...sceneProps} />
       </div>
 
-      {/* flèches de déplacement — masquées en mode LINÉAIRE (on n'avance
-          que par le signal « on peut partir », géré par App ; pas de retour) */}
+      {/* MODE NON-LINÉAIRE : navigation libre ‹ › */}
       {!linear && tab > 0 && (
         <button onClick={() => onTab(tab - 1)} style={navBtn("left")} title={scenes[tab - 1].name}>‹</button>
       )}
       {!linear && tab < scenes.length - 1 && (
         <button onClick={() => onTab(tab + 1)} style={navBtn("right")} title={scenes[tab + 1].name}>›</button>
       )}
+      {/* MODE LINÉAIRE : une seule flèche d'avancée, verte et pulsée, qui
+          n'apparaît QUE lorsque le tableau est bouclé (canAdvance). Elle pointe
+          à GAUCHE si le tableau courant est un RETOUR (on revient sur ses pas),
+          sinon à droite. Elle complète le titre vert près de MARTINE. */}
+      {linear && canAdvance && tab < scenes.length - 1 && (() => {
+        const back = !!scenes[tab].retour;
+        const side = back ? "left" : "right";
+        return (
+          <button onClick={() => onTab(tab + 1)} title={`Partir pour ${scenes[tab + 1].name}`}
+            style={{ ...navBtn(side), border: "1px solid #5eff9e", background: "rgba(94,255,158,0.85)", color: "#06110b", boxShadow: "0 0 18px rgba(94,255,158,0.6)", animation: "floaty 1.7s ease-in-out infinite" }}>
+            {back ? "‹" : "›"}
+          </button>
+        );
+      })()}
 
       {/* mini-carte : un point par lieu (cliquable en libre, simple repère en linéaire) */}
       <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 6, background: "rgba(0,0,0,0.4)", padding: "5px 10px", borderRadius: 20 }}>

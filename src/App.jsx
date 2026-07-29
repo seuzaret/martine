@@ -1088,7 +1088,8 @@ export default function App() {
           {/* taille exacte calculée (le plus grand cadre 1000/560 qui tient
               dans la cellule) → jamais rogné, jamais de débordement. */}
           <div style={{ width: decorBox ? decorBox.w : "100%", height: decorBox ? decorBox.h : "100%", position: "relative" }}>
-            <Scene scenes={chapter.scenes} tab={tab} onTab={setTab} sceneProps={sceneProps} sparkle={sparkle} linear={chapter.linear} />
+            <Scene scenes={chapter.scenes} tab={tab} onTab={setTab} sceneProps={sceneProps} sparkle={sparkle} linear={chapter.linear}
+              canAdvance={!!(chapter.linear && chapter.scenes[tab + 1] && (chapter.scenes[tab].nextWhen || []).every((id) => made.includes(id)))} />
           </div>
         </div>
         {/* écran large : la jauge temporelle à droite */}
