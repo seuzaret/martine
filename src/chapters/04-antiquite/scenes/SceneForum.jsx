@@ -175,7 +175,7 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
       {/* la ruche (cire) puis, une fois décrochée, la branche */}
       {!cire
         ? <Hotspot cx={84} cy={360} r={30} label="la ruche (cire d'abeille)" item="cire_abeille" reveal={reveal} onClick={() => collect("cire_abeille")} />
-        : <Hotspot cx={92} cy={338} r={30} label="la branche (le stylet)" item="branche" reveal={reveal} onClick={() => collect("branche")} />}
+        : <Hotspot cx={102} cy={320} r={28} label="la branche (le stylet)" item="branche" reveal={reveal} onClick={() => collect("branche")} />}
       <Hotspot cx={220} cy={438} r={26} label="l'épée (à la cabane)" item="epee" reveal={reveal} onClick={() => collect("epee")} />
       <Hotspot cx={280} cy={438} r={26} label="le burin (à la cabane)" item="burin" reveal={reveal} onClick={() => collect("burin")} />
       <Hotspot cx={662} cy={488} r={30} label="planche de bois" item="planche" reveal={reveal} onClick={() => collect("planche")} />
