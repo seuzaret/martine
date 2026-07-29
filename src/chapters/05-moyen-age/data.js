@@ -25,6 +25,7 @@ const ITEMS = {
   /* Le monastère */
   parchemin: { name: "Feuilles de parchemin", emoji: "📃", desc: "Des feuilles de peau prêtes à écrire. Si chères qu'un livre entier vaut un troupeau." },
   aiguille:  { name: "Aiguille & fil à relier", emoji: "🪡", desc: "Pour plier les feuilles en cahiers et les COUDRE : c'est ainsi qu'on fabrique un livre à pages." },
+  or_enlumine: { name: "Or et couleurs d'enluminure", emoji: "✨", desc: "De la feuille d'OR fin et des pigments vifs (rouge vermillon, bleu outremer). De quoi orner les lettrines et peindre de petites scènes : c'est ce qui rend un manuscrit précieux… et hors de prix." },
   /* SUPPORTS (support:true) : fixes, on leur APPORTE un objet (cyan). */
   rayon:     { name: "Les rayonnages", emoji: "📚", support: true, desc: "Les étagères du scriptorium, où dorment les précieux manuscrits recopiés à la main." },
   flamme:    { name: "Flamme de la bougie", emoji: "🔥", support: true, desc: "Une bougie vacille près des parchemins. La hantise du copiste : une abbaye entière peut brûler en une nuit." },
@@ -35,7 +36,8 @@ const ITEMS = {
   presse:      { name: "Presse à vis", emoji: "🗜️", support: true, desc: "Une grosse vis qui écrase la feuille sur les lettres encrées. La même page, encore et encore." },
 
   /* fabriqués */
-  codex:      { name: "Codex (livre à pages)", emoji: "📕", desc: "Des feuilles pliées et cousues : un LIVRE À PAGES qu'on feuillette. Fini le rouleau — on saute à la page voulue." },
+  codex:      { name: "Codex (livre à pages)", emoji: "📕", desc: "Des feuilles pliées et cousues : un LIVRE À PAGES qu'on feuillette. Fini le rouleau — on saute à la page voulue. Mais il est encore nu : il faut l'enluminer." },
+  codex_enlumine: { name: "Codex enluminé", emoji: "📖", desc: "Le livre orné à la main : lettrines dorées, rinceaux, petites scènes peintes à l'or et aux couleurs vives. Des mois de travail — un objet de luxe. Reste à le ranger précieusement." },
   caracteres: { name: "Caractères mobiles", emoji: "🔡", desc: "Des centaines de petites lettres de plomb, qu'on assemble en mots, puis en pages, puis qu'on démonte pour recommencer." },
 };
 
@@ -51,7 +53,7 @@ const SCENES = [
 
 const WHERE = {
   fil_laine: "au château", toile_lin: "au château",
-  parchemin: "au monastère", aiguille: "au monastère",
+  parchemin: "au monastère", aiguille: "au monastère", or_enlumine: "au monastère",
   plomb_fondu: "à l'atelier de Gutenberg", moule: "à l'atelier de Gutenberg",
 };
 
@@ -64,12 +66,15 @@ const RECIPES = [
   /* Château : la broderie des exploits (façon Bayeux) */
   { a: "fil_laine", b: "toile_lin", out: "msg_broderie", msg: true },
 
-  /* Monastère : assembler le codex, puis le confier au rayon (manuscrit) */
+  /* Monastère : relier le codex, l'ENLUMINER, puis le ranger (manuscrit) */
   { a: "parchemin", b: "aiguille", out: "codex",
-    line: "Plié en cahiers, cousu, relié : voici le CODEX — un livre à pages. Révolution du format : on l'annote, on l'indexe, on saute où l'on veut." },
-  { a: "codex", b: "rayon", out: "msg_manuscrit", msg: true },
-  /* MESSAGE PERDU : le codex unique pris dans un incendie. */
-  { a: "codex", b: "flamme", out: "msg_oeuvre", msg: true, perdu: true },
+    line: "Plié en cahiers, cousu, relié : voici le CODEX — un livre à pages. Révolution du format : on l'annote, on l'indexe, on saute où l'on veut. Mais il est encore nu…" },
+  { a: "codex", b: "or_enlumine", out: "codex_enlumine",
+    line: "Lettrines à l'or fin, rinceaux, miniatures peintes : le codex devient un CODEX ENLUMINÉ. Chaque page est une œuvre — et réclame des mois de travail. Voilà pourquoi un seul livre coûte une fortune." },
+  { a: "codex_enlumine", b: "rayon", out: "msg_manuscrit", msg: true },
+  /* MESSAGE PERDU : le manuscrit enluminé UNIQUE, des mois de travail,
+     part en fumée pour une bougie renversée. */
+  { a: "codex_enlumine", b: "flamme", out: "msg_oeuvre", msg: true, perdu: true },
 
   /* Gutenberg : les caractères mobiles + la presse */
   { a: "plomb_fondu", b: "moule", out: "caracteres",
@@ -122,14 +127,16 @@ const FACTURE = {
 const HINTS = [
   { needs: ["fil_laine", "toile_lin"], out: "msg_broderie", text: "Du fil de laine coloré, une longue toile de lin : brode les exploits du seigneur, image après image." },
   { needs: ["parchemin", "aiguille"], out: "codex", text: "Ces feuilles de parchemin : plie-les en cahiers et couds-les pour faire un vrai livre à pages." },
-  { needs: ["codex", "rayon"], out: "msg_manuscrit", text: "Ton codex recopié et enluminé : range-le sur les rayonnages, parmi les précieux manuscrits." },
-  { needs: ["codex", "flamme"], out: "msg_oeuvre", text: "Attention à cette bougie près de ton codex unique… un rien, et tout part en fumée." },
+  { needs: ["codex", "or_enlumine"], out: "codex_enlumine", text: "Ton codex est encore nu : enlumine-le. De l'or et des couleurs vives sur les lettrines, et de petites scènes peintes." },
+  { needs: ["codex_enlumine", "rayon"], out: "msg_manuscrit", text: "Ton manuscrit enluminé est fini : range-le précieusement sur les rayonnages, parmi les autres trésors." },
+  { needs: ["codex_enlumine", "flamme"], out: "msg_oeuvre", text: "Attention à cette bougie près de ton manuscrit enluminé unique… un rien, et des mois de travail partent en fumée." },
   { needs: ["plomb_fondu", "moule"], out: "caracteres", text: "Coule le plomb fondu dans le moule à lettres : tu obtiendras des caractères tous identiques." },
   { needs: ["caracteres", "presse"], out: "msg_imprimerie", text: "Range tes caractères en pages, encre-les, et écrase la feuille avec la presse à vis. Encore. Et encore." },
 ];
 
 const NEAR_MISS = [
   { pair: ["parchemin", "rayon"], line: "Ranger une feuille volante sur l'étagère ? Fais-en d'abord un livre : plie, couds, relie." },
+  { pair: ["codex", "rayon"], line: "Ranger un codex encore NU parmi les trésors ? Enlumine-le d'abord — or et couleurs — sinon quel manuscrit précieux ?" },
   { pair: ["fil_laine", "aiguille"], line: "Broder sans support ? Il te faut une grande toile de lin à couvrir." },
   { pair: ["caracteres", "flamme"], line: "Approcher tes lettres de plomb de la flamme ? Le plomb fond ! Garde-les pour la presse." },
   { pair: ["plomb_fondu", "presse"], line: "Écraser du plomb fondu à la presse ? Coule-le d'abord en LETTRES dans le moule." },
@@ -210,8 +217,8 @@ const QUETE = [
     suite: "Tu as l'accord et l'or du seigneur ! File au monastère du frère Jorge chercher — et payer — le traité de Galien." },
 
   { perso: "jorge", portrait: "jorge",
-    bubble: "Bienvenue au monastère, voyageur. Tu viens pour la commande du seigneur ? Elle sera prête — mais d'abord, aide-moi à assembler ce codex : plie les feuilles de parchemin, couds-les, et range-le aux rayonnages. On garde ainsi le savoir du monde, une page à la fois.",
-    say: "Assemble le livre : parchemin + aiguille → codex, puis range-le aux rayonnages (il devient un manuscrit enluminé). Ensuite, Jorge te présentera sa note…",
+    bubble: "Bienvenue au monastère, voyageur. Tu viens pour la commande du seigneur ? Elle sera prête — mais d'abord, aide-moi à fabriquer ce livre : plie et couds les feuilles de parchemin, ENLUMINE-le à l'or et aux couleurs, puis range-le aux rayonnages. On garde ainsi le savoir du monde, une page à la fois.",
+    say: "Trois gestes du copiste : (1) parchemin + aiguille → codex, (2) codex + or et couleurs → codex enluminé, (3) range-le aux rayonnages → le manuscrit est sauvé. Ensuite, Jorge te présentera sa note…",
     attend: "msg_manuscrit",
     suite: "Beau travail ! Le frère Jorge va maintenant chercher ta commande — et te présenter l'addition. Ouvre la NOTE DE FRAIS (elle brille près du pupitre) et règle-la." },
 

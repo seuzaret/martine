@@ -128,6 +128,31 @@ export default function SceneMonastere({ collect, action, reveal, made = [], fla
             <path d="M-34 12 h56 M-34 18 h44" stroke="#c9b892" strokeWidth="1" opacity="0.6" />
           </g>
         </g>
+        {/* LE NÉCESSAIRE D'ENLUMINURE : coquilles de pigments vifs, feuilles
+            d'or et un pinceau — de quoi orner le codex (disparaît une fois le
+            manuscrit rangé) */}
+        {!manuscrit && (
+          <g transform="translate(432,516)">
+            {/* petit plateau de bois */}
+            <path d="M-32 7 L32 7 L27 -4 L-27 -4 Z" fill="#5a3f24" />
+            <path d="M-27 -4 L27 -4" stroke="#3a2814" strokeWidth="1" opacity="0.6" />
+            {/* coquilles de pigment (rouge, bleu, vert) */}
+            <ellipse cx="-17" cy="-1" rx="7" ry="4" fill="#a8202a" /><ellipse cx="-17" cy="-2" rx="4.5" ry="2.2" fill="#c8383e" />
+            <ellipse cx="-2" cy="-1" rx="7" ry="4" fill="#2a4a9a" /><ellipse cx="-2" cy="-2" rx="4.5" ry="2.2" fill="#3a62c0" />
+            <ellipse cx="13" cy="-1" rx="7" ry="4" fill="#2a6a3a" /><ellipse cx="13" cy="-2" rx="4.5" ry="2.2" fill="#3a8a4a" />
+            {/* feuilles d'or empilées + éclat */}
+            <g transform="translate(25,-4)">
+              <rect x="-6" y="-2" width="12" height="9" rx="1" fill="#e6c25a" stroke="#a8801f" strokeWidth="0.8" transform="rotate(-9)" />
+              <rect x="-5" y="-4" width="12" height="9" rx="1" fill="#f2d472" stroke="#a8801f" strokeWidth="0.8" transform="rotate(7)" />
+              <circle cx="1" cy="-1" r="1.6" fill="#fff6d8" style={{ animation: "glow 2.4s ease-in-out infinite" }} />
+            </g>
+            {/* pinceau posé en travers */}
+            <g transform="translate(-8,-8) rotate(22)">
+              <rect x="-1" y="-16" width="2" height="20" rx="1" fill="#8a6a3a" />
+              <path d="M-1.6 4 h3.2 l-1.6 6 Z" fill="#a8202a" />
+            </g>
+          </g>
+        )}
         {/* l'aiguille & le fil à relier, sur un cahier plié */}
         <g transform="translate(320,514)">
           <path d="M-24 4 L24 4 L20 -8 L-20 -8 Z" fill="#c9b892" />
@@ -223,6 +248,9 @@ export default function SceneMonastere({ collect, action, reveal, made = [], fla
       {/* les éléments à ramasser */}
       <Hotspot cx={220} cy={504} r={46} label="feuilles de parchemin" item="parchemin" reveal={reveal} onClick={() => collect("parchemin")} />
       <Hotspot cx={320} cy={510} r={34} label="aiguille & fil à relier" item="aiguille" reveal={reveal} onClick={() => collect("aiguille")} />
+      {!manuscrit && (
+        <Hotspot cx={432} cy={510} r={38} label="or & couleurs d'enluminure" item="or_enlumine" reveal={reveal} onClick={() => collect("or_enlumine")} />
+      )}
       <Hotspot cx={900} cy={502} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
     </svg>
   );
