@@ -11,8 +11,9 @@
 
 import SceneChateau from "./scenes/SceneChateau.jsx";
 import SceneMonastere from "./scenes/SceneScriptorium.jsx";
+import SceneMoulin from "./scenes/SceneMoulin.jsx";
 import SceneGutenberg from "./scenes/SceneGutenberg.jsx";
-import { PortraitCharles, PortraitJorge, PortraitGutenberg } from "./scenes/portraits.jsx";
+import { PortraitCharles, PortraitJorge, PortraitGutenberg, PortraitPapetier } from "./scenes/portraits.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -43,7 +44,7 @@ const ITEMS = {
   traite_galien: { name: "Traité de médecine de Galien", emoji: "📗", desc: "La copie payée au prix fort : le remède pour le fils du paysan est écrit là-dedans. Encore faut-il savoir le LIRE… Rapporte-le à quelqu'un d'instruit, au château." },
   caracteres: { name: "Caractères mobiles", emoji: "🔡", desc: "Des centaines de petites lettres de plomb, qu'on assemble en mots, puis en pages, puis qu'on démonte pour recommencer." },
   papier:      { name: "Feuille de papier de chiffon", emoji: "📄", desc: "Une feuille tirée de la pâte de chiffons. Bien moins chère que le parchemin (fait de peau) : sans ce papier bon marché, imprimer par milliers ne servirait à rien." },
-  forme_encree: { name: "Forme encrée", emoji: "🖤", desc: "Les caractères rangés en page, serrés dans la presse et encrés au tampon. Prête à imprimer : il ne manque que la feuille de papier." },
+  forme_encree: { name: "Forme encrée", emoji: "🖤", keep: true, desc: "Les caractères rangés en page, serrés dans la presse et encrés au tampon. Prête à imprimer : il ne manque que la feuille de papier." },
 };
 
 /* ------------------------------------------------------------
@@ -57,13 +58,15 @@ const SCENES = [
   { id: "monastere", name: "Le monastère du frère Jorge",      Component: SceneMonastere, nextWhen: ["paye"], retour: true },
   /* RETOUR au château (même décor) : rapporter le remède au prêtre. */
   { id: "retour",    name: "Retour au château — le remède",   Component: SceneChateau,  nextWhen: ["remis"] },
+  /* LE MOULIN À PAPIER (extérieur) : fabriquer le papier de chiffon. */
+  { id: "moulin",    name: "Le moulin à papier",              Component: SceneMoulin,   nextWhen: ["papier"] },
   { id: "gutenberg", name: "L'atelier de Gutenberg",           Component: SceneGutenberg },
 ];
 
 const WHERE = {
   fil_laine: "au château", toile_lin: "au château",
   parchemin: "au monastère", aiguille: "au monastère", or_enlumine: "au monastère",
-  plomb_fondu: "à l'atelier de Gutenberg", moule: "à l'atelier de Gutenberg", chiffons: "à l'atelier de Gutenberg",
+  plomb_fondu: "à l'atelier de Gutenberg", moule: "à l'atelier de Gutenberg", chiffons: "au moulin à papier",
 };
 
 const HIDDEN_BY_FLAG = {};
@@ -80,10 +83,10 @@ const RECIPES = [
     line: "Plié en cahiers, cousu, relié : voici le CODEX — un livre à pages. Révolution du format : on l'annote, on l'indexe, on saute où l'on veut. Mais il est encore nu…" },
   { a: "codex", b: "or_enlumine", out: "codex_enlumine",
     line: "Lettrines à l'or fin, rinceaux, miniatures peintes : le codex devient un CODEX ENLUMINÉ. Chaque page est une œuvre — et réclame des mois de travail. Voilà pourquoi un seul livre coûte une fortune." },
-  { a: "codex_enlumine", b: "rayon", out: "msg_manuscrit", msg: true },
+  { a: "codex_enlumine", b: "rayon", out: "msg_manuscrit", msg: true, consume: ["codex_enlumine"] },
   /* MESSAGE PERDU : le manuscrit enluminé UNIQUE, des mois de travail,
      part en fumée pour une bougie renversée. */
-  { a: "codex_enlumine", b: "flamme", out: "msg_oeuvre", msg: true, perdu: true },
+  { a: "codex_enlumine", b: "flamme", out: "msg_oeuvre", msg: true, perdu: true, consume: ["codex_enlumine"] },
 
   /* Retour au château : remettre le traité au PRÊTRE (qui sait lire) →
      le remède est préparé. Le geste ouvre la route vers Gutenberg. */
@@ -94,14 +97,15 @@ const RECIPES = [
      papier bon marché, et la presse. */
   { a: "plomb_fondu", b: "moule", out: "caracteres",
     line: "Coulé dans le moule, le plomb donne des centaines de lettres identiques : les CARACTÈRES MOBILES. On les assemble, on imprime, on démonte, on recommence." },
-  /* le papier de chiffon (la recette venue de Chine) */
+  /* le papier de chiffon (au MOULIN À PAPIER, la recette venue de Chine) */
   { a: "chiffons", b: "cuve", out: "papier",
-    line: "On jette les vieux chiffons dans la cuve, on les broie en bouillie, on puise la pâte au tamis, on presse et on sèche : voilà une feuille de PAPIER. La recette vient de Chine (par les Arabes) — et le papier coûte dix fois moins que le parchemin." },
-  /* composer et encrer la forme dans la presse… */
+    line: "On jette les vieux chiffons dans la cuve, on les broie en bouillie (le moulin à eau fait tourner les maillets), on puise la pâte au tamis, on presse et on sèche : voilà une feuille de PAPIER. La recette vient de Chine (par les Arabes) — et le papier coûte dix fois moins que le parchemin." },
+  /* Gutenberg — 1) composer et encrer la forme dans la presse… */
   { a: "caracteres", b: "presse", out: "forme_encree",
-    line: "Tu ranges les lettres en lignes, tu serres la forme dans la presse, tu l'encres au tampon. La forme est prête — il ne manque que la feuille de papier." },
-  /* …puis presser une feuille dessus : la page est imprimée ! */
-  { a: "forme_encree", b: "papier", out: "msg_imprimerie", msg: true },
+    line: "Tu ranges les lettres en lignes, tu serres la forme dans la presse, tu l'encres au tampon. La forme est ENCRÉE dans la presse — il ne manque plus qu'à poser une feuille dessus." },
+  /* …2) puis poser le PAPIER sur la presse encrée et abaisser la vis ! */
+  { a: "papier", b: "presse", out: "msg_imprimerie", msg: true, needsInv: ["forme_encree"], consume: ["forme_encree"],
+    needMsg: "La presse est vide ! Compose et encre d'abord tes caractères dedans (caractères + presse), puis pose la feuille." },
 ];
 
 /* ------------------------------------------------------------
@@ -156,8 +160,8 @@ const HINTS = [
   { needs: ["codex_enlumine", "flamme"], out: "msg_oeuvre", text: "Attention à cette bougie près de ton manuscrit enluminé unique… un rien, et des mois de travail partent en fumée." },
   { needs: ["plomb_fondu", "moule"], out: "caracteres", text: "Coule le plomb fondu dans le moule à lettres : tu obtiendras des caractères tous identiques." },
   { needs: ["chiffons", "cuve"], out: "papier", text: "Ces vieux chiffons : broie-les dans la cuve du papetier pour en faire une feuille de papier — la recette venue de Chine, bien moins chère que le parchemin." },
-  { needs: ["caracteres", "presse"], out: "forme_encree", text: "Range tes caractères en page dans la presse et encre-les : tu obtiens la forme prête à imprimer." },
-  { needs: ["forme_encree", "papier"], out: "msg_imprimerie", text: "Pose une feuille de papier sur la forme encrée et abaisse la vis : la page s'imprime ! Et on recommence, mille fois." },
+  { needs: ["caracteres", "presse"], out: "forme_encree", text: "Range tes caractères en page dans la presse et encre-les : la forme est encrée dans la presse." },
+  { needs: ["papier", "presse"], out: "msg_imprimerie", text: "Pose une feuille de papier sur la presse encrée et abaisse la vis : la page s'imprime ! Et on recommence, mille fois." },
 ];
 
 const NEAR_MISS = [
@@ -198,6 +202,14 @@ const ACTIONS = {
   gutenberg: { mood: "neutre",
     bubble: "Un moine met un an à copier un livre, et y glisse des fautes. Moi, j'en veux MILLE, tous pareils ! Il me faut des lettres SÉPARÉES, qu'on range et qu'on réutilise.",
     say: "Ça, c'est LA grande idée : les caractères mobiles. Fonds-lui des lettres de plomb, et donne-lui une presse." },
+
+  /* Le moulin à papier : le papetier (guide) et le chiffonnier (ramasseur). */
+  papetier: { mood: "neutre",
+    bubble: "Bienvenue à mon moulin ! Ici je fais du papier avec de vieux chiffons — une recette venue de Chine. Bien moins cher que le parchemin : c'est LUI qui va rendre les livres accessibles.",
+    say: "Le papetier : sans son papier bon marché, l'imprimerie n'imprimerait que pour les riches." },
+  chiffonnier: { mood: "content",
+    bubble: "« Chiffons ! Chiffons à vendre ! Vieux linge, vieilles hardes ! » Tiens, prends ce que tu veux dans ma hotte, l'ami — le papetier m'en débarrasse à bon prix.",
+    say: "Le chiffonnier parcourt les rues en criant, pour ramasser le vieux linge : c'est la matière première du papier. Prends ses chiffons." },
 
   /* le paysan et le prêtre, devant le trône (contexte de la quête de Galien).
      Ces répliques par DÉFAUT servent HORS séquence de quête ; en cours de
@@ -262,11 +274,18 @@ const QUETE = [
     bubble: "Tu rapportes le traité de Galien ? Confie-le-moi, mon enfant : je sais lire le latin des médecins. Je vais préparer le remède pour ce petit — encore fallait-il que le livre arrive… et qu'un lettré le lise.",
     say: "Remets le traité au PRÊTRE : glisse-le sur lui. (Essaie sur le paysan si tu veux : il t'avouera qu'il ne sait pas lire — un livre ne sert qu'à qui sait le déchiffrer.)",
     attend: "remis",
-    suite: "L'enfant a maintenant bien plus de chances de s'en sortir ! Un livre, ET quelqu'un pour le lire : voilà comment le savoir agit. À présent, cap sur la merveille qui va tout changer — l'atelier de Gutenberg." },
+    suite: "L'enfant a maintenant bien plus de chances de s'en sortir ! Un livre, ET quelqu'un pour le lire : voilà comment le savoir agit. Mais tout ça reste lent et rare tant qu'on copie à la main… La suite se joue au moulin à papier, puis chez un certain Gutenberg." },
+
+  /* au moulin à papier : fabriquer le papier de chiffon */
+  { perso: "papetier", portrait: "papetier",
+    bubble: "Bienvenue à mon moulin ! Tu veux du papier ? Prends de vieux chiffons au chiffonnier, jette-les dans ma cuve : l'eau du moulin les broie en pâte, on puise au tamis, on presse, on sèche. Une recette venue de Chine — et dix fois moins chère que le parchemin !",
+    say: "Prends les chiffons du chiffonnier (il crie sa marchandise), puis broie-les dans la cuve du papetier → une feuille de PAPIER. C'est ce papier bon marché qui rendra l'imprimerie possible pour tous.",
+    attend: "papier",
+    suite: "Une belle feuille de papier ! Emporte-la : direction l'atelier de Gutenberg, où lettres de plomb, presse et papier vont faire des étincelles." },
 
   { perso: "gutenberg", portrait: "gutenberg",
-    bubble: "Bienvenue dans mon atelier ! Un moine met un an à copier un livre. Moi, j'en veux MILLE, tous pareils. Il me faut trois choses : des lettres de plomb que je réutilise, une presse… et du papier. Le parchemin coûte trop cher — mais on rapporte de Chine une recette : du papier fait avec de vieux chiffons ! Aide-moi.",
-    say: "L'imprimerie, en trois temps : (1) caractères mobiles (plomb + moule), (2) PAPIER de chiffon (chiffons + cuve — la recette chinoise), (3) compose et encre la forme dans la presse, puis presse une feuille dessus. Le grand basculement : le savoir pour tous.",
+    bubble: "Bienvenue dans mon atelier ! Un moine met un an à copier un livre. Moi, j'en veux MILLE, tous pareils. Il me faut trois choses : des lettres de plomb que je réutilise, une presse… et ton papier de chiffon, bien moins cher que le parchemin. Aide-moi !",
+    say: "L'imprimerie : (1) caractères mobiles (plomb + moule), (2) compose et encre la forme dans la presse (caractères + presse), (3) pose ta feuille de PAPIER sur la presse encrée. Le grand basculement : le savoir pour tous.",
     attend: "msg_imprimerie",
     suite: "Mille exemplaires ! Le savoir échappe enfin au monastère et aux riches. Ma jauge déborde : le bouton PARTIR nous emmène aux Temps modernes." },
 ];
@@ -307,7 +326,7 @@ const chapter = {
   intro: INTRO,
   actions: ACTIONS,
   quete: QUETE,
-  portraits: { charles: PortraitCharles, jorge: PortraitJorge, gutenberg: PortraitGutenberg },
+  portraits: { charles: PortraitCharles, jorge: PortraitJorge, gutenberg: PortraitGutenberg, papetier: PortraitPapetier },
   facture: FACTURE,
 };
 

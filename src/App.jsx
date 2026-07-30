@@ -474,11 +474,15 @@ export default function App() {
   const combinePair = (a, b, point) => {
     const rec = findRecipe(chapter.recipes, a, b);
     if (rec) {
-      /* recette qui OUVRE un mini-jeu (ex. encre + papyrus → cartouche).
-         `needsInv` : objets qu'il faut AUSSI avoir en main (ex. le calame). */
-      if (rec.opens) {
-        const manque = (rec.needsInv || []).find((id) => !inv.includes(id));
+      /* `needsInv` : objets qu'il faut AUSSI avoir en main pour que la
+         recette parte (ex. la forme encrée avant de presser une feuille).
+         Vaut pour TOUS les types de recettes. */
+      if (rec.needsInv) {
+        const manque = rec.needsInv.find((id) => !inv.includes(id));
         if (manque) { setShake(true); setTimeout(() => setShake(false), 500); playSfx("fail"); say(rec.needMsg || `Il te manque : ${chapter.items[manque]?.name}.`, "vexe"); return; }
+      }
+      /* recette qui OUVRE un mini-jeu (ex. encre + papyrus → cartouche). */
+      if (rec.opens) {
         boom(point); playSfx("craft");
         setModal({ type: rec.opens });
         return;
@@ -510,7 +514,7 @@ export default function App() {
       if (rec.msg && rec.perdu) {
         const m = chapter.messages[rec.out];
         setCollection((c) => c.some((x) => x.id === rec.out) ? c : [...c, { id: rec.out, titre: m.title, emoji: m.emoji, date: chapter.date, jauges: m.jauges, fact: m.fact, perdu: true }]);
-        setInv((v) => cleanup(v, newMade));
+        setInv((v) => cleanup(v.filter((x) => !(rec.consume || []).includes(x)), newMade));
         poof(point, m.emoji); playSfx("dissolve");
         say(`💨 « ${m.title} »… envolé. Le message a bien existé, mais son support ne nous est jamais parvenu. Tu récupères un fragment — et une leçon.`, "neutre");
         setTimeout(() => setModal({ type: "lost", id: rec.out }), 850);
@@ -521,7 +525,7 @@ export default function App() {
         const m = chapter.messages[rec.out];
         setMsgs((v) => [...v, rec.out]);
         setCollection((c) => c.some((x) => x.id === rec.out) ? c : [...c, { id: rec.out, titre: m.title, emoji: m.emoji, date: chapter.date, jauges: m.jauges, fact: m.fact, perdu: false }]);
-        setInv((v) => cleanup(v, newMade));
+        setInv((v) => cleanup(v.filter((x) => !(rec.consume || []).includes(x)), newMade));
         flash(); boom(point, true); playSfx("message");
         /* certains messages ont leur propre son (ex. la flûte joue sa
            mélodie) : il part juste après l'arpège de transmission */

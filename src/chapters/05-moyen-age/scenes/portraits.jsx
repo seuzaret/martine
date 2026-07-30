@@ -189,3 +189,67 @@ export function PortraitGutenberg() {
     </svg>
   );
 }
+
+/* LE PAPETIER — artisan du moulin à papier. Coiffe de toile, tablier de
+   cuir, manches retroussées, barbe courte, air jovial et robuste. */
+export function PortraitPapetier() {
+  return (
+    <svg viewBox="0 0 300 340" style={{ display: "block", width: "100%", height: "auto" }}>
+      <defs>
+        <radialGradient id="pPaHalo" cx="50%" cy="38%" r="62%">
+          <stop offset="0%" stopColor="#e6f0f4" stopOpacity="0.45" /><stop offset="60%" stopColor="#cadce2" stopOpacity="0.14" /><stop offset="100%" stopColor="#cadce2" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="pPaSkin" x1="0" y1="0" x2="1" y2="0.3"><stop offset="0%" stopColor="#dcac7c" /><stop offset="55%" stopColor="#cc9c6c" /><stop offset="100%" stopColor="#ac7c4c" /></linearGradient>
+        <linearGradient id="pPaApron" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8a5a34" /><stop offset="100%" stopColor="#5a3a1e" /></linearGradient>
+      </defs>
+      <circle cx="150" cy="138" r="130" fill="url(#pPaHalo)" />
+
+      {/* chemise de toile écrue, manches retroussées */}
+      <path d="M40 340 Q44 250 96 232 Q122 222 150 224 Q178 222 204 232 Q256 250 260 340 Z" fill="#c2b492" />
+      <path d="M40 340 Q44 250 96 232 Q122 222 150 224 Q178 222 204 232 Q256 250 260 340 Z" fill="#8a7c5a" opacity="0.2" />
+      {/* le tablier de cuir par-dessus */}
+      <path d="M108 236 Q150 250 192 236 L204 340 L96 340 Z" fill="url(#pPaApron)" />
+      <path d="M108 236 Q150 250 192 236 L204 340 L96 340 Z" fill="none" stroke="#3a2412" strokeWidth="2" opacity="0.5" />
+      {/* bavette + bretelles du tablier */}
+      <path d="M126 234 L120 210 M174 234 L180 210" stroke="#5a3a1e" strokeWidth="6" strokeLinecap="round" />
+      <path d="M124 250 h52 v10 h-52 Z" fill="#6a4424" />
+      {/* taches d'humidité du métier */}
+      {[[120, 300], [176, 296], [150, 320]].map(([x, y], i) => <ellipse key={i} cx={x} cy={y} rx="7" ry="5" fill="#4a2e16" opacity="0.4" />)}
+
+      {/* LE COU */}
+      <path d="M134 194 L166 194 L169 242 Q150 250 131 242 Z" fill="url(#pPaSkin)" />
+
+      {/* LE VISAGE : rond, robuste */}
+      <path d="M150 66 C189 66 205 94 203 130 C201 166 184 198 150 204 C116 198 99 166 97 130 C95 94 111 66 150 66 Z" fill="url(#pPaSkin)" />
+      <path d="M104 118 Q100 152 118 180" stroke="#ffe6b0" strokeWidth="5" fill="none" opacity="0.3" strokeLinecap="round" />
+      <ellipse cx="98" cy="142" rx="8" ry="11" fill="#cc9c6c" /><ellipse cx="202" cy="142" rx="8" ry="11" fill="#cc9c6c" />
+
+      {/* SOURCILS + YEUX francs, joviaux */}
+      <path d="M116 125 Q129 119 143 126" stroke="#6a4a2e" strokeWidth="3.4" fill="none" strokeLinecap="round" />
+      <path d="M157 126 Q171 119 184 125" stroke="#6a4a2e" strokeWidth="3.4" fill="none" strokeLinecap="round" />
+      <path d="M118 137 Q129 131 141 137 Q130 144 118 137 Z" fill="#f8efdd" />
+      <path d="M159 137 Q171 131 182 137 Q170 144 159 137 Z" fill="#f8efdd" />
+      <circle cx="130" cy="137" r="4.3" fill="#4a3320" /><circle cx="170" cy="137" r="4.3" fill="#4a3320" />
+      <circle cx="131.4" cy="135.5" r="1.3" fill="#fff" /><circle cx="171.4" cy="135.5" r="1.3" fill="#fff" />
+      <path d="M117 136 Q129 130 142 136 M158 136 Q171 130 183 136" stroke="#5a4633" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+      {/* rides de sourire */}
+      <path d="M108 150 q4 8 10 12 M192 150 q-4 8 -10 12" stroke="#ac7c4c" strokeWidth="1.6" fill="none" opacity="0.35" />
+
+      {/* NEZ discret + bouche souriante */}
+      <path d="M145 157 Q150 161 155 157 M145 157 Q143 150 147 148 M155 157 Q157 150 153 148" stroke="#ac7c4c" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <Mouth y={172} dark="#8a3a2e" light="#c0785a" w={14} smile={1} />
+
+      {/* barbe courte encadrant */}
+      <path d="M118 152 Q114 186 138 204 Q150 212 162 204 Q186 186 182 152 Q168 172 150 174 Q132 172 118 152 Z" fill="#7a6a52" />
+      <g stroke="#5a4c38" strokeWidth="1.2" fill="none" opacity="0.5"><path d="M128 162 q6 22 22 38 M172 162 q-6 22 -22 38 M150 176 v30" /></g>
+      <path d="M130 158 q20 -7 40 0" stroke="#6a5a42" strokeWidth="3" fill="none" strokeLinecap="round" />
+
+      {/* cheveux courts + COIFFE de toile (bonnet du papetier) */}
+      <path d="M100 128 Q96 92 118 82 Q112 100 116 122 Z" fill="#6a5a44" />
+      <path d="M200 128 Q204 92 182 82 Q188 100 184 122 Z" fill="#6a5a44" />
+      <path d="M102 112 Q100 66 150 60 Q200 66 198 112 Q196 88 174 80 Q160 75 150 76 Q140 75 126 80 Q104 88 102 112 Z" fill="#eae4d4" />
+      <path d="M102 112 Q150 92 198 112 L198 104 Q150 84 102 104 Z" fill="#d8d0bc" />
+      <path d="M112 92 q38 -14 76 0" stroke="#c8c0aa" strokeWidth="1.6" fill="none" opacity="0.7" />
+    </svg>
+  );
+}
