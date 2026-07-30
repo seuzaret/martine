@@ -35,6 +35,7 @@ const ITEMS = {
   plomb_fondu: { name: "Plomb fondu", emoji: "🫗", desc: "Un métal en fusion, coulé dans des moules. Il durcit en un instant en petites lettres identiques." },
   moule:       { name: "Moule à lettres", emoji: "🔠", desc: "Une matrice pour couler des caractères tous semblables — et réutilisables à l'infini." },
   presse:      { name: "Presse à vis", emoji: "🗜️", support: true, desc: "Une grosse vis qui écrase la feuille sur les lettres encrées. La même page, encore et encore." },
+  encre:       { name: "Bouteille d'encre", emoji: "🖋️", desc: "Une encre noire et grasse, spéciale imprimerie. On la tamponne sur les lettres SERRÉES dans la presse — jamais sur des caractères en vrac, ça baverait partout." },
   chiffons:    { name: "Vieux chiffons de lin", emoji: "🧵", desc: "Des chiffons de lin et de chanvre usés. En Chine, on sait depuis mille ans qu'en les broyant on obtient… du papier. La recette a voyagé jusqu'ici par les marchands arabes." },
   cuve:        { name: "Cuve du papetier", emoji: "🪣", support: true, desc: "Une cuve pleine d'eau où l'on broie les chiffons en bouillie. On y puise ensuite la pâte avec un tamis pour former les feuilles." },
 
@@ -44,7 +45,8 @@ const ITEMS = {
   traite_galien: { name: "Traité de médecine de Galien", emoji: "📗", desc: "La copie payée au prix fort : le remède pour le fils du paysan est écrit là-dedans. Encore faut-il savoir le LIRE… Rapporte-le à quelqu'un d'instruit, au château." },
   caracteres: { name: "Caractères mobiles", emoji: "🔡", desc: "Des centaines de petites lettres de plomb, qu'on assemble en mots, puis en pages, puis qu'on démonte pour recommencer." },
   papier:      { name: "Feuille de papier de chiffon", emoji: "📄", desc: "Une feuille tirée de la pâte de chiffons. Bien moins chère que le parchemin (fait de peau) : sans ce papier bon marché, imprimer par milliers ne servirait à rien." },
-  forme_encree: { name: "Forme encrée", emoji: "🖤", keep: true, desc: "Les caractères rangés en page, serrés dans la presse et encrés au tampon. Prête à imprimer : il ne manque que la feuille de papier." },
+  forme_composee: { name: "Forme composée (à encrer)", emoji: "🔲", keep: true, desc: "Les caractères rangés en lignes et serrés dans la presse. Mais ils sont SECS : rien ne s'imprimera tant qu'on ne les a pas encrés." },
+  forme_encree: { name: "Forme encrée", emoji: "🖤", keep: true, desc: "Les caractères serrés dans la presse et tamponnés d'encre grasse. Prête à mordre le papier : il ne manque que la feuille." },
 };
 
 /* ------------------------------------------------------------
@@ -68,7 +70,7 @@ const SCENES = [
 const WHERE = {
   fil_laine: "au château", toile_lin: "au château",
   parchemin: "au monastère", aiguille: "au monastère", or_enlumine: "au monastère",
-  plomb_fondu: "à l'atelier de Gutenberg", moule: "à l'atelier de Gutenberg", chiffons: "au moulin à papier",
+  plomb_fondu: "à l'atelier de Gutenberg", moule: "à l'atelier de Gutenberg", encre: "à l'atelier de Gutenberg", chiffons: "au moulin à papier",
 };
 
 const HIDDEN_BY_FLAG = {};
@@ -102,12 +104,16 @@ const RECIPES = [
   /* le papier de chiffon (au MOULIN À PAPIER, la recette venue de Chine) */
   { a: "chiffons", b: "cuve", out: "papier",
     line: "On jette les vieux chiffons dans la cuve, on les broie en bouillie (le moulin à eau fait tourner les maillets), on puise la pâte au tamis, on presse et on sèche : voilà une feuille de PAPIER. La recette vient de Chine (par les Arabes) — et le papier coûte dix fois moins que le parchemin." },
-  /* Gutenberg — 1) composer et encrer la forme dans la presse… */
-  { a: "caracteres", b: "presse", out: "forme_encree",
-    line: "Tu ranges les lettres en lignes, tu serres la forme dans la presse, tu l'encres au tampon. La forme est ENCRÉE dans la presse — il ne manque plus qu'à poser une feuille dessus." },
-  /* …2) puis poser le PAPIER sur la presse encrée et abaisser la vis ! */
+  /* Gutenberg — 1) ranger et serrer les caractères dans la presse… */
+  { a: "caracteres", b: "presse", out: "forme_composee",
+    line: "Tu ranges les lettres en lignes et tu les serres dans la presse : la forme est COMPOSÉE. Mais elle est encore sèche — sans encre, rien ne s'imprimera." },
+  /* …2) …seulement ALORS on peut encrer la forme sur la presse… */
+  { a: "encre", b: "presse", out: "forme_encree", needsInv: ["forme_composee"], consume: ["forme_composee"],
+    needMsg: "Encrer une presse vide ? Range et serre d'abord tes caractères dedans (caractères + presse).",
+    line: "Tu tamponnes l'encre grasse sur les lettres serrées dans la presse : la forme est ENCRÉE, toute noire, prête à mordre le papier." },
+  /* …3) puis poser le PAPIER sur la presse encrée et abaisser la vis ! */
   { a: "papier", b: "presse", out: "msg_imprimerie", msg: true, needsInv: ["forme_encree"], consume: ["forme_encree"],
-    needMsg: "La presse est vide ! Compose et encre d'abord tes caractères dedans (caractères + presse), puis pose la feuille." },
+    needMsg: "La forme n'est pas encore encrée ! Tamponne d'abord l'encre sur les caractères de la presse, puis pose la feuille." },
 ];
 
 /* ------------------------------------------------------------
@@ -162,7 +168,8 @@ const HINTS = [
   { needs: ["codex_enlumine", "flamme"], out: "msg_oeuvre", text: "Attention à cette bougie près de ton manuscrit enluminé unique… un rien, et des mois de travail partent en fumée." },
   { needs: ["plomb_fondu", "moule"], out: "caracteres", text: "Coule le plomb fondu dans le moule à lettres : tu obtiendras des caractères tous identiques." },
   { needs: ["chiffons", "cuve"], out: "papier", text: "Ces vieux chiffons : broie-les dans la cuve du papetier pour en faire une feuille de papier — la recette venue de Chine, bien moins chère que le parchemin." },
-  { needs: ["caracteres", "presse"], out: "forme_encree", text: "Range tes caractères en page dans la presse et encre-les : la forme est encrée dans la presse." },
+  { needs: ["caracteres", "presse"], out: "forme_composee", text: "Range tes caractères en page dans la presse et serre-les : tu obtiens la forme composée (encore sèche)." },
+  { needs: ["encre", "presse"], out: "forme_encree", text: "Tamponne l'encre sur les caractères SERRÉS dans la presse : la forme devient encrée." },
   { needs: ["papier", "presse"], out: "msg_imprimerie", text: "Pose une feuille de papier sur la presse encrée et abaisse la vis : la page s'imprime ! Et on recommence, mille fois." },
 ];
 
@@ -175,6 +182,7 @@ const NEAR_MISS = [
   { pair: ["plomb_fondu", "presse"], line: "Écraser du plomb fondu à la presse ? Coule-le d'abord en LETTRES dans le moule." },
   { pair: ["chiffons", "presse"], line: "Écraser des chiffons secs à la presse ne fait pas du papier : il faut d'abord les BROYER dans l'eau de la cuve." },
   { pair: ["caracteres", "papier"], line: "Poser la feuille sur des lettres nues ? Sans les encrer, rien ne s'imprime : serre-les et encre-les d'abord dans la presse." },
+  { pair: ["encre", "caracteres"], line: "De l'encre sur des lettres en vrac ? Ça bave partout. Range-les d'abord dans la presse — on n'encre la forme QUE sur la presse." },
 ];
 
 const FAIL_LINES = [
@@ -280,7 +288,7 @@ const QUETE = [
 
   { perso: "gutenberg", portrait: "gutenberg",
     bubble: "Bienvenue dans mon atelier ! Un moine met un an à copier un livre. Moi, j'en veux MILLE, tous pareils. Il me faut des lettres de plomb, une presse… et surtout du PAPIER, bien moins cher que le parchemin. Je n'en ai plus : va au moulin à papier, juste à côté (la flèche › t'y mène), rapporte-m'en une feuille — et on imprime !",
-    say: "Gutenberg réclame du PAPIER. Va au moulin à papier (flèche › à droite) le fabriquer, puis reviens (‹) : (1) plomb + moule → caractères, (2) caractères + presse → forme encrée, (3) pose le papier sur la presse encrée. Le grand basculement !",
+    say: "Gutenberg réclame du PAPIER. Va au moulin à papier (flèche › à droite) le fabriquer, puis reviens (‹) et imprime : (1) plomb + moule → caractères, (2) caractères + presse → forme composée, (3) encre + presse → forme encrée, (4) papier + presse → la page ! Le grand basculement !",
     attend: "msg_imprimerie",
     suite: "Mille exemplaires ! Le savoir échappe enfin au monastère et aux riches. Ma jauge déborde : le bouton PARTIR nous emmène aux Temps modernes." },
 ];

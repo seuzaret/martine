@@ -535,7 +535,7 @@ export default function App() {
         return;
       }
       /* Objet fabriqué classique */
-      setInv((v) => cleanup([...v, rec.out], newMade));
+      setInv((v) => cleanup([...v.filter((x) => !(rec.consume || []).includes(x)), rec.out], newMade));
       flash(); boom(point); playSfx("craft");
       say(`✨ NOUVEL OBJET : ${chapter.items[rec.out].emoji} ${chapter.items[rec.out].name}. ${rec.line}`, "content");
       return;

@@ -100,6 +100,24 @@ export default function SceneGutenberg({ collect, action, reveal, made = [] }) {
           </g>
         </g>
 
+        {/* LA BOUTEILLE D'ENCRE + les tampons (balles à encrer) */}
+        <g transform="translate(556,514)">
+          <ellipse cx="0" cy="16" rx="30" ry="7" fill="#160f08" opacity="0.4" />
+          {/* la bouteille d'encre noire */}
+          <path d="M-8 8 Q-11 -6 -5 -10 L-5 -16 L5 -16 L5 -10 Q11 -6 8 8 Z" fill="#2a2620" />
+          <rect x="-5" y="-20" width="10" height="5" rx="1" fill="#4a3f30" />
+          <ellipse cx="0" cy="-2" rx="6" ry="3" fill="#0c0a08" />
+          <path d="M-6 0 q6 3 12 0" stroke="#4a4438" strokeWidth="1" opacity="0.6" fill="none" />
+          {/* deux balles à encrer (cuir bourré, manche court) */}
+          {[[18, 2], [26, 8]].map(([x, y], i) => (
+            <g key={i} transform={`translate(${x},${y})`}>
+              <circle cx="0" cy="0" r="7" fill="#3a2c1c" />
+              <circle cx="-2" cy="-2" r="2.4" fill="#5a4632" opacity="0.7" />
+              <rect x="-1.4" y="-14" width="3" height="10" rx="1.4" fill="#6a4c2e" />
+            </g>
+          ))}
+        </g>
+
         {/* LA GRANDE PRESSE À VIS (la pièce maîtresse) */}
         <g transform="translate(680,430)">
           {/* bâti en bois */}
@@ -183,6 +201,7 @@ export default function SceneGutenberg({ collect, action, reveal, made = [] }) {
 
       <Hotspot cx={200} cy={472} r={40} label="plomb fondu" item="plomb_fondu" reveal={reveal} onClick={() => collect("plomb_fondu")} />
       <Hotspot cx={360} cy={500} r={46} label="moule à lettres" item="moule" reveal={reveal} onClick={() => collect("moule")} />
+      <Hotspot cx={560} cy={510} r={30} label="bouteille d'encre" item="encre" reveal={reveal} onClick={() => collect("encre")} />
       <Hotspot cx={678} cy={470} r={74} label="presse à vis" item="presse" reveal={reveal} onClick={() => collect("presse")} />
     </svg>
   );

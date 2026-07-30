@@ -46,10 +46,10 @@ export default function Scene({ scenes, tab, onTab, sceneProps, sparkle, linear 
           librement par des flèches simples ‹ › (ni titre vert, ni condition) —
           ex. l'atelier de Gutenberg et le moulin à papier, juste à côté. */}
       {linear && scenes[tab].free && tab > 0 && scenes[tab - 1].free && (
-        <button onClick={() => onTab(tab - 1)} style={navBtn("left")} title={scenes[tab - 1].name}>‹</button>
+        <button onClick={() => onTab(tab - 1)} style={navBtn("left")} aria-label="tableau précédent">‹</button>
       )}
       {linear && scenes[tab].free && tab < scenes.length - 1 && scenes[tab + 1].free && (
-        <button onClick={() => onTab(tab + 1)} style={navBtn("right")} title={scenes[tab + 1].name}>›</button>
+        <button onClick={() => onTab(tab + 1)} style={navBtn("right")} aria-label="tableau suivant">›</button>
       )}
       {/* MODE LINÉAIRE (scènes NON libres) : une seule flèche d'avancée, verte
           et pulsée, qui n'apparaît QUE lorsque le tableau est bouclé
