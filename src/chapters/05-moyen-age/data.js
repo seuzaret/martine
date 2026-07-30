@@ -45,8 +45,6 @@ const ITEMS = {
   traite_galien: { name: "Traité de médecine de Galien", emoji: "📗", desc: "La copie payée au prix fort : le remède pour le fils du paysan est écrit là-dedans. Encore faut-il savoir le LIRE… Rapporte-le à quelqu'un d'instruit, au château." },
   caracteres: { name: "Caractères mobiles", emoji: "🔡", desc: "Des centaines de petites lettres de plomb, qu'on assemble en mots, puis en pages, puis qu'on démonte pour recommencer." },
   papier:      { name: "Feuille de papier de chiffon", emoji: "📄", desc: "Une feuille tirée de la pâte de chiffons. Bien moins chère que le parchemin (fait de peau) : sans ce papier bon marché, imprimer par milliers ne servirait à rien." },
-  forme_composee: { name: "Forme composée (à encrer)", emoji: "🔲", keep: true, desc: "Les caractères rangés en lignes et serrés dans la presse. Mais ils sont SECS : rien ne s'imprimera tant qu'on ne les a pas encrés." },
-  forme_encree: { name: "Forme encrée", emoji: "🖤", keep: true, desc: "Les caractères serrés dans la presse et tamponnés d'encre grasse. Prête à mordre le papier : il ne manque que la feuille." },
 };
 
 /* ------------------------------------------------------------
@@ -104,15 +102,17 @@ const RECIPES = [
   /* le papier de chiffon (au MOULIN À PAPIER, la recette venue de Chine) */
   { a: "chiffons", b: "cuve", out: "papier",
     line: "On jette les vieux chiffons dans la cuve, on les broie en bouillie (le moulin à eau fait tourner les maillets), on puise la pâte au tamis, on presse et on sèche : voilà une feuille de PAPIER. La recette vient de Chine (par les Arabes) — et le papier coûte dix fois moins que le parchemin." },
-  /* Gutenberg — 1) ranger et serrer les caractères dans la presse… */
-  { a: "caracteres", b: "presse", out: "forme_composee",
+  /* Gutenberg — les étapes de la PRESSE sont des ÉTATS (drapeaux), pas des
+     objets : rien ne traîne dans le sac, la presse « se souvient ».
+     1) ranger et serrer les caractères dans la presse… */
+  { a: "caracteres", b: "presse", out: "presse_composee", gives: [], flag: "presse_composee", consume: ["caracteres"],
     line: "Tu ranges les lettres en lignes et tu les serres dans la presse : la forme est COMPOSÉE. Mais elle est encore sèche — sans encre, rien ne s'imprimera." },
   /* …2) …seulement ALORS on peut encrer la forme sur la presse… */
-  { a: "encre", b: "presse", out: "forme_encree", needsInv: ["forme_composee"], consume: ["forme_composee"],
+  { a: "encre", b: "presse", out: "presse_encree", gives: [], flag: "presse_encree", consume: ["encre"], needsFlag: "presse_composee",
     needMsg: "Encrer une presse vide ? Range et serre d'abord tes caractères dedans (caractères + presse).",
     line: "Tu tamponnes l'encre grasse sur les lettres serrées dans la presse : la forme est ENCRÉE, toute noire, prête à mordre le papier." },
   /* …3) puis poser le PAPIER sur la presse encrée et abaisser la vis ! */
-  { a: "papier", b: "presse", out: "msg_imprimerie", msg: true, needsInv: ["forme_encree"], consume: ["forme_encree"],
+  { a: "papier", b: "presse", out: "msg_imprimerie", msg: true, needsFlag: "presse_encree", consume: ["papier"],
     needMsg: "La forme n'est pas encore encrée ! Tamponne d'abord l'encre sur les caractères de la presse, puis pose la feuille." },
 ];
 
@@ -168,8 +168,8 @@ const HINTS = [
   { needs: ["codex_enlumine", "flamme"], out: "msg_oeuvre", text: "Attention à cette bougie près de ton manuscrit enluminé unique… un rien, et des mois de travail partent en fumée." },
   { needs: ["plomb_fondu", "moule"], out: "caracteres", text: "Coule le plomb fondu dans le moule à lettres : tu obtiendras des caractères tous identiques." },
   { needs: ["chiffons", "cuve"], out: "papier", text: "Ces vieux chiffons : broie-les dans la cuve du papetier pour en faire une feuille de papier — la recette venue de Chine, bien moins chère que le parchemin." },
-  { needs: ["caracteres", "presse"], out: "forme_composee", text: "Range tes caractères en page dans la presse et serre-les : tu obtiens la forme composée (encore sèche)." },
-  { needs: ["encre", "presse"], out: "forme_encree", text: "Tamponne l'encre sur les caractères SERRÉS dans la presse : la forme devient encrée." },
+  { needs: ["caracteres", "presse"], out: "presse_composee", text: "Range tes caractères en page dans la presse et serre-les : la forme est composée (encore sèche)." },
+  { needs: ["encre", "presse"], out: "presse_encree", text: "Tamponne l'encre sur les caractères SERRÉS dans la presse : la forme devient encrée." },
   { needs: ["papier", "presse"], out: "msg_imprimerie", text: "Pose une feuille de papier sur la presse encrée et abaisse la vis : la page s'imprime ! Et on recommence, mille fois." },
 ];
 

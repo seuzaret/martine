@@ -481,6 +481,13 @@ export default function App() {
         const manque = rec.needsInv.find((id) => !inv.includes(id));
         if (manque) { setShake(true); setTimeout(() => setShake(false), 500); playSfx("fail"); say(rec.needMsg || `Il te manque : ${chapter.items[manque]?.name}.`, "vexe"); return; }
       }
+      /* `needsFlag` : ÉTAT préalable requis (drapeau ou jalon `made`), sans
+         objet dans le sac — ex. la presse déjà composée/encrée. */
+      if (rec.needsFlag) {
+        const list = Array.isArray(rec.needsFlag) ? rec.needsFlag : [rec.needsFlag];
+        const manque = list.find((f) => !flags[f] && !made.includes(f));
+        if (manque) { setShake(true); setTimeout(() => setShake(false), 500); playSfx("fail"); say(rec.needMsg || "Il manque une étape avant celle-ci.", "vexe"); return; }
+      }
       /* recette qui OUVRE un mini-jeu (ex. encre + papyrus → cartouche). */
       if (rec.opens) {
         boom(point); playSfx("craft");
