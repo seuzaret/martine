@@ -11,7 +11,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    l'espion, disques de zinc & cuivre, chiffons à la saumure.
    ============================================================ */
 
-export default function SceneChappe({ collect, action, reveal, made = [] }) {
+export default function SceneChappe({ collect, action, reveal, made = [], queteQui }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -42,6 +42,19 @@ export default function SceneChappe({ collect, action, reveal, made = [] }) {
       {/* ═══ couche lointaine : collines + tour du télégraphe à l'horizon ═══ */}
       <PLayer depth={1}>
         <path d="M0 300 L150 250 L320 296 L500 244 L700 300 L860 252 L1000 296 L1000 400 L0 400 Z" fill="url(#cp-hill)" />
+        {/* CONDÉ reprise, au loin à gauche : une place forte avec le drapeau
+            TRICOLORE hissé, un peu de fumée de canon — l'événement du jour */}
+        <g transform="translate(170,268)" opacity="0.9">
+          <rect x="-46" y="-14" width="92" height="34" fill="#6a6450" />
+          {[-46, -30, -14, 2, 18, 34].map((x, i) => <rect key={i} x={x} y="-22" width="8" height="8" fill="#6a6450" />)}
+          <rect x="-16" y="-6" width="14" height="26" fill="#2c2618" />
+          {/* mât + drapeau tricolore */}
+          <path d="M40 -14 v-30" stroke="#3a2c1c" strokeWidth="2" />
+          <path d="M40 -44 h24 v14 h-24 Z" fill="#e8e2d0" />
+          <rect x="40" y="-44" width="8" height="14" fill="#2a4a9a" /><rect x="56" y="-44" width="8" height="14" fill="#a83030" />
+          {/* fumée de canon */}
+          <path d="M-40 6 q-10 -8 -4 -18 q-8 4 -6 -8" stroke="#cfc8bc" strokeWidth="4" fill="none" opacity="0.4" style={{ animation: "drift 6s ease-in-out infinite" }} filter="url(#cp-blur)" />
+        </g>
         {/* la tour SUIVANTE, au loin (silhouette) */}
         <g transform="translate(500,244)" opacity="0.7">
           <rect x="-6" y="-30" width="12" height="30" fill="#3a3a2a" />
@@ -114,6 +127,24 @@ export default function SceneChappe({ collect, action, reveal, made = [] }) {
           </g>
         </g>
 
+        {/* ALESSANDRO VOLTA, badaud savant, penché sur son établi, examinant
+            ses disques — il cherche une source d'énergie constante */}
+        <g transform="translate(596,470)">
+          <ellipse cx="0" cy="30" rx="22" ry="6" fill="#241608" opacity="0.5" />
+          {/* habit vert + jabot */}
+          <path d="M-13 6 Q-17 -14 0 -18 Q17 -14 13 6 L11 28 L-11 28 Z" fill="#2c4636" />
+          <path d="M0 -14 Q-3 0 0 12 Q3 0 0 -14 Z" fill="#e6dfc8" />
+          {/* tête, cheveux naturels grisonnants */}
+          <circle cx="1" cy="-24" r="8" fill="#cc9c6c" />
+          <path d="M-7 -27 q8 -6 16 0 q-2 -8 -8 -8 q-7 0 -8 8" fill="#6a5a48" />
+          <path d="M8 -24 q7 2 7 10" stroke="#6a5a48" strokeWidth="3" fill="none" />
+          {/* un bras tendu vers l'établi, l'autre au menton (réflexion) */}
+          <path d="M11 -6 q16 4 20 16" stroke="#2c4636" strokeWidth="5" fill="none" strokeLinecap="round" />
+          <path d="M-10 -6 q-8 2 -6 -6" stroke="#2c4636" strokeWidth="4.5" fill="none" strokeLinecap="round" />
+          {/* petit éclair d'idée */}
+          <path d="M-2 -40 l-4 8 l4 -1 l-3 8" stroke="#ffe08a" strokeWidth="2" fill="none" style={{ animation: "pulse 1.8s infinite" }} />
+        </g>
+
         {/* LE COIN ATELIER DE VOLTA : disques de zinc & cuivre + chiffons salés */}
         <g transform="translate(660,502)">
           <path d="M-44 14 L44 14 L38 -2 L-38 -2 Z" fill="#5a3f24" />
@@ -166,14 +197,24 @@ export default function SceneChappe({ collect, action, reveal, made = [] }) {
       <rect width="1000" height="560" fill="#201810" opacity="0.06" style={{ pointerEvents: "none" }} />
 
       {/* zones cliquables */}
-      {/* le « ? » de l'opérateur : et si le message ne voyageait plus ? */}
-      {!made.includes("msg_chappe") && (
+      {/* le « ? » de l'opérateur (tant qu'il guide : télégraphier Condé) */}
+      {queteQui === "operateur" && (
         <>
           <g transform="translate(372,356)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
             <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
           </g>
           <Hotspot cx={392} cy={366} r={26} label="parler à l'opérateur" reveal={reveal} onClick={() => action("operateur")} />
+        </>
+      )}
+      {/* le « ? » de Volta (quand il guide : fabriquer la pile) */}
+      {queteQui === "volta" && (
+        <>
+          <g transform="translate(578,356)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+            <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
+            <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
+          </g>
+          <Hotspot cx={598} cy={452} r={26} label="parler à Volta" reveal={reveal} onClick={() => action("volta")} />
         </>
       )}
 

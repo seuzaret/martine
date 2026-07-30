@@ -5,11 +5,11 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    CHAPITRE 6 — Tableau : l'imprimerie en effervescence (départ)
    Peinture fine — atelier animé, jour clair : une presse en
    marche, des cordes de gazettes qui sèchent, des piles de
-   feuilles, et le colporteur qui remplit sa hotte à la porte.
-   À trouver : feuilles imprimées, le colporteur.
+   feuilles, et le RÉDACTEUR EN CHEF Sigismond près de sa presse.
+   On lui APPORTE l'article de Jules → il en fait une gazette.
    ============================================================ */
 
-export default function SceneImprimerie({ collect, action, reveal, made = [] }) {
+export default function SceneImprimerie({ collect, action, reveal, made = [], queteQui }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -134,23 +134,25 @@ export default function SceneImprimerie({ collect, action, reveal, made = [] }) 
           </g>
         </g>
 
-        {/* LE COLPORTEUR à la porte, remplissant sa hotte */}
-        <g transform="translate(760,466)">
-          <ellipse cx="0" cy="40" rx="30" ry="7" fill="#241608" opacity="0.5" />
-          {/* jambes + manteau */}
-          <path d="M-14 8 Q-18 -16 0 -20 Q18 -16 14 8 L12 34 L-12 34 Z" fill="#4a5a48" />
-          <path d="M-8 34 l-2 12 M8 34 l2 12" stroke="#3a2c1c" strokeWidth="6" strokeLinecap="round" />
-          {/* tête + chapeau */}
-          <circle cx="0" cy="-26" r="8" fill="#c8a882" />
-          <path d="M-12 -30 h24 M-9 -30 q9 -8 18 0" stroke="#3a2c1c" strokeWidth="4" fill="#3a2c1c" />
-          {/* la hotte pleine de feuilles dans le dos */}
-          <g transform="translate(20,-6)">
-            <path d="M-6 -18 L16 -18 L20 20 L-2 20 Z" fill="#7a5636" />
-            <path d="M-6 -18 L16 -18 L20 20 L-2 20 Z" fill="#3a2814" opacity="0.3" filter="url(#im-grain)" />
-            {[-12, -6, 0].map((y, i) => <rect key={i} x="-2" y={y - 22} width="18" height="8" fill="#efe6ce" transform="rotate(6)" />)}
-          </g>
-          {/* bras qui charge */}
-          <path d="M-8 -6 q-14 4 -18 16" stroke="#c8a882" strokeWidth="4" fill="none" strokeLinecap="round" />
+        {/* SIGISMOND, le rédacteur en chef, près de sa presse, une épreuve
+            à la main, l'autre main sur la hanche — l'air du patron */}
+        <g transform="translate(762,462)">
+          <ellipse cx="0" cy="44" rx="30" ry="8" fill="#241608" opacity="0.5" />
+          {/* habit long brun + gilet bordeaux */}
+          <path d="M-17 42 Q-22 -12 0 -22 Q22 -12 17 42 Z" fill="#4a3226" />
+          <path d="M-9 -14 L9 -14 L6 30 L-6 30 Z" fill="#6a2530" />
+          {[6, 18].map((y, i) => <circle key={i} cx="0" cy={y} r="2" fill="#c8a84a" />)}
+          {/* cravate blanche */}
+          <path d="M-5 -18 Q0 -8 5 -18 L3 -4 Q0 0 -3 -4 Z" fill="#efe9dc" />
+          {/* tête + catogan poudré + bésicles */}
+          <circle cx="0" cy="-28" r="8.5" fill="#cc9c6c" />
+          <path d="M-9 -30 q9 -7 18 0 q-1 -8 -9 -8 q-8 0 -9 8" fill="#c8bfb0" />
+          <ellipse cx="-9" cy="-24" rx="4" ry="3.4" fill="#c8bfb0" /><ellipse cx="9" cy="-24" rx="4" ry="3.4" fill="#c8bfb0" />
+          <g stroke="#2a2218" strokeWidth="1" fill="none"><circle cx="-3" cy="-27" r="3" /><circle cx="4" cy="-27" r="3" /><path d="M-0.2 -27 h1.4" /></g>
+          {/* un bras tient une épreuve, l'autre sur la hanche */}
+          <path d="M-12 -8 q-12 6 -10 18" stroke="#4a3226" strokeWidth="5" fill="none" strokeLinecap="round" />
+          <path d="M12 -8 q14 2 16 14" stroke="#4a3226" strokeWidth="5" fill="none" strokeLinecap="round" />
+          <g transform="translate(30,8) rotate(10)"><rect x="-10" y="-12" width="20" height="26" rx="1" fill="#efe6ce" /><path d="M-6 -6 h12 M-6 -1 h9 M-6 4 h12" stroke="#7a6a4a" strokeWidth="1" opacity="0.7" /></g>
         </g>
 
         {/* épave de MARTINE, contre une presse */}
@@ -184,19 +186,19 @@ export default function SceneImprimerie({ collect, action, reveal, made = [] }) 
       <rect width="1000" height="560" fill="#1a1208" opacity="0.08" style={{ pointerEvents: "none" }} />
 
       {/* zones cliquables */}
-      {/* le « ? » du colporteur : mille feuilles en une nuit, incontrôlables */}
-      {!made.includes("msg_gazettes") && (
+      {/* le « ? » de Sigismond (tant qu'il est le personnage de la quête) */}
+      {queteQui === "sigismond" && (
         <>
-          <g transform="translate(758,356)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+          <g transform="translate(744,352)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
             <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
           </g>
-          <Hotspot cx={778} cy={366} r={26} label="parler au colporteur" reveal={reveal} onClick={() => action("colporteur")} />
+          <Hotspot cx={762} cy={438} r={26} label="parler à Sigismond" reveal={reveal} onClick={() => action("sigismond")} />
         </>
       )}
 
-      <Hotspot cx={288} cy={500} r={54} label="feuilles" item="feuilles" reveal={reveal} onClick={() => collect("feuilles")} />
-      <Hotspot cx={766} cy={456} r={50} label="colporteur" item="colporteur" reveal={reveal} onClick={() => collect("colporteur")} />
+      {/* Sigismond, cible de dépôt : on lui apporte l'article → la gazette */}
+      <Hotspot cx={762} cy={452} r={44} label="donner l'article à Sigismond" item="sigismond" reveal={reveal} onClick={() => action("sigismond")} />
       <Hotspot cx={910} cy={502} r={34} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
     </svg>
   );
