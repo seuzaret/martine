@@ -4,14 +4,16 @@ import { PLayer } from "../../../engine/Parallax.jsx";
 /* ============================================================
    CHAPITRE 5 — Tableau : le moulin à papier (extérieur)
    Peinture fine — au bord de la rivière : un MOULIN À EAU dont
-   la roue tourne, l'atelier du papetier avec sa CUVE et ses
-   feuilles qui sèchent, et un CHIFFONNIER qui parcourt le chemin
-   en criant sa marchandise, sa hotte pleine de vieux chiffons.
+   la roue tourne (elle actionne les maillets qui broient les
+   chiffons). Le papetier travaille DANS le moulin, sous la grande
+   arche de son atelier, avec sa CUVE et ses feuilles au séchoir.
+   Sur le chemin, un CHIFFONNIER crie sa marchandise, sa hotte
+   pleine de vieux chiffons.
    On ramasse les chiffons, on les broie dans la cuve → du PAPIER
    (la recette venue de Chine, bien moins cher que le parchemin).
    ============================================================ */
 
-export default function SceneMoulin({ collect, action, reveal, made = [], queteQui }) {
+export default function SceneMoulin({ collect, action, reveal, made = [] }) {
   const papier = made.includes("papier");
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
@@ -38,75 +40,88 @@ export default function SceneMoulin({ collect, action, reveal, made = [], queteQ
       {[[200, 90, 130], [560, 66, 160], [760, 116, 100]].map(([x, y, w], i) => (
         <ellipse key={i} cx={x} cy={y} rx={w} ry={13} fill="#f2f2e8" opacity="0.55" />
       ))}
-      <circle cx="150" cy="104" r="30" fill="#fff4d0" opacity="0.85" />
+      <circle cx="130" cy="100" r="30" fill="#fff4d0" opacity="0.85" />
 
-      {/* ═══ couche lointaine : collines, arbres, le moulin ═══ */}
+      {/* ═══ couche lointaine : collines, arbres, LE MOULIN ═══ */}
       <PLayer depth={1}>
         <path d="M0 300 Q250 280 500 292 Q750 304 1000 286 L1000 360 L0 360 Z" fill="#8a9a6a" />
         <path d="M0 330 Q300 314 620 326 Q820 334 1000 322 L1000 380 L0 380 Z" fill="#79895c" />
-        {/* quelques arbres */}
-        {[[90, 320], [300, 312], [430, 322]].map(([x, y], i) => (
+        {[[70, 322], [250, 314], [980, 316]].map(([x, y], i) => (
           <g key={i} transform={`translate(${x},${y})`}>
             <rect x="-4" y="-4" width="8" height="26" fill="#6a4c2e" />
             <circle cx="0" cy="-18" r="22" fill="#5a7a44" /><circle cx="-14" cy="-8" r="16" fill="#658149" /><circle cx="14" cy="-8" r="16" fill="#557040" />
           </g>
         ))}
 
-        {/* LE MOULIN À EAU (bâtiment de pierre + colombages, à droite) */}
-        <g transform="translate(800,300)">
-          {/* corps du bâtiment */}
-          <rect x="-70" y="-120" width="150" height="180" fill="url(#mo-stone)" />
-          <rect x="-70" y="-120" width="150" height="180" fill="#2c2418" opacity="0.22" filter="url(#mo-grain)" />
+        {/* ═══ LE MOULIN À PAPIER : bâtiment de pierre + étage à colombages,
+            avec une GRANDE ARCHE ouverte (l'atelier) où travaille le papetier ═══ */}
+        <g transform="translate(650,300)">
+          {/* corps de pierre */}
+          <rect x="-120" y="-10" width="240" height="172" fill="url(#mo-stone)" />
+          <rect x="-120" y="-10" width="240" height="172" fill="#2c2418" opacity="0.2" filter="url(#mo-grain)" />
           {/* étage à colombages */}
-          <rect x="-70" y="-120" width="150" height="60" fill="url(#mo-wood)" />
-          <path d="M-70 -90 h150 M-30 -120 v60 M10 -120 v60 M50 -120 v60 M-70 -120 l40 60 M50 -120 l30 60" stroke="#4a3218" strokeWidth="3" opacity="0.5" />
+          <rect x="-120" y="-72" width="240" height="62" fill="url(#mo-wood)" />
+          <path d="M-120 -42 h240 M-60 -72 v62 M0 -72 v62 M60 -72 v62 M-120 -72 l60 62 M60 -72 l60 62 M-60 -72 l60 62 M0 -72 l60 62" stroke="#4a3218" strokeWidth="3" opacity="0.5" />
           {/* toit */}
-          <path d="M-84 -120 L5 -168 L94 -120 Z" fill="#7a4632" />
-          <path d="M-84 -120 L5 -168" stroke="#5a3020" strokeWidth="3" opacity="0.6" />
-          {/* petite lucarne + fenêtres */}
-          <rect x="-8" y="-150" width="26" height="18" fill="#3a2c1c" />
-          {[-46, 40].map((x, i) => <rect key={i} x={x} y="-40" width="22" height="30" rx="2" fill="#2c2418" />)}
+          <path d="M-138 -72 L0 -134 L138 -72 Z" fill="#7a4632" />
+          <path d="M-138 -72 L0 -134" stroke="#5a3020" strokeWidth="3" opacity="0.6" />
+          <rect x="-14" y="-116" width="28" height="20" fill="#3a2c1c" />
+          {/* petites fenêtres de l'étage */}
+          {[-86, 74].map((x, i) => <rect key={i} x={x} y="-58" width="24" height="30" rx="2" fill="#2c2418" />)}
+          {/* LA GRANDE ARCHE de l'atelier (sombre : on y voit travailler) */}
+          <path d="M-72 162 L-72 60 Q0 8 72 60 L72 162 Z" fill="#241c14" />
+          <path d="M-72 162 L-72 60 Q0 8 72 60 L72 162 Z" fill="none" stroke="#4a3a28" strokeWidth="6" />
+          {/* dans l'ombre de l'arche : étagère + rames de papier qui sèchent */}
+          <g opacity="0.9">
+            <rect x="-64" y="70" width="128" height="7" fill="#3a2c1c" />
+            {[-52, -30, -8, 14, 36].map((x, i) => (
+              <rect key={i} x={x} y="46" width="16" height="24" fill="#cabf9a" opacity="0.55" transform={`rotate(${i % 2 ? 2 : -2} ${x + 8} 58)`} />
+            ))}
+            {/* une corde de feuilles suspendues au fond */}
+            <path d="M-60 96 q60 10 120 0" stroke="#4a3a28" strokeWidth="1.6" fill="none" />
+            {[-44, -16, 12, 40].map((x, i) => <rect key={i} x={x} y="98" width="20" height="26" fill="#d8d0b6" opacity="0.5" />)}
+          </g>
         </g>
       </PLayer>
 
-      {/* ═══ couche intermédiaire : la roue, la rivière, feuilles au séchoir ═══ */}
+      {/* ═══ couche intermédiaire : la rivière, LA ROUE, séchoir extérieur ═══ */}
       <PLayer depth={2}>
         {/* LA RIVIÈRE en travers */}
         <rect y="392" width="1000" height="72" fill="url(#mo-water)" />
         <rect y="394" width="1000" height="70" fill="#2a3e46" opacity="0.22" filter="url(#mo-mottle)" />
         {[406, 424, 444].map((y, i) => <path key={i} d={`M0 ${y} q120 -6 240 0 q120 6 240 0 q120 -6 240 0 q120 6 240 0`} stroke="#bcd2d4" strokeWidth="1.6" fill="none" opacity="0.4" />)}
 
-        {/* LA ROUE À AUBES du moulin (tourne) — collée au flanc gauche du bâtiment */}
-        <g transform="translate(704,404)">
-          <ellipse cx="6" cy="6" rx="86" ry="86" fill="#000" opacity="0.12" />
-          {/* axe */}
-          <circle cx="0" cy="0" r="9" fill="#4a3218" />
-          {/* la roue qui tourne : animation SUR UN G IMBRIQUÉ (ne casse pas la position) */}
-          <g style={{ transformOrigin: "704px 404px", transformBox: "view-box", animation: "spin 9s linear infinite" }}>
-            <circle cx="0" cy="0" r="82" fill="none" stroke="#6a4c2e" strokeWidth="9" />
-            <circle cx="0" cy="0" r="58" fill="none" stroke="#5a3f24" strokeWidth="5" />
+        {/* LA ROUE À AUBES, accolée au flanc DROIT du moulin, dans la rivière.
+            La rotation est appliquée à un <g> IMBRIQUÉ (contenu symétrique
+            centré sur 0,0), autour de son propre centre (transform-box:fill-box)
+            → elle tourne bien rond, sans vaciller. */}
+        <g transform="translate(792,406)">
+          {/* support + axe (fixes) */}
+          <rect x="-6" y="-96" width="12" height="150" fill="#4a3218" />
+          <circle cx="0" cy="0" r="10" fill="#3a2818" />
+          <g style={{ transformBox: "fill-box", transformOrigin: "center", animation: "spin 10s linear infinite" }}>
+            <circle cx="0" cy="0" r="84" fill="none" stroke="#6a4c2e" strokeWidth="10" />
+            <circle cx="0" cy="0" r="56" fill="none" stroke="#5a3f24" strokeWidth="5" />
             {[...Array(12)].map((_, i) => (
               <g key={i} transform={`rotate(${i * 30})`}>
-                <rect x="-5" y="-82" width="10" height="30" fill="#7a5636" />
-                <path d="M-14 -82 h28 v-10 h-28 Z" fill="#6a4c2e" />
-                <path d="M-3 -58 v58" stroke="#5a3f24" strokeWidth="3" />
+                <rect x="-3" y="-84" width="6" height="56" fill="#7a5636" />
+                <path d="M-15 -88 h30 v-10 h-30 Z" fill="#6a4c2e" />
               </g>
             ))}
           </g>
-          {/* éclaboussures en bas de la roue */}
+          {/* éclaboussures en bas de la roue (fixes) */}
           <g style={{ animation: "glow 1.4s ease-in-out infinite" }}>
-            <ellipse cx="0" cy="80" rx="30" ry="8" fill="#dfeef0" opacity="0.6" />
-            <circle cx="-16" cy="72" r="3" fill="#eef6f6" opacity="0.7" /><circle cx="14" cy="76" r="2.4" fill="#eef6f6" opacity="0.7" />
+            <ellipse cx="0" cy="82" rx="30" ry="8" fill="#dfeef0" opacity="0.6" />
+            <circle cx="-16" cy="74" r="3" fill="#eef6f6" opacity="0.7" /><circle cx="14" cy="78" r="2.4" fill="#eef6f6" opacity="0.7" />
           </g>
         </g>
 
-        {/* SÉCHOIR : des feuilles de papier suspendues à une corde sous un auvent */}
+        {/* SÉCHOIR extérieur : feuilles suspendues à une corde sous un auvent */}
         <g transform="translate(300,300)">
-          {/* poteaux + auvent */}
-          <rect x="-140" y="-6" width="8" height="150" fill="#6a4c2e" /><rect x="128" y="-6" width="8" height="150" fill="#6a4c2e" />
-          <path d="M-150 -6 L146 -6 L138 -26 L-142 -26 Z" fill="#8a5a34" />
-          <path d="M-132 22 q140 18 260 0" stroke="#5a4630" strokeWidth="2" fill="none" />
-          {[-110, -70, -30, 10, 50, 90].map((x, i) => (
+          <rect x="-120" y="-6" width="8" height="150" fill="#6a4c2e" /><rect x="108" y="-6" width="8" height="150" fill="#6a4c2e" />
+          <path d="M-130 -6 L126 -6 L118 -26 L-122 -26 Z" fill="#8a5a34" />
+          <path d="M-112 22 q120 18 220 0" stroke="#5a4630" strokeWidth="2" fill="none" />
+          {[-92, -54, -16, 22, 60].map((x, i) => (
             <g key={i} transform={`translate(${x},24)`}>
               <rect x="-16" y="0" width="32" height="42" fill="#efe9d6" transform={`rotate(${i % 2 ? 2 : -2})`} />
               <rect x="-16" y="0" width="32" height="42" fill="#cabf9a" opacity="0.25" transform={`rotate(${i % 2 ? 2 : -2})`} />
@@ -116,39 +131,42 @@ export default function SceneMoulin({ collect, action, reveal, made = [], queteQ
         </g>
       </PLayer>
 
-      {/* ═══ premier plan : berge, la cuve + le papetier, le chiffonnier ═══ */}
+      {/* ═══ premier plan : berge, la cuve + le papetier (dans l'arche), chiffonnier ═══ */}
       <PLayer depth={3}>
         <rect y="452" width="1000" height="108" fill="url(#mo-ground)" />
         <rect y="454" width="1000" height="106" fill="#2c2214" opacity="0.3" filter="url(#mo-mottle)" />
         <ellipse cx="500" cy="500" rx="460" ry="44" fill="#7a6844" opacity="0.25" />
 
-        {/* LA CUVE DU PAPETIER + le papetier qui puise avec le tamis */}
-        <g transform="translate(560,472)">
-          <ellipse cx="0" cy="44" rx="62" ry="12" fill="#160f08" opacity="0.4" />
-          {/* la cuve (grande) */}
-          <path d="M-48 -16 L48 -16 L40 40 L-40 40 Z" fill="url(#mo-wood)" />
-          <path d="M-48 -16 L48 -16 L40 40 L-40 40 Z" fill="#2a1c10" opacity="0.22" filter="url(#mo-grain)" />
-          <path d="M-28 -16 L-24 40 M0 -16 v56 M28 -16 L24 40" stroke="#4a3218" strokeWidth="1.4" opacity="0.5" />
-          <path d="M-46 -3 L46 -3 M-43 20 L43 20" stroke="#3a2412" strokeWidth="3" />
-          {/* surface d'eau + pâte de chiffon */}
-          <ellipse cx="0" cy="-16" rx="47" ry="12" fill="#9aa29a" />
-          <ellipse cx="0" cy="-16" rx="47" ry="12" fill="#d8dcd2" opacity="0.28" />
-          {[[-20, -18], [8, -15], [24, -19], [-6, -14], [16, -18]].map(([x, y], i) => (
-            <ellipse key={i} cx={x} cy={y} rx="4" ry="1.8" fill="#eef0e8" opacity="0.8" />
-          ))}
-          {/* le papetier, tablier de cuir, qui plonge le tamis */}
-          <g transform="translate(-62,-6)">
-            <path d="M-16 40 Q-20 2 0 -8 Q20 2 16 40 Z" fill="#8a5a34" />
+        {/* LE PAPETIER dans l'atelier, qui plonge son tamis dans la CUVE */}
+        <g transform="translate(590,470)">
+          {/* le papetier, tablier de cuir */}
+          <g transform="translate(-46,-6)">
+            <ellipse cx="0" cy="46" rx="20" ry="6" fill="#160f08" opacity="0.4" />
+            <path d="M-16 42 Q-20 2 0 -8 Q20 2 16 42 Z" fill="#8a5a34" />
             <path d="M-13 8 q13 6 26 0" stroke="#5a3a1e" strokeWidth="2.5" fill="none" />
             <circle cx="0" cy="-20" r="10" fill="#cc9c6c" />
             <path d="M-10 -24 q10 -6 20 0 q-2 -8 -10 -8 q-8 0 -10 8" fill="#eae4d4" />
             {/* bras tendus vers la cuve, tenant le tamis */}
-            <path d="M12 -8 q20 -2 34 8" stroke="#cc9c6c" strokeWidth="5" fill="none" strokeLinecap="round" />
-            <g transform="translate(48,2) rotate(12)">
+            <path d="M12 -8 q22 -2 36 8" stroke="#cc9c6c" strokeWidth="5" fill="none" strokeLinecap="round" />
+            <g transform="translate(50,2) rotate(12)">
               <rect x="-3" y="-14" width="30" height="20" rx="2" fill="#8a6a3a" />
               <rect x="1" y="-10" width="22" height="12" fill="#cabf90" />
               <path d="M1 -4 h22 M8 -10 v12 M15 -10 v12" stroke="#9a8a5a" strokeWidth="0.7" opacity="0.7" />
             </g>
+          </g>
+          {/* LA CUVE (grande) */}
+          <g transform="translate(70,0)">
+            <ellipse cx="0" cy="44" rx="58" ry="11" fill="#160f08" opacity="0.4" />
+            <path d="M-46 -16 L46 -16 L38 40 L-38 40 Z" fill="url(#mo-wood)" />
+            <path d="M-46 -16 L46 -16 L38 40 L-38 40 Z" fill="#2a1c10" opacity="0.22" filter="url(#mo-grain)" />
+            <path d="M-26 -16 L-22 40 M0 -16 v56 M26 -16 L22 40" stroke="#4a3218" strokeWidth="1.4" opacity="0.5" />
+            <path d="M-44 -3 L44 -3 M-41 20 L41 20" stroke="#3a2412" strokeWidth="3" />
+            {/* surface d'eau + pâte de chiffon */}
+            <ellipse cx="0" cy="-16" rx="45" ry="11" fill="#9aa29a" />
+            <ellipse cx="0" cy="-16" rx="45" ry="11" fill="#d8dcd2" opacity="0.28" />
+            {[[-20, -18], [8, -15], [24, -19], [-6, -14], [16, -18]].map(([x, y], i) => (
+              <ellipse key={i} cx={x} cy={y} rx="4" ry="1.8" fill="#eef0e8" opacity="0.8" />
+            ))}
           </g>
         </g>
 
@@ -188,9 +206,8 @@ export default function SceneMoulin({ collect, action, reveal, made = [], queteQ
         {/* RÉSULTAT (papier) : une belle feuille blanche fraîchement formée,
             posée sur un feutre, qui « pop » et brille doucement */}
         {papier && (
-          <g transform="translate(760,498)" style={{ animation: "fadein 1s ease-out" }}>
+          <g transform="translate(500,506)" style={{ animation: "fadein 1s ease-out" }}>
             <ellipse cx="0" cy="18" rx="34" ry="8" fill="#160f08" opacity="0.4" />
-            {/* pile de feutres + la feuille blanche dessus */}
             <path d="M-30 14 L30 14 L26 6 L-26 6 Z" fill="#8a7a56" />
             <path d="M-28 8 L28 8 L24 0 L-24 0 Z" fill="#a89a72" />
             <g transform="rotate(-3)">
@@ -206,14 +223,14 @@ export default function SceneMoulin({ collect, action, reveal, made = [], queteQ
       <rect width="1000" height="560" fill="#221a0c" opacity="0.05" style={{ pointerEvents: "none" }} />
 
       {/* ═══ zones cliquables ═══ */}
-      {/* le « ? » du papetier (tant qu'il guide la quête) */}
-      {queteQui === "papetier" && (
+      {/* le « ? » du papetier tant qu'on n'a pas fabriqué le papier */}
+      {!papier && (
         <>
-          <g transform="translate(542,346)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+          <g transform="translate(526,352)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
             <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
           </g>
-          <Hotspot cx={486} cy={462} r={26} label="parler au papetier" reveal={reveal} onClick={() => action("papetier")} />
+          <Hotspot cx={548} cy={460} r={28} label="parler au papetier" reveal={reveal} onClick={() => action("papetier")} />
         </>
       )}
 
@@ -222,7 +239,7 @@ export default function SceneMoulin({ collect, action, reveal, made = [], queteQ
       <Hotspot cx={136} cy={480} r={22} label="le chiffonnier" reveal={reveal} onClick={() => action("chiffonnier")} />
       <Hotspot cx={184} cy={466} r={22} label="vieux chiffons de lin" item="chiffons" reveal={reveal} onClick={() => collect("chiffons")} />
       {/* la cuve du papetier (support : on y broie les chiffons) */}
-      <Hotspot cx={565} cy={472} r={42} label="la cuve du papetier" item="cuve" reveal={reveal} onClick={() => collect("cuve")} />
+      <Hotspot cx={660} cy={468} r={44} label="la cuve du papetier" item="cuve" reveal={reveal} onClick={() => collect("cuve")} />
     </svg>
   );
 }

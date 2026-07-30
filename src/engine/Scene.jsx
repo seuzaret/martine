@@ -42,11 +42,20 @@ export default function Scene({ scenes, tab, onTab, sceneProps, sparkle, linear 
       {!linear && tab < scenes.length - 1 && (
         <button onClick={() => onTab(tab + 1)} style={navBtn("right")} title={scenes[tab + 1].name}>›</button>
       )}
-      {/* MODE LINÉAIRE : une seule flèche d'avancée, verte et pulsée, qui
-          n'apparaît QUE lorsque le tableau est bouclé (canAdvance). Elle pointe
-          à GAUCHE si le tableau courant est un RETOUR (on revient sur ses pas),
-          sinon à droite. Elle complète le titre vert près de MARTINE. */}
-      {linear && canAdvance && tab < scenes.length - 1 && (() => {
+      {/* MODE LINÉAIRE, scènes voisines LIBRES (`free`) : on va et vient
+          librement par des flèches simples ‹ › (ni titre vert, ni condition) —
+          ex. l'atelier de Gutenberg et le moulin à papier, juste à côté. */}
+      {linear && scenes[tab].free && tab > 0 && scenes[tab - 1].free && (
+        <button onClick={() => onTab(tab - 1)} style={navBtn("left")} title={scenes[tab - 1].name}>‹</button>
+      )}
+      {linear && scenes[tab].free && tab < scenes.length - 1 && scenes[tab + 1].free && (
+        <button onClick={() => onTab(tab + 1)} style={navBtn("right")} title={scenes[tab + 1].name}>›</button>
+      )}
+      {/* MODE LINÉAIRE (scènes NON libres) : une seule flèche d'avancée, verte
+          et pulsée, qui n'apparaît QUE lorsque le tableau est bouclé
+          (canAdvance). Elle pointe à GAUCHE si le tableau courant est un RETOUR
+          (on revient sur ses pas), sinon à droite. Complète le titre vert. */}
+      {linear && !scenes[tab].free && canAdvance && tab < scenes.length - 1 && (() => {
         const back = !!scenes[tab].retour;
         const side = back ? "left" : "right";
         return (

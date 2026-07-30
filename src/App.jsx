@@ -1093,7 +1093,7 @@ export default function App() {
               dans la cellule) → jamais rogné, jamais de débordement. */}
           <div style={{ width: decorBox ? decorBox.w : "100%", height: decorBox ? decorBox.h : "100%", position: "relative" }}>
             <Scene scenes={chapter.scenes} tab={tab} onTab={setTab} sceneProps={sceneProps} sparkle={sparkle} linear={chapter.linear}
-              canAdvance={!!(chapter.linear && chapter.scenes[tab + 1] && (chapter.scenes[tab].nextWhen || []).every((id) => made.includes(id)))} />
+              canAdvance={!!(chapter.linear && !chapter.scenes[tab].free && chapter.scenes[tab + 1] && (chapter.scenes[tab].nextWhen || []).every((id) => made.includes(id)))} />
           </div>
         </div>
         {/* écran large : la jauge temporelle à droite */}
@@ -1110,7 +1110,7 @@ export default function App() {
         <div style={{ width: "100%", maxWidth: 980, position: "relative" }}>
           {(() => {
             const next = chapter.scenes[tab + 1];
-            const ready = chapter.linear && next
+            const ready = chapter.linear && next && !chapter.scenes[tab].free
               && (chapter.scenes[tab].nextWhen || []).every((id) => made.includes(id));
             if (!ready) return null;
             return (

@@ -58,9 +58,11 @@ const SCENES = [
   { id: "monastere", name: "Le monastère du frère Jorge",      Component: SceneMonastere, nextWhen: ["paye"], retour: true },
   /* RETOUR au château (même décor) : rapporter le remède au prêtre. */
   { id: "retour",    name: "Retour au château — le remède",   Component: SceneChateau,  nextWhen: ["remis"] },
-  /* LE MOULIN À PAPIER (extérieur) : fabriquer le papier de chiffon. */
-  { id: "moulin",    name: "Le moulin à papier",              Component: SceneMoulin,   nextWhen: ["papier"] },
-  { id: "gutenberg", name: "L'atelier de Gutenberg",           Component: SceneGutenberg },
+  /* Fin du chapitre : l'atelier de Gutenberg ET le moulin à papier, juste
+     à côté, se parcourent LIBREMENT par les flèches ‹ › (`free`). Gutenberg
+     réclame du papier → on va le fabriquer au moulin (à droite) → on revient. */
+  { id: "gutenberg", name: "L'atelier de Gutenberg",           Component: SceneGutenberg, free: true },
+  { id: "moulin",    name: "Le moulin à papier",              Component: SceneMoulin,    free: true },
 ];
 
 const WHERE = {
@@ -205,8 +207,8 @@ const ACTIONS = {
 
   /* Le moulin à papier : le papetier (guide) et le chiffonnier (ramasseur). */
   papetier: { mood: "neutre",
-    bubble: "Bienvenue à mon moulin ! Ici je fais du papier avec de vieux chiffons — une recette venue de Chine. Bien moins cher que le parchemin : c'est LUI qui va rendre les livres accessibles.",
-    say: "Le papetier : sans son papier bon marché, l'imprimerie n'imprimerait que pour les riches." },
+    bubble: "Bienvenue à mon moulin ! Tu viens pour du papier ? Prends de vieux chiffons au chiffonnier, jette-les dans ma cuve : la roue à eau les broie en pâte, je puise au tamis, je presse, je sèche. Une recette venue de Chine — dix fois moins cher que le parchemin !",
+    say: "Le papetier : prends les chiffons du chiffonnier, broie-les dans sa cuve → une feuille de PAPIER. Rapporte-la à Gutenberg (‹). Sans ce papier bon marché, l'imprimerie n'imprimerait que pour les riches." },
   chiffonnier: { mood: "content",
     bubble: "« Chiffons ! Chiffons à vendre ! Vieux linge, vieilles hardes ! » Tiens, prends ce que tu veux dans ma hotte, l'ami — le papetier m'en débarrasse à bon prix.",
     say: "Le chiffonnier parcourt les rues en criant, pour ramasser le vieux linge : c'est la matière première du papier. Prends ses chiffons." },
@@ -274,18 +276,11 @@ const QUETE = [
     bubble: "Tu rapportes le traité de Galien ? Confie-le-moi, mon enfant : je sais lire le latin des médecins. Je vais préparer le remède pour ce petit — encore fallait-il que le livre arrive… et qu'un lettré le lise.",
     say: "Remets le traité au PRÊTRE : glisse-le sur lui. (Essaie sur le paysan si tu veux : il t'avouera qu'il ne sait pas lire — un livre ne sert qu'à qui sait le déchiffrer.)",
     attend: "remis",
-    suite: "L'enfant a maintenant bien plus de chances de s'en sortir ! Un livre, ET quelqu'un pour le lire : voilà comment le savoir agit. Mais tout ça reste lent et rare tant qu'on copie à la main… La suite se joue au moulin à papier, puis chez un certain Gutenberg." },
-
-  /* au moulin à papier : fabriquer le papier de chiffon */
-  { perso: "papetier", portrait: "papetier",
-    bubble: "Bienvenue à mon moulin ! Tu veux du papier ? Prends de vieux chiffons au chiffonnier, jette-les dans ma cuve : l'eau du moulin les broie en pâte, on puise au tamis, on presse, on sèche. Une recette venue de Chine — et dix fois moins chère que le parchemin !",
-    say: "Prends les chiffons du chiffonnier (il crie sa marchandise), puis broie-les dans la cuve du papetier → une feuille de PAPIER. C'est ce papier bon marché qui rendra l'imprimerie possible pour tous.",
-    attend: "papier",
-    suite: "Une belle feuille de papier ! Emporte-la : direction l'atelier de Gutenberg, où lettres de plomb, presse et papier vont faire des étincelles." },
+    suite: "L'enfant a maintenant bien plus de chances de s'en sortir ! Un livre, ET quelqu'un pour le lire : voilà comment le savoir agit. Mais tout ça reste lent et rare tant qu'on copie à la main… Direction l'atelier d'un certain Gutenberg, la machine qui va TOUT changer." },
 
   { perso: "gutenberg", portrait: "gutenberg",
-    bubble: "Bienvenue dans mon atelier ! Un moine met un an à copier un livre. Moi, j'en veux MILLE, tous pareils. Il me faut trois choses : des lettres de plomb que je réutilise, une presse… et ton papier de chiffon, bien moins cher que le parchemin. Aide-moi !",
-    say: "L'imprimerie : (1) caractères mobiles (plomb + moule), (2) compose et encre la forme dans la presse (caractères + presse), (3) pose ta feuille de PAPIER sur la presse encrée. Le grand basculement : le savoir pour tous.",
+    bubble: "Bienvenue dans mon atelier ! Un moine met un an à copier un livre. Moi, j'en veux MILLE, tous pareils. Il me faut des lettres de plomb, une presse… et surtout du PAPIER, bien moins cher que le parchemin. Je n'en ai plus : va au moulin à papier, juste à côté (la flèche › t'y mène), rapporte-m'en une feuille — et on imprime !",
+    say: "Gutenberg réclame du PAPIER. Va au moulin à papier (flèche › à droite) le fabriquer, puis reviens (‹) : (1) plomb + moule → caractères, (2) caractères + presse → forme encrée, (3) pose le papier sur la presse encrée. Le grand basculement !",
     attend: "msg_imprimerie",
     suite: "Mille exemplaires ! Le savoir échappe enfin au monastère et aux riches. Ma jauge déborde : le bouton PARTIR nous emmène aux Temps modernes." },
 ];
