@@ -91,8 +91,24 @@ export default function SceneChappe({ collect, action, reveal, made = [], queteQ
         <rect y="400" width="1000" height="160" fill="url(#cp-ground)" />
         <rect y="402" width="1000" height="158" fill="#2a2010" opacity="0.32" filter="url(#cp-grain)" />
         <ellipse cx="500" cy="472" rx="440" ry="52" fill="#6e5c38" opacity="0.3" />
-        {[80, 420, 940].map((x, i) => (
+        {[80, 940].map((x, i) => (
           <path key={i} d={`M${x} 470 q-5 -16 -10 -20 M${x} 470 q0 -18 6 -22 M${x} 470 q6 -14 12 -16`} stroke="#6a6e36" strokeWidth="2.4" fill="none" opacity="0.7" />
+        ))}
+
+        {/* LA FOULE DES BADAUDS au pied de la tour, le nez en l'air vers les
+            bras du télégraphe — le spectacle nouveau de la Révolution */}
+        {[[452, 430, "#5a3a4a", 0.85], [492, 436, "#3a4a6a", 0.95], [536, 432, "#5a4a2a", 0.9], [578, 438, "#4a3a5a", 1], [620, 434, "#6a3a3a", 0.9], [662, 440, "#3a4a3a", 0.82]].map(([x, y, c, s], i) => (
+          <g key={i} transform={`translate(${x},${y}) scale(${s})`}>
+            <ellipse cx="0" cy="34" rx="14" ry="4" fill="#241608" opacity="0.4" />
+            <path d="M-11 32 Q-14 -2 0 -8 Q14 -2 11 32 Z" fill={c} />
+            {/* tête levée */}
+            <circle cx="1" cy="-14" r="7" fill="#cc9c6c" />
+            <path d="M-6 -17 q7 -5 14 -1" stroke="#3a2c1c" strokeWidth="2.6" fill="none" />
+            {/* chapeau tricorne pour certains */}
+            {i % 2 === 0 && <path d="M-9 -18 q10 -6 20 0 l-3 -3 h-14 Z" fill="#2c2620" />}
+            {/* un bras qui pointe la tour */}
+            {i % 3 === 0 && <path d="M7 0 q14 -8 14 -24" stroke={c} strokeWidth="4" fill="none" strokeLinecap="round" />}
+          </g>
         ))}
 
         {/* L'OPÉRATEUR à la longue-vue, tourné vers l'horizon */}
@@ -127,22 +143,27 @@ export default function SceneChappe({ collect, action, reveal, made = [], queteQ
           </g>
         </g>
 
-        {/* ALESSANDRO VOLTA, badaud savant, penché sur son établi, examinant
-            ses disques — il cherche une source d'énergie constante */}
-        <g transform="translate(596,470)">
-          <ellipse cx="0" cy="30" rx="22" ry="6" fill="#241608" opacity="0.5" />
-          {/* habit vert + jabot */}
-          <path d="M-13 6 Q-17 -14 0 -18 Q17 -14 13 6 L11 28 L-11 28 Z" fill="#2c4636" />
-          <path d="M0 -14 Q-3 0 0 12 Q3 0 0 -14 Z" fill="#e6dfc8" />
-          {/* tête, cheveux naturels grisonnants */}
-          <circle cx="1" cy="-24" r="8" fill="#cc9c6c" />
-          <path d="M-7 -27 q8 -6 16 0 q-2 -8 -8 -8 q-7 0 -8 8" fill="#6a5a48" />
-          <path d="M8 -24 q7 2 7 10" stroke="#6a5a48" strokeWidth="3" fill="none" />
-          {/* un bras tendu vers l'établi, l'autre au menton (réflexion) */}
-          <path d="M11 -6 q16 4 20 16" stroke="#2c4636" strokeWidth="5" fill="none" strokeLinecap="round" />
-          <path d="M-10 -6 q-8 2 -6 -6" stroke="#2c4636" strokeWidth="4.5" fill="none" strokeLinecap="round" />
-          {/* petit éclair d'idée */}
-          <path d="M-2 -40 l-4 8 l4 -1 l-3 8" stroke="#ffe08a" strokeWidth="2" fill="none" style={{ animation: "pulse 1.8s infinite" }} />
+        {/* ALESSANDRO VOLTA, au premier plan, la tête levée vers le télégraphe :
+            il l'observe et cherche comment l'alimenter en énergie constante */}
+        <g transform="translate(600,476)">
+          <ellipse cx="0" cy="36" rx="24" ry="7" fill="#241608" opacity="0.5" />
+          {/* habit vert long + jabot */}
+          <path d="M-15 8 Q-19 -16 0 -21 Q19 -16 15 8 L13 34 L-13 34 Z" fill="#2c4636" />
+          <path d="M-9 6 q9 5 18 0" stroke="#1e3226" strokeWidth="2.5" fill="none" />
+          <path d="M0 -17 Q-3 -2 0 12 Q3 -2 0 -17 Z" fill="#e6dfc8" />
+          {/* tête RENVERSÉE en arrière (il regarde en l'air vers la tour) */}
+          <circle cx="-3" cy="-27" r="8.5" fill="#cc9c6c" />
+          <path d="M-11 -30 q8 -6 16 -1 q-1 -8 -8 -9 q-8 0 -8 10" fill="#6a5a48" />
+          <path d="M-11 -28 q-3 4 0 9" stroke="#6a5a48" strokeWidth="3" fill="none" />
+          {/* petit nez pointé vers le haut + regard levé */}
+          <path d="M-9 -27 l-3 -2" stroke="#a8764a" strokeWidth="1.4" strokeLinecap="round" />
+          {/* un bras LEVÉ, l'index pointant les bras du télégraphe (en haut à gauche) */}
+          <path d="M-11 -8 Q-28 -18 -34 -40" stroke="#2c4636" strokeWidth="5" fill="none" strokeLinecap="round" />
+          <path d="M-34 -40 l-3 -7 l6 2" fill="#cc9c6c" stroke="#cc9c6c" strokeWidth="1.4" strokeLinejoin="round" />
+          {/* l'autre main vers son établi (les disques) */}
+          <path d="M13 -6 q14 6 16 18" stroke="#2c4636" strokeWidth="5" fill="none" strokeLinecap="round" />
+          {/* éclair d'idée au-dessus de sa tête */}
+          <path d="M6 -44 l-4 8 l4 -1 l-3 8" stroke="#ffe08a" strokeWidth="2" fill="none" style={{ animation: "pulse 1.8s infinite" }} />
         </g>
 
         {/* LE COIN ATELIER DE VOLTA : disques de zinc & cuivre + chiffons salés */}

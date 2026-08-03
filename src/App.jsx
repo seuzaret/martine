@@ -16,6 +16,7 @@ import { AlphabetGame } from "./chapters/alphabet.jsx";
 import { TabletteGame } from "./chapters/mesopotamie-tablette.jsx";
 import { CartoucheGame } from "./chapters/egypte-cartouche.jsx";
 import { FactureGame } from "./chapters/moyen-age-facture.jsx";
+import { ChappeGame } from "./chapters/moderne-chappe.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 
@@ -1256,6 +1257,10 @@ export default function App() {
       {modal?.type === "facture" && (
         <FactureGame facture={chapter.facture} onClose={() => setModal(null)}
           onWin={() => { grantFlag("paye"); grantItem("traite_galien"); }} />
+      )}
+
+      {modal?.type === "chappe" && (
+        <ChappeGame onClose={() => setModal(null)} onWin={() => grantItem("signal_code")} />
       )}
 
       {modal?.type === "carte" && (

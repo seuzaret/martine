@@ -166,18 +166,42 @@ export default function SceneImprimerie({ collect, action, reveal, made = [], qu
           <path d="M8 -20 q6 -8 13 -6" stroke="#8a94a8" strokeWidth="2.3" fill="none" strokeLinecap="round" />
         </g>
 
-        {/* RÉSULTAT (msg_gazettes) : un ÉVENTAIL de gazettes se répand — mille
-            feuilles identiques en une nuit, que nul ne peut plus arrêter */}
+        {/* RÉSULTAT (msg_gazettes) : LA UNE DU JOURNAL en grand — l'article de
+            Jules sur la montgolfière, imprimé et tiré à des centaines
+            d'exemplaires (une petite pile identique dessous). */}
         {made.includes("msg_gazettes") && (
-          <g transform="translate(602,512)" style={{ animation: "fadein 1s ease-out" }}>
-            <ellipse cx="0" cy="12" rx="48" ry="8" fill="#140b06" opacity="0.4" />
-            {[-28, -14, 0, 14, 28].map((rot, i) => (
-              <g key={i} transform={`rotate(${rot})`}>
-                <rect x="-13" y="-42" width="26" height="46" rx="1" fill="#efe6ce" stroke="#c8bda0" strokeWidth="0.6" />
-                <rect x="-13" y="-42" width="26" height="9" fill="#d8cdb0" />
-                <path d="M-9 -29 h18 M-9 -24 h14 M-9 -19 h18 M-9 -14 h12 M-9 -9 h16" stroke="#5a4a3a" strokeWidth="0.9" opacity="0.6" />
+          <g transform="translate(560,470)">
+            {/* la pile d'exemplaires identiques, au sol */}
+            <g transform="translate(0,26)">
+              {[0, -5, -10, -15].map((y, i) => <rect key={i} x="-64" y={y} width="128" height="8" rx="1" fill="#e6dcc2" stroke="#c9b892" strokeWidth="0.6" transform={`rotate(${i % 2 ? 1 : -1})`} />)}
+            </g>
+            {/* la UNE, dressée en grand */}
+            <g style={{ transformOrigin: "center", transformBox: "fill-box", animation: "popIn 0.6s ease-out" }}>
+              <rect x="-72" y="-236" width="150" height="248" rx="2" fill="#f2ead2" stroke="#b8a97e" strokeWidth="2" style={{ filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.45))" }} />
+              {/* bandeau-titre */}
+              <text x="3" y="-212" textAnchor="middle" fontFamily="'Cinzel','Trajan Pro',Georgia,serif" fontSize="19" fill="#2a2015" letterSpacing="1.5" style={{ fontWeight: 700 }}>LA GAZETTE</text>
+              <path d="M-64 -202 h134 M-64 -198 h134" stroke="#3a2c1c" strokeWidth="1" />
+              <text x="-64" y="-190" fontFamily="Georgia,serif" fontSize="6.5" fill="#5a4a34" fontStyle="italic">Annonay · 1783</text>
+              <text x="70" y="-190" textAnchor="end" fontFamily="Georgia,serif" fontSize="6.5" fill="#5a4a34" fontStyle="italic">par Jules · 2 sols</text>
+              {/* le gros titre */}
+              <text x="3" y="-172" textAnchor="middle" fontFamily="'Cinzel',Georgia,serif" fontSize="12.5" fill="#7a1e18" letterSpacing="0.5" style={{ fontWeight: 700 }}>UN GLOBE VOLE !</text>
+              <text x="3" y="-159" textAnchor="middle" fontFamily="Georgia,serif" fontSize="8" fill="#3a2c1c" fontStyle="italic">La montgolfière s'élève à Annonay</text>
+              {/* la gravure de la montgolfière */}
+              <g transform="translate(3,-118)">
+                <rect x="-40" y="-30" width="80" height="60" fill="#e6dcc0" stroke="#8a7a56" strokeWidth="1" />
+                <path d="M0 -24 C16 -24 22 -8 20 2 C18 10 8 16 0 18 C-8 16 -18 10 -20 2 C-22 -8 -16 -24 0 -24 Z" fill="#c7b891" stroke="#5a4a34" strokeWidth="1" />
+                <path d="M0 -24 V18 M-13 -20 Q-16 0 -8 16 M13 -20 Q16 0 8 16" stroke="#5a4a34" strokeWidth="0.6" fill="none" opacity="0.7" />
+                <path d="M-8 18 L-4 26 M8 18 L4 26" stroke="#5a4a34" strokeWidth="0.8" />
+                <path d="M-5 26 h10 l-2 6 h-6 Z" fill="#7a5230" />
+                {/* petits badauds sous le ballon */}
+                {[-30, -22, 24, 30].map((x, i) => <circle key={i} cx={x} cy="26" r="1.6" fill="#4a3a2a" />)}
               </g>
-            ))}
+              {/* colonnes de texte */}
+              {[-64, -18, 28].map((cx, c) => (
+                <g key={c}>{[...Array(9)].map((_, i) => <path key={i} d={`M${cx} ${-78 + i * 8} h${c === 2 ? 42 : 40}`} stroke="#6a5a44" strokeWidth="1" opacity="0.55" />)}</g>
+              ))}
+              <path d="M-64 -86 h134" stroke="#3a2c1c" strokeWidth="0.8" />
+            </g>
           </g>
         )}
       </PLayer>

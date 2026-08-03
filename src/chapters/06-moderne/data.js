@@ -74,9 +74,11 @@ const RECIPES = [
   /* L'imprimerie : confier l'article à Sigismond → la gazette */
   { a: "article", b: "sigismond", out: "msg_gazettes", msg: true },
 
-  /* Après la Révolution : le télégraphe de Chappe (2 temps) */
-  { a: "bras", b: "cahier", out: "signal_code",
-    line: "Tu positionnes les grands bras selon le cahier de codes : la nouvelle de Condé se forme, visible à des kilomètres. Mais un signal que personne ne sait lire ne sert à rien… il faut que la tour suivante le repère." },
+  /* Après la Révolution : le télégraphe de Chappe (2 temps).
+     1) apporter le CAHIER DE CODES aux bras ouvre le MINI-JEU : placer
+        les bras selon le code → on gagne le « signal codé ». */
+  { a: "bras", b: "cahier", opens: "chappe" },
+  /* 2) la tour suivante LIT le signal à la longue-vue et le relaie. */
   { a: "signal_code", b: "longuevue", out: "msg_chappe", msg: true },
   /* MESSAGE PERDU : le code observé par un espion. */
   { a: "cahier", b: "espion", out: "msg_code", msg: true, perdu: true },
@@ -111,7 +113,7 @@ const HINTS = [
   { needs: ["plume", "montgolfiere"], out: "article", text: "Le globe s'élève, la foule crie : c'est LE moment. Prends ta plume et écris l'article sur ce vol de montgolfière." },
   { needs: ["article", "chevaux"], out: "msg_poste", text: "Ton article doit filer à Paris : confie-le au relais de chevaux frais, il ira de relais en relais." },
   { needs: ["article", "sigismond"], out: "msg_gazettes", text: "Ton article est arrivé à Paris : porte-le au rédacteur en chef Sigismond, il en fera une gazette." },
-  { needs: ["bras", "cahier"], out: "signal_code", text: "Des bras qui bougent au hasard ne disent rien. Place-les selon le cahier de codes : le mot « Condé » se forme." },
+  { needs: ["bras", "cahier"], out: "signal_code", text: "Apporte le cahier de codes aux bras du télégraphe : tu pourras alors les placer toi-même selon le code (petit jeu)." },
   { needs: ["signal_code", "longuevue"], out: "msg_chappe", text: "Ton signal est formé, mais il faut que la tour suivante le LISE : donne-lui une longue-vue pour le repérer et le répéter." },
   { needs: ["cahier", "espion"], out: "msg_code", text: "Méfie-toi : un espion guette ta tour. Ton code si secret pourrait bien ne plus l'être…" },
   { needs: ["zinc_cuivre", "saumure"], out: "pile", text: "Aide Volta : empile les disques de zinc et de cuivre en intercalant les chiffons salés → de l'électricité !" },
