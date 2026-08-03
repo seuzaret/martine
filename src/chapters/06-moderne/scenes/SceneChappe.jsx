@@ -204,7 +204,7 @@ export default function SceneChappe({ collect, action, reveal, made = [], queteQ
           reprend le signal — le message saute de colline en colline, plus
           vite qu'aucun cheval */}
       {made.includes("msg_chappe") && (
-        <g transform="translate(812,166)" style={{ animation: "fadein 1s ease-out" }}>
+        <g transform="translate(812,232)" style={{ animation: "fadein 1s ease-out" }}>
           <rect x="-6" y="0" width="12" height="36" fill="#4a5260" opacity="0.85" />
           <rect x="-9" y="-6" width="18" height="8" fill="#3e4652" opacity="0.85" />
           <path d="M0 -6 v-24" stroke="#2e3540" strokeWidth="3" />

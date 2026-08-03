@@ -191,7 +191,13 @@ const QUETE = [
     bubble: "Ce télégraphe est ingénieux, mais tributaire du beau temps et de la lumière du jour. Il lui faudrait une énergie CONSTANTE… J'ai une idée : des disques de zinc et de cuivre, séparés par des chiffons salés. Aidez-moi à les empiler !",
     say: "Aide Volta : disques de zinc & cuivre + chiffons à la saumure → la PILE. Ce n'est pas un média, mais EMPORTE-LA : le prochain siècle en dépend.",
     attend: "pile",
-    suite: "⚡ La pile de Volta est à toi ! Garde-la précieusement. Ma jauge déborde : le bouton PARTIR nous emmène au XIXe siècle — l'électricité va tout accélérer." },
+    suite: "⚡ La pile fonctionne ! Montre-la à Volta (son « ? » brille encore) : il a une idée de tout ce qu'elle va rendre possible." },
+
+  /* CONCLUSION : Volta contemple sa pile et énumère ce qu'elle va permettre */
+  { perso: "volta", portrait: "volta",
+    bubble: "Incroyable… un courant qui ne s'arrête JAMAIS ! Vous rendez-vous compte ? Avec cette pile, on enverra bientôt des messages par un simple FIL, d'un continent à l'autre en un éclair. On fera voyager la VOIX elle-même le long de ce fil. On gravera les sons pour les réentendre. Et un jour, j'en suis sûr, on éclairera les villes entières sans la moindre flamme. Gardez-la précieusement, voyageur : montrez au futur ce qu'un peu de zinc et de cuivre ont rendu possible.",
+    say: "Volta voit juste : sa pile va allumer TOUT le XIXe siècle — télégraphe électrique, téléphone, son enregistré, lumière. Garde-la bien : le prochain saut en a besoin dès l'arrivée.",
+    suite: "En route pour le XIXe siècle ! La pile de Volta dans la besace, l'électricité va tout accélérer. Le bouton PARTIR nous y emmène." },
 ];
 
 /* ------------------------------------------------------------
