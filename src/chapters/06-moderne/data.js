@@ -16,6 +16,7 @@ import SceneProvince from "./scenes/SceneProvince.jsx";
 import SceneImprimerie from "./scenes/SceneImprimerie.jsx";
 import SceneApres from "./scenes/SceneChappe.jsx";
 import { PortraitJules, PortraitSigismond, PortraitVolta } from "./scenes/portraits.jsx";
+import CarteModerne from "./scenes/CarteModerne.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -237,6 +238,7 @@ const chapter = {
   actions: ACTIONS,
   quete: QUETE,
   portraits: { jules: PortraitJules, sigismond: PortraitSigismond, volta: PortraitVolta },
+  carte: CarteModerne,
 };
 
 export default chapter;

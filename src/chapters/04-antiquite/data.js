@@ -13,6 +13,7 @@ import SceneEntree from "./scenes/ScenePompei.jsx";
 import SceneBibliotheque from "./scenes/SceneAlexandrie.jsx";
 import SceneJardin from "./scenes/SceneForum.jsx";
 import { PortraitCaius } from "./scenes/portraits.jsx";
+import CarteAntiquite from "./scenes/CarteAntiquite.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -238,6 +239,7 @@ const chapter = {
   actions: ACTIONS,
   quete: QUETE,
   portraits: { caius: PortraitCaius },
+  carte: CarteAntiquite,
 };
 
 export default chapter;

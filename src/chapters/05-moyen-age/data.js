@@ -14,6 +14,7 @@ import SceneMonastere from "./scenes/SceneScriptorium.jsx";
 import SceneMoulin from "./scenes/SceneMoulin.jsx";
 import SceneGutenberg from "./scenes/SceneGutenberg.jsx";
 import { PortraitCharles, PortraitJorge, PortraitGutenberg, PortraitPapetier } from "./scenes/portraits.jsx";
+import CarteMoyenAge from "./scenes/CarteMoyenAge.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -331,6 +332,7 @@ const chapter = {
   quete: QUETE,
   portraits: { charles: PortraitCharles, jorge: PortraitJorge, gutenberg: PortraitGutenberg, papetier: PortraitPapetier },
   facture: FACTURE,
+  carte: CarteMoyenAge,
 };
 
 export default chapter;

@@ -12,6 +12,7 @@ import SceneExterieur from "./scenes/SceneExterieur.jsx";
 import SceneCampement from "./scenes/SceneCampement.jsx";
 import SceneRiviere from "./scenes/SceneRiviere.jsx";
 import { PortraitAna, PortraitRaya, PortraitDoru, PortraitKyan } from "./scenes/portraits.jsx";
+import CartePaleo from "./scenes/CartePaleo.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -346,6 +347,7 @@ const chapter = {
   actions: ACTIONS,
   quete: QUETE,
   portraits: { ana: PortraitAna, raya: PortraitRaya, doru: PortraitDoru, kyan: PortraitKyan },
+  carte: CartePaleo,
 };
 
 export default chapter;

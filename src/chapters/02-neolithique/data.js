@@ -20,6 +20,7 @@ import SceneArtisans from "./scenes/SceneArtisans.jsx";
 import ScenePlaine from "./scenes/ScenePlaine.jsx";
 import SceneMontagne from "./scenes/SceneMontagne.jsx";
 import { PortraitGuna, PortraitTannis, PortraitJala, PortraitAhmid, PortraitImir, PortraitDoka, PortraitOtzi } from "./scenes/portraits.jsx";
+import CarteNeolithique from "./scenes/CarteNeolithique.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -295,6 +296,7 @@ const chapter = {
   actions: ACTIONS,
   quete: QUETE,
   portraits: { guna: PortraitGuna, tannis: PortraitTannis, jala: PortraitJala, ahmid: PortraitAhmid, imir: PortraitImir, doka: PortraitDoka, otzi: PortraitOtzi },
+  carte: CarteNeolithique,
 };
 
 export default chapter;
