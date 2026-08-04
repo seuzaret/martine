@@ -16,6 +16,7 @@ import SceneTelegraphe from "./scenes/SceneTelegraphe.jsx";
 import SceneCable from "./scenes/SceneCable.jsx";
 import SceneTSF from "./scenes/SceneTSF.jsx";
 import CarteXIXe from "./scenes/CarteXIXe.jsx";
+import { PortraitJames } from "./scenes/portraits.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -45,8 +46,8 @@ const ITEMS = {
    LES TABLEAUX (3 communication)
    ------------------------------------------------------------ */
 const SCENES = [
-  { id: "telegraphe", name: "Le bureau du télégraphe",           Component: SceneTelegraphe },
-  { id: "cable",      name: "La pose du câble transatlantique",  Component: SceneCable },
+  { id: "telegraphe", name: "Le bureau du télégraphe",           Component: SceneTelegraphe, nextWhen: ["msg_telegraphe"] },
+  { id: "cable",      name: "La pose du câble transatlantique",  Component: SceneCable,      nextWhen: ["msg_cable"] },
   { id: "tsf",        name: "La cabine de TSF",                  Component: SceneTSF },
 ];
 
@@ -114,17 +115,18 @@ const FAIL_LINES = [
 
 const INTRO = [
   "Tu as bien la pile de Volta ? Sans elle, ce siècle ne tourne pas. Bienvenue au XIXe : le siècle pressé, celui qui veut vaincre la DISTANCE.",
-  "D'abord une cabane de télégraphe, en plein Far West : Jessie Tombstone, prospecteur, débarque tout excité — il a trouvé un FILON D'OR et veut prévenir sa famille à New York en une seconde ! À toi de taper son message en Morse, avec ta pile pour alimenter l'appareil.",
+  "D'abord une cabane de télégraphe, en plein Far West : James O'Sullivan, un émigré irlandais, débarque tout excité — il a trouvé un FILON D'OR et veut prévenir ses cousins à New York en une seconde ! À toi de taper son message en Morse, avec ta pile pour alimenter l'appareil. Ensuite, devenu riche, il voudra joindre sa famille restée en Irlande…",
   "Ensuite, on pose un câble géant au fond de l'Atlantique pour relier deux continents ; enfin, avec Marconi, on lance des ondes SANS fil pour sauver un navire dans la nuit. Trois messages, et on repart.",
 ];
 
 const ACTIONS = {
   wreck: { mood: "vexe", say: "Oui, j'ai grillé trois fusibles du télégraphe en atterrissant. L'opérateur a cru à un orage magnétique. Recharge-moi avant qu'il ne comprenne." },
 
-  /* Les personnages — ils posent leur problème en mots simples (niveau 6e). */
-  jessie: { mood: "content",
-    bubble: "Nom d'un coyote ! JESSIE TOMBSTONE, prospecteur ! Regarde cette pépite — j'ai trouvé le FILON, un vrai, plein d'or ! Faut prévenir ma famille à New York avant que la nouvelle s'ébruite : on va être riches ! Vite, le télégraphe ! Mais l'appareil est mort… il lui faut du courant. Cette drôle de pile que tu tiens — c'est exactement ça !",
-    say: "Jessie a trouvé de l'or et veut télégraphier « OR » à New York, vite ! Apporte ta pile de Volta au manipulateur : tu taperas le message toi-même en Morse." },
+  /* Les personnages — ils posent leur problème en mots simples (niveau 6e).
+     James : ses vraies répliques d'étape sont dans QUETE. */
+  james: { mood: "content",
+    bubble: "James O'Sullivan, pour vous servir ! Émigré d'Irlande, venu chercher fortune ici. Et je l'ai trouvée !",
+    say: "James O'Sullivan : un Irlandais parti tenter sa chance dans l'Ouest américain." },
   field: { mood: "neutre",
     bubble: "De l'autre côté de cet océan, il y a l'Amérique. Un bateau met deux semaines pour y porter une lettre. Et si je posais un très long câble tout au fond de l'eau, pour envoyer le message en quelques minutes ?",
     say: "Relier deux continents par le fond de la mer : le monde rétrécit d'un coup. Ose dérouler ce câble." },
@@ -132,6 +134,30 @@ const ACTIONS = {
     bubble: "Là-bas, un navire est en train de couler. Aucun fil ne le relie à la terre… Alors comment appeler à l'aide ? Mon idée : envoyer le message SANS aucun fil, dans l'air, grâce à des ondes !",
     say: "La TSF, la radio sans fil : une antenne, des ondes, et on peut sauver ce navire dans la nuit." },
 };
+
+/* ------------------------------------------------------------
+   LA QUÊTE — on suit James O'Sullivan (télégraphe puis câble),
+   puis Marconi (la TSF).
+   ------------------------------------------------------------ */
+const QUETE = [
+  { perso: "james", portrait: "james", auto: true,
+    bubble: "Bénie soit la Sainte Patronne ! James O'Sullivan, émigré d'Irlande — et regarde cette pépite : j'ai trouvé le FILON, un vrai, plein d'or ! Il faut prévenir mes cousins à New York avant que la nouvelle s'ébruite. Vite, le télégraphe ! Mais l'appareil est mort… il lui faut du courant. Cette drôle de pile que tu tiens — c'est exactement ça !",
+    say: "James a trouvé de l'or et veut télégraphier « OR » à New York, vite ! Apporte ta pile de Volta au manipulateur : tu taperas le message toi-même en Morse.",
+    attend: "msg_telegraphe",
+    suite: "Message reçu à New York en une seconde ! Mais James pense déjà à sa famille restée en IRLANDE, de l'autre côté de l'océan… Suis-le à bord du navire câblier." },
+
+  { perso: "james", portrait: "james",
+    bubble: "Me voilà riche, grâce à Dieu ! Mais mon cœur est resté en Irlande, avec ma vieille mère et mes sœurs. Je voudrais leur dire : « Restez au pays, j'arrive » — ou « Venez me rejoindre ! ». Seulement, une lettre par bateau met DEUX SEMAINES à traverser l'Atlantique… Comment faire parvenir un message par-delà les océans ?",
+    say: "La question de James : franchir l'océan vite. La réponse — un CÂBLE au fond de la mer (câble + océan), justement relié à l'Irlande. Le monde rétrécit d'un coup.",
+    attend: "msg_cable",
+    suite: "Le câble touche la côte : le message de James file jusqu'en Irlande en quelques minutes ! Reste un dernier défi — et si le message n'avait plus AUCUN fil ?" },
+
+  { perso: "marconi", portrait: null,
+    bubble: "Là-bas, un navire est en train de couler dans la nuit. Aucun fil ne le relie à la terre… Alors comment appeler à l'aide ? Mon idée : envoyer le message SANS aucun fil, dans l'air, grâce à des ondes !",
+    say: "La TSF de Marconi : une antenne + des ondes → un poste sans fil, puis l'appel du navire en détresse. La radio qui sauve des vies.",
+    attend: "msg_sos",
+    suite: "Le SOS a été entendu, des vies sauvées ! De la plume au fil, du fil au câble, du câble aux ondes… Ma jauge déborde : le bouton PARTIR nous emmène au XXe siècle." },
+];
 
 /* ------------------------------------------------------------
    LA FICHE DU CHAPITRE
@@ -155,6 +181,7 @@ const chapter = {
   required: 3,
   startScene: 0,
   destination: "XXe SIÈCLE",
+  linear: true,
 
   items: ITEMS,
   scenes: SCENES,
@@ -167,6 +194,8 @@ const chapter = {
   failLines: FAIL_LINES,
   intro: INTRO,
   actions: ACTIONS,
+  quete: QUETE,
+  portraits: { james: PortraitJames },
   carte: CarteXIXe,
 };
 

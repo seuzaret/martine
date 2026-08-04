@@ -13,7 +13,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    le télégraphe → mini-jeu Morse (taper « OR »).
    ============================================================ */
 
-export default function SceneTelegraphe({ collect, action, reveal, made = [] }) {
+export default function SceneTelegraphe({ collect, action, reveal, made = [], queteQui }) {
   const tg = made.includes("msg_telegraphe");
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
@@ -122,7 +122,7 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [] }) 
 
       {/* ═══ couche intermédiaire : le télégraphiste au bureau + le « ? » ═══ */}
       <PLayer depth={2}>
-        {!tg && (
+        {queteQui === "james" && !tg && (
           <g transform="translate(232,272)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -26 26 -26 q26 0 26 22 q0 18 -22 24 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
             <circle cx="26" cy="40" r="3" fill="#ffd166" />
@@ -229,7 +229,7 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [] }) 
       <rect width="1000" height="560" fill="#181008" opacity="0.08" style={{ pointerEvents: "none" }} />
 
       {/* ═══ zones cliquables ═══ */}
-      <Hotspot cx={200} cy={430} r={40} label="Jessie Tombstone" reveal={reveal} onClick={() => action("jessie")} />
+      <Hotspot cx={200} cy={430} r={40} label="James O'Sullivan" reveal={reveal} onClick={() => action("james")} />
       {!tg && (
         <Hotspot cx={306} cy={476} r={40} label="le manipulateur Morse" item="code_morse" reveal={reveal} onClick={() => collect("code_morse")} />
       )}

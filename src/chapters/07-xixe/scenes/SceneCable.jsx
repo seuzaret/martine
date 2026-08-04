@@ -11,7 +11,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    Ce décor réagit à l'état du jeu via la prop `made`.
    ============================================================ */
 
-export default function SceneCable({ collect, action, reveal, made = [] }) {
+export default function SceneCable({ collect, action, reveal, made = [], queteQui }) {
   const built = made.includes("msg_cable"); // le câble relie les deux continents
 
   return (
@@ -105,13 +105,31 @@ export default function SceneCable({ collect, action, reveal, made = [] }) {
         <path d="M842 434 Q900 460 940 500" stroke="#2c2c34" strokeWidth="6" fill="none" />
         <ellipse cx="944" cy="502" rx="18" ry="5" fill="#bfe0dc" opacity="0.4" style={{ animation: "ripple 2.6s ease-in-out infinite" }} />
 
-        {/* « ? » de l'énigme, tant que le câble n'est pas posé */}
-        {!built && (
-          <g transform="translate(516,350)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+        {/* « ? » de James, tant qu'il guide (poser le câble vers l'Irlande) */}
+        {queteQui === "james" && !built && (
+          <g transform="translate(688,344)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -24 24 -24 q24 0 24 20 q0 17 -20 22 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
             <circle cx="24" cy="37" r="3" fill="#ffd166" />
           </g>
         )}
+
+        {/* JAMES O'SULLIVAN, passager fortuné, à la proue, le regard vers
+            l'Irlande — il rêve de joindre sa famille de l'autre côté */}
+        <g transform="translate(706,470)">
+          <ellipse cx="0" cy="34" rx="18" ry="6" fill="#160f08" opacity="0.5" />
+          {/* gilet + chemise à carreaux */}
+          <path d="M-13 6 Q-17 -16 0 -20 Q17 -16 13 6 L11 32 L-11 32 Z" fill="#6a4a30" />
+          <path d="M-8 -14 L0 -6 L8 -14 L6 12 L-6 12 Z" fill="#a8352a" />
+          <path d="M-4 -8 q4 12 8 0" stroke="#e6c25a" strokeWidth="1.6" fill="none" />
+          {/* tête barbe auburn + chapeau repoussé */}
+          <circle cx="1" cy="-28" r="9" fill="#e0b084" />
+          <path d="M-8 -22 Q-9 -8 1 -6 Q11 -8 10 -22 Q6 -14 1 -14 Q-4 -14 -8 -22 Z" fill="#b0602c" />
+          <path d="M-9 -30 q10 -6 20 0 q-2 -8 -10 -8 q-8 0 -10 8" fill="#b0602c" />
+          <path d="M-11 -32 q12 -7 24 0 l0 -3 q-12 -6 -24 0 Z" fill="#7a5230" />
+          {/* bras appuyé au bastingage, l'autre pointant l'horizon */}
+          <path d="M11 -6 q18 -6 26 -20" stroke="#6a4a30" strokeWidth="5" fill="none" strokeLinecap="round" />
+          <path d="M-11 -4 q-8 4 -8 14" stroke="#6a4a30" strokeWidth="5" fill="none" strokeLinecap="round" />
+        </g>
 
         {/* L'INGÉNIEUR : debout, il regarde vers l'Amérique */}
         <g transform="translate(540,470)">
@@ -139,6 +157,7 @@ export default function SceneCable({ collect, action, reveal, made = [] }) {
       <rect width="1000" height="560" fill="#141810" opacity="0.05" style={{ pointerEvents: "none" }} />
 
       {/* ═══ zones cliquables ═══ */}
+      <Hotspot cx={706} cy={452} r={34} label="James O'Sullivan" reveal={reveal} onClick={() => action("james")} />
       <Hotspot cx={540} cy={444} r={48} label="l'ingénieur" reveal={reveal} onClick={() => action("field")} />
       {!built && (
         <>

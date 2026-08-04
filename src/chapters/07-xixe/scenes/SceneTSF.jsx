@@ -13,7 +13,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    Ce décor réagit à l'état du jeu via la prop `made`.
    ============================================================ */
 
-export default function SceneTSF({ collect, action, reveal, made = [] }) {
+export default function SceneTSF({ collect, action, reveal, made = [], queteQui }) {
   const hasTsf = made.includes("tsf");     // la télégraphie sans fil fonctionne
   const sos = made.includes("msg_sos");    // l'appel est parti → secours en route
 
@@ -143,8 +143,8 @@ export default function SceneTSF({ collect, action, reveal, made = [] }) {
         </g>
         <path d="M424 440 l6 -40 l6 40 Z" fill="#2a3038" />
 
-        {/* « ? » tant que le navire n'est pas sauvé */}
-        {!sos && (
+        {/* « ? » de Marconi (tant qu'il guide) */}
+        {queteQui === "marconi" && (
           <g transform="translate(214,378)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -24 24 -24 q24 0 24 20 q0 17 -20 22 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
             <circle cx="24" cy="37" r="3" fill="#ffd166" />
