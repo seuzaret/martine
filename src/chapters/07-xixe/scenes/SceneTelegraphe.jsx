@@ -2,132 +2,164 @@ import Hotspot from "../../../engine/Hotspot.jsx";
 import { PLayer } from "../../../engine/Parallax.jsx";
 
 /* ============================================================
-   CHAPITRE 7 — Tableau 1 : le bureau du télégraphe (western, 1844)
+   CHAPITRE 7 — Tableau 1 : la cabane du télégraphe (Far West)
    ------------------------------------------------------------
-   Ligne Baltimore–Washington toute neuve. Le télégraphiste (cliquable)
-   veut envoyer un message en une seconde ; il ne lui manque que du
-   COURANT. On lui APPORTE la pile de Volta au manipulateur Morse
-   → un MINI-JEU s'ouvre (taper « OR » en points et traits).
-   Quand c'est fait, une bande de points-traits sort de l'appareil.
+   Une cabane en rondins : murs de planches, un bureau et le
+   manipulateur Morse. Par la fenêtre : la rue d'une ville western
+   (façades de bois, SALOON), les poteaux télégraphiques et un TRAIN
+   À VAPEUR qui fume. JESSIE TOMBSTONE, prospecteur, débarque tout
+   excité : il a trouvé un FILON D'OR et veut prévenir sa famille à
+   New York — vite ! On lui apporte la pile de Volta pour brancher
+   le télégraphe → mini-jeu Morse (taper « OR »).
    ============================================================ */
 
 export default function SceneTelegraphe({ collect, action, reveal, made = [] }) {
-  const tg = made.includes("msg_telegraphe"); // télégraphe transmis
-
+  const tg = made.includes("msg_telegraphe");
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
-        <linearGradient id="tg-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#6a5844" /><stop offset="100%" stopColor="#3e3226" /></linearGradient>
-        <linearGradient id="tg-win" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#6a86a0" /><stop offset="60%" stopColor="#b0b8a8" /><stop offset="100%" stopColor="#d8c898" /></linearGradient>
-        <linearGradient id="tg-desk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8a5e38" /><stop offset="100%" stopColor="#5a3f24" /></linearGradient>
-        <linearGradient id="tg-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#7a6448" /><stop offset="100%" stopColor="#403020" /></linearGradient>
-        <radialGradient id="tg-lamp" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ffcf78" stopOpacity="0.55" /><stop offset="100%" stopColor="#ff9540" stopOpacity="0" /></radialGradient>
-        <radialGradient id="tg-glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ffe9a8" stopOpacity="0.7" /><stop offset="100%" stopColor="#ffe9a8" stopOpacity="0" /></radialGradient>
-        <filter id="tg-grain" x="0%" y="0%" width="100%" height="100%">
+        <linearGradient id="wt-plank" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8a5f38" /><stop offset="100%" stopColor="#5e3f24" /></linearGradient>
+        <linearGradient id="wt-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#a8c0d0" /><stop offset="55%" stopColor="#e6cf9e" /><stop offset="100%" stopColor="#e0a860" /></linearGradient>
+        <linearGradient id="wt-desk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#9a6a3c" /><stop offset="100%" stopColor="#5a3f24" /></linearGradient>
+        <linearGradient id="wt-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#7a5636" /><stop offset="100%" stopColor="#3e2c1a" /></linearGradient>
+        <radialGradient id="wt-lamp" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ffcf78" stopOpacity="0.5" /><stop offset="100%" stopColor="#ff9540" stopOpacity="0" /></radialGradient>
+        <radialGradient id="wt-glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ffe9a8" stopOpacity="0.7" /><stop offset="100%" stopColor="#ffe9a8" stopOpacity="0" /></radialGradient>
+        <filter id="wt-grain" x="0%" y="0%" width="100%" height="100%">
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" />
           <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0" result="a" />
           <feComposite in="a" in2="SourceGraphic" operator="in" />
         </filter>
-        <clipPath id="tg-winclip"><rect x="-58" y="-64" width="116" height="128" /></clipPath>
+        <clipPath id="wt-winclip"><rect x="-118" y="-96" width="236" height="196" /></clipPath>
       </defs>
 
-      {/* ═══ mur du bureau ═══ */}
-      <rect width="1000" height="560" fill="url(#tg-wall)" />
-      <rect width="1000" height="560" fill="#241a10" opacity="0.26" filter="url(#tg-grain)" />
+      {/* ═══ mur de planches de la cabane ═══ */}
+      <rect width="1000" height="560" fill="url(#wt-plank)" />
+      <rect width="1000" height="560" fill="#2c1c0e" opacity="0.26" filter="url(#wt-grain)" />
+      {/* rainures horizontales des planches + clous */}
+      <g stroke="#3a2614" strokeWidth="2" opacity="0.5">
+        {[70, 140, 210, 280, 350].map((y, i) => <path key={i} d={`M0 ${y} h1000`} />)}
+      </g>
+      {[[40, 105], [40, 245], [960, 105], [960, 245], [500, 35]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="3" fill="#2a1a0c" />)}
 
-      {/* ═══ couche lointaine : fenêtre sur la ligne télégraphique, pendule, cartes ═══ */}
+      {/* ═══ couche lointaine : la FENÊTRE sur la ville western + le TRAIN ═══ */}
       <PLayer depth={1}>
-        <g transform="translate(760,180)">
-          <rect x="-60" y="-66" width="120" height="132" fill="url(#tg-win)" />
-          <g clipPath="url(#tg-winclip)">
-            <rect x="-58" y="34" width="116" height="30" fill="#8a8a5e" />
-            {[[-40, 40, 1], [-8, 34, 0.8], [18, 30, 0.62], [40, 27, 0.48]].map(([px, py, s], i) => (
-              <g key={i} transform={`translate(${px},${py}) scale(${s})`}>
-                <rect x="-2" y="-56" width="4" height="56" fill="#4a3728" />
-                <path d="M-12 -50 h24 M-12 -42 h24" stroke="#4a3728" strokeWidth="2" />
+        <g transform="translate(748,176)">
+          {/* le paysage à travers la vitre */}
+          <rect x="-118" y="-96" width="236" height="196" fill="url(#wt-sky)" />
+          <g clipPath="url(#wt-winclip)">
+            {/* mesa/collines sèches */}
+            <path d="M-118 30 L-70 -6 L-30 24 L20 -10 L70 20 L118 -4 L118 100 L-118 100 Z" fill="#b98a52" />
+            <path d="M-118 46 Q-40 30 40 44 Q90 52 118 42 L118 100 L-118 100 Z" fill="#9a6e40" />
+            {/* soleil bas */}
+            <circle cx="72" cy="-40" r="20" fill="#fff0c0" opacity="0.85" />
+            {/* façades western à faux-fronts (SALOON, STORE) */}
+            {[[-92, "#8a5a34", "SALOON"], [-46, "#6a4a30", "STORE"], [6, "#7a5236", ""]].map(([x, c, t], i) => (
+              <g key={i} transform={`translate(${x},20)`}>
+                <rect x="-20" y="0" width="40" height="46" fill={c} />
+                <rect x="-24" y="-14" width="48" height="16" fill={c} />
+                <path d="M-24 -14 h48 v-4 h-48 Z" fill="#4a3220" />
+                <rect x="-10" y="16" width="20" height="30" fill="#2c1c10" />
+                {t && <text x="0" y="-3" textAnchor="middle" fontFamily="'Cinzel',Georgia,serif" fontSize="6" fill="#e6d5a8">{t}</text>}
               </g>
             ))}
-            <path d="M-52 -6 Q-8 -18 60 -30 M-52 2 Q-8 -8 60 -24" stroke="#2c2418" strokeWidth="1" fill="none" opacity="0.7" />
+            {/* poteaux télégraphiques qui s'éloignent */}
+            {[[44, 1], [72, 0.8], [94, 0.62]].map(([x, s], i) => (
+              <g key={i} transform={`translate(${x},34) scale(${s})`}>
+                <rect x="-2" y="-40" width="4" height="46" fill="#4a3320" />
+                <path d="M-9 -34 h18" stroke="#4a3320" strokeWidth="2.4" />
+              </g>
+            ))}
+            {/* le TRAIN À VAPEUR sur ses rails, qui fume */}
+            <g transform="translate(-30,74)">
+              <path d="M-118 6 h236" stroke="#5a4630" strokeWidth="2" />
+              {[-100, -70, -40, -10, 20, 50, 80].map((x, i) => <rect key={i} x={x} y="2" width="4" height="6" fill="#3a2c1c" />)}
+              {/* wagons */}
+              <rect x="34" y="-16" width="30" height="18" rx="2" fill="#6a3a2a" /><rect x="68" y="-16" width="30" height="18" rx="2" fill="#5a3a2a" />
+              {/* locomotive */}
+              <rect x="-6" y="-20" width="36" height="22" rx="2" fill="#2c2620" />
+              <rect x="-18" y="-12" width="14" height="14" fill="#2c2620" /> {/* cabine */}
+              <path d="M-20 2 l-6 6 h8 Z" fill="#1c1610" /> {/* chasse-pierres */}
+              <circle cx="-2" cy="4" r="4" fill="#3a3a44" /><circle cx="14" cy="4" r="4" fill="#3a3a44" /><circle cx="52" cy="4" r="3" fill="#3a3a44" />
+              {/* cheminée + fumée */}
+              <rect x="18" y="-30" width="8" height="12" fill="#1c1610" />
+              <g style={{ animation: "drift 5s ease-in-out infinite" }}>
+                <circle cx="24" cy="-36" r="7" fill="#d8d0c4" opacity="0.5" /><circle cx="34" cy="-44" r="9" fill="#cfc8bc" opacity="0.4" /><circle cx="48" cy="-50" r="11" fill="#c8c0b4" opacity="0.3" />
+              </g>
+            </g>
           </g>
-          <rect x="-60" y="-66" width="120" height="132" fill="none" stroke="#2e2418" strokeWidth="7" />
-          <path d="M0 -66 v132 M-60 0 h120" stroke="#2e2418" strokeWidth="3.5" />
+          {/* cadre + croisillons de la fenêtre */}
+          <rect x="-118" y="-96" width="236" height="196" fill="none" stroke="#3a2614" strokeWidth="10" />
+          <path d="M0 -96 v196 M-118 2 h236" stroke="#3a2614" strokeWidth="6" />
+          <path d="M-124 -102 h248 v10 h-248 Z" fill="#5a3f24" />
         </g>
-        {/* pendule murale */}
-        <g transform="translate(150,140)">
-          <circle cx="0" cy="0" r="30" fill="#e8dcc0" stroke="#5a3f24" strokeWidth="6" />
-          <path d="M0 0 L0 -18 M0 0 L11 5" stroke="#3a2c1c" strokeWidth="2.5" />
-          <rect x="-6" y="30" width="12" height="36" fill="#5a3f24" />
+
+        {/* pendule + affiche WANTED + carte, sur le mur de gauche */}
+        <g transform="translate(120,150)">
+          <circle cx="0" cy="0" r="26" fill="#e8dcc0" stroke="#4a3218" strokeWidth="5" />
+          <path d="M0 0 L0 -15 M0 0 L9 4" stroke="#3a2c1c" strokeWidth="2.2" />
         </g>
-        {/* carte des lignes (Baltimore ↔ Washington en évidence) */}
-        <g transform="translate(360,140)">
-          <rect x="-52" y="-36" width="104" height="72" fill="#d8c8a0" />
-          <rect x="-52" y="-36" width="104" height="72" fill="none" stroke="#5a3f24" strokeWidth="4" />
-          <path d="M-30 12 L28 -14" stroke="#a83828" strokeWidth="2" fill="none" />
-          <circle cx="-30" cy="12" r="2.6" fill="#7a2418" /><circle cx="28" cy="-14" r="2.6" fill="#7a2418" />
-          <text x="-30" y="24" textAnchor="middle" fontSize="6" fill="#5a3f24" fontFamily="Georgia,serif">Baltimore</text>
-          <text x="28" y="-20" textAnchor="middle" fontSize="6" fill="#5a3f24" fontFamily="Georgia,serif">Washington</text>
-        </g>
-        {/* AFFICHE « WANTED » (ambiance western) */}
         <g transform="translate(250,150) rotate(-3)">
-          <rect x="-30" y="-40" width="60" height="80" fill="#e0d0a8" />
-          <rect x="-30" y="-40" width="60" height="80" fill="#7a5a30" opacity="0.18" filter="url(#tg-grain)" />
-          <rect x="-30" y="-40" width="60" height="80" fill="none" stroke="#8a6a3a" strokeWidth="2" />
-          <text x="0" y="-26" textAnchor="middle" fontSize="11" fill="#3a2c1c" fontFamily="'Cinzel',Georgia,serif" style={{ fontWeight: 700 }}>WANTED</text>
-          {/* portrait grossier */}
-          <rect x="-16" y="-18" width="32" height="30" fill="#c8b890" stroke="#6a4a2a" strokeWidth="1.4" />
-          <circle cx="0" cy="-6" r="7" fill="#9a8a6a" /><path d="M-9 12 q9 -8 18 0" fill="#8a7a5a" />
-          <path d="M-9 -9 q9 -6 18 0 l-2 -4 h-14 Z" fill="#5a4a2a" />
-          <text x="0" y="26" textAnchor="middle" fontSize="7.5" fill="#7a2418" fontFamily="'Cinzel',Georgia,serif" style={{ fontWeight: 700 }}>500 $</text>
+          <rect x="-28" y="-38" width="56" height="76" fill="#e0d0a8" />
+          <rect x="-28" y="-38" width="56" height="76" fill="#7a5a30" opacity="0.18" filter="url(#wt-grain)" />
+          <rect x="-28" y="-38" width="56" height="76" fill="none" stroke="#8a6a3a" strokeWidth="2" />
+          <text x="0" y="-24" textAnchor="middle" fontSize="11" fill="#3a2c1c" fontFamily="'Cinzel',Georgia,serif" style={{ fontWeight: 700 }}>WANTED</text>
+          <rect x="-15" y="-16" width="30" height="28" fill="#c8b890" stroke="#6a4a2a" strokeWidth="1.4" />
+          <circle cx="0" cy="-5" r="6.5" fill="#9a8a6a" /><path d="M-8 11 q8 -7 16 0" fill="#8a7a5a" />
+          <path d="M-9 -8 q9 -6 18 0 l-2 -4 h-14 Z" fill="#5a4a2a" />
+          <text x="0" y="26" textAnchor="middle" fontSize="8" fill="#7a2418" fontFamily="'Cinzel',Georgia,serif" style={{ fontWeight: 700 }}>500 $</text>
         </g>
-        {/* CHAPEAU stetson accroché à une patère */}
-        <g transform="translate(640,120)">
-          <rect x="-2" y="-6" width="4" height="10" fill="#5a3f24" /><circle cx="0" cy="-8" r="3" fill="#8a6a3a" />
-          <g transform="translate(0,6)">
-            <ellipse cx="0" cy="8" rx="26" ry="6" fill="#5a4028" />
-            <path d="M-15 8 Q-16 -12 0 -14 Q16 -12 15 8 Z" fill="#6a4c2e" />
-            <path d="M-15 4 q15 6 30 0" stroke="#4a3218" strokeWidth="3" fill="none" />
+        {/* carabine accrochée + chapeau stetson */}
+        <g transform="translate(430,120)">
+          <path d="M-40 0 h80" stroke="#3a2614" strokeWidth="3" />
+          <path d="M-40 6 h70 v4 h-70 Z" fill="#3a2c22" /><rect x="24" y="4" width="16" height="8" rx="2" fill="#5a3f24" />
+          <g transform="translate(56,2)">
+            <ellipse cx="0" cy="8" rx="22" ry="5" fill="#5a4028" />
+            <path d="M-13 8 Q-14 -10 0 -12 Q14 -10 13 8 Z" fill="#6a4c2e" />
+            <path d="M-13 4 q13 6 26 0" stroke="#4a3218" strokeWidth="3" fill="none" />
           </g>
         </g>
       </PLayer>
 
-      {/* ═══ couche intermédiaire : LE TÉLÉGRAPHISTE + le « ? » de l'énigme ═══ */}
+      {/* ═══ couche intermédiaire : le télégraphiste au bureau + le « ? » ═══ */}
       <PLayer depth={2}>
-        {/* « ? » tant que le télégraphe n'est pas transmis */}
         {!tg && (
-          <g transform="translate(560,214)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+          <g transform="translate(232,272)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -26 26 -26 q26 0 26 22 q0 18 -22 24 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
             <circle cx="26" cy="40" r="3" fill="#ffd166" />
           </g>
         )}
-        {/* le télégraphiste assis derrière le bureau */}
-        <g transform="translate(520,360)">
-          <path d="M-30 100 Q-38 24 -6 10 Q10 4 26 10 Q40 24 34 100 Z" fill="#3a3040" />
-          <path d="M-30 100 Q-38 24 -6 10 Q10 4 26 10 Q40 24 34 100 Z" fill="#160c10" opacity="0.22" filter="url(#tg-grain)" />
-          <circle cx="2" cy="-8" r="15" fill="#d8a884" />
-          {/* cheveux + moustache */}
-          <path d="M-13 -12 q-2 -18 16 -17 q17 1 12 16 q-5 -7 -14 -7 q-11 0 -14 8 Z" fill="#4a3a30" />
-          <path d="M-5 -2 q7 3 14 0" stroke="#4a3a30" strokeWidth="2.5" fill="none" />
-          {/* gilet + bras vers l'appareil */}
-          <path d="M-6 18 q10 30 22 46" stroke="#2c2432" strokeWidth="7" fill="none" strokeLinecap="round" />
-          <path d="M18 60 q22 4 40 18" stroke="#d8a884" strokeWidth="6" fill="none" strokeLinecap="round" />
+        {/* le télégraphiste assis derrière le bureau (à droite), au manipulateur */}
+        <g transform="translate(540,372)">
+          <path d="M-26 96 Q-34 22 -4 10 Q10 4 24 10 Q36 22 30 96 Z" fill="#3a4152" />
+          <circle cx="2" cy="-8" r="14" fill="#d8a884" />
+          <path d="M-12 -12 q-2 -16 14 -15 q15 1 11 15 q-4 -6 -13 -6 q-10 0 -12 7 Z" fill="#4a3a30" />
+          {/* visière verte de télégraphiste */}
+          <path d="M-13 -14 q15 -6 28 0 l0 5 q-14 -4 -28 0 Z" fill="#2a6a3a" />
+          <path d="M-4 -2 q7 3 13 0" stroke="#4a3a30" strokeWidth="2.2" fill="none" />
+          {/* manchettes + bras vers l'appareil */}
+          <path d="M-4 18 q8 26 -14 40" stroke="#2c3242" strokeWidth="7" fill="none" strokeLinecap="round" />
+          <path d="M-18 58 q-24 4 -44 16" stroke="#d8a884" strokeWidth="6" fill="none" strokeLinecap="round" />
+          <rect x="-30" y="30" width="10" height="12" fill="#e6dfc8" />
         </g>
       </PLayer>
 
-      {/* ═══ premier plan : bureau, pièces, inventions, épave ═══ */}
+      {/* ═══ premier plan : bureau, Morse, Jessie, épave ═══ */}
       <PLayer depth={3}>
-        <rect y="400" width="1000" height="160" fill="url(#tg-floor)" />
-        <rect y="402" width="1000" height="158" fill="#241a10" opacity="0.34" filter="url(#tg-grain)" />
-        <ellipse cx="500" cy="474" rx="440" ry="52" fill="#5e4a30" opacity="0.3" />
-        <ellipse cx="330" cy="452" rx="180" ry="90" fill="url(#tg-lamp)" style={{ animation: "glow 2.6s ease-in-out infinite" }} />
+        <rect y="404" width="1000" height="156" fill="url(#wt-floor)" />
+        <rect y="406" width="1000" height="154" fill="#241608" opacity="0.34" filter="url(#wt-grain)" />
+        {/* lattes du plancher */}
+        <path d="M0 470 h1000 M0 520 h1000 M180 404 v156 M420 404 v156 M660 404 v156 M860 404 v156" stroke="#2a1a0c" strokeWidth="1.6" opacity="0.4" />
+        <ellipse cx="380" cy="472" rx="200" ry="80" fill="url(#wt-lamp)" style={{ animation: "glow 2.6s ease-in-out infinite" }} />
 
-        {/* LE GRAND BUREAU */}
+        {/* LE BUREAU du télégraphe */}
         <g transform="translate(430,486)">
-          <rect x="-210" y="8" width="440" height="16" rx="3" fill="url(#tg-desk)" />
-          <rect x="-200" y="24" width="14" height="40" fill="#4a3220" /><rect x="196" y="24" width="14" height="40" fill="#4a3220" />
+          <rect x="-190" y="6" width="400" height="16" rx="3" fill="url(#wt-desk)" />
+          <rect x="-182" y="22" width="14" height="42" fill="#3e2a16" /><rect x="176" y="22" width="14" height="42" fill="#3e2a16" />
+          {/* registre + plume sur le bureau */}
+          <g transform="translate(120,-2)"><rect x="-18" y="-8" width="36" height="14" rx="1" fill="#efe6ce" /><path d="M-12 -3 h24 M-12 1 h18" stroke="#8a7a5a" strokeWidth="1" opacity="0.6" /></g>
         </g>
 
-        {/* LE MANIPULATEUR MORSE sur le bureau (support : on lui apporte la
-            pile pour le brancher et ouvrir le mini-jeu de saisie) */}
+        {/* LE MANIPULATEUR MORSE (support : on lui apporte la pile) */}
         <g transform="translate(300,478)">
           <rect x="-30" y="2" width="60" height="8" rx="2" fill="#3a2c1c" />
           <circle cx="-8" cy="-2" r="8" fill="#3a3a44" />
@@ -139,32 +171,55 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [] }) 
             <path d="M-6 -18 q0 -6 6 -6" stroke="#5a5c62" strokeWidth="2" fill="none" />
           </g>
         </g>
-        {/* APPARAÎT : la bande de papier avec points et traits (télégraphe fait) */}
+        {/* APPARAÎT : la bande de points-traits (télégraphe transmis) */}
         {tg && (
           <g transform="translate(300,470)" style={{ animation: "pulse 0.7s ease-out 2" }}>
-            <ellipse cx="0" cy="8" rx="70" ry="30" fill="url(#tg-glow)" />
-            <rect x="-30" y="-2" width="60" height="10" rx="2" fill="#3a2c1c" />
-            <circle cx="-8" cy="-6" r="8" fill="#3a3a44" />
-            {/* la bande qui se déroule vers l'avant */}
+            <ellipse cx="0" cy="8" rx="70" ry="30" fill="url(#wt-glow)" />
             <path d="M20 0 q40 6 92 26" stroke="#f2ead6" strokeWidth="14" fill="none" strokeLinecap="round" />
             <g fill="#2c2418">
               {[[38, 6], [52, 10], [70, 15], [86, 20], [104, 26]].map(([x, y], i) => (
-                i % 2
-                  ? <rect key={i} x={x} y={y - 2} width="9" height="3" rx="1.5" />
-                  : <circle key={i} cx={x} cy={y} r="1.8" />
+                i % 2 ? <rect key={i} x={x} y={y - 2} width="9" height="3" rx="1.5" /> : <circle key={i} cx={x} cy={y} r="1.8" />
               ))}
             </g>
           </g>
         )}
 
-        {/* épave de MARTINE dans un coin (x ≤ 860 : au-delà, le décor est
-            rogné sur les bords selon la taille de la fenêtre) */}
+        {/* JESSIE TOMBSTONE, prospecteur surexcité, brandissant sa pépite d'or */}
+        <g transform="translate(196,458)">
+          <ellipse cx="0" cy="52" rx="30" ry="8" fill="#160f08" opacity="0.5" />
+          {/* jambes/pantalon + bottes */}
+          <path d="M-15 52 l-2 -30 h10 l1 30 Z" fill="#4a3a2a" /><path d="M2 52 l1 -30 h10 l-2 30 Z" fill="#4a3a2a" />
+          <path d="M-19 52 h12 v4 h-14 Z" fill="#2c1c10" /><path d="M5 52 h12 v4 h-14 Z" fill="#2c1c10" />
+          {/* chemise à carreaux rouge + bretelles */}
+          <path d="M-18 24 Q-22 -6 0 -12 Q22 -6 18 24 Z" fill="#a83a2c" />
+          <path d="M-16 24 h32 M-14 8 h28 M-12 -4 h24" stroke="#7a241c" strokeWidth="1.4" opacity="0.6" />
+          <path d="M-14 -6 h4 v30 h-4 Z M10 -6 h4 v30 h-4 Z" fill="#4a3320" />
+          {/* tête barbue + grand chapeau de prospecteur */}
+          <circle cx="0" cy="-24" r="11" fill="#d8a878" />
+          <path d="M-11 -18 Q-14 4 0 8 Q14 4 11 -18 Q6 -8 0 -8 Q-6 -8 -11 -18 Z" fill="#7a5a3a" />
+          <g stroke="#5a4028" strokeWidth="1" fill="none" opacity="0.5"><path d="M-7 -14 q5 16 14 20 M8 -14 q-3 16 -12 20" /></g>
+          <path d="M-13 -26 q13 -8 26 0" stroke="#5a4028" strokeWidth="3" fill="none" />
+          <path d="M-18 -30 Q0 -46 18 -30 Q10 -34 0 -34 Q-10 -34 -18 -30 Z" fill="#6a4c2e" />
+          <path d="M-18 -30 q18 6 36 0" stroke="#4a3218" strokeWidth="3" fill="none" />
+          {/* bras LEVÉ brandissant la pépite d'or qui scintille */}
+          <path d="M14 -6 Q30 -18 30 -38" stroke="#a83a2c" strokeWidth="6" fill="none" strokeLinecap="round" />
+          <g transform="translate(30,-44)">
+            <path d="M-7 4 L-3 -6 L6 -4 L4 6 Z" fill="#ffd44a" stroke="#c8961e" strokeWidth="1.4" />
+            <path d="M-3 -1 l3 3" stroke="#fff6c8" strokeWidth="1.4" />
+            {[[-10, -8], [10, -6], [0, -12]].map(([x, y], i) => <path key={i} d={`M${x} ${y} l2 2 l-2 2 l-2 -2 Z`} fill="#fff2b0" style={{ animation: `twinkle ${1.4 + i * 0.3}s ease-in-out infinite` }} />)}
+          </g>
+          {/* l'autre main tient une batée avec des paillettes */}
+          <path d="M-14 -4 q-16 6 -18 18" stroke="#a83a2c" strokeWidth="5.5" fill="none" strokeLinecap="round" />
+          <g transform="translate(-34,16)"><ellipse cx="0" cy="0" rx="12" ry="5" fill="#3a3a42" /><ellipse cx="0" cy="-1" rx="8" ry="3" fill="#5a5040" /><circle cx="-2" cy="-1" r="1.2" fill="#ffd44a" /><circle cx="3" cy="0" r="1" fill="#ffd44a" /></g>
+        </g>
+
+        {/* épave de MARTINE dans un coin */}
         <g transform="translate(856,506) rotate(8)">
           <ellipse cx="0" cy="12" rx="26" ry="6" fill="#0a0603" opacity="0.6" />
           <path d="M0 -20 Q18 -18 20 -4 Q22 8 11 11 L-11 11 Q-22 8 -20 -4 Q-18 -18 0 -20 Z" fill="#8a6240" />
           <circle cx="-1" cy="-4" r="5.5" fill="#cfeaff" stroke="#5c3a22" strokeWidth="1.4" />
           <rect x="-13" y="3" width="24" height="7" rx="2" fill="#0c1410" stroke="#5c3a22" strokeWidth="1" />
-          <text x="-1" y="9" textAnchor="middle" fontSize="5.5" fill="#5eff9e" fontFamily="ui-monospace,monospace" style={{ animation: "pulse 2.2s infinite" }}>1844</text>
+          <text x="-1" y="9" textAnchor="middle" fontSize="5.5" fill="#5eff9e" fontFamily="ui-monospace,monospace" style={{ animation: "pulse 2.2s infinite" }}>1849</text>
           <circle cx="13" cy="-27" r="2.3" fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
           <path d="M8 -20 q6 -8 13 -6" stroke="#8a94a8" strokeWidth="2.3" fill="none" strokeLinecap="round" />
         </g>
@@ -174,9 +229,7 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [] }) 
       <rect width="1000" height="560" fill="#181008" opacity="0.08" style={{ pointerEvents: "none" }} />
 
       {/* ═══ zones cliquables ═══ */}
-      {/* le télégraphiste : pose son problème */}
-      <Hotspot cx={520} cy={370} r={54} label="le télégraphiste" reveal={reveal} onClick={() => action("operator")} />
-      {/* le manipulateur Morse (support) : on lui apporte la pile → mini-jeu */}
+      <Hotspot cx={200} cy={430} r={40} label="Jessie Tombstone" reveal={reveal} onClick={() => action("jessie")} />
       {!tg && (
         <Hotspot cx={306} cy={476} r={40} label="le manipulateur Morse" item="code_morse" reveal={reveal} onClick={() => collect("code_morse")} />
       )}

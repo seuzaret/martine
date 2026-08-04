@@ -15,6 +15,7 @@
 import SceneTelegraphe from "./scenes/SceneTelegraphe.jsx";
 import SceneCable from "./scenes/SceneCable.jsx";
 import SceneTSF from "./scenes/SceneTSF.jsx";
+import CarteXIXe from "./scenes/CarteXIXe.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -113,7 +114,7 @@ const FAIL_LINES = [
 
 const INTRO = [
   "Tu as bien la pile de Volta ? Sans elle, ce siècle ne tourne pas. Bienvenue au XIXe : le siècle pressé, celui qui veut vaincre la DISTANCE.",
-  "D'abord un bureau de télégraphe, façon western : sur la nouvelle ligne Baltimore–Washington, un télégraphiste veut envoyer un message en une seconde. À toi de le taper en Morse, avec ta pile pour l'alimenter.",
+  "D'abord une cabane de télégraphe, en plein Far West : Jessie Tombstone, prospecteur, débarque tout excité — il a trouvé un FILON D'OR et veut prévenir sa famille à New York en une seconde ! À toi de taper son message en Morse, avec ta pile pour alimenter l'appareil.",
   "Ensuite, on pose un câble géant au fond de l'Atlantique pour relier deux continents ; enfin, avec Marconi, on lance des ondes SANS fil pour sauver un navire dans la nuit. Trois messages, et on repart.",
 ];
 
@@ -121,9 +122,9 @@ const ACTIONS = {
   wreck: { mood: "vexe", say: "Oui, j'ai grillé trois fusibles du télégraphe en atterrissant. L'opérateur a cru à un orage magnétique. Recharge-moi avant qu'il ne comprenne." },
 
   /* Les personnages — ils posent leur problème en mots simples (niveau 6e). */
-  operator: { mood: "content",
-    bubble: "Nouvelle ligne, tout juste tendue de Baltimore à Washington ! Je veux qu'un message traverse le pays en une SECONDE, pas en trois jours de diligence. Mon code de points et de traits est prêt… il ne me manque que du COURANT. Cette drôle de pile que tu tiens, là — c'est exactement ça !",
-    say: "Le télégraphe électrique : plus vite que le cheval ! Apporte ta pile de Volta au manipulateur, et tape le message toi-même en Morse." },
+  jessie: { mood: "content",
+    bubble: "Nom d'un coyote ! JESSIE TOMBSTONE, prospecteur ! Regarde cette pépite — j'ai trouvé le FILON, un vrai, plein d'or ! Faut prévenir ma famille à New York avant que la nouvelle s'ébruite : on va être riches ! Vite, le télégraphe ! Mais l'appareil est mort… il lui faut du courant. Cette drôle de pile que tu tiens — c'est exactement ça !",
+    say: "Jessie a trouvé de l'or et veut télégraphier « OR » à New York, vite ! Apporte ta pile de Volta au manipulateur : tu taperas le message toi-même en Morse." },
   field: { mood: "neutre",
     bubble: "De l'autre côté de cet océan, il y a l'Amérique. Un bateau met deux semaines pour y porter une lettre. Et si je posais un très long câble tout au fond de l'eau, pour envoyer le message en quelques minutes ?",
     say: "Relier deux continents par le fond de la mer : le monde rétrécit d'un coup. Ose dérouler ce câble." },
@@ -166,6 +167,7 @@ const chapter = {
   failLines: FAIL_LINES,
   intro: INTRO,
   actions: ACTIONS,
+  carte: CarteXIXe,
 };
 
 export default chapter;

@@ -75,8 +75,8 @@ export function MorseGame({ onClose, onWin }) {
       style={{ position: "fixed", inset: 0, background: "rgba(4,8,14,0.82)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, zIndex: 70, backdropFilter: "blur(3px)" }}>
       <div onClick={(e) => e.stopPropagation()}
         style={{ background: "#17110a", border: "2px solid #c8963e66", borderRadius: 18, padding: 20, maxWidth: 560, width: "100%", maxHeight: "92vh", overflowY: "auto", boxShadow: "0 12px 48px rgba(0,0,0,0.6)", color: "#efe6d2", fontFamily: "Palatino, Georgia, serif" }}>
-        <div style={{ textAlign: "center", fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 2, color: "#e0a848" }}>📟 LIGNE BALTIMORE — WASHINGTON · 1844</div>
-        <h2 style={{ textAlign: "center", margin: "6px 0 4px", color: "#ffd166", fontSize: 21 }}>Transmets le message : « OR »</h2>
+        <div style={{ textAlign: "center", fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 2, color: "#e0a848" }}>📟 TÉLÉGRAPHE DU FAR WEST · POUR NEW YORK</div>
+        <h2 style={{ textAlign: "center", margin: "6px 0 4px", color: "#ffd166", fontSize: 21 }}>Le message de Jessie : « OR »</h2>
         <p style={{ textAlign: "center", fontSize: 13, color: "#d8c9a8", margin: "0 0 14px" }}>
           Au télégraphe, chaque lettre est un CODE de points et de traits. Tape-les avec le manipulateur (appui bref = point ·, appui long = trait —), ou avec les deux boutons.
         </p>
@@ -129,11 +129,11 @@ export function MorseGame({ onClose, onWin }) {
           <div style={{ marginTop: 4 }}>
             <div style={{ background: "#0e1420", border: "1px solid #2a3648", borderRadius: 12, padding: "14px 16px" }}>
               <p style={{ fontSize: 15, lineHeight: 1.65, color: "#e8eef5", margin: 0 }}>
-                « · – · — bip ! — À Washington, l'aiguille du récepteur a tremblé exactement dans le même ordre : O… R… « OR » ! Ton message a traversé le pays en une SECONDE, là où un cheval mettait des jours. Voilà la magie de l'électricité et d'un CODE partagé : sans le même code des deux côtés, ces bips ne voudraient rien dire. » — MARTINE
+                « · – · — bip ! — À New York, l'aiguille du récepteur a tremblé exactement dans le même ordre : O… R… « OR » ! La famille de Jessie va exulter. Le message a traversé le pays en une SECONDE, là où une diligence mettait des semaines. Voilà la magie de l'électricité et d'un CODE partagé : sans le même code des deux côtés, ces bips ne voudraient rien dire. » — MARTINE
               </p>
             </div>
             <p style={{ textAlign: "center", margin: "12px 0 0", color: "#7fe0a8", fontSize: 13, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
-              ✓ Message « OR » transmis à Washington !
+              ✓ Message « OR » transmis à New York !
             </p>
             <button onClick={onClose}
               style={{ marginTop: 10, width: "100%", background: "#e0a848", color: "#1a1206", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer", fontSize: 15, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
