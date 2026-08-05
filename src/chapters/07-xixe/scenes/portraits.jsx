@@ -54,28 +54,38 @@ export function PortraitJames() {
       {/* taches de rousseur (sur les joues, à l'intérieur de l'ovale) */}
       {[[126, 148], [132, 154], [122, 152], [174, 148], [168, 154], [178, 152]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.4" fill="#c88a58" opacity="0.7" />)}
 
-      {/* NEZ discret + sourire */}
+      {/* NEZ discret */}
       <path d="M146 152 Q150 156 154 152 M146 152 Q144 145 148 143 M154 152 Q156 145 152 143" stroke="#c8946a" strokeWidth="1.8" fill="none" strokeLinecap="round" />
-      <Mouth y={163} dark="#8a3a2e" light="#c0785a" w={12} smile={1} />
+      {/* MOUSTACHE seule (rasé), en fer à cheval western — sur les joues rasées */}
+      <path d="M138 168 q12 -6 24 0 q-4 -8 -12 -8 q-8 0 -12 8 Z" fill="#a85a2a" />
+      <path d="M138 168 q-6 6 -10 6 M162 168 q6 6 10 6" stroke="#a85a2a" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+      {/* petite ombre sous la moustache */}
+      <path d="M140 170 q10 3 20 0" stroke="#7a3a18" strokeWidth="1" fill="none" opacity="0.4" />
+      {/* bouche */}
+      <Mouth y={176} dark="#8a3a2e" light="#c0785a" w={11} smile={1} />
+      {/* légère ombre sous le menton (rasé) */}
+      <path d="M136 184 q14 6 28 0" stroke="#c8946a" strokeWidth="1.4" fill="none" opacity="0.4" />
 
-      {/* moustache + BARBE auburn qui ÉPOUSE le bas de l'ovale : le contour
-          extérieur suit exactement la mâchoire/le menton du visage. */}
-      <path d="M112 138 Q112 168 138 188 Q150 195 162 188 Q188 168 188 138 Q170 160 150 162 Q130 160 112 138 Z" fill="#b0602c" />
-      <path d="M130 150 q20 -6 40 0" stroke="#a85a2a" strokeWidth="3.2" fill="none" strokeLinecap="round" />
-      <g stroke="#8a4820" strokeWidth="1.2" fill="none" opacity="0.5"><path d="M124 146 q6 24 26 42 M176 146 q-6 24 -26 42 M150 162 v30" /></g>
+      {/* CHEVEUX : courts, en RAIE sur le côté (mèche auburn plaquée) — ils
+          descendent au-dessus des oreilles et laissent le front dégagé.
+          Bord bas des mèches suit la naissance des cheveux (juste avant l'ovale). */}
+      {/* calotte */}
+      <path d="M112 130 Q108 96 150 92 Q192 96 188 130 Q184 108 168 100 Q158 96 150 98 Q142 96 132 100 Q116 108 112 130 Z" fill="#b0602c" />
+      {/* raie sur le côté (mèche qui traverse le front) */}
+      <path d="M136 108 Q152 100 176 118 Q168 108 156 106 Q144 106 136 108 Z" fill="#9a4e22" />
+      {/* pattes au-dessus des oreilles (bien collées à l'ovale) */}
+      <path d="M112 130 Q112 148 122 152 Q120 138 118 128 Z" fill="#9a4e22" />
+      <path d="M188 130 Q188 148 178 152 Q180 138 182 128 Z" fill="#9a4e22" />
 
-      {/* CHEVEUX auburn : calotte qui ÉPOUSE le haut de l'ovale (bord bas =
-          la ligne des cheveux sur le front), avant le chapeau. */}
-      <path d="M112 140 Q110 92 150 88 Q190 92 188 140 Q182 112 166 104 Q158 100 150 101 Q142 100 134 104 Q118 112 112 140 Z" fill="#b0602c" />
-      <path d="M112 140 Q110 118 118 108 Q116 128 116 142 Z" fill="#9a4e22" />
-      <path d="M188 140 Q190 118 182 108 Q184 128 184 142 Z" fill="#9a4e22" />
-
-      {/* CHAPEAU de prospecteur, repoussé en arrière (on voit le front + les
-          mèches ; la coiffe passe DERRIÈRE le haut du crâne). */}
-      <ellipse cx="150" cy="78" rx="60" ry="11" fill="#5a3f22" />
-      <path d="M118 80 Q120 50 150 46 Q180 50 182 80 Q168 64 150 64 Q132 64 118 80 Z" fill="#7a5230" />
-      <path d="M120 74 q30 9 60 0" stroke="#4a3218" strokeWidth="4" fill="none" />
-      <path d="M120 74 q30 9 60 0 l0 -4 q-30 -8 -60 0 Z" fill="#a8352a" opacity="0.6" />
+      {/* CHAPEAU de prospecteur — bien POSÉ sur le crâne (bord bas passe
+          juste au niveau de la naissance des cheveux), pas repoussé loin
+          derrière : on voit le bandeau et un peu de coiffure devant. */}
+      <ellipse cx="150" cy="94" rx="62" ry="11" fill="#5a3f22" />
+      <path d="M118 94 Q120 62 150 58 Q180 62 182 94 Q168 78 150 78 Q132 78 118 94 Z" fill="#7a5230" />
+      <path d="M120 88 q30 9 60 0" stroke="#4a3218" strokeWidth="4" fill="none" />
+      <path d="M120 88 q30 9 60 0 l0 -4 q-30 -8 -60 0 Z" fill="#a8352a" opacity="0.6" />
+      {/* petite pénombre du bord sur le front */}
+      <path d="M124 100 Q150 106 176 100" stroke="#8a5230" strokeWidth="2" fill="none" opacity="0.35" />
     </svg>
   );
 }

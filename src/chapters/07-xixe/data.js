@@ -65,7 +65,7 @@ const HIDDEN_BY_FLAG = {};
 const RECIPES = [
   /* T1 : brancher la pile au manipulateur ouvre le MINI-JEU Morse
      (taper « OR ») → le télégraphe électrique. */
-  { a: "pile", b: "code_morse", opens: "morse" },
+  { a: "pile", b: "code_morse", opens: "morse", consume: ["pile"] },
   /* T2 : le câble au fond de l'océan. */
   { a: "cable", b: "ocean", out: "msg_cable", msg: true },
   /* T3 : la TSF (antenne + ondes), puis l'appel au navire en détresse. */

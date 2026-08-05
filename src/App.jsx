@@ -490,8 +490,12 @@ export default function App() {
         const manque = list.find((f) => !flags[f] && !made.includes(f));
         if (manque) { setShake(true); setTimeout(() => setShake(false), 500); playSfx("fail"); say(rec.needMsg || "Il manque une étape avant celle-ci.", "vexe"); return; }
       }
-      /* recette qui OUVRE un mini-jeu (ex. encre + papyrus → cartouche). */
+      /* recette qui OUVRE un mini-jeu (ex. encre + papyrus → cartouche).
+         Honore `consume` : les ingrédients consommés partent du sac
+         immédiatement (ex. la pile de Volta apporte le courant au
+         télégraphe et n'a plus lieu d'être ensuite). */
       if (rec.opens) {
+        if (rec.consume) setInv((v) => cleanup(v.filter((x) => !rec.consume.includes(x)), made));
         boom(point); playSfx("craft");
         setModal({ type: rec.opens });
         return;
