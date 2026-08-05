@@ -6,9 +6,10 @@
    ============================================================ */
 
 const LIEUX = [
-  { tab: 0, nom: "Télégraphe", sous: "Far West → New York", x: 214, y: 250 },
-  { tab: 2, nom: "TSF · SOS", sous: "le Titanic", x: 322, y: 170 },
-  { tab: 1, nom: "Câble", sous: "sous l'océan", x: 380, y: 186 },
+  { tab: 0, nom: "Télégraphe", sous: "Far West (1844)", x: 76, y: 254 },
+  { tab: 1, nom: "Câble", sous: "sous l'océan (1866)", x: 380, y: 186 },
+  { tab: 2, nom: "TSF · SOS", sous: "Titanic (1912)", x: 322, y: 170 },
+  { tab: 3, nom: "Téléphone", sous: "NY↔SF (1915)", x: 168, y: 232 },
 ];
 
 export default function CarteXIXe({ tab = 0 }) {
@@ -52,6 +53,10 @@ export default function CarteXIXe({ tab = 0 }) {
       <path d="M474 176 q8 -4 10 6 q0 8 -8 8 q-8 -2 -6 -10 Z" fill="url(#c7-land)" />
       <text x="618" y="150" textAnchor="middle" fontFamily="Palatino, Georgia, serif" fontSize="18" fill="#6a4a24" fontStyle="italic" opacity="0.8">Europe</text>
       <text x="512" y="132" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7.5" fill="#5a3f24" opacity="0.8">Irlande · G.-B.</text>
+
+      {/* la LIGNE TÉLÉPHONIQUE TRANSCONTINENTALE (1915), SF → NY (traits) */}
+      <path d="M76 254 Q160 246 220 232" fill="none" stroke="#c8382e" strokeWidth="2.4" strokeDasharray="4 4" strokeLinecap="round" opacity="0.85" />
+      <text x="140" y="222" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="8" fill="#7a2418" opacity="0.85">ligne AT&amp;T · 1915</text>
 
       {/* ═══ le CÂBLE sous-marin (Terre-Neuve ↔ Irlande) ═══ */}
       <path d="M256 158 Q368 210 486 168" fill="none" stroke="#7a3020" strokeWidth="3" strokeDasharray="2 6" strokeLinecap="round" opacity="0.85" />

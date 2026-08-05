@@ -18,6 +18,7 @@ import { CartoucheGame } from "./chapters/egypte-cartouche.jsx";
 import { FactureGame } from "./chapters/moyen-age-facture.jsx";
 import { ChappeGame } from "./chapters/moderne-chappe.jsx";
 import { MorseGame } from "./chapters/xixe-morse.jsx";
+import { TsfGame } from "./chapters/xixe-tsf.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 
@@ -1279,6 +1280,10 @@ export default function App() {
 
       {modal?.type === "morse" && (
         <MorseGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_telegraphe")} />
+      )}
+
+      {modal?.type === "tsf" && (
+        <TsfGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_sos")} />
       )}
 
       {modal?.type === "carte" && (

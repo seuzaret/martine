@@ -2,19 +2,16 @@ import Hotspot from "../../../engine/Hotspot.jsx";
 import { PLayer } from "../../../engine/Parallax.jsx";
 
 /* ============================================================
-   CHAPITRE 7 — Tableau-ÉNIGME : « Comment être sauvé ? »
+   CHAPITRE 7 — Tableau : la STATION MARCONI (côte, nuit du 15 avril 1912)
    ------------------------------------------------------------
-   Nuit sur une station côtière. Au large, un navire coule.
-   Aucun fil ne le relie à la terre… Marconi (cliquable) pose LA
-   question : comment appeler à l'aide sans aucun fil ?
-   → antenne + ondes → la station s'allume, les ondes filent
-     dans la nuit vers le navire.
-   → TSF + navire → un bateau de secours arrive : sauvés !
-   Ce décor réagit à l'état du jeu via la prop `made`.
+   Nuit sur une station côtière de TSF. Au large, un navire (invisible
+   depuis ici) coule dans l'Atlantique. Marconi capte les bips de
+   détresse : parmi tous les outils de son établi, lequel peut porter
+   secours SANS AUCUN FIL, à travers la mer et la nuit ? Cliquer sur
+   l'établi ouvre le mini-jeu (choisir l'antenne).
    ============================================================ */
 
 export default function SceneTSF({ collect, action, reveal, made = [], queteQui }) {
-  const hasTsf = made.includes("tsf");     // la télégraphie sans fil fonctionne
   const sos = made.includes("msg_sos");    // l'appel est parti → secours en route
 
   return (
@@ -93,7 +90,7 @@ export default function SceneTSF({ collect, action, reveal, made = [], queteQui 
         {/* ⚠️ animation sur le <g>, opacité sur le <path> : une animation CSS
             d'opacité écrase l'attribut opacity (sinon les ondes « faibles »
             brillent autant que les fortes). */}
-        {!hasTsf && (
+        {!sos && (
           <g transform="translate(430,178)" fill="none" stroke="#7fd8ff">
             {[26, 46, 66].map((r, i) => (
               <g key={i} style={{ animation: `pulse ${2 + i * 0.4}s infinite` }}>
@@ -105,7 +102,7 @@ export default function SceneTSF({ collect, action, reveal, made = [], queteQui 
         )}
 
         {/* APRÈS : la station ÉMET pour de bon — grandes ondes vers le large */}
-        {hasTsf && (
+        {sos && (
           <g style={{ animation: "pulse 0.7s ease-out 2" }}>
             <circle cx="430" cy="178" r="90" fill="url(#ts-glow)" />
             <g transform="translate(430,178)" fill="none" stroke="#7fd8ff">
@@ -171,16 +168,11 @@ export default function SceneTSF({ collect, action, reveal, made = [], queteQui 
 
       {/* ═══ zones cliquables ═══ */}
       <Hotspot cx={238} cy={468} r={50} label="Marconi" reveal={reveal} onClick={() => action("marconi")} />
-      {/* l'antenne et les ondes : tant que la TSF n'est pas montée */}
-      {!hasTsf && (
-        <>
-          <Hotspot cx={430} cy={280} r={64} label="antenne" item="antenne" reveal={reveal} onClick={() => collect("antenne")} />
-          <Hotspot cx={430} cy={176} r={58} label="ondes" item="ondes" reveal={reveal} onClick={() => collect("ondes")} />
-        </>
-      )}
-      {/* le navire : tant qu'il n'est pas secouru */}
+      {/* L'ÉTABLI D'OUTILS de Marconi (au premier plan, sous la station) :
+          cliquer ouvre le mini-jeu — quel outil peut porter secours au
+          Titanic dans la nuit, sans aucun fil ? */}
       {!sos && (
-        <Hotspot cx={800} cy={360} r={80} label="navire" item="navire" reveal={reveal} onClick={() => collect("navire")} />
+        <Hotspot cx={500} cy={490} r={70} label="choisir l'outil pour appeler à l'aide" reveal={reveal} onClick={() => action("outils")} />
       )}
     </svg>
   );
