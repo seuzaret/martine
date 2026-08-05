@@ -176,7 +176,7 @@ const QUETE = [
     attend: "msg_poste",
     suite: "L'article file vers Paris au galop ! Suis-le : direction l'imprimerie du journal, chez le rédacteur en chef Sigismond." },
 
-  { perso: "sigismond", portrait: "sigismond",
+  { perso: "sigismond", portrait: "sigismond", auto: true,
     bubble: "Un ballon qui vole ? Voilà qui fera vendre ! Donne-moi cet article, mon garçon. Regarde ma presse : ce que ta plume a écrit une fois, je le tire à des CENTAINES d'exemplaires. Voilà l'essor de la presse — et le pouvoir d'imprimer les esprits.",
     say: "Confie l'article à Sigismond (glisse-le sur lui) : il en fait une gazette diffusée partout. L'essor de la presse.",
     attend: "msg_gazettes",
@@ -188,7 +188,7 @@ const QUETE = [
     attend: "msg_chappe",
     suite: "Condé annoncé à Paris en une heure ! Reste une rencontre à ne pas rater : ce curieux badaud qui prend des notes sur l'électricité…" },
 
-  { perso: "volta", portrait: "volta",
+  { perso: "volta", portrait: "volta", auto: true,
     bubble: "Ce télégraphe est ingénieux, mais tributaire du beau temps et de la lumière du jour. Il lui faudrait une énergie CONSTANTE… J'ai une idée : des disques de zinc et de cuivre, séparés par des chiffons salés. Aidez-moi à les empiler !",
     say: "Aide Volta : disques de zinc & cuivre + chiffons à la saumure → la PILE. Ce n'est pas un média, mais EMPORTE-LA : le prochain siècle en dépend.",
     attend: "pile",

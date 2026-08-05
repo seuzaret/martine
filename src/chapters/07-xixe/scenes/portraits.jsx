@@ -33,44 +33,49 @@ export function PortraitJames() {
       {/* col ouvert + foulard */}
       <path d="M140 236 Q150 250 160 236 L156 262 Q150 270 144 262 Z" fill="#efe6d2" />
 
-      {/* LE COU */}
-      <path d="M134 192 L166 192 L169 240 Q150 248 131 240 Z" fill="url(#pJaSkin)" />
+      {/* LE COU (plus étroit, sous un menton plus petit) */}
+      <path d="M137 186 L163 186 L165 230 Q150 238 135 230 Z" fill="url(#pJaSkin)" />
 
-      {/* LE VISAGE : franc, joufflu, taches de rousseur */}
-      <path d="M150 66 C189 66 204 94 202 130 C200 165 184 197 150 203 C116 197 100 165 98 130 C96 94 111 66 150 66 Z" fill="url(#pJaSkin)" />
-      <path d="M104 116 Q100 150 118 178" stroke="#ffe6b0" strokeWidth="5" fill="none" opacity="0.3" strokeLinecap="round" />
-      <ellipse cx="98" cy="140" rx="8" ry="11" fill="#e0a878" opacity="0.6" /><ellipse cx="202" cy="140" rx="8" ry="11" fill="#e0a878" opacity="0.6" />
-      {/* taches de rousseur */}
-      {[[112, 134], [120, 142], [108, 148], [188, 134], [180, 142], [192, 148]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.6" fill="#c88a58" opacity="0.7" />)}
+      {/* LE VISAGE : OVALE (plus haut que large) et plus petit qu'avant.
+          Contour de référence : x 112→188, y 86→192, centre ~138. */}
+      <path d="M150 86 C177 86 189 110 188 138 C187 166 171 190 150 192 C129 190 113 166 112 138 C111 110 123 86 150 86 Z" fill="url(#pJaSkin)" />
+      <path d="M118 120 Q114 150 130 176" stroke="#ffe6b0" strokeWidth="4" fill="none" opacity="0.3" strokeLinecap="round" />
+      {/* oreilles collées au bord de l'ovale */}
+      <ellipse cx="113" cy="140" rx="6" ry="9" fill="#e0a878" /><ellipse cx="187" cy="140" rx="6" ry="9" fill="#e0a878" />
 
       {/* SOURCILS auburn + YEUX pétillants (bleus) */}
-      <path d="M116 122 Q129 116 143 123" stroke="#a85a2a" strokeWidth="3.4" fill="none" strokeLinecap="round" />
-      <path d="M157 123 Q171 116 184 122" stroke="#a85a2a" strokeWidth="3.4" fill="none" strokeLinecap="round" />
-      <path d="M118 134 Q129 128 141 134 Q130 141 118 134 Z" fill="#f8efdd" />
-      <path d="M159 134 Q171 128 182 134 Q170 141 159 134 Z" fill="#f8efdd" />
-      <circle cx="130" cy="134" r="4.2" fill="#3a6a8a" /><circle cx="170" cy="134" r="4.2" fill="#3a6a8a" />
-      <circle cx="131.4" cy="132.4" r="1.4" fill="#fff" /><circle cx="171.4" cy="132.4" r="1.4" fill="#fff" />
-      <path d="M117 133 Q129 127 142 133 M158 133 Q171 127 183 133" stroke="#8a5a3a" strokeWidth="2.2" fill="none" strokeLinecap="round" />
-      {/* rides de sourire */}
-      <path d="M106 150 q4 8 12 12 M194 150 q-4 8 -12 12" stroke="#c8946a" strokeWidth="1.6" fill="none" opacity="0.4" />
+      <path d="M124 124 Q134 119 145 125" stroke="#a85a2a" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <path d="M155 125 Q166 119 176 124" stroke="#a85a2a" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <path d="M126 134 Q135 129 144 134 Q135 140 126 134 Z" fill="#f8efdd" />
+      <path d="M156 134 Q165 129 174 134 Q165 140 156 134 Z" fill="#f8efdd" />
+      <circle cx="135" cy="134" r="3.8" fill="#3a6a8a" /><circle cx="165" cy="134" r="3.8" fill="#3a6a8a" />
+      <circle cx="136.2" cy="132.6" r="1.2" fill="#fff" /><circle cx="166.2" cy="132.6" r="1.2" fill="#fff" />
+      <path d="M125 133 Q135 128 145 133 M155 133 Q165 128 175 133" stroke="#8a5a3a" strokeWidth="1.9" fill="none" strokeLinecap="round" />
+      {/* taches de rousseur (sur les joues, à l'intérieur de l'ovale) */}
+      {[[126, 148], [132, 154], [122, 152], [174, 148], [168, 154], [178, 152]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.4" fill="#c88a58" opacity="0.7" />)}
 
-      {/* NEZ + grand sourire */}
-      <path d="M145 156 Q150 160 155 156 M145 156 Q143 149 147 147 M155 156 Q157 149 153 147" stroke="#c8946a" strokeWidth="2" fill="none" strokeLinecap="round" />
-      <Mouth y={170} dark="#8a3a2e" light="#c0785a" w={14} smile={1} />
+      {/* NEZ discret + sourire */}
+      <path d="M146 152 Q150 156 154 152 M146 152 Q144 145 148 143 M154 152 Q156 145 152 143" stroke="#c8946a" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+      <Mouth y={163} dark="#8a3a2e" light="#c0785a" w={12} smile={1} />
 
-      {/* moustache + BARBE auburn fournie */}
-      <path d="M130 158 q20 -6 40 0" stroke="#b0602c" strokeWidth="3.6" fill="none" strokeLinecap="round" />
-      <path d="M110 152 Q106 192 138 208 Q150 216 162 208 Q194 192 190 152 Q172 176 150 178 Q128 176 110 152 Z" fill="#b0602c" />
-      <g stroke="#8a4820" strokeWidth="1.3" fill="none" opacity="0.5"><path d="M124 162 q6 26 24 42 M176 162 q-6 26 -24 42 M150 178 v34" /></g>
+      {/* moustache + BARBE auburn qui ÉPOUSE le bas de l'ovale : le contour
+          extérieur suit exactement la mâchoire/le menton du visage. */}
+      <path d="M112 138 Q112 168 138 188 Q150 195 162 188 Q188 168 188 138 Q170 160 150 162 Q130 160 112 138 Z" fill="#b0602c" />
+      <path d="M130 150 q20 -6 40 0" stroke="#a85a2a" strokeWidth="3.2" fill="none" strokeLinecap="round" />
+      <g stroke="#8a4820" strokeWidth="1.2" fill="none" opacity="0.5"><path d="M124 146 q6 24 26 42 M176 146 q-6 24 -26 42 M150 162 v30" /></g>
 
-      {/* CHAPEAU de prospecteur, repoussé en arrière (mèches auburn devant) */}
-      <path d="M100 118 Q96 80 150 74 Q204 80 200 118 Q192 96 172 90 Q160 86 150 88 Q140 86 128 90 Q108 96 100 118 Z" fill="#b0602c" />
-      <g transform="translate(0,-4)">
-        <ellipse cx="150" cy="70" rx="66" ry="12" fill="#7a5230" />
-        <path d="M116 72 Q118 40 150 36 Q182 40 184 72 Z" fill="#8a6238" />
-        <path d="M116 66 q34 10 68 0" stroke="#5a3f22" strokeWidth="4" fill="none" />
-        <path d="M116 66 q34 10 68 0 l0 -4 q-34 -9 -68 0 Z" fill="#a8352a" opacity="0.7" />
-      </g>
+      {/* CHEVEUX auburn : calotte qui ÉPOUSE le haut de l'ovale (bord bas =
+          la ligne des cheveux sur le front), avant le chapeau. */}
+      <path d="M112 140 Q110 92 150 88 Q190 92 188 140 Q182 112 166 104 Q158 100 150 101 Q142 100 134 104 Q118 112 112 140 Z" fill="#b0602c" />
+      <path d="M112 140 Q110 118 118 108 Q116 128 116 142 Z" fill="#9a4e22" />
+      <path d="M188 140 Q190 118 182 108 Q184 128 184 142 Z" fill="#9a4e22" />
+
+      {/* CHAPEAU de prospecteur, repoussé en arrière (on voit le front + les
+          mèches ; la coiffe passe DERRIÈRE le haut du crâne). */}
+      <ellipse cx="150" cy="78" rx="60" ry="11" fill="#5a3f22" />
+      <path d="M118 80 Q120 50 150 46 Q180 50 182 80 Q168 64 150 64 Q132 64 118 80 Z" fill="#7a5230" />
+      <path d="M120 74 q30 9 60 0" stroke="#4a3218" strokeWidth="4" fill="none" />
+      <path d="M120 74 q30 9 60 0 l0 -4 q-30 -8 -60 0 Z" fill="#a8352a" opacity="0.6" />
     </svg>
   );
 }
