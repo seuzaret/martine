@@ -59,12 +59,44 @@ export default function SceneCable({ collect, action, reveal, made = [], queteQu
         )}
       </PLayer>
 
-      {/* ═══ couche intermédiaire : la mer proche ═══ */}
+      {/* ═══ couche intermédiaire : la mer proche + la GRUE FLOTTANTE ═══ */}
       <PLayer depth={2}>
         <rect y="360" width="1000" height="80" fill="#2c586e" />
         {[380, 404, 424].map((y, i) => (
           <path key={i} d={`M0 ${y} q120 ${i % 2 ? 6 : -6} 240 0 t240 0 t240 0 t240 0`} stroke="#7ab0b8" strokeWidth="2" fill="none" opacity="0.4" style={{ animation: `ripple ${3 + (i % 3)}s ease-in-out infinite` }} />
         ))}
+
+        {/* la GRUE FLOTTANTE — un ponton avec un bras de grue qui pivote, cliquable
+            tant qu'on ne l'a pas ramassée. Une fois attrapée, elle disparaît du décor
+            (le joueur la « prend » dans son sac). */}
+        {!built && (
+          <g transform="translate(210,378)" style={{ animation: "float 4s ease-in-out infinite" }}>
+            {/* la coque du ponton (large et plate) */}
+            <path d="M-56 12 Q0 22 56 12 L46 24 Q0 32 -46 24 Z" fill="#1a2028" />
+            <path d="M-56 12 Q0 22 56 12 L46 24 Q0 32 -46 24 Z" fill="none" stroke="#0a0e14" strokeWidth="1.5" />
+            {/* le pont */}
+            <rect x="-40" y="4" width="80" height="10" fill="#3a2c1c" />
+            {/* la base pivotante de la grue */}
+            <rect x="-6" y="-8" width="12" height="14" fill="#5a4028" />
+            {/* le MÂT DE GRUE + FLÈCHE inclinée à 45° (silhouette caractéristique) */}
+            <path d="M0 -8 L0 -50 L34 -30 Z" fill="none" stroke="#7a5030" strokeWidth="3" />
+            <path d="M0 -50 L34 -30" stroke="#7a5030" strokeWidth="3" />
+            {/* le CROCHET qui pend au bout de la flèche */}
+            <path d="M34 -30 L34 -12" stroke="#a89878" strokeWidth="1.2" />
+            <path d="M32 -12 q0 4 2 4 q2 0 2 -4 Z" fill="#a89878" />
+            {/* cheminée fumante */}
+            <rect x="-24" y="-8" width="6" height="14" fill="#3a2418" />
+            <ellipse cx="-21" cy="-14" rx="4" ry="6" fill="#7a7a7a" opacity="0.6" style={{ animation: "drift 3s ease-in-out infinite" }} />
+          </g>
+        )}
+        {/* une fois le câble posé : la grue est repartie ; on la remplace au fond
+            par sa silhouette lointaine (mission accomplie) */}
+        {built && (
+          <g transform="translate(160,354)" opacity="0.5">
+            <path d="M-14 4 Q0 8 14 4 L12 8 Q0 10 -12 8 Z" fill="#1a2028" />
+            <path d="M0 -6 L0 -18 L12 -10 Z" fill="none" stroke="#7a5030" strokeWidth="1.5" />
+          </g>
+        )}
       </PLayer>
 
       {/* ═══ premier plan : le pont du navire câblier ═══ */}
@@ -162,6 +194,7 @@ export default function SceneCable({ collect, action, reveal, made = [], queteQu
       {!built && (
         <>
           <Hotspot cx={300} cy={468} r={64} label="câble" item="cable" reveal={reveal} onClick={() => collect("cable")} />
+          <Hotspot cx={210} cy={368} r={54} label="grue flottante" item="grue" reveal={reveal} onClick={() => collect("grue")} />
           <Hotspot cx={740} cy={320} r={80} label="océan" item="ocean" reveal={reveal} onClick={() => collect("ocean")} />
         </>
       )}

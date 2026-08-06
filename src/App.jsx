@@ -19,6 +19,9 @@ import { FactureGame } from "./chapters/moyen-age-facture.jsx";
 import { ChappeGame } from "./chapters/moderne-chappe.jsx";
 import { MorseGame } from "./chapters/xixe-morse.jsx";
 import { TsfGame } from "./chapters/xixe-tsf.jsx";
+import { PhotoGame } from "./chapters/xixe-photo.jsx";
+import { PhonoGame } from "./chapters/xixe-phono.jsx";
+import { CineGame } from "./chapters/xixe-cine.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 
@@ -310,11 +313,16 @@ export default function App() {
   };
 
   /* Rejoue un chapitre depuis le menu titre (repart de son début,
-     sans toucher à la frise/collection cumulative). */
+     sans toucher à la frise/collection cumulative). Les objets
+     HÉRITAGE (heirloom) du chapitre sont pré-remplis dans le sac
+     pour qu'un enseignant puisse tester une époque sans avoir dû
+     rejouer toutes les précédentes. */
   const playChapter = (i) => {
+    const seed = Object.entries(CHAPTERS[i].items || {})
+      .filter(([, it]) => it.heirloom).map(([id]) => id);
     setChapterIndex(i);
     setMaxReached((m) => Math.max(m, i));
-    setInv([]); setMsgs([]); setMade([]); setFlags({}); setQuete(0);
+    setInv(seed); setMsgs([]); setMade([]); setFlags({}); setQuete(0);
     setTab(CHAPTERS[i].startScene);
     setDialog({ lines: CHAPTERS[i].intro, idx: 0, mood: "neutre" });
     setScreen("play");
@@ -361,8 +369,17 @@ export default function App() {
   const action = (name, point) => {
     const act = chapter.actions[name];
     if (!act) return;
-    /* certaines « actions » ouvrent un mini-jeu (ex. l'alphabet) */
-    if (act.modal) { setModal({ type: act.modal }); return; }
+    /* certaines « actions » ouvrent un mini-jeu (ex. l'alphabet). Elles
+       peuvent exiger un drapeau préalable — sinon MARTINE explique ce qui
+       manque via `needMsg`, et la modale reste fermée. */
+    if (act.modal) {
+      if (act.needsFlag) {
+        const list = Array.isArray(act.needsFlag) ? act.needsFlag : [act.needsFlag];
+        const manque = list.find((f) => !flags[f] && !made.includes(f));
+        if (manque) { say(act.needMsg || "Il y a une étape à faire avant.", "vexe"); return; }
+      }
+      setModal({ type: act.modal }); return;
+    }
     if (act.goto !== undefined) setTab(act.goto);
     /* LA QUÊTE (si le chapitre en a une) : quand on clique le personnage
        de l'étape en cours, il dit SA réplique d'étape (pas sa réplique
@@ -418,7 +435,11 @@ export default function App() {
   useEffect(() => {
     const st = chapter.quete?.[quete];
     setPortraitOpen(!!(st?.portrait && st.auto));
-  }, [quete, chapterIndex]); // eslint-disable-line react-hooks/exhaustive-deps
+    /* dépendance sur `tab` (pas `quete`) : l'encart auto s'ouvre à
+       l'ARRIVÉE sur un nouveau tableau. Si on le déclenchait sur `quete`,
+       la fin d'une étape ouvrirait le portrait du perso suivant sur
+       l'ancien tableau (bug « un tableau trop tôt »). */
+  }, [tab, chapterIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* AMBIANCE SONORE : si le tableau courant en déclare une (champ
      `ambience` dans les SCENES du data.js), elle démarre en douceur et
@@ -617,11 +638,13 @@ export default function App() {
   };
 
   /* Les objets HÉRITAGE (heirloom) du chapitre courant DOIVENT être en
-     besace avant de partir : ils voyagent au chapitre suivant, qui casse
-     sans eux (ex. la pile de Volta pour le XIXe). On bloque donc le saut
-     tant qu'ils ne sont pas fabriqués. */
+     besace avant de partir SI le chapitre suivant les attend (ex. la
+     disquette de ch8 pour ch9). On ne bloque PAS quand l'heirloom est
+     consommé dans le chapitre lui-même (ex. la pile de Volta brûlée au
+     télégraphe Morse, absente de ch8). */
+  const nextItems = CHAPTERS[chapterIndex + 1]?.items || {};
   const heritagesManquants = Object.entries(chapter.items)
-    .filter(([id, it]) => it.heirloom && !inv.includes(id))
+    .filter(([id, it]) => it.heirloom && nextItems[id] && !inv.includes(id))
     .map(([, it]) => it.name);
   const canJump = msgs.length >= chapter.required && heritagesManquants.length === 0;
   const jumpBloque = msgs.length >= chapter.required && heritagesManquants.length > 0
@@ -1284,6 +1307,18 @@ export default function App() {
 
       {modal?.type === "tsf" && (
         <TsfGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_sos")} />
+      )}
+
+      {modal?.type === "photo" && (
+        <PhotoGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_daguerreotype")} />
+      )}
+
+      {modal?.type === "phono" && (
+        <PhonoGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_phonographe")} />
+      )}
+
+      {modal?.type === "cine" && (
+        <CineGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_cinema")} />
       )}
 
       {modal?.type === "carte" && (

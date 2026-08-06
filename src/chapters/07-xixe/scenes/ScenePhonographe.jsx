@@ -2,213 +2,171 @@ import Hotspot from "../../../engine/Hotspot.jsx";
 import { PLayer } from "../../../engine/Parallax.jsx";
 
 /* ============================================================
-   CHAPITRE 7 — Tableau-ÉNIGME : « Comment garder une voix ? »
+   CHAPITRE 7 — Tableau 4 : le SALON du PHONOGRAPHE (New York, 1878)
    ------------------------------------------------------------
-   L'atelier d'Edison. Sur l'établi, PAS de phonographe : juste
-   les pièces en vrac (aiguille, cylindre de cire, disque) et
-   l'inventeur qui se pose une question. Le soleil d'été tape à
-   la fenêtre (danger pour la cire).
-   → Quand le joueur assemble aiguille + cire, le PHONOGRAPHE
-     apparaît sur l'établi (prop `made`). Puis, une fois le
-     disque gravé (msg_gramophone), un disque se met à tourner.
-   Ce décor RÉAGIT à l'état du jeu via la prop `made`.
+   James, désormais âgé (~66 ans), a fait venir à la maison la
+   dernière merveille d'Edison : un phonographe à cylindre de cire.
+   Il veut y enregistrer sa voix pour ses petits-enfants — pour
+   qu'après sa mort, on l'entende encore. Son fils tourne la
+   manivelle. Cliquer sur le phonographe ouvre le mini-jeu.
    ============================================================ */
 
-export default function ScenePhonographe({ collect, action, reveal, made = [] }) {
-  const built = made.includes("phonographe");   // l'aiguille a gravé la cire → la machine existe
-  const gramo = made.includes("msg_gramophone"); // on est passé au disque plat
+export default function ScenePhonographe({ action, reveal, made = [], queteQui }) {
+  const done = made.includes("msg_phonographe");
 
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
-        <linearGradient id="ph-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8a5a52" /><stop offset="100%" stopColor="#5e3a34" /></linearGradient>
-        <linearGradient id="ph-win" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ffe6a8" /><stop offset="100%" stopColor="#ffc060" /></linearGradient>
-        <linearGradient id="ph-table" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#7a4e2c" /><stop offset="100%" stopColor="#4a2e18" /></linearGradient>
-        <linearGradient id="ph-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#7a5a3c" /><stop offset="100%" stopColor="#3e2c1c" /></linearGradient>
-        <linearGradient id="ph-horn" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#f4c860" /><stop offset="60%" stopColor="#c98a2c" /><stop offset="100%" stopColor="#8a5a18" /></linearGradient>
-        <radialGradient id="ph-sun" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#fff0c0" stopOpacity="0.8" /><stop offset="100%" stopColor="#ffd060" stopOpacity="0" /></radialGradient>
-        <radialGradient id="ph-glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ffe9a8" stopOpacity="0.7" /><stop offset="100%" stopColor="#ffe9a8" stopOpacity="0" /></radialGradient>
+        <linearGradient id="ph-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#7a4a3a" /><stop offset="100%" stopColor="#4a2818" /></linearGradient>
+        <linearGradient id="ph-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#5a3820" /><stop offset="100%" stopColor="#2a1608" /></linearGradient>
+        <linearGradient id="ph-table" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8a5a30" /><stop offset="100%" stopColor="#4a2c14" /></linearGradient>
+        <radialGradient id="ph-lamp" cx="50%" cy="0%" r="80%"><stop offset="0%" stopColor="#ffe8b0" stopOpacity="0.6" /><stop offset="100%" stopColor="#ffe8b0" stopOpacity="0" /></radialGradient>
         <filter id="ph-grain" x="0%" y="0%" width="100%" height="100%">
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" />
-          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0" result="a" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0" result="a" />
           <feComposite in="a" in2="SourceGraphic" operator="in" />
         </filter>
-        <clipPath id="ph-winclip"><rect x="-56" y="-70" width="112" height="140" /></clipPath>
       </defs>
 
-      {/* ═══ papier peint ═══ */}
-      <rect width="1000" height="560" fill="url(#ph-wall)" />
-      {[...Array(7)].map((_, r) => [...Array(11)].map((_, c) => (
-        <path key={`${r}-${c}`} d={`M${40 + c * 96 + (r % 2 ? 48 : 0)} ${50 + r * 74} q6 -10 12 0 q-6 10 -12 0`} fill="#a86a5a" opacity="0.25" />
-      )))}
-      <rect width="1000" height="560" fill="#2c1810" opacity="0.16" filter="url(#ph-grain)" />
+      {/* ═══ mur tapissé de bordeaux (papier peint Belle Époque) ═══ */}
+      <rect width="1000" height="440" fill="url(#ph-wall)" />
+      <rect width="1000" height="440" fill="#2a1808" opacity="0.15" filter="url(#ph-grain)" />
+      <g fill="#3a1c10" opacity="0.5">
+        {[80, 200, 320, 440, 560, 680, 800, 920].map((x, i) =>
+          [60, 160, 260, 360].map((y, j) => (
+            <path key={`${i}-${j}`} d={`M${x} ${y} l6 -8 l6 8 l-6 8 Z m0 0 l-6 -8 l-6 8 l6 8 Z`} />
+          ))
+        )}
+      </g>
+      <path d="M0 340 h1000" stroke="#2a1808" strokeWidth="4" />
+      <rect y="340" width="1000" height="60" fill="#3a2010" />
 
-      {/* ═══ couche lointaine : la fenêtre ensoleillée (chaleur) + un cadre ═══ */}
-      <PLayer depth={1}>
-        <g transform="translate(820,180)">
-          <rect x="-58" y="-72" width="116" height="144" fill="url(#ph-win)" />
-          <g clipPath="url(#ph-winclip)">
-            <ellipse cx="30" cy="-30" rx="40" ry="40" fill="#fff2c8" opacity="0.9" />
-            {[...Array(8)].map((_, i) => <path key={i} d={`M30 -30 L${30 + Math.cos(i) * 70} ${-30 + Math.sin(i) * 70}`} stroke="#ffe08a" strokeWidth="2" opacity="0.5" />)}
-            <path d="M-58 40 L-30 20 L-2 40 L26 18 L54 40 Z" fill="#c98a4a" opacity="0.5" />
-          </g>
-          <rect x="-58" y="-72" width="116" height="144" fill="none" stroke="#3a2418" strokeWidth="8" />
-          <path d="M0 -72 v144 M-58 0 h116" stroke="#3a2418" strokeWidth="4" />
-          <ellipse cx="0" cy="0" rx="130" ry="150" fill="url(#ph-sun)" style={{ animation: "glow 3s ease-in-out infinite" }} />
-        </g>
-        {/* petit cadre au mur */}
-        <g transform="translate(150,150)">
-          <rect x="-40" y="-30" width="80" height="60" fill="#d8c8a0" stroke="#5a3f24" strokeWidth="6" />
-          <circle cx="0" cy="-4" r="12" fill="#b09070" />
-          <path d="M-24 24 q24 -30 48 0 Z" fill="#9a7a58" />
-        </g>
-      </PLayer>
+      {/* Un CADRE au mur : le daguerréotype de James JEUNE (héritage narratif du T2) */}
+      <g transform="translate(120,120)">
+        <rect x="-30" y="-40" width="60" height="80" fill="#e8c060" />
+        <rect x="-26" y="-36" width="52" height="72" fill="#0a0806" />
+        <rect x="-22" y="-32" width="44" height="64" fill="#c8d0d4" />
+        <path d="M-10 -22 Q0 -30 10 -22 L8 8 Q0 12 -8 8 Z" fill="#8a807a" />
+        <circle cx="0" cy="-14" r="4" fill="#5a5450" />
+        <text y="56" textAnchor="middle" fontFamily="Palatino, Georgia, serif" fontStyle="italic" fontSize="10" fill="#e8c060">1855</text>
+      </g>
 
-      {/* ═══ couche intermédiaire : L'INVENTEUR (Edison) à son établi ═══ */}
+      {/* halo lumineux (lampe à pétrole) */}
+      <path d="M400 20 L640 20 L720 400 L320 400 Z" fill="url(#ph-lamp)" opacity="0.5" />
+
+      {/* ═══ le sol parqueté ═══ */}
       <PLayer depth={2}>
-        {/* bulle « ? » tant que rien n'est trouvé — signale qu'il y a une énigme */}
-        {!built && (
-          <g transform="translate(360,232)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
-            <path d="M0 0 q0 -26 26 -26 q26 0 26 22 q0 18 -22 24 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
-            <circle cx="26" cy="40" r="3" fill="#ffd166" />
-          </g>
-        )}
-        {/* la silhouette de l'inventeur, penché, cliquable */}
-        <g transform="translate(300,360)">
-          <path d="M-26 90 Q-34 20 -6 6 Q10 -2 24 6 Q40 18 34 90 Z" fill="#3a2c3a" />
-          <path d="M-26 90 Q-34 20 -6 6 Q10 -2 24 6 Q40 18 34 90 Z" fill="#160c10" opacity="0.25" filter="url(#ph-grain)" />
-          <circle cx="4" cy="-10" r="15" fill="#d8a884" />
-          <path d="M-11 -14 q-2 -20 18 -18 q18 2 12 18 q-4 -8 -14 -8 q-12 0 -16 8 Z" fill="#4a3a34" />
-          {/* moustache d'époque */}
-          <path d="M-4 -4 q8 4 16 0" stroke="#4a3a34" strokeWidth="2.5" fill="none" />
-          {/* bras tendu vers l'établi */}
-          <path d="M24 20 q26 6 40 30" stroke="#d8a884" strokeWidth="7" fill="none" strokeLinecap="round" />
-          {/* nœud papillon */}
-          <path d="M-2 8 l8 -4 l0 8 Z M14 8 l-8 -4 l0 8 Z" fill="#7a2418" />
-        </g>
+        <path d="M0 560 L0 400 L1000 400 L1000 560 Z" fill="url(#ph-floor)" />
+        {[420, 460, 500, 540].map((y, i) => <path key={i} d={`M0 ${y} h1000`} stroke="#1a0c04" strokeWidth="1" opacity="0.5" />)}
+        {[200, 400, 600, 800].map((x, i) => <path key={i} d={`M${x} 400 v160`} stroke="#1a0c04" strokeWidth="1" opacity="0.4" />)}
       </PLayer>
 
-      {/* ═══ premier plan : parquet, établi, pièces en vrac, invention ═══ */}
+      {/* ═══ premier plan : la TABLE + LE PHONOGRAPHE + James âgé + son fils ═══ */}
       <PLayer depth={3}>
-        <rect y="410" width="1000" height="150" fill="url(#ph-floor)" />
-        <rect y="412" width="1000" height="148" fill="#241408" opacity="0.34" filter="url(#ph-grain)" />
-        <path d="M0 440 h1000 M0 480 h1000 M0 520 h1000 M120 410 v150 M340 410 v150 M560 410 v150 M780 410 v150" stroke="#2c1c0e" strokeWidth="1.4" opacity="0.4" />
-        <ellipse cx="480" cy="480" rx="440" ry="46" fill="#241408" opacity="0.28" />
-
-        {/* L'ÉTABLI (guéridon de travail) */}
-        <g transform="translate(470,470)">
-          <rect x="-8" y="10" width="16" height="70" fill="#4a2e18" />
-          <path d="M-30 80 h60 M-24 84 l-8 6 M24 84 l8 6" stroke="#4a2e18" strokeWidth="6" strokeLinecap="round" />
-          <ellipse cx="0" cy="8" rx="92" ry="18" fill="url(#ph-table)" />
-          <ellipse cx="0" cy="4" rx="92" ry="16" fill="#6a4628" />
-
-          {/* AVANT assemblage : un cornet posé de côté + un socle nu (les pièces attendent) */}
-          {!built && (
-            <g>
-              {/* socle vide, prêt à recevoir la machine */}
-              <rect x="-30" y="-14" width="60" height="18" rx="3" fill="#3a2414" opacity="0.9" />
-              <ellipse cx="0" cy="-14" rx="30" ry="6" fill="#4a2e18" />
-              {/* un cornet couché, en pièce détachée */}
-              <g transform="translate(44,-4) rotate(18)">
-                <path d="M0 0 Q26 -18 52 -24 Q54 -12 54 0 Q54 12 52 24 Q26 18 0 0 Z" fill="url(#ph-horn)" opacity="0.85" />
-                <path d="M0 0 Q26 -18 52 -24 Q54 -12 54 0 Q54 12 52 24 Q26 18 0 0 Z" fill="none" stroke="#8a5a18" strokeWidth="1.6" opacity="0.7" />
-              </g>
-            </g>
-          )}
-
-          {/* APRÈS assemblage : LE PHONOGRAPHE monté (apparaît via `built`) */}
-          {built && (
-            <g style={{ animation: "pulse 0.7s ease-out 2" }}>
-              <ellipse cx="0" cy="-6" rx="120" ry="60" fill="url(#ph-glow)" />
-              <rect x="-40" y="-24" width="80" height="30" rx="4" fill="#3a2414" />
-              <rect x="-40" y="-24" width="80" height="30" rx="4" fill="#160c04" opacity="0.3" filter="url(#ph-grain)" />
-              {/* plateau + support tournant */}
-              <ellipse cx="-14" cy="-24" rx="22" ry="8" fill="#5a3f24" />
-              {/* si on n'a pas encore le disque : le cylindre de cire ; sinon un disque qui tourne */}
-              {gramo ? (
-                <g transform="translate(-14,-26)">
-                  <ellipse cx="0" cy="0" rx="26" ry="8" fill="#1c1c22" style={{ transformOrigin: "0px 0px", animation: "spin 1.6s linear infinite" }} />
-                  <ellipse cx="0" cy="0" rx="6" ry="2" fill="#a83828" />
-                </g>
-              ) : (
-                <g transform="translate(-30,-40)">
-                  <rect x="0" y="0" width="30" height="16" rx="4" fill="#e8dcc0" />
-                  <path d="M0 4 h30 M0 10 h30" stroke="#c8b890" strokeWidth="1" />
-                </g>
-              )}
-              {/* LE GRAND PAVILLON en place */}
-              <g transform="translate(20,-30)">
-                <path d="M0 0 Q40 -46 88 -60 Q92 -34 92 -10 Q92 14 88 40 Q40 26 0 -2 Z" fill="url(#ph-horn)" />
-                <path d="M0 0 Q40 -46 88 -60 Q92 -34 92 -10 Q92 14 88 40 Q40 26 0 -2 Z" fill="none" stroke="#8a5a18" strokeWidth="2" />
-                <ellipse cx="88" cy="-10" rx="8" ry="50" fill="#3a2408" opacity="0.5" />
-                <path d="M0 0 q-14 -2 -22 6" stroke="#6a6c72" strokeWidth="3" fill="none" />
-              </g>
-              {/* petites notes de musique qui s'échappent une fois le disque gravé */}
-              {gramo && [0, 1, 2].map((i) => (
-                <text key={i} x={70 + i * 18} y={-58 - i * 10} fontSize="16" fill="#ffe9a8" opacity="0.9" style={{ animation: `drift ${2 + i * 0.6}s ease-in-out infinite` }}>♪</text>
-              ))}
-            </g>
-          )}
+        {/* la table victorienne */}
+        <g transform="translate(500,410)">
+          <rect x="-140" y="-10" width="280" height="16" fill="url(#ph-table)" />
+          <rect x="-140" y="-10" width="280" height="16" fill="#1a0c04" opacity="0.25" filter="url(#ph-grain)" />
+          <path d="M-130 6 Q-124 60 -134 130 L-126 130 Q-116 60 -122 6 Z" fill="#4a2c14" />
+          <path d="M130 6 Q124 60 134 130 L126 130 Q116 60 122 6 Z" fill="#4a2c14" />
         </g>
 
-        {/* LES PIÈCES EN VRAC — chacune disparaît une fois SERVIE.
-            aiguille + cire : consommées à l'assemblage du phonographe.
-            disque : consommé plus tard, à la gravure du gramophone. */}
-        {/* console de dépose (aiguille tant que non monté · disque tant que non gravé) */}
-        {!gramo && (
-          <g transform="translate(700,486)">
-            <rect x="-70" y="-6" width="140" height="12" rx="2" fill="url(#ph-table)" />
-            {/* LE DISQUE PLAT — reste jusqu'à la gravure du gramophone */}
-            <g transform="translate(-34,-10)">
-              <ellipse cx="0" cy="4" rx="38" ry="9" fill="#160c04" opacity="0.4" />
-              <ellipse cx="0" cy="0" rx="38" ry="10" fill="#1c1c22" />
-              <ellipse cx="0" cy="0" rx="38" ry="10" fill="none" stroke="#3a3a42" strokeWidth="1" />
-              {[30, 22, 14].map((r, i) => <ellipse key={i} cx="0" cy="0" rx={r} ry={r * 0.26} fill="none" stroke="#3a3a42" strokeWidth="0.8" />)}
-              <ellipse cx="0" cy="0" rx="6" ry="1.6" fill="#a83828" />
-            </g>
-            {/* L'AIGUILLE — disparaît une fois le phonographe monté */}
-            {!built && (
-              <g transform="translate(46,-8)">
-                <rect x="-16" y="-4" width="32" height="12" rx="2" fill="#6a4628" />
-                <rect x="-13" y="-2" width="26" height="8" fill="#2c1c10" />
-                <path d="M-8 2 l16 0" stroke="#dfeaf2" strokeWidth="1.4" />
-                <path d="M8 2 l6 -3" stroke="#c8c8d0" strokeWidth="2.4" strokeLinecap="round" />
-              </g>
-            )}
+        {/* LE PHONOGRAPHE EDISON — cylindre à cire + grand cornet de cuivre */}
+        <g transform="translate(500,320)">
+          <rect x="-70" y="60" width="140" height="30" rx="4" fill="#5a3820" />
+          <rect x="-70" y="60" width="140" height="30" rx="4" fill="none" stroke="#2a1608" strokeWidth="2" />
+          <rect x="-60" y="30" width="120" height="30" fill="#3a2a20" />
+          <circle cx="-52" cy="45" r="10" fill="#7a6a5a" stroke="#3a2a20" strokeWidth="2" />
+          <circle cx="-52" cy="45" r="4" fill="#3a2a20" />
+          {/* manivelle */}
+          <g style={{ transformOrigin: "-52px 45px", animation: done ? "spin 3.2s linear infinite" : "none" }}>
+            <rect x="-58" y="43" width="26" height="4" fill="#a89878" />
+            <circle cx="-32" cy="45" r="3.4" fill="#5a4a3a" />
           </g>
-        )}
+          {/* le cylindre de cire (le SUPPORT — l'objet héritage) */}
+          <g transform="translate(0,20)">
+            <ellipse cx="0" cy="0" rx="52" ry="12" fill="#e0d0a0" />
+            <rect x="-52" y="0" width="104" height="20" fill="#e0d0a0" />
+            <ellipse cx="0" cy="20" rx="52" ry="12" fill="#c8b088" />
+            {[4, 8, 12, 16].map((y, i) => <ellipse key={i} cx="0" cy={y} rx="52" ry="12" fill="none" stroke="#8a7050" strokeWidth="0.6" opacity="0.7" />)}
+            {/* l'aiguille sur son bras */}
+            <path d="M0 -10 L-20 -30" stroke="#7a6a5a" strokeWidth="3" />
+            <circle cx="-20" cy="-30" r="6" fill="#a89878" />
+            <path d="M0 -10 L0 -6" stroke="#c8b088" strokeWidth="3" />
+          </g>
+          {/* le grand cornet de cuivre (pavillon d'enregistrement) */}
+          <g transform="translate(50,0)">
+            <path d="M0 0 L120 -70 L120 -30 L0 30 Z" fill="#c8802a" />
+            <path d="M0 0 L120 -70 L120 -30 L0 30 Z" fill="none" stroke="#7a4a10" strokeWidth="2" />
+            <ellipse cx="120" cy="-50" rx="10" ry="40" fill="#7a4a10" />
+            <path d="M0 -6 L20 -14 L20 22 L0 14 Z" fill="#7a4a10" />
+          </g>
+        </g>
 
-        {/* LE CYLINDRE DE CIRE, exposé devant (menacé par la chaleur) */}
-        {!built && (
-          <g transform="translate(150,500)">
-            <ellipse cx="0" cy="26" rx="30" ry="7" fill="#160c04" opacity="0.4" />
-            <rect x="-22" y="-14" width="44" height="36" rx="4" fill="#e8dcc0" />
-            <ellipse cx="0" cy="-14" rx="22" ry="7" fill="#f2ead6" />
-            <ellipse cx="0" cy="22" rx="22" ry="7" fill="#d8ccae" />
-            {[...Array(6)].map((_, i) => <ellipse key={i} cx="0" cy={-8 + i * 5} rx="22" ry="6" fill="none" stroke="#cabf9e" strokeWidth="0.7" />)}
-            <path d="M18 -6 q6 8 2 18" stroke="#d8ccae" strokeWidth="2" fill="none" opacity="0.6" />
+        {/* JAMES ÂGÉ (~66 ans) — dans un fauteuil, penché vers le cornet */}
+        <g transform="translate(720,420)">
+          {/* fauteuil */}
+          <rect x="-52" y="-30" width="104" height="80" rx="8" fill="#4a2814" />
+          <rect x="-58" y="-90" width="12" height="130" rx="4" fill="#4a2814" />
+          <rect x="46" y="-90" width="12" height="130" rx="4" fill="#4a2814" />
+          <rect x="-48" y="-102" width="96" height="20" rx="6" fill="#5a3018" />
+          {/* corps : redingote noire, cravate */}
+          <path d="M-24 -60 Q-30 -110 0 -122 Q30 -110 24 -60 L20 -50 L-20 -50 Z" fill="#1c1610" />
+          <path d="M-8 -122 L0 -110 L8 -122 L6 -80 L-6 -80 Z" fill="#efe6d2" />
+          <path d="M-3 -110 L3 -110 L3 -84 L-3 -84 Z" fill="#0a0a10" />
+          {/* le bras qui se tend vers le cornet à sa gauche */}
+          <path d="M-22 -100 q-50 -8 -80 8" stroke="#e0b084" strokeWidth="6" fill="none" strokeLinecap="round" />
+          {/* la tête — cheveux blancs, moustache blanche, petites lunettes rondes */}
+          <path d="M0 -150 c14 0 22 12 22 26 c0 14 -8 24 -22 24 c-14 0 -22 -10 -22 -24 c0 -14 8 -26 22 -26 Z" fill="#e0b084" />
+          <path d="M-20 -134 Q-16 -156 0 -158 Q16 -156 20 -134 Q10 -148 0 -148 Q-10 -148 -20 -134 Z" fill="#e8e4dc" />
+          <path d="M-6 -114 q6 -3 12 0 q-2 -4 -6 -4 q-4 0 -6 4 Z" fill="#e8e4dc" />
+          <path d="M-6 -114 q-3 3 -5 3 M6 -114 q3 3 5 3" stroke="#e8e4dc" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+          <circle cx="-7" cy="-126" r="6" fill="none" stroke="#5a4030" strokeWidth="1.2" />
+          <circle cx="7" cy="-126" r="6" fill="none" stroke="#5a4030" strokeWidth="1.2" />
+          <path d="M-1 -126 h2" stroke="#5a4030" strokeWidth="1.2" />
+          <circle cx="-7" cy="-126" r="1.6" fill="#3a6a8a" />
+          <circle cx="7" cy="-126" r="1.6" fill="#3a6a8a" />
+        </g>
+
+        {/* LE FILS DE JAMES (~30 ans) — debout, tournant la manivelle du phono */}
+        <g transform="translate(360,410)">
+          <path d="M-16 -60 Q-20 -110 0 -122 Q20 -110 16 -60 L12 -50 L-12 -50 Z" fill="#4a5a6a" />
+          <path d="M-8 -122 L0 -110 L8 -122 L6 -80 L-6 -80 Z" fill="#efe6d2" />
+          <path d="M-3 -110 L3 -110 L3 -80 L-3 -80 Z" fill="#3a2820" />
+          <path d="M-12 -50 L-8 40 L-2 40 L-2 -50 Z" fill="#2c3846" />
+          <path d="M2 -50 L2 40 L8 40 L12 -50 Z" fill="#2c3846" />
+          {/* bras qui tourne la manivelle à droite */}
+          <path d="M14 -90 q40 -6 60 20" stroke="#4a5a6a" strokeWidth="6" fill="none" strokeLinecap="round" />
+          {/* tête — cheveux courts auburn */}
+          <path d="M0 -150 c12 0 20 10 20 24 c0 14 -8 22 -20 22 c-12 0 -20 -8 -20 -22 c0 -14 8 -24 20 -24 Z" fill="#e0b084" />
+          <path d="M-18 -134 Q-14 -154 0 -156 Q14 -154 18 -134 Q10 -146 0 -146 Q-10 -146 -18 -134 Z" fill="#7a3a1a" />
+          <circle cx="-6" cy="-128" r="1.5" fill="#3a6a8a" />
+          <circle cx="6" cy="-128" r="1.5" fill="#3a6a8a" />
+        </g>
+
+        {/* lampe à pétrole suspendue */}
+        <g transform="translate(500,40)">
+          <path d="M0 0 v50" stroke="#3a2410" strokeWidth="2" />
+          <path d="M-24 50 L24 50 L20 70 L-20 70 Z" fill="#a89878" />
+          <ellipse cx="0" cy="80" rx="18" ry="10" fill="#ffe8b0" opacity="0.85" style={{ animation: "glow 2.8s ease-in-out infinite" }} />
+        </g>
+
+        {/* « ? » de James âgé (tant qu'il guide) */}
+        {queteQui === "james-vieux" && !done && (
+          <g transform="translate(720,240)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+            <path d="M0 0 q0 -24 24 -24 q24 0 24 20 q0 17 -20 22 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
+            <circle cx="24" cy="37" r="3" fill="#ffd166" />
           </g>
         )}
       </PLayer>
 
-      {/* voile chaud global */}
-      <rect width="1000" height="560" fill="#3a1e08" opacity="0.06" style={{ pointerEvents: "none" }} />
+      <rect width="1000" height="560" fill="#141810" opacity="0.06" style={{ pointerEvents: "none" }} />
 
       {/* ═══ zones cliquables ═══ */}
-      {/* l'inventeur : pose son problème (dialogue) */}
-      <Hotspot cx={310} cy={370} r={54} label="l'inventeur" reveal={reveal} onClick={() => action("edison")} />
-      {/* le soleil d'été (chaleur) : toujours ramassable */}
-      <Hotspot cx={820} cy={190} r={70} label="chaleur" item="chaleur" reveal={reveal} onClick={() => collect("chaleur")} />
-      {/* aiguille & cire : tant que le phonographe n'est pas monté */}
-      {!built && (
-        <>
-          <Hotspot cx={746} cy={478} r={30} label="aiguille" item="aiguille" reveal={reveal} onClick={() => collect("aiguille")} />
-          <Hotspot cx={150} cy={498} r={40} label="cylindre de cire" item="cylindre_cire" reveal={reveal} onClick={() => collect("cylindre_cire")} />
-        </>
-      )}
-      {/* disque : tant que le gramophone n'est pas gravé */}
-      {!gramo && (
-        <Hotspot cx={666} cy={476} r={40} label="disque" item="disque" reveal={reveal} onClick={() => collect("disque")} />
+      <Hotspot cx={720} cy={310} r={54} label="James âgé" reveal={reveal} onClick={() => action("james-vieux")} />
+      <Hotspot cx={360} cy={330} r={40} label="son fils" reveal={reveal} onClick={() => action("filsjames")} />
+      {!done && (
+        <Hotspot cx={520} cy={320} r={80} label="le phonographe Edison — graver la voix" reveal={reveal} onClick={() => action("phono")} />
       )}
     </svg>
   );

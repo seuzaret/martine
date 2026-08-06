@@ -1,27 +1,32 @@
 /* ============================================================
-   CHAPITRE 7 — Le XIXe siècle : vaincre la distance (1844 → 1915)
+   CHAPITRE 7 — Le XIXe siècle : vaincre la distance, fixer l'instant.
    ============================================================
-   4 tableaux de COMMUNICATION, en une histoire — la famille O'Sullivan
-   à travers l'Atlantique et l'Amérique :
-   1. TÉLÉGRAPHE MORSE (Far West, 1844) — JAMES tape « OR » à New York.
-   2. CÂBLE TRANSATLANTIQUE (1866) — James dit à sa famille d'Irlande
-      « Venez me rejoindre en Amérique ! ».
-   3. STATION MARCONI (nuit du 15 avril 1912) — la génération suivante
-      embarque à Cobh sur le Titanic. Le paquebot coule. Depuis la
-      station à terre, un mini-jeu : quel outil, parmi tant d'autres,
-      peut porter secours dans la nuit ? → l'ANTENNE.
-   4. TÉLÉPHONE TRANSCONTINENTAL (25 janvier 1915) — SEAN, fils de
-      James, à New York, appelle la famille rescapée à San Francisco
-      par la nouvelle ligne AT&T (Bell).
+   7 tableaux qui suivent la famille O'Sullivan sur 4 générations :
+   1. TÉLÉGRAPHE MORSE (Far West, ~1849) — JAMES tape « OR » à New York.
+   2. DAGUERRÉOTYPE (Californie, ~1855) — James envoie son portrait
+      à sa mère restée en Irlande.
+   3. CÂBLE TRANSATLANTIQUE (1866) — James dit « Venez me rejoindre ! ».
+   4. PHONOGRAPHE EDISON (New York, 1878) — James âgé grave sa voix
+      sur un cylindre de cire pour ses petits-enfants.
+   5. STATION MARCONI (nuit du 15 avril 1912) — la génération suivante
+      embarque à Cobh sur le Titanic. Le paquebot coule. Un mini-jeu :
+      quel outil peut porter secours sans fil ? → l'ANTENNE (TSF).
+   6. NICKELODEON (New York, mai 1912) — SEAN, 15 ans, va voir au
+      cinéma « Saved from the Titanic », un film muet sur le naufrage.
+   7. TÉLÉPHONE TRANSCONTINENTAL (25 janvier 1915) — Sean, à New York,
+      appelle la famille rescapée à San Francisco (AT&T, Bell).
    La PILE DE VOLTA (héritage du ch. 6) alimente le télégraphe.
    ============================================================ */
 
 import SceneTelegraphe from "./scenes/SceneTelegraphe.jsx";
+import ScenePhoto from "./scenes/ScenePhoto.jsx";
 import SceneCable from "./scenes/SceneCable.jsx";
+import ScenePhonographe from "./scenes/ScenePhonographe.jsx";
 import SceneTSF from "./scenes/SceneTSF.jsx";
+import SceneLumiere from "./scenes/SceneLumiere.jsx";
 import SceneTelephone from "./scenes/SceneTelephone.jsx";
 import CarteXIXe from "./scenes/CarteXIXe.jsx";
-import { PortraitJames, PortraitMarconi, PortraitSean } from "./scenes/portraits.jsx";
+import { PortraitJames, PortraitJamesVieux, PortraitMarconi, PortraitSean, PortraitPhotographe, PortraitOuvreuse } from "./scenes/portraits.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -33,29 +38,43 @@ const ITEMS = {
   /* T1 — le bureau du télégraphe (western, ~1849) */
   code_morse: { name: "Manipulateur Morse", emoji: "🎛️", support: true, desc: "La touche du télégraphe : elle coupe le courant en impulsions, courtes et longues — les points et les traits du code Morse. Branche-lui du courant, et tape !" },
 
-  /* T2 — la pose du câble (1866) */
+  /* T2 — le studio du daguerréotypist (Californie, ~1855) */
+  plaque: { name: "Plaque de cuivre argentée", emoji: "🟫", desc: "Une plaque de cuivre polie miroir, recouverte d'une fine couche d'argent : le support qui va capter la lumière. Glisse-la dans la chambre photographique." },
+  iodure: { name: "Iodure d'argent (flacon)", emoji: "⚗️", desc: "Un flacon jaune : les vapeurs d'iodure d'argent SENSIBILISENT la plaque à la lumière. Sans ça, aucune image ne se formera. Verse-le sur la chambre, une fois la plaque à l'intérieur." },
+  chambre: { name: "Chambre photographique", emoji: "📷", support: true, desc: "Le grand appareil en bois : boîte étanche à la lumière, objectif à l'avant, plaque à l'arrière. On y CHARGE la plaque puis on la SENSIBILISE avant d'exposer." },
+
+  /* T3 — la pose du câble (1866) */
   cable: { name: "Câble gainé", emoji: "➿", desc: "Un fil de cuivre isolé de gutta-percha, capable de résister à l'eau et à la pression. Des milliers de kilomètres à dérouler." },
+  grue: { name: "Grue flottante", emoji: "🏗️", desc: "Un ponton à vapeur équipé d'une flèche articulée : il peut soulever de très lourdes charges, comme un rouleau de câble. Combine-le avec le câble pour armer un vrai NAVIRE CÂBLIER." },
+  cablier: { name: "Navire câblier", emoji: "🚢", desc: "La grue flottante chargée du grand rouleau de câble : c'est un navire câblier, comme le fameux Great Eastern qui a posé le premier câble transatlantique en 1866. Il ne reste plus qu'à traverser l'océan…" },
   ocean: { name: "L'océan", emoji: "🌊", support: true, desc: "Entre l'Europe et l'Amérique, des semaines de bateau… ou quelques minutes, si on ose poser un câble au fond." },
 
-  /* T4 — le téléphone (New York, 1915) : combiner l'écouteur et le
+  /* T7 — le téléphone (New York, 1915) : combiner l'écouteur et le
      microphone du téléphone à colonne Bell pour joindre San Francisco. */
   micro:    { name: "Microphone (embouchure)", emoji: "🎙️", desc: "Le petit cône noir au sommet de la colonne Bell : c'est là qu'on PARLE. Une membrane à l'intérieur transforme la voix en courant électrique." },
   ecouteur: { name: "Écouteur", emoji: "🎧", desc: "Le petit combiné qu'on colle à l'oreille : à l'autre bout du fil, la voix redevient vibration. Sean l'a en main — accroche-le au microphone pour faire le circuit." },
 };
 
 /* ------------------------------------------------------------
-   LES TABLEAUX (4 communication, guidés)
+   LES TABLEAUX (7, guidés)
    ------------------------------------------------------------ */
 const SCENES = [
-  { id: "telegraphe", name: "Le bureau du télégraphe",             Component: SceneTelegraphe, nextWhen: ["msg_telegraphe"] },
-  { id: "cable",      name: "La pose du câble transatlantique",    Component: SceneCable,      nextWhen: ["msg_cable"] },
-  { id: "tsf",        name: "La station Marconi (nuit du Titanic)", Component: SceneTSF,       nextWhen: ["msg_sos"] },
+  { id: "telegraphe", name: "Le bureau du télégraphe (Far West, 1849)", Component: SceneTelegraphe, nextWhen: ["msg_telegraphe"] },
+  { id: "photo",      name: "Le studio du daguerréotypist (Californie, 1855)", Component: ScenePhoto, nextWhen: ["msg_daguerreotype"] },
+  { id: "cable",      name: "La pose du câble transatlantique (1866)", Component: SceneCable, nextWhen: ["msg_cable"] },
+  { id: "phono",      name: "Le salon du phonographe (New York, 1878)", Component: ScenePhonographe, nextWhen: ["msg_phonographe"] },
+  { id: "tsf",        name: "La station Marconi (nuit du Titanic, 1912)", Component: SceneTSF, nextWhen: ["msg_sos"] },
+  { id: "cinema",     name: "Le Nickelodeon (New York, mai 1912)", Component: SceneLumiere, nextWhen: ["msg_cinema"] },
   { id: "telephone",  name: "Le téléphone transcontinental (1915)", Component: SceneTelephone },
 ];
 
 const WHERE = {
   pile: "dans ta besace — la pile de Volta du chapitre 6 (si tu ne l'as plus, rejoue le chapitre 6)",
+  plaque: "au studio du daguerréotypist — posée sur une petite table à droite",
+  iodure: "au studio du daguerréotypist — le flacon jaune sur la table de gauche",
   cable: "à la pose du câble transatlantique",
+  grue: "à la pose du câble transatlantique — ponton à vapeur sur l'eau",
+  cablier: "combine la grue avec le câble à la pose du câble transatlantique",
   micro: "au bureau du téléphone (New York, 1915)", ecouteur: "au bureau du téléphone (New York, 1915)",
 };
 
@@ -65,14 +84,24 @@ const HIDDEN_BY_FLAG = {};
    LES RECETTES
    ------------------------------------------------------------ */
 const RECIPES = [
-  /* T1 : brancher la pile au manipulateur ouvre le MINI-JEU Morse (« OR »)
-     → gagne msg_telegraphe. La pile est consommée. */
+  /* T1 : brancher la pile au manipulateur ouvre le MINI-JEU Morse (« OR »). */
   { a: "pile", b: "code_morse", opens: "morse", consume: ["pile"] },
-  /* T2 : le câble au fond de l'océan. */
-  { a: "cable", b: "ocean", out: "msg_cable", msg: true },
-  /* T3 : la station Marconi — l'action « choisir un outil » ouvre le
-     mini-jeu TSF (voir ACTIONS.outils). Pas de recette d'objets ici. */
-  /* T4 : brancher l'écouteur au microphone du téléphone à colonne Bell. */
+  /* T2 : préparer la chambre — 3 étapes.
+     1) plaque + chambre → la plaque, inclinée, est chargée à l'arrière.
+     2) iodure + chambre (needsFlag plaque_dedans) → les vapeurs jaunes
+        sensibilisent la plaque à la lumière.
+     3) cliquer sur la chambre (action:"chambre") ouvre le mini-jeu. */
+  { a: "plaque", b: "chambre", out: "chargee", gives: [], consume: ["plaque"], flag: "plaque_dedans",
+    line: "🟫 Tu glisses la plaque de cuivre argenté dans le dos de la chambre, inclinée à 45°. Reste à la SENSIBILISER — sans iodure, la lumière n'y laisse aucune trace." },
+  { a: "iodure", b: "chambre", out: "sensible", gives: [], consume: ["iodure"], flag: "plaque_sensible", needsFlag: "plaque_dedans",
+    line: "⚗️ Les vapeurs jaunes d'iodure d'argent enveloppent la plaque : à sa surface, elle devient PHOTOSENSIBLE — la lumière va pouvoir y graver une image. Il ne reste qu'à ouvrir l'objectif !",
+    needMsg: "Pas si vite ! Il faut d'abord glisser la plaque dans la chambre — sans support, l'iodure n'a rien à sensibiliser." },
+  /* T3 : arme d'abord la grue avec le câble → navire câblier ; puis
+     jette-le à l'océan pour poser le câble transatlantique. */
+  { a: "grue", b: "cable", out: "cablier", gives: ["cablier"], consume: ["grue", "cable"],
+    line: "🚢 La grue soulève le grand rouleau de câble et l'installe sur le pont : voilà un vrai NAVIRE CÂBLIER, prêt pour la traversée. Il ne reste qu'à le lancer dans l'océan." },
+  { a: "cablier", b: "ocean", out: "msg_cable", msg: true },
+  /* T7 : brancher l'écouteur au microphone du téléphone à colonne Bell. */
   { a: "micro", b: "ecouteur", out: "msg_telephone", msg: true },
 ];
 
@@ -83,12 +112,21 @@ const MESSAGES = {
   msg_telegraphe: { title: "Télégraphe électrique (Morse)", emoji: "📟",
     jauges: { vitesse: 5, portee: 3, capacite: 2, durabilite: 1 },
     fact: "En 1844, Samuel Morse relie Baltimore à Washington par un simple fil électrique. Grâce à la pile, il envoie de petits signaux — des points et des traits, le code Morse — et un message traverse le pays en une SECONDE, là où un cheval mettait des jours. Mais attention : ces bips ne veulent rien dire sans le CODE partagé des deux côtés. C'est aussi la naissance des agences de presse (Havas, 1835 → AFP) : quelques bureaux vendent la même nouvelle à tous les journaux. Bonne habitude, encore aujourd'hui : se demander d'où vient l'info." },
+  msg_daguerreotype: { title: "Daguerréotype (photographie)", emoji: "📷",
+    jauges: { vitesse: 1, portee: 2, capacite: 3, durabilite: 3 },
+    fact: "En 1826, Nicéphore Niépce fixe la toute première photographie de l'Histoire (« Point de vue du Gras ») après plusieurs jours de pose. Le 7 janvier 1839, Louis Daguerre présente son daguerréotype à l'Académie des sciences : une plaque de cuivre argentée qui capture un instant… en 15 à 30 secondes de pose. C'est pour ça que les gens du XIXᵉ font tous la tête sur les photos : essaye de sourire immobile pendant 15 s ! La photo devient vite PREUVE (journaux, papiers d'identité, tribunaux) — et déjà truquée : dès 1850, on retouche les images. Bonne habitude : se demander qui a fait cette photo, et ce qu'elle NE montre pas." },
   msg_cable: { title: "Câble transatlantique", emoji: "🌊",
     jauges: { vitesse: 5, portee: 4, capacite: 2, durabilite: 2 },
     fact: "Le 27 juillet 1866, le paquebot Great Eastern achève de poser un câble télégraphique entre Terre-Neuve (Amérique) et l'Irlande — le premier vraiment opérationnel. Avant, une lettre traversait l'Atlantique en deux semaines, en bateau. Maintenant, le message passe en quelques minutes ! Le monde devient plus petit. Et c'est encore vrai aujourd'hui : nos messages voyagent par des câbles cachés au fond de la mer, qu'on ne voit jamais." },
+  msg_phonographe: { title: "Phonographe Edison (voix enregistrée)", emoji: "🎙️",
+    jauges: { vitesse: 3, portee: 2, capacite: 3, durabilite: 1 },
+    fact: "21 novembre 1877 : Thomas Edison annonce le PHONOGRAPHE. Une aiguille grave la voix sur un cylindre de cire, une autre aiguille la restitue. Pour la première fois de l'Histoire, un SON survit à celui qui l'a émis. En 1887, Emile Berliner invente le disque plat (le gramophone) : plus facile à copier en série — c'est la naissance de l'INDUSTRIE musicale. Attention : la cire est FRAGILE (elle fond à 50 °C, s'use à chaque écoute). Combien de voix du XIXᵉ nous sont-elles arrivées ? Très peu. Le fait de POUVOIR enregistrer ne garantit pas la survie du message." },
   msg_sos: { title: "SOS du Titanic (TSF)", emoji: "🆘",
     jauges: { vitesse: 5, portee: 4, capacite: 2, durabilite: 1 },
     fact: "Grâce à Marconi, la TSF (télégraphie sans fil) libère le message de tout câble : des ondes, dans l'air, captées par n'importe quel navire à l'écoute. Nuit du 15 avril 1912 : le Titanic coule après avoir embarqué 113 émigrants irlandais à Cobh (Queenstown). L'opérateur radio Jack Phillips lance un signal d'alerte ; le RMS Carpathia le capte à 60 milles marins et fait route vers l'épave. Environ 700 personnes sont sauvées. Après ce drame, une règle mondiale : les navires doivent toujours écouter la radio. Un simple message peut sauver des vies." },
+  msg_cinema: { title: "Cinématographe (Lumière) & Nickelodeon", emoji: "🎞️",
+    jauges: { vitesse: 4, portee: 4, capacite: 5, durabilite: 2 },
+    fact: "28 décembre 1895 : les frères Louis et Auguste Lumière projettent 10 courts films au Salon Indien du Grand Café, boulevard des Capucines à Paris. Trente-trois spectateurs, un franc la place : le CINÉMA vient de naître. Le principe est simple — une suite de photos défile à 16 images/seconde, et notre œil ne voit pas les coupures. Dès 1905, les Nickelodeons (5 cents la place) fleurissent partout aux États-Unis. En mai 1912, un mois après le naufrage du Titanic, sort « Saved from the Titanic » avec Dorothy Gibson, vraie rescapée : le cinéma peut donc RECONSTITUER un événement, servir de mémoire… mais aussi de fiction émouvante. Trois médias, un même drame : la TSF (les bips), la presse (les mots), le cinéma (les images animées). Chacun le raconte à sa manière — se demander toujours qui montre, et à qui." },
   msg_telephone: { title: "Téléphone transcontinental (Bell)", emoji: "📞",
     jauges: { vitesse: 5, portee: 3, capacite: 4, durabilite: 1 },
     fact: "Le 25 janvier 1915, Alexander Graham Bell inaugure la première ligne téléphonique transcontinentale des États-Unis, 5 500 km de fil entre New York et San Francisco (AT&T). Il répète à Thomas Watson, à l'autre bout, sa phrase historique : « Mr. Watson – Come here – I want to see you ». Après le télégramme (bips codés) et la TSF (bips sans fil), voici la VOIX qui traverse le continent, en direct : ce n'est plus un message qu'on attend, c'est une CONVERSATION. On peut vraiment prendre des nouvelles de ceux qu'on aime, où qu'ils soient." },
@@ -99,7 +137,10 @@ const MESSAGES = {
    ------------------------------------------------------------ */
 const HINTS = [
   { needs: ["pile", "code_morse"], out: "msg_telegraphe", text: "Apporte ta pile de Volta au manipulateur Morse : tu pourras alors taper toi-même le message « OR » en points et traits (petit jeu)." },
-  { needs: ["cable", "ocean"], out: "msg_cable", text: "Ose dérouler le grand câble tout au fond de l'océan : il reliera l'Irlande et l'Amérique." },
+  { needs: ["plaque", "chambre"], out: "chargee", text: "Glisse d'abord la plaque de cuivre argenté dans la chambre photographique (à l'arrière). Elle s'incline à 45°." },
+  { needs: ["iodure", "chambre"], out: "sensible", text: "Une fois la plaque en place, verse (glisse) le flacon d'iodure sur la chambre : les vapeurs jaunes vont la sensibiliser." },
+  { needs: ["grue", "cable"], out: "cablier", text: "La grue flottante peut soulever ton grand rouleau de câble : combine-les pour armer un vrai NAVIRE CÂBLIER." },
+  { needs: ["cablier", "ocean"], out: "msg_cable", text: "Le navire câblier prêt, ose dérouler le câble tout au fond de l'océan : il reliera l'Irlande à l'Amérique." },
   { needs: ["micro", "ecouteur"], out: "msg_telephone", text: "Sur le téléphone à colonne : accroche l'écouteur au microphone. La voix de Sean partira jusqu'à San Francisco." },
 ];
 
@@ -117,9 +158,9 @@ const FAIL_LINES = [
 ];
 
 const INTRO = [
-  "Tu as bien la pile de Volta ? Sans elle, ce siècle ne tourne pas. Bienvenue au XIXe : le siècle pressé, celui qui veut vaincre la DISTANCE.",
-  "Une cabane de télégraphe en plein Far West : JAMES O'SULLIVAN, émigré irlandais, débarque tout excité — il a trouvé un FILON D'OR ! Il faut télégraphier la nouvelle à ses cousins de New York en une seconde, puis, devenu riche, joindre sa famille restée en Irlande par un câble sous l'océan.",
-  "Une génération plus tard, en 1912, la famille embarque à Cobh sur le Titanic… le paquebot coule dans la nuit — mais la TSF de Marconi peut sauver les survivants. Puis, en 1915, SEAN, le fils de James, décroche à New York pour appeler par la toute nouvelle ligne téléphonique transcontinentale, jusqu'à San Francisco.",
+  "Tu as bien la pile de Volta ? Sans elle, ce siècle ne tourne pas. Bienvenue au XIXe : le siècle pressé, celui qui veut vaincre la DISTANCE — et fixer l'INSTANT.",
+  "Une cabane de télégraphe en plein Far West : JAMES O'SULLIVAN, émigré irlandais, débarque tout excité — il a trouvé un FILON D'OR ! Il faut télégraphier la nouvelle à ses cousins de New York en une seconde, puis, devenu riche, envoyer son portrait à sa mère en Irlande par un procédé tout neuf : le daguerréotype.",
+  "Suit alors le câble sous l'océan (1866), puis la voix de James âgé gravée sur un cylindre Edison (1878). Vient enfin 1912, le Titanic — la TSF de Marconi sauve les rescapés. Sean, 15 ans, va au cinéma voir un film sur le naufrage. Trois ans plus tard, il décroche à New York pour appeler la Californie par la première ligne téléphonique transcontinentale.",
 ];
 
 const ACTIONS = {
@@ -129,44 +170,81 @@ const ACTIONS = {
   james: { mood: "content",
     bubble: "James O'Sullivan, pour vous servir ! Émigré d'Irlande, venu chercher fortune ici. Et je l'ai trouvée !",
     say: "James O'Sullivan : un Irlandais parti tenter sa chance dans l'Ouest américain." },
+  photographe: { mood: "neutre",
+    bubble: "Bienvenue dans mon studio de daguerréotype ! Une plaque de cuivre argentée, un peu de mercure, du soleil… et je fixe votre visage pour toujours.",
+    say: "Le photographe : il expose une plaque sensible dans sa chambre en bois — 15 secondes de pose, immobile !" },
+  "james-vieux": { mood: "neutre",
+    bubble: "James O'Sullivan, encore là, plus vieux d'un demi-siècle. J'ai fait installer chez moi la dernière merveille de Mr. Edison : un phonographe. Je veux graver ma voix pour mes petits-enfants — qu'après ma mort, on m'entende encore.",
+    say: "James âgé : sa vie est derrière lui. Il tente d'envoyer un message… au futur." },
+  filsjames: { mood: "neutre",
+    bubble: "Je suis le fils de James. Je tourne la manivelle pendant que mon père parle dans le pavillon. Il faut la BONNE vitesse — sinon sa voix sera déformée à l'écoute.",
+    say: "Le fils de James : il actionne la manivelle du phonographe." },
   marconi: { mood: "vexe",
     bubble: "Guglielmo Marconi. Un paquebot coule au large et nous captons ses bips de détresse. Il faut agir — MAINTENANT.",
     say: "Marconi : père de la TSF (télégraphie sans fil). L'urgence de sa vie : sauver les rescapés du Titanic." },
+  ouvreuse: { mood: "neutre",
+    bubble: "Bienvenue au Nickelodeon, 5 cents la place ! Ce soir, un film émouvant : « Saved from the Titanic ». Mais notre projectionniste est malade — sauras-tu tourner la manivelle à la bonne vitesse ?",
+    say: "L'ouvreuse : elle t'invite à monter dans la cabine et à projeter le film." },
+  "sean-jeune": { mood: "neutre",
+    bubble: "Sean, 15 ans. Notre famille venait tout juste d'embarquer sur le Titanic pour nous rejoindre… certains n'ont jamais débarqué. Je suis venu voir le film pour comprendre. Et pour ne pas les oublier.",
+    say: "Sean, 15 ans, en deuil : il vient voir en images ce qu'il n'a pas vécu." },
   sean: { mood: "neutre",
     bubble: "Sean O'Sullivan, fils de James. Depuis 1912, la famille s'est installée à San Francisco — et depuis peu, une prouesse : la ligne téléphonique traverse tout le pays !",
     say: "Sean O'Sullivan : la génération suivante, en 1915. Il va appeler la famille à San Francisco par la première ligne transcontinentale Bell." },
 
-  /* clique sur l'ÉTABLI d'outils à la station Marconi → mini-jeu TSF */
+  /* actions qui ouvrent les mini-jeux */
+  chambre: { modal: "photo", needsFlag: "plaque_sensible",
+    needMsg: "La chambre n'est pas prête ! Il faut d'abord glisser la PLAQUE de cuivre à l'intérieur, puis SENSIBILISER cette plaque avec de l'IODURE d'argent. Alors seulement, l'objectif peut s'ouvrir." },
+  phono: { modal: "phono" },
+  projecteur: { modal: "cine" },
   outils: { modal: "tsf" },
 };
 
 /* ------------------------------------------------------------
-   LA QUÊTE — James (télégraphe + câble), Marconi (TSF), Sean (téléphone).
+   LA QUÊTE — 7 étapes, une par tableau.
    ------------------------------------------------------------ */
 const QUETE = [
   { perso: "james", portrait: "james", auto: true,
     bubble: "Bénie soit la Sainte Patronne ! James O'Sullivan, émigré d'Irlande — et regarde cette pépite : j'ai trouvé le FILON, un vrai, plein d'or ! Il faut prévenir mes cousins à New York avant que la nouvelle s'ébruite. Vite, le télégraphe ! Mais l'appareil est mort… il lui faut du courant. Cette drôle de pile que tu tiens — c'est exactement ça !",
     say: "James a trouvé de l'or et veut télégraphier « OR » à New York, vite ! Apporte ta pile de Volta au manipulateur : tu taperas le message toi-même en Morse.",
     attend: "msg_telegraphe",
-    suite: "Message reçu à New York en une seconde ! Mais James pense déjà à sa famille restée en IRLANDE, de l'autre côté de l'océan… Suis-le à bord du navire câblier." },
+    suite: "Message reçu à New York en une seconde ! Riche du jour au lendemain, James pense à sa vieille mère restée en Irlande. Il veut lui envoyer… son PORTRAIT. Suis-le chez le photographe ›" },
+
+  { perso: "photographe", portrait: "photographe", auto: true,
+    bubble: "James, monsieur, asseyez-vous et NE BOUGEZ PLUS. Ma plaque de cuivre argentée va capter votre visage grâce à la lumière du jour — mais il faut 15 secondes de pose immobile. Le fer à poser tient votre tête. Toi, l'assistant, appuie sur le déclencheur et empêche l'appareil de trembler !",
+    say: "Clique sur la chambre photographique : un mini-jeu s'ouvre. Cadre bien James, puis tiens la pose sans qu'il tremble — à la moindre secousse, la plaque devient floue !",
+    attend: "msg_daguerreotype",
+    suite: "La plaque est révélée : voilà James à jamais, endimanché. Il l'envoie à sa mère par bateau — mais elle mettra deux semaines à traverser l'océan. Et si on posait un CÂBLE au fond de la mer ? Vite, sur le navire câblier !" },
 
   { perso: "james", portrait: "james",
     bubble: "Me voilà riche, grâce à Dieu ! Mais mon cœur est resté en Irlande, avec ma vieille mère et mes sœurs. Je voudrais leur écrire : « Venez me rejoindre, il y a de la place pour tout le monde ! ». Seulement, une lettre par bateau met DEUX SEMAINES à traverser l'Atlantique… Comment faire parvenir un message par-delà les océans ?",
-    say: "La question de James : franchir l'océan vite. La réponse — un CÂBLE au fond de la mer (câble + océan), justement relié à l'Irlande. Le monde rétrécit d'un coup.",
+    say: "La question de James : franchir l'océan vite. La réponse — armer un NAVIRE CÂBLIER (grue flottante + câble) puis poser le câble au fond de la mer (câblier + océan). Le monde rétrécit d'un coup.",
     attend: "msg_cable",
-    suite: "Le câble touche l'Irlande : le message de James file à Cobh en quelques minutes. Sa famille recevra bien la nouvelle. Le temps passe alors — 46 ans plus tard, une nuit d'avril 1912…" },
+    suite: "Le câble touche l'Irlande : le message de James file à Cobh en quelques minutes. Sa famille recevra bien la nouvelle. Douze ans passent — James est un vieil homme, à New York, et il a un dernier message à léguer…" },
+
+  { perso: "james-vieux", portrait: "james-vieux", auto: true,
+    bubble: "J'ai 66 ans, et je n'en ai plus pour longtemps. Mr. Edison vient d'inventer une machine incroyable : le PHONOGRAPHE. Une aiguille grave la voix sur un cylindre de cire. Je veux y déposer un message pour mes petits-enfants — pour qu'après ma mort, ils entendent encore la voix de leur grand-père. Mon fils tourne la manivelle ; toi, veille à la BONNE vitesse.",
+    say: "Clique sur le phonographe : un mini-jeu s'ouvre. Tourne la manivelle en cadence (2 tours par seconde environ) — trop vite, la voix monte dans les aigus ; trop lent, elle devient caverneuse.",
+    attend: "msg_phonographe",
+    suite: "Le cylindre est gravé. James pose l'oreille près du pavillon — et s'entend lui-même. « Voilà, dit-il, un peu de moi qui restera. » 34 ans passent. Nous sommes dans la nuit du 15 avril 1912…" },
 
   { perso: "marconi", portrait: "marconi", auto: true,
-    bubble: "Nous sommes en 1912. Une génération après James, sa famille a enfin décidé d'émigrer : ils ont embarqué à Cobh sur le paquebot le plus grand du monde, le Titanic. Cette nuit, ma station capte ses BIPS DE DÉTRESSE — il coule dans l'Atlantique. Vite ! Parmi tous les outils de mon établi, lequel peut porter secours SANS AUCUN FIL, à des centaines de kilomètres ?",
+    bubble: "Une génération après James, sa famille a enfin décidé d'émigrer : ils ont embarqué à Cobh sur le paquebot le plus grand du monde, le Titanic. Cette nuit, ma station capte ses BIPS DE DÉTRESSE — il coule dans l'Atlantique. Vite ! Parmi tous les outils de mon établi, lequel peut porter secours SANS AUCUN FIL, à des centaines de kilomètres ?",
     say: "Clique sur l'établi de Marconi : un mini-jeu s'ouvre. Choisis l'outil capable d'envoyer un message par-dessus la mer, dans la nuit — sans fil.",
     attend: "msg_sos",
-    suite: "Les rescapés sont recueillis par le Carpathia ! La famille O'Sullivan s'installe à San Francisco. Trois ans plus tard, à New York, un jeune homme décroche un téléphone…" },
+    suite: "Les rescapés sont recueillis par le Carpathia. Mais des cousins irlandais des O'Sullivan sont morts dans le naufrage. Sean, 15 ans, en deuil, entre au Nickelodeon voir un film sur le drame…" },
+
+  { perso: "ouvreuse", portrait: "ouvreuse", auto: true,
+    bubble: "Bienvenue au Nickelodeon de la 14ᵉ rue, 5 cents la place ! Ce soir, le film qui bouleverse toute l'Amérique : « Saved from the Titanic », avec Miss Dorothy Gibson — vraie rescapée du naufrage ! Sean est déjà installé au premier rang. Mais mon projectionniste est malade… saurais-tu tourner la manivelle à la bonne vitesse ?",
+    say: "Clique sur la cabine de projection : un mini-jeu s'ouvre. Charge la bobine, puis tourne la manivelle à 16 images/seconde — l'écran s'anime, Sean découvre le naufrage en images animées.",
+    attend: "msg_cinema",
+    suite: "Sean sort du Nickelodeon en larmes. Ces images l'ont remué : le cinéma peut donc RACONTER, garder la mémoire d'un événement. Il a une idée — appeler sa mère et ses tantes à San Francisco pour leur parler, VRAIMENT. Trois ans plus tard, une prouesse va le lui permettre…" },
 
   { perso: "sean", portrait: "sean", auto: true,
     bubble: "Sean O'Sullivan, fils de James, à votre service ! On est le 25 janvier 1915, et une prouesse vient d'être achevée : la première ligne téléphonique TRANSCONTINENTALE d'AT&T — 5 500 km de fil entre New York et San Francisco ! Bell l'a inaugurée hier. Cette fois, ce n'est plus un télégramme : ma tante et ma mère vont ENTENDRE ma voix, en direct. Aide-moi à brancher le combiné.",
     say: "Sur le téléphone à colonne Bell : accroche l'ÉCOUTEUR au MICROPHONE. La voix de Sean partira le long de la ligne jusqu'à San Francisco. Ce n'est plus un message : c'est une CONVERSATION en direct.",
     attend: "msg_telephone",
-    suite: "« Allô, San Francisco ? » — les voix se croisent d'un océan à l'autre. Ma jauge déborde : de la plume au fil, du fil au câble, du câble aux ondes, des ondes à la VOIX en direct. Le XXe siècle nous attend." },
+    suite: "« Allô, San Francisco ? » — les voix se croisent d'un océan à l'autre. Ma jauge déborde : de la plume au fil, du fil au câble, du câble aux ondes, des ondes à la VOIX en direct. Et grâce à la photo, au cylindre et au film, on peut désormais FIXER les visages, les voix et les mouvements pour toujours. Le XXe siècle nous attend." },
 ];
 
 /* ------------------------------------------------------------
@@ -181,14 +259,14 @@ const chapter = {
 
   titre: "MARTINE",
   sousTitre: "Machine À Remonter le Temps Intelligente Néanmoins Excellente",
-  presentationTitre: "Chapitre 7 — Vaincre la distance, avec les O'Sullivan.",
-  presentation: "Grâce à ta pile de Volta, l'électricité fait voyager le message plus vite que l'homme. Suis la famille O'Sullivan : James télégraphie son filon d'or de l'Ouest, dit « Venez ! » à l'Irlande par le câble sous l'océan ; sa famille embarque sur le Titanic — la TSF de Marconi les sauve ; et son fils Sean, à New York en 1915, appelle San Francisco au téléphone.",
-  accroche: "Tape en Morse 📟 · pose le câble transatlantique 🌊 · sauve avec la TSF 🆘 · téléphone à travers le pays 📞",
+  presentationTitre: "Chapitre 7 — Vaincre la distance, fixer l'instant. Avec les O'Sullivan.",
+  presentation: "Grâce à ta pile de Volta, l'électricité fait voyager les messages plus vite que l'homme — mais surtout, on apprend à FIXER l'instant (photo), la VOIX (phonographe) et le MOUVEMENT (cinéma). Suis la famille O'Sullivan sur 4 générations : James télégraphie son filon d'or, envoie son portrait à sa mère, dit « Venez ! » à l'Irlande par le câble, grave sa voix sur un cylindre de cire ; sa famille embarque sur le Titanic — la TSF les sauve ; Sean va au cinéma voir un film sur le naufrage, puis appelle San Francisco au téléphone.",
+  accroche: "Morse 📟 · photo 📷 · câble 🌊 · phono 🎙️ · TSF 🆘 · cinéma 🎞️ · téléphone 📞",
 
   finTitre: "SAUT TEMPOREL RÉUSSI",
   finTexte: "« Circuits rechargés à {pct} %. Quel siècle pressé ! Le message file désormais autour du globe en un éclair — par fil, par câble sous la mer, par ondes dans l'air, et pour finir en VOIX vivante d'un océan à l'autre. Mais regarde ta frise : plus c'est rapide et puissant, moins ça dure. Prochain saut : le XXe siècle. La radio et la télévision vont entrer dans chaque foyer… et l'ordinateur va naître. » — MARTINE",
 
-  required: 4,
+  required: 7,
   startScene: 0,
   destination: "XXe SIÈCLE",
   linear: true,
@@ -205,7 +283,14 @@ const chapter = {
   intro: INTRO,
   actions: ACTIONS,
   quete: QUETE,
-  portraits: { james: PortraitJames, marconi: PortraitMarconi, sean: PortraitSean },
+  portraits: {
+    james: PortraitJames,
+    "james-vieux": PortraitJamesVieux,
+    photographe: PortraitPhotographe,
+    marconi: PortraitMarconi,
+    ouvreuse: PortraitOuvreuse,
+    sean: PortraitSean,
+  },
   carte: CarteXIXe,
 };
 

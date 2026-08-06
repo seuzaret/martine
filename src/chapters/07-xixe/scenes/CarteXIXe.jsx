@@ -1,15 +1,16 @@
 /* ============================================================
-   CHAPITRE 7 — Carte : l'Atlantique Nord (côtes reconnaissables)
-   Amérique du Nord (côte est, Floride, Terre-Neuve) et Europe de
-   l'Ouest (îles Britanniques, France, Ibérie), le câble sous-marin
-   Terre-Neuve ↔ Irlande, et le point du SOS du Titanic.
+   CHAPITRE 7 — Carte : l'Atlantique Nord + Est américain
+   Sept lieux, un fil rouge : le voyage des O'Sullivan.
    ============================================================ */
 
 const LIEUX = [
-  { tab: 0, nom: "Télégraphe", sous: "Far West (1844)", x: 76, y: 254 },
-  { tab: 1, nom: "Câble", sous: "sous l'océan (1866)", x: 380, y: 186 },
-  { tab: 2, nom: "TSF · SOS", sous: "Titanic (1912)", x: 322, y: 170 },
-  { tab: 3, nom: "Téléphone", sous: "NY↔SF (1915)", x: 168, y: 232 },
+  { tab: 0, nom: "Télégraphe",  sous: "Far West (1849)",       x: 76,  y: 254 },
+  { tab: 1, nom: "Photo",       sous: "Californie (1855)",     x: 60,  y: 292 },
+  { tab: 2, nom: "Câble",       sous: "sous l'océan (1866)",   x: 380, y: 186 },
+  { tab: 3, nom: "Phono",       sous: "New York (1878)",       x: 208, y: 236 },
+  { tab: 4, nom: "TSF · SOS",   sous: "Titanic (1912)",        x: 322, y: 170 },
+  { tab: 5, nom: "Cinéma",      sous: "NY, mai 1912",          x: 240, y: 224 },
+  { tab: 6, nom: "Téléphone",   sous: "NY↔SF (1915)",          x: 168, y: 268 },
 ];
 
 export default function CarteXIXe({ tab = 0 }) {
@@ -34,8 +35,8 @@ export default function CarteXIXe({ tab = 0 }) {
       <text x="350" y="360" textAnchor="middle" fontFamily="Palatino, Georgia, serif" fontSize="16" fill="#2e5560" fontStyle="italic" opacity="0.7">Océan Atlantique</text>
 
       {/* ═══ AMÉRIQUE DU NORD (côte est reconnaissable + Floride) ═══ */}
-      <path d="M0 0 L0 440 L150 440 L176 388 Q196 350 200 316 L214 316 Q222 348 214 372 L226 372 Q244 318 232 268 Q224 236 200 222 Q182 210 206 196 Q232 186 236 158 Q240 132 210 120 Q184 110 150 118 Q120 40 150 0 Z" fill="url(#c7-land)" />
-      <path d="M0 0 L0 440 L150 440 L176 388 Q196 350 200 316 L214 316 Q222 348 214 372 L226 372 Q244 318 232 268 Q224 236 200 222 Q182 210 206 196 Q232 186 236 158 Q240 132 210 120 Q184 110 150 118 Q120 40 150 0 Z" fill="#8a6a3a" opacity="0.13" filter="url(#c7-grain)" />
+      <path d="M0 0 L0 440 L150 440 L176 388 Q196 350 200 316 L214 316 Q222 348 214 372 L226 372 Q244 318 240 268 Q258 244 264 214 Q272 188 250 168 Q240 158 244 148 Q248 132 218 120 Q184 110 150 118 Q120 40 150 0 Z" fill="url(#c7-land)" />
+      <path d="M0 0 L0 440 L150 440 L176 388 Q196 350 200 316 L214 316 Q222 348 214 372 L226 372 Q244 318 240 268 Q258 244 264 214 Q272 188 250 168 Q240 158 244 148 Q248 132 218 120 Q184 110 150 118 Q120 40 150 0 Z" fill="#8a6a3a" opacity="0.13" filter="url(#c7-grain)" />
       {/* Terre-Neuve (île détachée) */}
       <path d="M244 150 q18 -6 26 8 q4 12 -10 16 q-16 2 -18 -12 Z" fill="url(#c7-land)" />
       <text x="86" y="150" textAnchor="middle" fontFamily="Palatino, Georgia, serif" fontSize="18" fill="#6a4a24" fontStyle="italic" opacity="0.8">Amérique</text>
@@ -45,36 +46,30 @@ export default function CarteXIXe({ tab = 0 }) {
       </g>
 
       {/* ═══ EUROPE DE L'OUEST (Ibérie, France, Îles Britanniques) ═══ */}
-      {/* continent : Ibérie + France + Scandinavie */}
       <path d="M700 440 L700 0 L560 0 Q540 40 556 78 Q568 108 548 130 L560 150 Q548 176 556 202 L536 214 Q520 240 540 262 Q552 286 520 300 Q500 310 520 330 L500 360 Q506 400 540 440 Z" fill="url(#c7-land)" />
       <path d="M700 440 L700 0 L560 0 Q540 40 556 78 Q568 108 548 130 L560 150 Q548 176 556 202 L536 214 Q520 240 540 262 Q552 286 520 300 Q500 310 520 330 L500 360 Q506 400 540 440 Z" fill="#8a6a3a" opacity="0.13" filter="url(#c7-grain)" />
-      {/* Îles Britanniques */}
       <path d="M496 150 q14 -10 20 4 q4 16 -10 20 q-16 0 -18 -12 q-2 -8 8 -12 Z" fill="url(#c7-land)" />
       <path d="M474 176 q8 -4 10 6 q0 8 -8 8 q-8 -2 -6 -10 Z" fill="url(#c7-land)" />
       <text x="618" y="150" textAnchor="middle" fontFamily="Palatino, Georgia, serif" fontSize="18" fill="#6a4a24" fontStyle="italic" opacity="0.8">Europe</text>
       <text x="512" y="132" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7.5" fill="#5a3f24" opacity="0.8">Irlande · G.-B.</text>
 
-      {/* la LIGNE TÉLÉPHONIQUE TRANSCONTINENTALE (1915), SF → NY (traits) */}
+      {/* la LIGNE TÉLÉPHONIQUE TRANSCONTINENTALE (1915), SF → NY */}
       <path d="M76 254 Q160 246 220 232" fill="none" stroke="#c8382e" strokeWidth="2.4" strokeDasharray="4 4" strokeLinecap="round" opacity="0.85" />
       <text x="140" y="222" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="8" fill="#7a2418" opacity="0.85">ligne AT&amp;T · 1915</text>
 
-      {/* ═══ le CÂBLE sous-marin (Terre-Neuve ↔ Irlande) ═══ */}
+      {/* le CÂBLE sous-marin (Terre-Neuve ↔ Irlande) */}
       <path d="M256 158 Q368 210 486 168" fill="none" stroke="#7a3020" strokeWidth="3" strokeDasharray="2 6" strokeLinecap="round" opacity="0.85" />
 
-      {/* ═══ le trajet du voyage (pointillés) ═══ */}
-      <path d={`M${LIEUX[0].x} ${LIEUX[0].y} L${LIEUX[2].x} ${LIEUX[2].y} L${LIEUX[1].x} ${LIEUX[1].y}`}
-        fill="none" stroke="#9a5a2e" strokeWidth="2.5" strokeDasharray="3 7" strokeLinecap="round" opacity="0.55" />
-
-      {/* ═══ les 3 lieux ═══ */}
+      {/* ═══ les 7 lieux ═══ */}
       {LIEUX.map((l) => {
         const ici = l.tab === tab;
         return (
           <g key={l.tab}>
             {ici && <circle cx={l.x} cy={l.y} r="28" fill="url(#c7-glow)" style={{ animation: "glow 2s ease-in-out infinite" }} />}
-            <circle cx={l.x} cy={l.y} r={ici ? 9 : 6} fill={ici ? "#e8542e" : "#7a3a24"} stroke="#3a2410" strokeWidth="2" />
+            <circle cx={l.x} cy={l.y} r={ici ? 9 : 5} fill={ici ? "#e8542e" : "#7a3a24"} stroke="#3a2410" strokeWidth="2" />
             {ici && <circle cx={l.x} cy={l.y} r="14" fill="none" stroke="#e8542e" strokeWidth="2" style={{ animation: "pulse 1.6s ease-in-out infinite" }} />}
-            <text x={l.x} y={l.y - (ici ? 22 : 14)} textAnchor="middle" fontFamily="Palatino, Georgia, serif" fontSize={ici ? 16 : 13} fontWeight={ici ? 700 : 400} fill="#22343a">{l.nom}</text>
-            <text x={l.x} y={l.y + (ici ? 30 : 22)} textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="9.5" fill="#22343a" opacity="0.85">{l.sous}</text>
+            <text x={l.x} y={l.y - (ici ? 22 : 12)} textAnchor="middle" fontFamily="Palatino, Georgia, serif" fontSize={ici ? 16 : 11} fontWeight={ici ? 700 : 400} fill="#22343a">{l.nom}</text>
+            <text x={l.x} y={l.y + (ici ? 30 : 20)} textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize={ici ? 9.5 : 8} fill="#22343a" opacity="0.85">{l.sous}</text>
             {ici && <text x={l.x} y={l.y + 44} textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="10.5" fill="#e8542e" fontWeight="700">◉ tu es ici</text>}
           </g>
         );
