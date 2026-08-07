@@ -193,8 +193,11 @@ const ACTIONS = {
     say: "Sean O'Sullivan : la génération suivante, en 1915. Il va appeler la famille à San Francisco par la première ligne transcontinentale Bell." },
 
   /* actions qui ouvrent les mini-jeux */
-  chambre: { modal: "photo", needsFlag: "plaque_sensible",
-    needMsg: "La chambre n'est pas prête ! Il faut d'abord glisser la PLAQUE de cuivre à l'intérieur, puis SENSIBILISER cette plaque avec de l'IODURE d'argent. Alors seulement, l'objectif peut s'ouvrir." },
+  chambre: { mood: "neutre",
+    bubble: "La chambre photographique — cible pour glisser la PLAQUE, puis le flacon d'IODURE. Une fois la plaque sensibilisée, il ne restera plus qu'à retirer le CACHE de l'objectif.",
+    say: "Cible de dépôt : glisse la plaque de cuivre argenté sur la chambre, puis l'iodure d'argent. Une fois la plaque sensibilisée, le CACHE de l'objectif devient cliquable pour ouvrir." },
+  cache: { modal: "photo", needsFlag: "plaque_sensible",
+    needMsg: "Le cache résiste : sans plaque sensibilisée derrière l'objectif, la lumière ne servirait à rien. Prépare d'abord la chambre (plaque + iodure)." },
   phono: { modal: "phono" },
   projecteur: { modal: "cine" },
   outils: { modal: "tsf" },

@@ -11,51 +11,116 @@ import { useState, useEffect, useRef } from "react";
    Leçon : c'est le premier support qui GRAVE et RESTITUE la voix.
    ============================================================ */
 
-const TARGET_MS = 500;   // 1 clic toutes les 500 ms = 60 rpm (2 clics/tour)
-const TOL_MS = 130;      // tolérance ±130 ms
-const HOLD_MS = 10000;   // maintenir dans la zone 10 s
+const TARGET_BASE = 500;   // cadence cible moyenne (2 clics/seconde)
+const TARGET_SWING = 140;  // amplitude d'oscillation de la cible (±140 ms)
+const TARGET_PERIOD = 3.4; // secondes pour un cycle complet
+const TOL_MS = 110;        // tolérance autour de la cible (± ms)
+const HOLD_MS = 10000;     // maintenir dans la zone 10 s
 
-/* petit son "aou" filtré selon la vitesse (WebAudio) — sans échantillon */
+/* la cible bouge — elle glisse doucement en sinusoïde autour de 500 ms.
+   Le joueur doit ralentir/accélérer pour la suivre. */
+function targetAt(elapsedMs) {
+  return TARGET_BASE + Math.sin((elapsedMs / 1000) * (2 * Math.PI / TARGET_PERIOD)) * TARGET_SWING;
+}
+
+/* Un vrai bruit de VOIX NASILLARDE sur cire : un cornet grave qui grince
+   (triangle grave + formant nasal) + un CRRR de vinyle en fond (bruit
+   blanc filtré passe-bande). Chaque clic joue un demi-mot enregistré. */
 let AC = null;
 function playCue(pitchMul) {
   try {
     AC = AC || new (window.AudioContext || window.webkitAudioContext)();
     if (AC.state === "suspended") AC.resume();
     const t = AC.currentTime;
-    const o = AC.createOscillator(); const g = AC.createGain();
-    o.type = "triangle"; o.frequency.value = 220 * pitchMul;
-    o.connect(g); g.connect(AC.destination);
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.08, t + 0.01);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
-    o.start(t); o.stop(t + 0.2);
+    /* --- 1) le CORPS de la voix : deux oscillateurs légèrement désaccordés
+       + un filtre passe-bas pour l'aspect « vieux cornet » --- */
+    const base = 180 * pitchMul; // hauteur qui suit la cadence (trop vite = aigu)
+    const o1 = AC.createOscillator(); o1.type = "sawtooth"; o1.frequency.value = base;
+    const o2 = AC.createOscillator(); o2.type = "triangle"; o2.frequency.value = base * 1.005;
+    const filt = AC.createBiquadFilter(); filt.type = "lowpass";
+    filt.frequency.value = 900 * pitchMul; filt.Q.value = 6; // formant nasal
+    const g1 = AC.createGain();
+    g1.gain.setValueAtTime(0.0001, t);
+    g1.gain.exponentialRampToValueAtTime(0.09, t + 0.02);
+    g1.gain.setValueAtTime(0.09, t + 0.14);
+    g1.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+    o1.connect(filt); o2.connect(filt); filt.connect(g1); g1.connect(AC.destination);
+    o1.start(t); o2.start(t); o1.stop(t + 0.24); o2.stop(t + 0.24);
+
+    /* --- 2) le CRRR de vinyle : bruit blanc bref filtré passe-bande --- */
+    const noiseBuf = AC.createBuffer(1, AC.sampleRate * 0.22, AC.sampleRate);
+    const nd = noiseBuf.getChannelData(0);
+    for (let i = 0; i < nd.length; i++) nd[i] = (Math.random() * 2 - 1) * (1 - i / nd.length);
+    const noise = AC.createBufferSource(); noise.buffer = noiseBuf;
+    const bp = AC.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 2200; bp.Q.value = 1.4;
+    const g2 = AC.createGain();
+    g2.gain.setValueAtTime(0.06, t);
+    g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+    noise.connect(bp); bp.connect(g2); g2.connect(AC.destination);
+    noise.start(t); noise.stop(t + 0.24);
   } catch { /* audio indisponible : le jeu marche quand même */ }
 }
 
+/* CRRR de fond en LOOP : bruit blanc filtré très doux, joué en boucle
+   tant que le mini-jeu est ouvert. Volume plus fort quand on tourne. */
+function startCrackle() {
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    if (AC.state === "suspended") AC.resume();
+    const dur = 2.0;
+    const buf = AC.createBuffer(1, AC.sampleRate * dur, AC.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * 0.4;
+    const src = AC.createBufferSource(); src.buffer = buf; src.loop = true;
+    const hp = AC.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 1400;
+    const g = AC.createGain(); g.gain.value = 0.02;
+    src.connect(hp); hp.connect(g); g.connect(AC.destination);
+    src.start(); return { src, g };
+  } catch { return null; }
+}
+
 export function PhonoGame({ onClose, onWin }) {
-  const [interval_, setInterval_] = useState(TARGET_MS);
+  const [interval_, setInterval_] = useState(TARGET_BASE);
   const [inZone, setInZone] = useState(0);   // ms cumulés dans la zone
   const [won, setWon] = useState(false);
+  const [target, setTarget] = useState(TARGET_BASE); // cible mobile (état affiché)
   const lastClick = useRef(null);
   const raf = useRef(null);
   const lastT = useRef(null);
+  const t0 = useRef(performance.now());
   const angle = useRef(0);
   const [_, force] = useState(0);
+  const crackle = useRef(null);
+
+  /* CRRR de fond permanent tant que le mini-jeu est ouvert */
+  useEffect(() => {
+    crackle.current = startCrackle();
+    return () => { try { crackle.current?.src.stop(); } catch {} };
+  }, []);
 
   useEffect(() => {
     lastT.current = performance.now();
     const tick = (t) => {
       const dt = t - (lastT.current || t);
       lastT.current = t;
+      const elapsed = t - t0.current;
+      const tgt = targetAt(elapsed);
+      setTarget(tgt);
       // rotation visuelle : plus l'intervalle est court, plus ça tourne vite
       angle.current = (angle.current + dt / (interval_ * 0.5) * 180) % 360;
-      // décompte "dans la zone verte" si l'intervalle actuel est OK
-      const ok = Math.abs(interval_ - TARGET_MS) <= TOL_MS;
+      // décompte "dans la zone verte" si l'intervalle actuel est OK par rapport à la CIBLE mobile
+      const ok = Math.abs(interval_ - tgt) <= TOL_MS;
       setInZone((z) => {
-        const nz = ok ? Math.min(HOLD_MS, z + dt) : Math.max(0, z - dt * 0.6);
+        const nz = ok ? Math.min(HOLD_MS, z + dt) : Math.max(0, z - dt * 0.7);
         if (nz >= HOLD_MS && !won) setWon(true);
         return nz;
       });
+      /* le crrr monte en volume quand on tourne (dernier clic récent) */
+      if (crackle.current) {
+        const sinceClick = lastClick.current ? (t - lastClick.current) : 9999;
+        const vol = sinceClick < 1500 ? 0.05 : 0.02;
+        try { crackle.current.g.gain.setTargetAtTime(vol, AC.currentTime, 0.4); } catch {}
+      }
       force((x) => x + 1);
       raf.current = requestAnimationFrame(tick);
     };
@@ -73,15 +138,15 @@ export function PhonoGame({ onClose, onWin }) {
       // lissage : moyenne pondérée
       setInterval_((prev) => Math.round(prev * 0.4 + dt * 0.6));
       // hauteur du son inversement proportionnelle à l'intervalle
-      playCue(TARGET_MS / Math.max(80, dt));
+      playCue(TARGET_BASE / Math.max(80, dt));
     }
     lastClick.current = now;
   };
 
   const diagnosis = won ? "" :
-    interval_ < TARGET_MS - TOL_MS ? "Trop vite ! La voix monte dans les aigus…" :
-    interval_ > TARGET_MS + TOL_MS ? "Trop lent — la voix devient caverneuse." :
-    "Parfait ! Reste dans la zone verte.";
+    interval_ < target - TOL_MS ? "Trop vite ! La voix monte dans les aigus…" :
+    interval_ > target + TOL_MS ? "Trop lent — la voix devient caverneuse." :
+    "Parfait ! Suis la zone verte qui glisse.";
 
   return (
     <div onClick={onClose}
@@ -119,12 +184,16 @@ export function PhonoGame({ onClose, onWin }) {
 
             <p style={{ textAlign: "center", fontSize: 12.5, color: "#e0a848", fontStyle: "italic", minHeight: 20, margin: "0 0 8px" }}>{diagnosis}</p>
 
-            {/* barre de vitesse : cible au centre */}
+            {/* barre de vitesse : la ZONE VERTE glisse avec la cible mobile.
+                Le mécanisme du phono n'est pas parfaitement stable — il faut
+                sans cesse rattraper la bonne cadence. */}
             <div style={{ position: "relative", height: 22, background: "#1a140a", border: "1px solid #5a4028", borderRadius: 6, overflow: "hidden", marginBottom: 6 }}>
-              {/* zone verte */}
-              <div style={{ position: "absolute", left: `${((TARGET_MS - TOL_MS) / (TARGET_MS * 2)) * 100}%`, width: `${(TOL_MS * 2 / (TARGET_MS * 2)) * 100}%`, top: 0, bottom: 0, background: "#7fe0a8", opacity: 0.35 }} />
-              {/* curseur */}
-              <div style={{ position: "absolute", left: `${Math.max(0, Math.min(100, (interval_ / (TARGET_MS * 2)) * 100))}%`, top: 0, bottom: 0, width: 3, background: "#ffd166", transform: "translateX(-1px)" }} />
+              {/* zone verte mobile */}
+              <div style={{ position: "absolute", left: `${((target - TOL_MS) / (TARGET_BASE * 2)) * 100}%`, width: `${(TOL_MS * 2 / (TARGET_BASE * 2)) * 100}%`, top: 0, bottom: 0, background: "#7fe0a8", opacity: 0.4, transition: "left 0.1s linear" }} />
+              {/* petit repère vertical au centre de la cible */}
+              <div style={{ position: "absolute", left: `${(target / (TARGET_BASE * 2)) * 100}%`, top: 0, bottom: 0, width: 1, background: "#3a9a6a", opacity: 0.7, transition: "left 0.1s linear" }} />
+              {/* curseur du joueur */}
+              <div style={{ position: "absolute", left: `${Math.max(0, Math.min(100, (interval_ / (TARGET_BASE * 2)) * 100))}%`, top: 0, bottom: 0, width: 3, background: "#ffd166", transform: "translateX(-1px)" }} />
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10.5, color: "#a89878", marginBottom: 12 }}>
               <span>← trop vite (aigu)</span><span>cadence</span><span>trop lent (grave) →</span>

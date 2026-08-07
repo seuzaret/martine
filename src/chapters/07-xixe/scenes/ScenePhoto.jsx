@@ -129,22 +129,20 @@ export default function ScenePhoto({ collect, action, reveal, made = [], flags =
             <circle cx="10" cy="0" r="12" fill="#0a0806" stroke="#6a4826" strokeWidth="3" />
             <circle cx="10" cy="0" r="6" fill="#161010" />
             <circle cx="12" cy="-3" r="2" fill="#7a6a4a" opacity="0.6" />
-            {/* le CACHE (bouchon d'objectif) reste en place tant que la plaque
-                n'est pas sensibilisée — c'est en le RETIRANT qu'on ouvre le
-                mini-jeu (via l'action `chambre`). Une fois retiré, un fin
-                halo lumineux montre que l'objectif est prêt à recevoir la
-                lumière. */}
-            {!plaqueSensible ? (
-              <g>
-                <ellipse cx="10" cy="0" rx="14" ry="15" fill="#3a2410" stroke="#5a4028" strokeWidth="1.5" />
-                <circle cx="10" cy="0" r="3" fill="#7a5030" />
-              </g>
-            ) : (
-              <g>
-                <ellipse cx="10" cy="0" rx="18" ry="18" fill="#ffe8b0" opacity="0.35" style={{ animation: "glow 1.4s ease-in-out infinite" }} />
-                <circle cx="10" cy="0" r="9" fill="#fff2c8" opacity="0.6" style={{ animation: "pulse 1.2s ease-in-out infinite" }} />
-              </g>
+            {/* Le CACHE (bouchon d'objectif) reste TOUJOURS en place — le
+                joueur doit CLIQUER dessus pour le retirer et laisser entrer
+                la lumière. Quand la plaque est sensibilisée, un halo doré
+                entoure le cache pour signaler qu'il est prêt à être retiré. */}
+            {plaqueSensible && (
+              <ellipse cx="10" cy="0" rx="22" ry="22" fill="#ffe8b0" opacity="0.28" style={{ animation: "glow 1.4s ease-in-out infinite" }} />
             )}
+            <g>
+              <ellipse cx="10" cy="0" rx="14" ry="15" fill="#3a2410" stroke={plaqueSensible ? "#ffd166" : "#5a4028"} strokeWidth={plaqueSensible ? 2 : 1.5} style={plaqueSensible ? { animation: "pulse 1.4s ease-in-out infinite" } : {}} />
+              <circle cx="10" cy="0" r="3" fill={plaqueSensible ? "#ffd166" : "#7a5030"} />
+              {plaqueSensible && (
+                <text x="10" y="30" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="8" fill="#ffd166" style={{ animation: "pulse 1.4s ease-in-out infinite" }}>retirer</text>
+              )}
+            </g>
           </g>
           {/* le voile noir du photographe */}
           <path d="M-50 -70 Q-70 -50 -78 0 L-38 0 L-30 -70 Z" fill="#0a0806" opacity="0.85" />
@@ -243,10 +241,17 @@ export default function ScenePhoto({ collect, action, reveal, made = [], flags =
       {!iodurePris && (
         <Hotspot cx={76} cy={392} r={30} label="flacon d'iodure d'argent" item="iodure" reveal={reveal} onClick={() => collect("iodure")} />
       )}
-      {/* La chambre : cible de dépôt (plaque, puis iodure) ET, une fois
-          prête, bouton qui ouvre le mini-jeu. */}
+      {/* La chambre : cible de dépôt (plaque, puis iodure). Une fois prête,
+          on ne clique PAS dessus pour tirer — c'est le CACHE de l'objectif
+          qui déclenche la pose (voir hotspot ci-dessous). */}
       {!done && (
-        <Hotspot cx={280} cy={300} r={70} label={plaqueSensible ? "ouvrir l'objectif — prendre la pose" : plaqueDedans ? "chambre chargée — verser l'iodure d'argent" : "chambre photographique — y glisser la plaque"} item="chambre" reveal={reveal} onClick={() => action("chambre")} />
+        <Hotspot cx={280} cy={300} r={70} label={plaqueDedans && !plaqueSensible ? "chambre chargée — verser l'iodure d'argent" : plaqueSensible ? "chambre prête — retire le CACHE de l'objectif ›" : "chambre photographique — y glisser la plaque"} item="chambre" reveal={reveal} onClick={() => action("chambre")} />
+      )}
+      {/* Le CACHE de l'objectif : plus petit, positionné sur la lentille
+          (SVG local x=94 y=-35 relatif à la chambre à 280,344 → 374,309).
+          Cliquable quand la plaque est sensibilisée : ouvre le mini-jeu. */}
+      {!done && plaqueSensible && (
+        <Hotspot cx={374} cy={309} r={18} label="retirer le cache de l'objectif" reveal={reveal} onClick={() => action("cache")} />
       )}
     </svg>
   );
