@@ -1,153 +1,313 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 
 /* ============================================================
-   MINI-JEU : « La projection du Nickelodeon » (NY, mai 1912)
+   MINI-JEU : « Monter le film » (Nickelodeon, NY, mai 1912)
    ------------------------------------------------------------
-   Sean, 15 ans, entre dans un cinéma populaire pour voir
-   « Saved from the Titanic ». Il faut charger la bobine, puis
-   tourner la manivelle du projecteur à ~16 images/seconde
-   (2 rotations/s : soit une pression toutes les ~500 ms).
-   La fenêtre de projection montre le film qui « prend vie »
-   quand la vitesse est juste. Trop lent : ça saute. Trop vite :
-   ça défile en accéléré.
+   Les 6 photogrammes de « Saved from the Titanic » ont été
+   mélangés dans le laboratoire du projectionniste. À toi de
+   les remettre dans le bon ordre sur la bande — puis le film
+   se projette à l'écran. Leçon : le CINÉMA, c'est une SUITE
+   d'images fixes ordonnées ; le montage donne le sens du récit.
    ============================================================ */
 
-const TARGET_MS = 500;
-const TOL_MS = 140;
-const HOLD_MS = 8000;
+/* Les 6 photogrammes de l'histoire, dans l'ordre historique.
+   Chaque case dessine une petite scène en SVG (viewBox 100x70). */
+const FRAMES = [
+  { id: "depart", legend: "Le paquebot lève l'ancre",
+    draw: (
+      <>
+        <rect width="100" height="42" fill="#2a3648" />
+        <rect y="42" width="100" height="28" fill="#1a2438" />
+        <circle cx="80" cy="14" r="6" fill="#e8d8b0" opacity="0.6" />
+        {/* le paquebot */}
+        <path d="M18 46 Q50 50 82 46 L76 54 Q50 58 24 54 Z" fill="#0a0604" />
+        <rect x="26" y="38" width="48" height="8" fill="#2a1608" />
+        {[30, 40, 50, 60].map((x, i) => <rect key={i} x={x} y="30" width="4" height="10" fill="#3a1c0a" />)}
+        {/* fumée */}
+        <circle cx="34" cy="26" r="3" fill="#8a8a8a" opacity="0.6" />
+        <circle cx="38" cy="22" r="4" fill="#8a8a8a" opacity="0.4" />
+      </>
+    ) },
+  { id: "nuit", legend: "Nuit calme sur l'Atlantique",
+    draw: (
+      <>
+        <rect width="100" height="42" fill="#0a1428" />
+        <rect y="42" width="100" height="28" fill="#050a18" />
+        {/* étoiles */}
+        {[[20, 10], [40, 6], [60, 14], [78, 8], [88, 20], [12, 22]].map(([x, y], i) => (
+          <circle key={i} cx={x} cy={y} r="0.8" fill="#e8d8b0" />
+        ))}
+        <circle cx="18" cy="16" r="5" fill="#e8d8b0" opacity="0.85" />
+        {/* petit paquebot au loin */}
+        <path d="M60 48 Q70 50 80 48 L78 52 Q70 54 62 52 Z" fill="#0a0604" />
+        <rect x="64" y="44" width="12" height="4" fill="#2a1608" />
+        {/* fenêtres éclairées */}
+        <circle cx="66" cy="46" r="0.6" fill="#ffd166" />
+        <circle cx="70" cy="46" r="0.6" fill="#ffd166" />
+        <circle cx="74" cy="46" r="0.6" fill="#ffd166" />
+      </>
+    ) },
+  { id: "iceberg", legend: "Un iceberg surgit droit devant",
+    draw: (
+      <>
+        <rect width="100" height="42" fill="#0a1428" />
+        <rect y="42" width="100" height="28" fill="#050a18" />
+        {/* iceberg au premier plan */}
+        <path d="M28 60 L40 30 L52 42 L60 25 L72 60 Z" fill="#c8e0f0" />
+        <path d="M28 60 L40 30 L52 42 L60 25 L72 60 Z" fill="url(#ig)" opacity="0.5" />
+        <defs>
+          <linearGradient id="ig" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#fff" /><stop offset="1" stopColor="#3a5878" /></linearGradient>
+        </defs>
+        {/* petit paquebot au fond */}
+        <path d="M8 50 Q14 51 20 50 L19 53 Q14 54 9 53 Z" fill="#0a0604" />
+        <rect x="10" y="47" width="8" height="3" fill="#2a1608" />
+      </>
+    ) },
+  { id: "collision", legend: "Le choc contre la glace",
+    draw: (
+      <>
+        <rect width="100" height="42" fill="#0a1428" />
+        <rect y="42" width="100" height="28" fill="#050a18" />
+        {/* iceberg à gauche */}
+        <path d="M4 60 L14 32 L26 60 Z" fill="#c8e0f0" />
+        {/* paquebot touche */}
+        <path d="M22 46 Q54 50 86 46 L80 54 Q54 58 28 54 Z" fill="#0a0604" />
+        <rect x="30" y="38" width="48" height="8" fill="#2a1608" />
+        {[34, 44, 54, 64].map((x, i) => <rect key={i} x={x} y="30" width="3" height="10" fill="#3a1c0a" />)}
+        {/* étincelles / éclats blancs */}
+        {[[24, 40], [22, 46], [26, 44], [20, 42], [28, 38]].map(([x, y], i) => (
+          <path key={i} d={`M${x} ${y} l3 -2 M${x} ${y} l-3 -1 M${x} ${y} l1 3`} stroke="#ffd166" strokeWidth="0.8" />
+        ))}
+      </>
+    ) },
+  { id: "sos", legend: "L'opérateur envoie le SOS",
+    draw: (
+      <>
+        <rect width="100" height="70" fill="#1a1006" />
+        {/* cabine TSF */}
+        <rect x="10" y="20" width="80" height="46" fill="#2a1608" stroke="#5a4028" />
+        {/* opérateur */}
+        <circle cx="34" cy="34" r="6" fill="#e8c8a0" />
+        <rect x="28" y="40" width="12" height="14" fill="#5a4028" />
+        {/* table + manip Morse */}
+        <rect x="48" y="42" width="32" height="4" fill="#5a4028" />
+        <rect x="54" y="38" width="14" height="4" rx="1" fill="#c8963e" />
+        {/* ondes qui partent */}
+        {[10, 16, 22].map((r, i) => (
+          <path key={i} d={`M62 20 a${r} ${r * 0.5} 0 0 0 ${r * 2} 0`} fill="none" stroke="#ffd166" strokeWidth="1" opacity={0.9 - i * 0.25} />
+        ))}
+      </>
+    ) },
+  { id: "canots", legend: "Les canots à la mer",
+    draw: (
+      <>
+        <rect width="100" height="42" fill="#0a1428" />
+        <rect y="42" width="100" height="28" fill="#050a18" />
+        {/* paquebot très incliné à droite */}
+        <g transform="translate(60,42) rotate(20)">
+          <path d="M-30 0 Q0 5 30 0 L26 8 Q0 12 -26 8 Z" fill="#0a0604" />
+          <rect x="-20" y="-8" width="40" height="8" fill="#2a1608" />
+        </g>
+        {/* 2 canots + rames */}
+        <g transform="translate(20,54)">
+          <path d="M-8 0 Q0 3 8 0 L6 4 Q0 5 -6 4 Z" fill="#6a4a20" />
+          <circle cx="-2" cy="-2" r="1.5" fill="#e8c8a0" />
+          <circle cx="2" cy="-2" r="1.5" fill="#e8c8a0" />
+          <path d="M-6 -1 l-3 -3 M6 -1 l3 -3" stroke="#3a2c1c" strokeWidth="0.8" />
+        </g>
+        <g transform="translate(38,60)">
+          <path d="M-7 0 Q0 3 7 0 L5 3 Q0 4 -5 3 Z" fill="#6a4a20" />
+          <circle cx="0" cy="-2" r="1.5" fill="#e8c8a0" />
+        </g>
+      </>
+    ) },
+];
+
+/* Fisher-Yates : mélange stable dans un useMemo. */
+function shuffle(a) {
+  const arr = [...a];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/* Un photogramme dessiné : cadre + perforations façon pellicule 35mm. */
+function Photogramme({ frame, size = 100, highlight = false, wrong = false }) {
+  const h = Math.round(size * 0.7);
+  return (
+    <svg viewBox="0 0 100 90" style={{ width: size, height: Math.round(size * 0.9), display: "block" }}>
+      {/* bande grise autour */}
+      <rect width="100" height="90" fill="#1a1408" />
+      {/* perforations haut/bas */}
+      {[8, 24, 40, 56, 72, 88].map((x, i) => (
+        <g key={i}><rect x={x - 3} y="2" width="6" height="6" rx="1" fill="#0a0604" /><rect x={x - 3} y="82" width="6" height="6" rx="1" fill="#0a0604" /></g>
+      ))}
+      {/* image */}
+      <svg x="0" y="10" width="100" height="70" viewBox="0 0 100 70">{frame.draw}</svg>
+      {/* halo */}
+      {(highlight || wrong) && (
+        <rect x="1" y="1" width="98" height="88"
+          fill="none" stroke={wrong ? "#e8934a" : "#ffd166"} strokeWidth="3"
+          style={wrong ? { animation: "shake 0.35s" } : {}} />
+      )}
+    </svg>
+  );
+}
 
 export function CineGame({ onClose, onWin }) {
-  const [phase, setPhase] = useState("load"); // load → project → done
-  const [interval_, setInterval_] = useState(TARGET_MS);
-  const [inZone, setInZone] = useState(0);
-  const [frame, setFrame] = useState(0);
-  const lastClick = useRef(null);
-  const raf = useRef(null);
-  const lastT = useRef(null);
+  const [phase, setPhase] = useState("assemble"); // assemble → project → done
+  const shuffled = useMemo(() => shuffle(FRAMES), []);
+  /* slots : chaque case contient un id de frame ou null. */
+  const [slots, setSlots] = useState(() => Array(FRAMES.length).fill(null));
+  const [pool, setPool] = useState(() => shuffled.map((f) => f.id));
+  const [selected, setSelected] = useState(null); // {from:"pool"|"slot", id, index?}
+  const [wrongSlots, setWrongSlots] = useState([]);
+  const [message, setMessage] = useState("Assemble les 6 photogrammes dans le bon ordre chronologique.");
 
+  /* Phase projection : défilement image par image, ~500ms par image. */
+  const [projFrame, setProjFrame] = useState(0);
+  const projRef = useRef(null);
   useEffect(() => {
     if (phase !== "project") return;
-    lastT.current = performance.now();
-    const tick = (t) => {
-      const dt = t - (lastT.current || t);
-      lastT.current = t;
-      // le film n'avance QUE si on tourne : vitesse basée sur l'intervalle
-      const speed = Math.min(3, 500 / Math.max(80, interval_));
-      setFrame((f) => (f + dt * 0.008 * speed) % 4);
-      const ok = Math.abs(interval_ - TARGET_MS) <= TOL_MS;
-      setInZone((z) => {
-        const nz = ok ? Math.min(HOLD_MS, z + dt) : Math.max(0, z - dt * 0.6);
-        if (nz >= HOLD_MS) setPhase("done");
-        return nz;
-      });
-      raf.current = requestAnimationFrame(tick);
-    };
-    raf.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf.current);
-  }, [phase, interval_]);
+    setProjFrame(0);
+    const id = setInterval(() => setProjFrame((f) => {
+      if (f + 1 >= FRAMES.length) { clearInterval(id); setTimeout(() => setPhase("done"), 700); return f; }
+      return f + 1;
+    }), 700);
+    projRef.current = id;
+    return () => clearInterval(id);
+  }, [phase]);
 
   useEffect(() => { if (phase === "done") onWin?.(); }, [phase]); // eslint-disable-line
 
-  const clickCrank = () => {
-    if (phase !== "project") return;
-    const now = performance.now();
-    if (lastClick.current) {
-      const dt = now - lastClick.current;
-      setInterval_((prev) => Math.round(prev * 0.4 + dt * 0.6));
+  /* Ramasser un photogramme (depuis la pile OU une case). */
+  const pick = (from, id, index) => {
+    if (selected?.from === from && selected.id === id && selected.index === index) {
+      setSelected(null); return;
     }
-    lastClick.current = now;
+    setSelected({ from, id, index });
+    setWrongSlots([]);
   };
 
-  const diagnosis = phase === "done" ? "" :
-    interval_ < TARGET_MS - TOL_MS ? "Trop vite ! Les acteurs courent comme des lapins." :
-    interval_ > TARGET_MS + TOL_MS ? "Trop lent — l'image saccade et devient noire entre chaque photo." :
-    "Vitesse juste : le mouvement devient fluide !";
+  /* Déposer dans une case : place, ou permute si occupée. */
+  const dropInSlot = (slotIndex) => {
+    if (!selected) { pick("slot", slots[slotIndex], slotIndex); return; }
+    const next = [...slots];
+    const nextPool = [...pool];
+    const occupant = next[slotIndex];
+    next[slotIndex] = selected.id;
+    if (selected.from === "pool") {
+      const i = nextPool.indexOf(selected.id);
+      if (i >= 0) nextPool.splice(i, 1);
+      if (occupant) nextPool.push(occupant);
+    } else if (selected.from === "slot") {
+      next[selected.index] = occupant; // permutation
+    }
+    setSlots(next); setPool(nextPool); setSelected(null); setWrongSlots([]);
+  };
+
+  /* Renvoyer un photogramme à la pile (clic sur la pile après sélection d'une case). */
+  const dropInPool = () => {
+    if (!selected || selected.from !== "slot") return;
+    const next = [...slots]; next[selected.index] = null;
+    setSlots(next); setPool([...pool, selected.id]); setSelected(null);
+  };
+
+  const canValidate = slots.every(Boolean);
+  const validate = () => {
+    const wrongs = slots.map((id, i) => (id !== FRAMES[i].id ? i : -1)).filter((x) => x >= 0);
+    if (wrongs.length === 0) { setMessage("Ordre correct ! Le film peut être projeté."); setTimeout(() => setPhase("project"), 500); }
+    else { setWrongSlots(wrongs); setMessage(`Non — ${wrongs.length} photogramme(s) mal placé(s). Un événement doit précéder ses conséquences…`); }
+  };
+
+  const reset = () => { setSlots(Array(FRAMES.length).fill(null)); setPool(shuffled.map((f) => f.id)); setSelected(null); setWrongSlots([]); setMessage("Recommence — cherche la CHRONOLOGIE."); };
 
   return (
     <div onClick={onClose}
-      style={{ position: "fixed", inset: 0, background: "rgba(4,8,14,0.82)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, zIndex: 70, backdropFilter: "blur(3px)" }}>
+      style={{ position: "fixed", inset: 0, background: "rgba(4,8,14,0.85)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, zIndex: 70, backdropFilter: "blur(3px)" }}>
       <div onClick={(e) => e.stopPropagation()}
-        style={{ background: "#17110a", border: "2px solid #c8963e66", borderRadius: 18, padding: 20, maxWidth: 580, width: "100%", maxHeight: "92vh", overflowY: "auto", boxShadow: "0 12px 48px rgba(0,0,0,0.6)", color: "#efe6d2", fontFamily: "Palatino, Georgia, serif" }}>
+        style={{ background: "#17110a", border: "2px solid #c8963e66", borderRadius: 18, padding: 20, maxWidth: 780, width: "100%", maxHeight: "92vh", overflowY: "auto", boxShadow: "0 12px 48px rgba(0,0,0,0.6)", color: "#efe6d2", fontFamily: "Palatino, Georgia, serif" }}>
         <div style={{ textAlign: "center", fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 2, color: "#e0a848" }}>🎞️ NICKELODEON · 14ᵉ RUE, NY, MAI 1912</div>
-        <h2 style={{ textAlign: "center", margin: "6px 0 4px", color: "#ffd166", fontSize: 21 }}>« Saved from the Titanic »</h2>
+        <h2 style={{ textAlign: "center", margin: "6px 0 4px", color: "#ffd166", fontSize: 21 }}>« Saved from the Titanic » — remonte le film</h2>
 
-        {phase === "load" && (
+        {phase === "assemble" && (
           <>
-            <p style={{ textAlign: "center", fontSize: 13, color: "#d8c9a8", margin: "0 0 12px" }}>
-              Charge la bobine sur l'axe supérieur du projecteur : clique la BOBINE.
+            <p style={{ textAlign: "center", fontSize: 12.5, color: "#d8c9a8", margin: "0 0 10px" }}>
+              Clique un photogramme, puis clique la case où le placer. Clique à nouveau pour permuter.
             </p>
-            <svg viewBox="0 0 400 300" style={{ width: "100%", height: "auto", background: "#1a1006", borderRadius: 8, border: "1px solid #5a4028" }}>
-              {/* projecteur */}
-              <rect x="140" y="120" width="180" height="120" fill="#2a1608" stroke="#5a4028" strokeWidth="3" />
-              <rect x="220" y="140" width="80" height="40" fill="#0a0604" />
-              {/* axe supérieur (cible) */}
-              <circle cx="200" cy="140" r="24" fill="none" stroke="#c8963e" strokeWidth="3" strokeDasharray="4 4" style={{ animation: "pulse 1.6s ease-in-out infinite" }} />
-              <circle cx="200" cy="140" r="6" fill="#5a4028" />
-              <text x="200" y="180" fontFamily="ui-monospace,monospace" fontSize="10" fill="#c8963e" textAnchor="middle">axe de la bobine</text>
-              {/* la BOBINE, cliquable (grosse cible tactile) */}
-              <g transform="translate(80,240)" style={{ cursor: "pointer", userSelect: "none" }}
-                onClick={() => setPhase("project")}>
-                <circle cx="0" cy="0" r="44" fill="none" stroke="#7fe0a8" strokeWidth="2" strokeDasharray="4 4" opacity="0.6" style={{ animation: "pulse 2s ease-in-out infinite" }} />
-                <circle cx="0" cy="0" r="30" fill="#5a4028" />
-                <circle cx="0" cy="0" r="26" fill="#0a0604" />
-                <circle cx="0" cy="0" r="20" fill="#5a4028" />
-                {[0, 60, 120, 180, 240, 300].map((a, i) => {
-                  const rad = (a * Math.PI) / 180;
-                  return <path key={i} d={`M0 0 L${Math.cos(rad) * 24} ${Math.sin(rad) * 24}`} stroke="#0a0604" strokeWidth="2" />;
+
+            {/* La BANDE FILM en haut : 6 slots numérotés */}
+            <div style={{ background: "#0a0604", border: "2px solid #5a4028", borderRadius: 8, padding: 8, marginBottom: 12, overflowX: "auto" }}>
+              <div style={{ display: "flex", gap: 4, justifyContent: "space-between", minWidth: 640 }}>
+                {slots.map((id, i) => {
+                  const frame = id ? FRAMES.find((f) => f.id === id) : null;
+                  const isSelected = selected?.from === "slot" && selected.index === i;
+                  const isWrong = wrongSlots.includes(i);
+                  return (
+                    <button key={i} onClick={() => dropInSlot(i)}
+                      style={{ background: "transparent", border: "none", padding: 0, cursor: "pointer", position: "relative" }}>
+                      <div style={{ position: "absolute", top: -6, left: 4, fontFamily: "ui-monospace,monospace", fontSize: 10, color: "#c8963e", zIndex: 2 }}>{i + 1}</div>
+                      {frame ? (
+                        <Photogramme frame={frame} size={100} highlight={isSelected} wrong={isWrong} />
+                      ) : (
+                        <div style={{ width: 100, height: 90, border: "2px dashed #5a4028", borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", color: "#5a4028", fontFamily: "ui-monospace,monospace", fontSize: 24 }}>?</div>
+                      )}
+                    </button>
+                  );
                 })}
-                <circle cx="0" cy="0" r="5" fill="#c8963e" />
-                <text y="56" fontFamily="ui-monospace,monospace" fontSize="10" fill="#7fe0a8" textAnchor="middle">clique-moi !</text>
-              </g>
-            </svg>
+              </div>
+            </div>
+
+            <p style={{ textAlign: "center", fontSize: 12.5, color: wrongSlots.length ? "#e8934a" : "#e0a848", fontStyle: "italic", minHeight: 20, margin: "0 0 8px" }}>{message}</p>
+
+            {/* La PILE en bas : photogrammes en vrac */}
+            <div onClick={dropInPool}
+              style={{ background: "#1a1006", border: "1px dashed #5a4028", borderRadius: 8, padding: 10, minHeight: 110, display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", cursor: selected?.from === "slot" ? "pointer" : "default" }}>
+              {pool.length === 0 ? (
+                <div style={{ color: "#5a4028", fontStyle: "italic", fontSize: 12, alignSelf: "center" }}>— pile vide —</div>
+              ) : pool.map((id) => {
+                const frame = FRAMES.find((f) => f.id === id);
+                const isSelected = selected?.from === "pool" && selected.id === id;
+                return (
+                  <button key={id} onClick={(e) => { e.stopPropagation(); pick("pool", id); }}
+                    style={{ background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
+                    <Photogramme frame={frame} size={88} highlight={isSelected} />
+                  </button>
+                );
+              })}
+            </div>
+
+            <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+              <button onClick={reset}
+                style={{ flex: "0 0 auto", background: "#2a1608", color: "#e0a848", border: "1px solid #5a4028", borderRadius: 10, padding: "12px 16px", fontWeight: 700, cursor: "pointer", fontFamily: "ui-monospace,monospace" }}>
+                RECOMMENCER
+              </button>
+              <button onClick={validate} disabled={!canValidate}
+                style={{ flex: 1, background: canValidate ? "#e0a848" : "#3a2c1c", color: canValidate ? "#1a1206" : "#7a6a4a", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: canValidate ? "pointer" : "not-allowed", fontSize: 15, fontFamily: "ui-monospace,monospace", letterSpacing: 2 }}>
+                PROJETER LE FILM
+              </button>
+            </div>
           </>
         )}
 
         {phase === "project" && (
           <>
             <p style={{ textAlign: "center", fontSize: 13, color: "#d8c9a8", margin: "0 0 10px" }}>
-              Tourne la manivelle à ~2 tours/seconde (le CINÉMA se dit « 16 images/seconde »).
+              La lanterne s'allume, la bobine tourne… l'histoire prend vie image après image.
             </p>
-
-            {/* l'écran + le film qui prend vie */}
-            <svg viewBox="0 0 400 220" style={{ width: "100%", height: "auto", background: "#0a0604", borderRadius: 8, border: "2px solid #a8801f" }}>
-              <rect width="400" height="220" fill="#3a2418" opacity="0.4" />
-              {/* horizon marin */}
-              <path d="M0 130 h400" stroke="#7a5030" strokeWidth="1" opacity="0.5" />
-              {/* le paquebot qui coule — position selon frame */}
-              <g transform={`translate(${140 + Math.floor(frame) * 8}, ${140 + Math.floor(frame) * 3}) rotate(${-8 - Math.floor(frame) * 3})`}>
-                <path d="M-60 0 Q0 10 60 0 L52 12 Q0 18 -52 12 Z" fill="#1a0e04" />
-                <rect x="-44" y="-12" width="88" height="16" fill="#2a1608" />
-                {[-28, -8, 12, 30].map((x, i) => <rect key={i} x={x} y="-24" width="8" height="14" rx="2" fill="#3a1c0a" />)}
-              </g>
-              {/* intertitre */}
-              <rect x="60" y="180" width="280" height="30" fill="#0a0806" />
-              <text x="200" y="200" textAnchor="middle" fontFamily="Georgia,serif" fontStyle="italic" fontSize="13" fill="#e8d8b0">
-                {Math.floor(frame) === 0 ? "The great ship strikes the iceberg…" :
-                 Math.floor(frame) === 1 ? "…she begins to list…" :
-                 Math.floor(frame) === 2 ? "Boats away!" : "Miss Gibson, saved."}
-              </text>
-              {/* papillotement */}
-              <rect width="400" height="220" fill="#000" opacity={interval_ > TARGET_MS + TOL_MS ? 0.4 : 0.06} style={{ animation: "flicker 0.12s steps(2) infinite" }} />
-            </svg>
-
-            <p style={{ textAlign: "center", fontSize: 12.5, color: "#e0a848", fontStyle: "italic", minHeight: 20, margin: "8px 0" }}>{diagnosis}</p>
-
-            {/* barre de vitesse */}
-            <div style={{ position: "relative", height: 20, background: "#1a140a", border: "1px solid #5a4028", borderRadius: 6, overflow: "hidden", marginBottom: 6 }}>
-              <div style={{ position: "absolute", left: `${((TARGET_MS - TOL_MS) / (TARGET_MS * 2)) * 100}%`, width: `${(TOL_MS * 2 / (TARGET_MS * 2)) * 100}%`, top: 0, bottom: 0, background: "#7fe0a8", opacity: 0.35 }} />
-              <div style={{ position: "absolute", left: `${Math.max(0, Math.min(100, (interval_ / (TARGET_MS * 2)) * 100))}%`, top: 0, bottom: 0, width: 3, background: "#ffd166", transform: "translateX(-1px)" }} />
+            <div style={{ background: "#0a0604", border: "3px solid #a8801f", borderRadius: 8, padding: 12, textAlign: "center" }}>
+              <svg viewBox="0 0 100 70" style={{ width: "100%", maxWidth: 380, height: "auto", background: "#000", filter: "sepia(0.3) contrast(1.1)", animation: "flicker 0.14s steps(2) infinite" }}>
+                {FRAMES[projFrame].draw}
+              </svg>
+              <div style={{ marginTop: 10, background: "#0a0806", padding: "6px 12px", borderRadius: 4, fontFamily: "Georgia,serif", fontStyle: "italic", fontSize: 13, color: "#e8d8b0" }}>
+                {FRAMES[projFrame].legend}
+              </div>
+              <div style={{ marginTop: 8, fontFamily: "ui-monospace,monospace", fontSize: 10, color: "#7a6a4a" }}>
+                image {projFrame + 1} / {FRAMES.length}
+              </div>
             </div>
-
-            {/* barre de maintien */}
-            <div style={{ margin: "10px 0 4px", background: "#1a140a", border: "1px solid #5a4028", borderRadius: 6, height: 12, overflow: "hidden" }}>
-              <div style={{ width: `${(inZone / HOLD_MS) * 100}%`, height: "100%", background: "#7fe0a8", transition: "width 0.1s" }} />
-            </div>
-            <div style={{ fontSize: 11, textAlign: "center", color: "#a89878", margin: "0 0 10px" }}>projection : {Math.max(0, Math.ceil((HOLD_MS - inZone) / 1000))} s</div>
-
-            <button onPointerDown={clickCrank}
-              style={{ width: "100%", background: "#e0a848", color: "#1a1206", border: "none", borderRadius: 10, padding: "16px", fontWeight: 800, cursor: "pointer", fontSize: 17, fontFamily: "ui-monospace,monospace", letterSpacing: 2 }}>
-              TOURNER LA MANIVELLE
-            </button>
           </>
         )}
 
@@ -155,7 +315,7 @@ export function CineGame({ onClose, onWin }) {
           <div style={{ marginTop: 4 }}>
             <div style={{ background: "#0e1420", border: "1px solid #2a3648", borderRadius: 12, padding: "14px 16px" }}>
               <p style={{ fontSize: 15, lineHeight: 1.65, color: "#e8eef5", margin: 0 }}>
-                « Le 28 décembre 1895, les frères Lumière projettent 10 courts films au Salon Indien du Grand Café, à Paris — 33 spectateurs, 1 franc la place. Le CINÉMA vient de naître : une SUITE de photos à 16 images/seconde, notre œil ne voit pas les coupures. En 1912, quelques semaines après le naufrage du Titanic, le film « Saved from the Titanic » sort avec Dorothy Gibson, VRAIE rescapée — Sean pleure : le cinéma peut donc RECONSTITUER un événement, servir de mémoire, mais aussi de fiction émouvante. La même catastrophe est passée par la TSF (bips), la presse (mots), et maintenant les images animées. Chaque média la raconte à sa manière — un même événement, plusieurs récits. » — MARTINE
+                « Le 28 décembre 1895, les frères Lumière projettent 10 courts films au Salon Indien du Grand Café, à Paris — 33 spectateurs, 1 franc la place. Le CINÉMA vient de naître : une SUITE de photos à 16 images/seconde, notre œil ne voit pas les coupures. En 1912, quelques semaines après le naufrage du Titanic, le film « Saved from the Titanic » sort avec Dorothy Gibson, VRAIE rescapée — Sean pleure : le cinéma peut RECONSTITUER un événement… mais le MONTAGE (l'ordre des plans) donne le sens du récit. Un même événement, plusieurs récits — c'est ainsi qu'un média façonne notre mémoire. » — MARTINE
               </p>
             </div>
             <p style={{ textAlign: "center", margin: "12px 0 0", color: "#7fe0a8", fontSize: 13, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
