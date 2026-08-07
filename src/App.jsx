@@ -434,11 +434,11 @@ export default function App() {
      le clic sur le personnage qui l'ouvre (voir `action`). */
   useEffect(() => {
     const st = chapter.quete?.[quete];
-    /* En mode linéaire (1 step = 1 tableau), l'encart auto ne s'ouvre
-       que si le tab correspond au step courant — sinon un retour en
-       arrière réafficherait le portrait du prochain personnage. */
-    const matchTab = !chapter.linear || quete === tab;
-    setPortraitOpen(!!(st?.portrait && st.auto && matchTab));
+    setPortraitOpen(!!(st?.portrait && st.auto));
+    /* dépendance sur `tab` (pas `quete`) : l'encart auto s'ouvre à
+       l'ARRIVÉE sur un nouveau tableau. Si on le déclenchait sur `quete`,
+       la fin d'une étape ouvrirait le portrait du perso suivant sur
+       l'ancien tableau (bug « un tableau trop tôt »). */
   }, [tab, chapterIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* AMBIANCE SONORE : si le tableau courant en déclare une (champ

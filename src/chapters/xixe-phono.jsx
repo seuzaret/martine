@@ -184,19 +184,23 @@ export function PhonoGame({ onClose, onWin }) {
 
             <p style={{ textAlign: "center", fontSize: 12.5, color: "#e0a848", fontStyle: "italic", minHeight: 20, margin: "0 0 8px" }}>{diagnosis}</p>
 
-            {/* barre de vitesse : la ZONE VERTE glisse avec la cible mobile.
-                Le mécanisme du phono n'est pas parfaitement stable — il faut
-                sans cesse rattraper la bonne cadence. */}
-            <div style={{ position: "relative", height: 22, background: "#1a140a", border: "1px solid #5a4028", borderRadius: 6, overflow: "hidden", marginBottom: 6 }}>
-              {/* zone verte mobile */}
-              <div style={{ position: "absolute", left: `${((target - TOL_MS) / (TARGET_BASE * 2)) * 100}%`, width: `${(TOL_MS * 2 / (TARGET_BASE * 2)) * 100}%`, top: 0, bottom: 0, background: "#7fe0a8", opacity: 0.4, transition: "left 0.1s linear" }} />
-              {/* petit repère vertical au centre de la cible */}
-              <div style={{ position: "absolute", left: `${(target / (TARGET_BASE * 2)) * 100}%`, top: 0, bottom: 0, width: 1, background: "#3a9a6a", opacity: 0.7, transition: "left 0.1s linear" }} />
-              {/* curseur du joueur */}
-              <div style={{ position: "absolute", left: `${Math.max(0, Math.min(100, (interval_ / (TARGET_BASE * 2)) * 100))}%`, top: 0, bottom: 0, width: 3, background: "#ffd166", transform: "translateX(-1px)" }} />
+            {/* barre de vitesse + boutons ◀ ▶ pour ajuster la cadence */}
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+              <button onClick={() => { setInterval_((v) => Math.max(80, v - 30)); playCue(TARGET_BASE / Math.max(80, interval_ - 30)); lastClick.current = performance.now(); }}
+                style={{ width: 36, height: 36, borderRadius: 8, border: "1px solid #5a4028", background: "#2a1e10", color: "#ffd166", fontSize: 18, cursor: "pointer", flexShrink: 0, lineHeight: 1 }}>◀</button>
+              <div style={{ position: "relative", height: 22, background: "#1a140a", border: "1px solid #5a4028", borderRadius: 6, overflow: "hidden", flex: 1 }}>
+                {/* zone verte mobile */}
+                <div style={{ position: "absolute", left: `${((target - TOL_MS) / (TARGET_BASE * 2)) * 100}%`, width: `${(TOL_MS * 2 / (TARGET_BASE * 2)) * 100}%`, top: 0, bottom: 0, background: "#7fe0a8", opacity: 0.4, transition: "left 0.1s linear" }} />
+                {/* petit repère vertical au centre de la cible */}
+                <div style={{ position: "absolute", left: `${(target / (TARGET_BASE * 2)) * 100}%`, top: 0, bottom: 0, width: 1, background: "#3a9a6a", opacity: 0.7, transition: "left 0.1s linear" }} />
+                {/* curseur du joueur */}
+                <div style={{ position: "absolute", left: `${Math.max(0, Math.min(100, (interval_ / (TARGET_BASE * 2)) * 100))}%`, top: 0, bottom: 0, width: 3, background: "#ffd166", transform: "translateX(-1px)" }} />
+              </div>
+              <button onClick={() => { setInterval_((v) => Math.min(TARGET_BASE * 2, v + 30)); playCue(TARGET_BASE / Math.min(TARGET_BASE * 2, interval_ + 30)); lastClick.current = performance.now(); }}
+                style={{ width: 36, height: 36, borderRadius: 8, border: "1px solid #5a4028", background: "#2a1e10", color: "#ffd166", fontSize: 18, cursor: "pointer", flexShrink: 0, lineHeight: 1 }}>▶</button>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10.5, color: "#a89878", marginBottom: 12 }}>
-              <span>← trop vite (aigu)</span><span>cadence</span><span>trop lent (grave) →</span>
+              <span>◀ plus vite (aigu)</span><span>cadence</span><span>plus lent (grave) ▶</span>
             </div>
 
             {/* barre de maintien */}
