@@ -13,7 +13,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 /* Les 6 photogrammes de l'histoire, dans l'ordre historique.
    Chaque case dessine une petite scène en SVG (viewBox 100x70). */
 const FRAMES = [
-  { id: "depart", legend: "Le paquebot lève l'ancre",
+  { id: "depart", legend: "Le paquebot lève l'ancre", short: "Le départ",
     draw: (
       <>
         <rect width="100" height="42" fill="#2a3648" />
@@ -28,7 +28,7 @@ const FRAMES = [
         <circle cx="38" cy="22" r="4" fill="#8a8a8a" opacity="0.4" />
       </>
     ) },
-  { id: "nuit", legend: "Nuit calme sur l'Atlantique",
+  { id: "nuit", legend: "Nuit calme sur l'Atlantique", short: "En mer",
     draw: (
       <>
         <rect width="100" height="42" fill="#0a1428" />
@@ -47,7 +47,7 @@ const FRAMES = [
         <circle cx="74" cy="46" r="0.6" fill="#ffd166" />
       </>
     ) },
-  { id: "iceberg", legend: "Un iceberg surgit droit devant",
+  { id: "iceberg", legend: "Un iceberg surgit droit devant", short: "L'iceberg",
     draw: (
       <>
         <rect width="100" height="42" fill="#0a1428" />
@@ -63,7 +63,7 @@ const FRAMES = [
         <rect x="10" y="47" width="8" height="3" fill="#2a1608" />
       </>
     ) },
-  { id: "collision", legend: "Le choc contre la glace",
+  { id: "collision", legend: "Le choc contre la glace", short: "Le choc",
     draw: (
       <>
         <rect width="100" height="42" fill="#0a1428" />
@@ -80,7 +80,7 @@ const FRAMES = [
         ))}
       </>
     ) },
-  { id: "sos", legend: "L'opérateur envoie le SOS",
+  { id: "sos", legend: "L'opérateur envoie le SOS", short: "Le SOS",
     draw: (
       <>
         <rect width="100" height="70" fill="#1a1006" />
@@ -98,7 +98,7 @@ const FRAMES = [
         ))}
       </>
     ) },
-  { id: "canots", legend: "Les canots à la mer",
+  { id: "canots", legend: "Les canots à la mer", short: "Les canots",
     draw: (
       <>
         <rect width="100" height="42" fill="#0a1428" />
@@ -272,8 +272,9 @@ export function CineGame({ onClose, onWin }) {
                 const isSelected = selected?.from === "pool" && selected.id === id;
                 return (
                   <button key={id} onClick={(e) => { e.stopPropagation(); pick("pool", id); }}
-                    style={{ background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
+                    style={{ background: "transparent", border: "none", padding: 0, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
                     <Photogramme frame={frame} size={88} highlight={isSelected} />
+                    <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 10.5, color: isSelected ? "#ffd166" : "#c8963e", letterSpacing: 0.5 }}>{frame.short}</span>
                   </button>
                 );
               })}
