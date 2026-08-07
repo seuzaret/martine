@@ -51,16 +51,17 @@ export default function Scene({ scenes, tab, onTab, sceneProps, sparkle, linear 
       {linear && scenes[tab].free && tab < scenes.length - 1 && scenes[tab + 1].free && (
         <button onClick={() => onTab(tab + 1)} style={navBtn("right")} aria-label="tableau suivant">›</button>
       )}
-      {/* MODE LINÉAIRE (scènes NON libres) : une seule flèche d'avancée, verte
-          et pulsée, qui n'apparaît QUE lorsque le tableau est bouclé
-          (canAdvance). Elle pointe à GAUCHE si le tableau courant est un RETOUR
-          (on revient sur ses pas), sinon à droite. Complète le titre vert. */}
+      {/* MODE LINÉAIRE (scènes NON libres) : bouton ‹ pour revenir en
+          arrière (tableaux déjà visités), bouton › vert pulsé pour avancer
+          (seulement quand canAdvance). */}
+      {linear && !scenes[tab].free && tab > 0 && (
+        <button onClick={() => onTab(tab - 1)} style={navBtn("left")} aria-label="tableau précédent">‹</button>
+      )}
       {linear && !scenes[tab].free && canAdvance && tab < scenes.length - 1 && (() => {
         const back = !!scenes[tab].retour;
-        const side = back ? "left" : "right";
         return (
           <button onClick={() => onTab(tab + 1)} title={`Partir pour ${scenes[tab + 1].name}`}
-            style={{ ...navBtn(side), border: "1px solid #5eff9e", background: "rgba(94,255,158,0.85)", color: "#06110b", boxShadow: "0 0 18px rgba(94,255,158,0.6)", animation: "floaty 1.7s ease-in-out infinite" }}>
+            style={{ ...navBtn(back ? "left" : "right"), border: "1px solid #5eff9e", background: "rgba(94,255,158,0.85)", color: "#06110b", boxShadow: "0 0 18px rgba(94,255,158,0.6)", animation: "floaty 1.7s ease-in-out infinite" }}>
             {back ? "‹" : "›"}
           </button>
         );

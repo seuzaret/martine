@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 /* ============================================================
    MINI-JEU : « Sauver le Titanic ! » (choisir l'ANTENNE parmi plusieurs outils)
@@ -54,6 +54,7 @@ function OutilCard({ o, onClick, disabled, verdict }) {
 export function TsfGame({ onClose, onWin }) {
   const [verdict, setVerdict] = useState(null); // "id:yes" ou "id:no"
   const [won, setWon] = useState(false);
+  const shuffled = useMemo(() => [...OUTILS].sort(() => Math.random() - 0.5), []);
   useEffect(() => { if (won) onWin?.(); }, [won]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const tenter = (o) => {
@@ -78,7 +79,7 @@ export function TsfGame({ onClose, onWin }) {
         {!won ? (
           <>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", marginBottom: 14 }}>
-              {OUTILS.map((o) => (
+              {shuffled.map((o) => (
                 <OutilCard key={o.id} o={o} verdict={verdict} disabled={!!(verdict && verdict.endsWith(":yes"))}
                   onClick={() => tenter(o)} />
               ))}
