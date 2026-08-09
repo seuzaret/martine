@@ -1,0 +1,147 @@
+/* ============================================================
+   CHAPITRE 8 — Portraits « gros plan »
+   ------------------------------------------------------------
+   Arthur Smith : ingénieur du son à la BBC, Bush House, Londres.
+   La quarantaine, cheveux bruns lissés, moustache fine, chemise
+   blanche, cravate sombre, casque de studio autour du cou.
+   Marthe Dupont : veuve de 14-18, 68 ans, Parisienne, cheveux
+   gris en chignon, châle noir, air digne — dure à cuire.
+   ============================================================ */
+
+import { Mouth } from "../../../engine/faces.jsx";
+
+export function PortraitArthur() {
+  return (
+    <svg viewBox="0 0 300 340" style={{ display: "block", width: "100%", height: "auto" }}>
+      <defs>
+        <radialGradient id="pArHalo" cx="50%" cy="38%" r="62%">
+          <stop offset="0%" stopColor="#b0c8e0" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#3a4a60" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="pArSkin" x1="0" y1="0" x2="1" y2="0.3"><stop offset="0%" stopColor="#eec8a0" /><stop offset="100%" stopColor="#c8946a" /></linearGradient>
+        <linearGradient id="pArShirt" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#f0e8d8" /><stop offset="100%" stopColor="#c8bfa8" /></linearGradient>
+      </defs>
+      <circle cx="150" cy="138" r="130" fill="url(#pArHalo)" />
+
+      {/* veste sombre + chemise blanche + cravate rayée BBC */}
+      <path d="M40 340 Q46 244 100 228 Q126 220 150 222 Q174 220 200 228 Q254 244 260 340 Z" fill="#1a2438" />
+      <path d="M100 232 L150 268 L200 232 L214 340 L86 340 Z" fill="url(#pArShirt)" />
+      {/* cravate rayée */}
+      <path d="M140 234 L160 234 L156 280 L150 340 L144 280 Z" fill="#8a1a1a" />
+      <path d="M143 246 L157 246 M144 258 L156 258 M144 270 L156 270 M145 282 L155 282" stroke="#e0a848" strokeWidth="1.2" />
+      {/* col de chemise */}
+      <path d="M136 228 L150 258 L164 228 L154 224 L150 232 L146 224 Z" fill="#fff" />
+
+      {/* casque de studio autour du cou (headphones) */}
+      <path d="M110 220 Q150 200 190 220" fill="none" stroke="#2a2a2a" strokeWidth="4" />
+      <ellipse cx="110" cy="222" rx="10" ry="12" fill="#3a3a3a" stroke="#1a1a1a" strokeWidth="1.5" />
+      <ellipse cx="190" cy="222" rx="10" ry="12" fill="#3a3a3a" stroke="#1a1a1a" strokeWidth="1.5" />
+      <ellipse cx="110" cy="222" rx="6" ry="8" fill="#6a4a30" />
+      <ellipse cx="190" cy="222" rx="6" ry="8" fill="#6a4a30" />
+
+      {/* cou */}
+      <path d="M137 186 L163 186 L165 226 Q150 234 135 226 Z" fill="url(#pArSkin)" />
+
+      {/* visage ovale */}
+      <path d="M150 84 C178 84 190 108 189 138 C188 168 172 190 150 192 C128 190 112 168 111 138 C110 108 122 84 150 84 Z" fill="url(#pArSkin)" />
+      {/* ombre latérale */}
+      <path d="M116 118 Q112 150 128 176" stroke="#c8946a" strokeWidth="4" fill="none" opacity="0.3" strokeLinecap="round" />
+      {/* oreilles */}
+      <ellipse cx="112" cy="140" rx="6" ry="9" fill="#e0a878" />
+      <ellipse cx="188" cy="140" rx="6" ry="9" fill="#e0a878" />
+
+      {/* CHEVEUX bruns bien peignés en arrière, raie à droite */}
+      <path d="M112 108 Q130 78 150 78 Q182 78 194 108 Q198 96 188 84 Q166 62 148 62 Q120 62 108 92 Q104 100 112 108 Z" fill="#3a2418" />
+      {/* raie */}
+      <path d="M162 78 Q170 88 178 100" stroke="#5a3828" strokeWidth="1.5" fill="none" />
+
+      {/* SOURCILS + YEUX (bruns, sérieux) */}
+      <path d="M124 122 Q134 118 145 122" stroke="#2a1a10" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+      <path d="M155 122 Q166 118 176 122" stroke="#2a1a10" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+      <path d="M126 134 Q135 130 144 134 Q135 140 126 134 Z" fill="#f8efdd" />
+      <path d="M156 134 Q165 130 174 134 Q165 140 156 134 Z" fill="#f8efdd" />
+      <circle cx="135" cy="134" r="3.6" fill="#4a2f1a" />
+      <circle cx="165" cy="134" r="3.6" fill="#4a2f1a" />
+      <circle cx="136" cy="132.8" r="1.1" fill="#fff" />
+      <circle cx="166" cy="132.8" r="1.1" fill="#fff" />
+
+      {/* NEZ */}
+      <path d="M146 152 Q150 158 154 152 M146 152 Q144 146 148 144 M154 152 Q156 146 152 144" stroke="#c8946a" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+
+      {/* MOUSTACHE fine (style années 40) */}
+      <path d="M140 168 q10 -4 20 0 q-4 -3 -10 -3 q-6 0 -10 3 Z" fill="#3a2418" />
+
+      {/* BOUCHE */}
+      <Mouth cx={150} cy={178} />
+    </svg>
+  );
+}
+
+export function PortraitMarthe() {
+  return (
+    <svg viewBox="0 0 300 340" style={{ display: "block", width: "100%", height: "auto" }}>
+      <defs>
+        <radialGradient id="pMaHalo" cx="50%" cy="38%" r="62%">
+          <stop offset="0%" stopColor="#e8d8b0" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#403a2a" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="pMaSkin" x1="0" y1="0" x2="1" y2="0.3"><stop offset="0%" stopColor="#efd0b0" /><stop offset="100%" stopColor="#c8a080" /></linearGradient>
+      </defs>
+      <circle cx="150" cy="138" r="130" fill="url(#pMaHalo)" />
+
+      {/* robe noire + châle noir à franges */}
+      <path d="M40 340 Q48 250 106 230 Q128 224 150 226 Q172 224 194 230 Q252 250 260 340 Z" fill="#1a1a1a" />
+      {/* franges du châle */}
+      {[70, 90, 110, 130, 150, 170, 190, 210, 230].map((x, i) => (
+        <path key={i} d={`M${x} 250 v${8 + (i % 3) * 3}`} stroke="#2a2a2a" strokeWidth="1.6" />
+      ))}
+      {/* broche or (souvenir du mari mort en 14-18) */}
+      <circle cx="150" cy="248" r="5" fill="#c8963e" stroke="#8a5a20" strokeWidth="1" />
+      <circle cx="150" cy="248" r="1.8" fill="#5a3a10" />
+
+      {/* cou */}
+      <path d="M137 190 L163 190 L165 228 Q150 236 135 228 Z" fill="url(#pMaSkin)" />
+
+      {/* visage ovale, plus étroit (âgée) */}
+      <path d="M150 88 C176 88 188 112 187 140 C186 168 170 192 150 194 C130 192 114 168 113 140 C112 112 124 88 150 88 Z" fill="url(#pMaSkin)" />
+      {/* ombre + rides latérales */}
+      <path d="M118 122 Q114 152 130 178" stroke="#a88060" strokeWidth="3" fill="none" opacity="0.35" strokeLinecap="round" />
+      <path d="M126 156 Q124 162 128 166" stroke="#a88060" strokeWidth="1.4" fill="none" opacity="0.55" />
+      <path d="M172 156 Q174 162 170 166" stroke="#a88060" strokeWidth="1.4" fill="none" opacity="0.55" />
+      {/* oreilles */}
+      <ellipse cx="114" cy="142" rx="6" ry="9" fill="#dfa888" />
+      <ellipse cx="186" cy="142" rx="6" ry="9" fill="#dfa888" />
+
+      {/* CHIGNON gris tiré en arrière (silhouette de la coiffure) */}
+      <path d="M116 106 Q136 82 150 82 Q184 82 196 112 Q206 106 200 90 Q186 66 150 66 Q118 66 106 96 Q106 106 116 106 Z" fill="#8a8a8a" />
+      {/* boule du chignon derrière la nuque */}
+      <ellipse cx="205" cy="130" rx="14" ry="18" fill="#7a7a7a" />
+      <path d="M198 120 Q212 128 208 148" stroke="#5a5a5a" strokeWidth="1.2" fill="none" opacity="0.7" />
+      {/* mèches grises encadrant */}
+      <path d="M120 106 Q108 138 118 172" stroke="#8a8a8a" strokeWidth="4" fill="none" />
+
+      {/* SOURCILS gris + YEUX bleu délavé (âge + rigueur) */}
+      <path d="M124 126 Q134 122 145 126" stroke="#7a7a7a" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+      <path d="M155 126 Q166 122 176 126" stroke="#7a7a7a" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+      {/* pattes d'oie */}
+      <path d="M120 134 l-4 -2 M120 138 l-4 0 M120 142 l-4 2" stroke="#a88060" strokeWidth="1" fill="none" opacity="0.6" />
+      <path d="M180 134 l4 -2 M180 138 l4 0 M180 142 l4 2" stroke="#a88060" strokeWidth="1" fill="none" opacity="0.6" />
+      <path d="M126 138 Q135 134 144 138 Q135 144 126 138 Z" fill="#f8efdd" />
+      <path d="M156 138 Q165 134 174 138 Q165 144 156 138 Z" fill="#f8efdd" />
+      <circle cx="135" cy="138" r="3.4" fill="#5a7a90" />
+      <circle cx="165" cy="138" r="3.4" fill="#5a7a90" />
+      <circle cx="136" cy="136.8" r="1" fill="#fff" />
+      <circle cx="166" cy="136.8" r="1" fill="#fff" />
+
+      {/* NEZ un peu marqué */}
+      <path d="M146 156 Q150 164 154 156 M146 156 Q142 148 148 145 M154 156 Q158 148 152 145" stroke="#b48468" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+
+      {/* rides du sillon nasogénien */}
+      <path d="M138 172 Q134 180 140 186" stroke="#a88060" strokeWidth="1.2" fill="none" opacity="0.5" />
+      <path d="M162 172 Q166 180 160 186" stroke="#a88060" strokeWidth="1.2" fill="none" opacity="0.5" />
+
+      {/* BOUCHE (lèvres fines, âgée) */}
+      <Mouth cx={150} cy={182} />
+    </svg>
+  );
+}
