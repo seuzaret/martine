@@ -77,6 +77,73 @@ export function PortraitArthur() {
   );
 }
 
+export function PortraitKay() {
+  return (
+    <svg viewBox="0 0 300 340" style={{ display: "block", width: "100%", height: "auto" }}>
+      <defs>
+        <radialGradient id="pKaHalo" cx="50%" cy="38%" r="62%">
+          <stop offset="0%" stopColor="#c8d8e0" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#2a3040" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="pKaSkin" x1="0" y1="0" x2="1" y2="0.3"><stop offset="0%" stopColor="#f0d0b0" /><stop offset="100%" stopColor="#c8a080" /></linearGradient>
+        <linearGradient id="pKaSuit" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#4a6a80" /><stop offset="100%" stopColor="#243848" /></linearGradient>
+      </defs>
+      <circle cx="150" cy="138" r="130" fill="url(#pKaHalo)" />
+
+      {/* tailleur bleu-gris + col chemise blanche */}
+      <path d="M40 340 Q46 244 100 228 Q126 220 150 222 Q174 220 200 228 Q254 244 260 340 Z" fill="url(#pKaSuit)" />
+      <path d="M100 232 L150 268 L200 232 L212 340 L88 340 Z" fill="#efe6d2" />
+      {/* revers du tailleur */}
+      <path d="M108 234 L150 262 L192 234 L184 254 L150 274 L116 254 Z" fill="url(#pKaSuit)" />
+      {/* broche ronde de blouse */}
+      <circle cx="150" cy="276" r="3.5" fill="#c8963e" stroke="#8a5a20" strokeWidth="1" />
+      {/* col ras-du-cou */}
+      <path d="M136 230 L150 254 L164 230 L156 226 L150 234 L144 226 Z" fill="#fff" />
+
+      {/* cou */}
+      <path d="M137 190 L163 190 L165 226 Q150 234 135 226 Z" fill="url(#pKaSkin)" />
+
+      {/* visage jeune ovale */}
+      <path d="M150 86 C179 86 191 110 190 138 C189 168 173 190 150 192 C127 190 111 168 110 138 C109 110 121 86 150 86 Z" fill="url(#pKaSkin)" />
+      <path d="M116 120 Q112 150 128 176" stroke="#c8a080" strokeWidth="4" fill="none" opacity="0.28" strokeLinecap="round" />
+      <ellipse cx="112" cy="140" rx="6" ry="9" fill="#dfa878" />
+      <ellipse cx="188" cy="140" rx="6" ry="9" fill="#dfa878" />
+
+      {/* CHEVEUX bruns coiffure victory rolls typique des années 40 */}
+      <path d="M108 108 Q120 78 150 78 Q192 78 198 106 Q204 96 200 84 Q182 60 148 60 Q116 62 104 92 Q102 100 108 108 Z" fill="#5a3020" />
+      {/* rouleaux de côté */}
+      <ellipse cx="114" cy="102" rx="14" ry="18" fill="#6a3820" />
+      <ellipse cx="186" cy="102" rx="14" ry="18" fill="#6a3820" />
+      <ellipse cx="114" cy="102" rx="8" ry="12" fill="#5a3020" opacity="0.6" />
+      <ellipse cx="186" cy="102" rx="8" ry="12" fill="#5a3020" opacity="0.6" />
+      {/* frange latérale à droite */}
+      <path d="M172 92 Q182 100 176 118" stroke="#7a4028" strokeWidth="1.5" fill="none" />
+
+      {/* SOURCILS bruns arqués */}
+      <path d="M124 124 Q134 118 145 124" stroke="#3a2010" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+      <path d="M155 124 Q166 118 176 124" stroke="#3a2010" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+      {/* yeux noisette pétillants */}
+      <path d="M126 136 Q135 132 144 136 Q135 142 126 136 Z" fill="#f8efdd" />
+      <path d="M156 136 Q165 132 174 136 Q165 142 156 136 Z" fill="#f8efdd" />
+      <circle cx="135" cy="136" r="3.6" fill="#5a3818" />
+      <circle cx="165" cy="136" r="3.6" fill="#5a3818" />
+      <circle cx="136" cy="134.8" r="1.1" fill="#fff" />
+      <circle cx="166" cy="134.8" r="1.1" fill="#fff" />
+      {/* cils */}
+      <path d="M126 133 Q135 128 144 133" stroke="#3a2010" strokeWidth="1.4" fill="none" />
+      <path d="M156 133 Q165 128 174 133" stroke="#3a2010" strokeWidth="1.4" fill="none" />
+
+      {/* NEZ fin */}
+      <path d="M146 154 Q150 160 154 154 M147 152 Q144 145 148 143 M153 152 Q156 145 152 143" stroke="#c8a080" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+
+      {/* BOUCHE — rouge à lèvres années 40 */}
+      <path d="M138 174 Q150 170 162 174 Q150 182 138 174 Z" fill="#a83020" />
+      <path d="M140 174 Q150 172 160 174" stroke="#c04030" strokeWidth="0.6" fill="none" />
+      <Mouth cx={150} cy={180} />
+    </svg>
+  );
+}
+
 export function PortraitMarchand() {
   return (
     <svg viewBox="0 0 300 340" style={{ display: "block", width: "100%", height: "auto" }}>

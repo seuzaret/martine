@@ -2,190 +2,187 @@ import Hotspot from "../../../engine/Hotspot.jsx";
 import { PLayer } from "../../../engine/Parallax.jsx";
 
 /* ============================================================
-   CHAPITRE 8 — Tableau-ÉNIGME : « Calculer plus vite qu'un cerveau ? »
-   ------------------------------------------------------------
-   Une immense salle militaire, 1946. Les armoires sont VIDES et
-   éteintes. L'ingénieure (cliquable) croule sous les calculs faits
-   à la main.
-   → tubes à vide + tables de tir → les 18 000 tubes s'allument,
-     la salle s'éclaire, les voyants clignotent : l'ENIAC démarre.
-   Ce décor réagit à l'état du jeu via la prop `made`.
+   CHAPITRE 8 — Tableau : ENIAC, Moore School of Electrical
+   Engineering, université de Pennsylvanie, Philadelphie, 1946.
+   Une immense salle militaire pleine d'armoires électroniques
+   noires, 18 000 tubes à vide qui clignotent en rangées, câbles
+   au sol, tableau de plugboard sur le côté. Kay McNulty, l'une
+   des six « ENIAC Girls », attend qu'on l'aide à programmer.
    ============================================================ */
 
-export default function SceneEniac({ collect, action, reveal, made = [] }) {
-  const on = made.includes("msg_eniac"); // la machine tourne
+export default function SceneEniac({ collect, action, reveal, made = [], flags = [] }) {
+  const chargees = !!flags.fiches_chargees;
+  const allume   = made.includes("msg_eniac");
 
-  /* les armoires : mêmes positions avant/après, mais éteintes ou allumées */
-  const BAIES = [60, 200, 340, 620, 760];
+  /* les grandes armoires-baies alignées le long du mur du fond */
+  const BAIES = [40, 180, 320, 640, 780];
 
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
-        <linearGradient id="en-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#3e444c" /><stop offset="100%" stopColor="#22262c" /></linearGradient>
-        <linearGradient id="en-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#4a4e54" /><stop offset="100%" stopColor="#212429" /></linearGradient>
-        <linearGradient id="en-baie" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#4a4e56" /><stop offset="50%" stopColor="#3a3e46" /><stop offset="100%" stopColor="#2a2e36" /></linearGradient>
-        <radialGradient id="en-glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ffc860" stopOpacity="0.55" /><stop offset="100%" stopColor="#ffc860" stopOpacity="0" /></radialGradient>
-        <filter id="en-grain" x="0%" y="0%" width="100%" height="100%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" />
-          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0" result="a" />
-          <feComposite in="a" in2="SourceGraphic" operator="in" />
-        </filter>
+        <linearGradient id="en-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#4a4438" /><stop offset="100%" stopColor="#26221a" /></linearGradient>
+        <linearGradient id="en-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#6a604a" /><stop offset="100%" stopColor="#2c281c" /></linearGradient>
+        <linearGradient id="en-baie" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#4a4438" /><stop offset="50%" stopColor="#332e26" /><stop offset="100%" stopColor="#221e18" /></linearGradient>
+        <radialGradient id="en-tube" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ffd870" stopOpacity="1" /><stop offset="100%" stopColor="#ffa848" stopOpacity="0" /></radialGradient>
+        <radialGradient id="en-glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ffdb6a" stopOpacity="0.4" /><stop offset="100%" stopColor="#ffdb6a" stopOpacity="0" /></radialGradient>
       </defs>
 
-      {/* ═══ la salle ═══ */}
-      <rect width="1000" height="560" fill="url(#en-wall)" />
-      <rect width="1000" height="560" fill="#141820" opacity="0.26" filter="url(#en-grain)" />
-      {/* lueur générale quand la machine chauffe */}
-      {on && <ellipse cx="480" cy="300" rx="520" ry="260" fill="url(#en-glow)" style={{ animation: "glow 2.4s ease-in-out infinite" }} />}
-
-      {/* ═══ couche lointaine : le plafond, les néons, la pancarte ═══ */}
-      <PLayer depth={1}>
-        {[160, 480, 800].map((x, i) => (
-          <g key={i} transform={`translate(${x},60)`}>
-            <rect x="-52" y="-6" width="104" height="12" rx="3" fill="#5a6068" />
-            <rect x="-46" y="-3" width="92" height="6" rx="2" fill="#cfe0ea" opacity={on ? 0.85 : 0.3} />
+      {/* ═══ mur du fond + halo ambiant quand allumé ═══ */}
+      <PLayer depth={4}>
+        <rect width="1000" height="560" fill="url(#en-wall)" />
+        {allume && <rect width="1000" height="440" fill="url(#en-glow)" opacity="0.9" />}
+        {/* fenêtres hautes avec store — atmosphère bureau militaire américain */}
+        {[100, 500].map((x, i) => (
+          <g key={i}>
+            <rect x={x} y="40" width="140" height="60" fill="#8a9098" opacity="0.6" />
+            {[45, 55, 65, 75, 85].map((y, j) => (
+              <path key={j} d={`M${x} ${y} h140`} stroke="#3a3830" strokeWidth="0.6" opacity="0.6" />
+            ))}
           </g>
         ))}
-        {/* pancarte militaire */}
-        <g transform="translate(480,150)">
-          <rect x="-92" y="-24" width="184" height="48" rx="3" fill="#3a4a3a" stroke="#22301f" strokeWidth="4" />
-          <text x="0" y="-3" textAnchor="middle" fontSize="12" fill="#c8d8b8" fontFamily="ui-monospace,monospace" letterSpacing="1.5">U.S. ARMY · 1946</text>
-          <text x="0" y="14" textAnchor="middle" fontSize="10" fill="#9ab08a" fontFamily="ui-monospace,monospace" letterSpacing="1">30 TONNES · 18 000 TUBES</text>
+        {/* affichage horloge ronde institutionnelle */}
+        <g transform="translate(500,72)">
+          <circle r="24" fill="#f0e8d0" stroke="#3a2c18" strokeWidth="3" />
+          <path d="M0 -18 L0 0 L14 4" stroke="#1a1006" strokeWidth="2" fill="none" strokeLinecap="round" />
+          {[0, 90, 180, 270].map((a, i) => {
+            const rad = (a * Math.PI) / 180;
+            return <path key={i} d={`M${Math.cos(rad) * 18} ${Math.sin(rad) * 18} L${Math.cos(rad) * 22} ${Math.sin(rad) * 22}`} stroke="#1a1006" strokeWidth="1.4" />;
+          })}
         </g>
       </PLayer>
 
-      {/* ═══ couche intermédiaire : LES BAIES de l'ENIAC ═══ */}
-      <PLayer depth={2}>
-        {BAIES.map((x, b) => (
-          <g key={b} transform={`translate(${x},250)`}>
-            {/* l'armoire */}
-            <rect x="0" y="-70" width="112" height="220" rx="4" fill="url(#en-baie)" />
-            <rect x="0" y="-70" width="112" height="220" rx="4" fill="#12161c" opacity="0.28" filter="url(#en-grain)" />
-            <rect x="8" y="-62" width="96" height="204" rx="3" fill="#1e222a" />
-            {/* les rangées de tubes : éteints (gris) ou allumés (orange) */}
-            {[...Array(7)].map((_, r) => (
-              <g key={r}>
-                {[...Array(4)].map((_, c) => {
-                  const i = b * 28 + r * 4 + c;
-                  return (
-                    <g key={c} transform={`translate(${22 + c * 23},${-48 + r * 28})`}>
-                      {/* ⚠️ animation sur le <g>, opacité sur la forme : une
-                          animation CSS d'opacité écrase l'attribut opacity. */}
-                      <g style={on ? { animation: `pulse ${1.2 + (i % 7) * 0.3}s infinite` } : undefined}>
-                        <rect x="-5" y="-9" width="10" height="18" rx="5" fill={on ? "#ffb347" : "#3a3e46"} />
-                      </g>
-                      {on && (
-                        <g style={{ animation: `glow ${1.4 + (i % 5) * 0.3}s infinite` }}>
-                          <circle cx="0" cy="0" r="7" fill="#ffc860" opacity="0.28" />
-                        </g>
-                      )}
-                    </g>
-                  );
-                })}
-              </g>
-            ))}
-            {/* voyants du bas */}
-            <g transform="translate(56,132)">
-              {[-30, -10, 10, 30].map((dx, i) => (
-                <circle key={i} cx={dx} cy="0" r="3.4" fill={on ? (i % 2 ? "#5eff9e" : "#ff6a4a") : "#2a2e36"}
-                  style={on ? { animation: `pulse ${0.8 + i * 0.4}s infinite` } : undefined} />
-              ))}
-            </g>
-          </g>
-        ))}
-        {/* les câbles au sol entre les baies */}
-        <path d="M172 380 q60 22 120 0 M452 380 q80 26 168 0 M732 380 q60 20 120 0" stroke="#1a1e24" strokeWidth="7" fill="none" opacity="0.8" />
-      </PLayer>
-
-      {/* ═══ premier plan : le sol, l'ingénieure, les pièces ═══ */}
+      {/* ═══ grand banc d'armoires ENIAC alignées ═══ */}
       <PLayer depth={3}>
-        <rect y="400" width="1000" height="160" fill="url(#en-floor)" />
-        <rect y="402" width="1000" height="158" fill="#12161c" opacity="0.34" filter="url(#en-grain)" />
-        <path d="M0 440 h1000 M0 490 h1000 M170 400 v160 M450 400 v160 M730 400 v160" stroke="#1a1e24" strokeWidth="1.4" opacity="0.5" />
-        <ellipse cx="480" cy="470" rx="440" ry="42" fill="#101418" opacity="0.28" />
-
-        {/* « ? » tant que la machine ne tourne pas */}
-        {!on && (
-          <g transform="translate(432,318)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
-            <path d="M0 0 q0 -24 24 -24 q24 0 24 20 q0 17 -20 22 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
-            <circle cx="24" cy="37" r="3" fill="#ffd166" />
+        {BAIES.map((x, i) => (
+          <g key={i}>
+            <rect x={x} y="140" width="120" height="260" fill="url(#en-baie)" stroke="#0a0806" strokeWidth="2" />
+            {/* rangées de tubes à vide qui clignotent */}
+            {[...Array(6)].map((_, r) => [...Array(4)].map((_, c) => {
+              const tubeX = x + 14 + c * 24;
+              const tubeY = 160 + r * 34;
+              const on = allume && (Math.floor((tubeX + tubeY + r + c + i) * 13) % 3 !== 0);
+              return (
+                <g key={`t-${r}-${c}`}>
+                  <rect x={tubeX} y={tubeY} width="16" height="26" rx="3"
+                    fill={on ? "#ffb848" : "#3a3428"} stroke="#0a0806" strokeWidth="0.8" />
+                  {on && <circle cx={tubeX + 8} cy={tubeY + 13} r="10" fill="url(#en-tube)" opacity="0.85" />}
+                </g>
+              );
+            }))}
+            {/* petite étiquette panneau */}
+            <rect x={x + 20} y="380" width="80" height="14" fill="#0a0806" />
+            <text x={x + 60} y="390" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="8" fill="#ffcf78">PANEL {String.fromCharCode(65 + i)}</text>
           </g>
-        )}
+        ))}
+        {/* câbles serpentant au sol entre les baies */}
+        <path d="M160 400 Q300 420 460 400 Q620 380 760 400" stroke="#1a1608" strokeWidth="4" fill="none" opacity="0.8" />
+        <path d="M180 402 Q320 424 480 402 Q640 380 780 402" stroke="#3a2818" strokeWidth="2" fill="none" opacity="0.6" />
+      </PLayer>
 
-        {/* L'INGÉNIEURE, sa pile de calculs à la main */}
-        <g transform="translate(470,470)">
-          <path d="M-14 8 Q-18 -16 0 -21 Q18 -16 14 8 L12 40 L-12 40 Z" fill="#4a5a6a" />
-          <path d="M-14 8 Q-18 -16 0 -21 Q18 -16 14 8 L12 40 L-12 40 Z" fill="#101418" opacity="0.24" filter="url(#en-grain)" />
-          <circle cx="0" cy="-31" r="10" fill="#e0b090" />
-          {/* cheveux relevés années 40 */}
-          <path d="M-10 -35 q1 -13 10 -12 q11 1 10 12 q-4 -6 -10 -6 q-7 0 -10 6 Z" fill="#4a3428" />
-          <path d="M8 -40 q9 -3 8 7" stroke="#4a3428" strokeWidth="4" fill="none" strokeLinecap="round" />
-          {/* le bras qui tend la pile de feuilles */}
-          <path d="M-13 -4 q-20 2 -26 16" stroke="#e0b090" strokeWidth="5" fill="none" strokeLinecap="round" />
-          <g transform="translate(-44,18) rotate(-8)">
-            <rect x="-15" y="-11" width="30" height="22" fill="#e8e4da" />
-            <rect x="-15" y="-14" width="30" height="22" fill="#f2eee4" />
-            <path d="M-11 -9 h22 M-11 -4 h22 M-11 1 h16" stroke="#9a96a0" strokeWidth="1.3" />
-          </g>
+      {/* ═══ sol + tables + plugboard ═══ */}
+      <PLayer depth={2}>
+        <rect y="440" width="1000" height="120" fill="url(#en-floor)" />
+        {/* PLUGBOARD debout à gauche : grand tableau avec des trous et des câbles pendants */}
+        <g transform="translate(490,300)">
+          <rect x="-56" y="0" width="112" height="140" fill="#2a2418" stroke="#0a0806" strokeWidth="2" />
+          <rect x="-52" y="6" width="104" height="128" fill="#3a3020" />
+          {/* grille de prises */}
+          {[...Array(10)].map((_, r) => [...Array(8)].map((_, c) => (
+            <circle key={`p-${r}-${c}`} cx={-42 + c * 12} cy={16 + r * 12} r="2.2" fill="#0a0806" stroke="#8a5820" strokeWidth="0.4" />
+          )))}
+          {/* câbles branchés (quand fiches chargées) */}
+          {chargees && [
+            "M-30 22 Q-10 60 20 40",
+            "M-6 34 Q10 80 30 60",
+            "M18 22 Q-4 70 -20 90",
+          ].map((d, i) => (
+            <path key={i} d={d} stroke={["#c83020", "#3a80c8", "#c8c830"][i]} strokeWidth="2.4" fill="none" opacity="0.9" />
+          ))}
+          <text y="150" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="9" fill="#c8963e">PLUGBOARD</text>
         </g>
 
-        {/* PIÈCE : la caisse de TUBES À VIDE */}
-        {!on && (
-          <g transform="translate(180,494)">
-            <path d="M-44 24 L-38 -6 L38 -6 L44 24 Z" fill="#6a5a3a" />
-            <path d="M-44 24 L-38 -6 L38 -6 L44 24 Z" fill="#221c08" opacity="0.3" filter="url(#en-grain)" />
-            <path d="M-38 -6 L38 -6" stroke="#8a7a52" strokeWidth="2" />
-            {/* des tubes qui dépassent de la paille */}
-            {[-24, -8, 8, 24].map((x, i) => (
-              <g key={i} transform={`translate(${x},${-16 - (i % 2) * 6})`}>
-                <rect x="-6" y="-14" width="12" height="22" rx="6" fill="#c8d8e0" opacity="0.9" />
-                <path d="M-3 -8 v12 M3 -8 v12" stroke="#8a9aa4" strokeWidth="1.2" />
-                <rect x="-4" y="8" width="8" height="4" fill="#5a5c66" />
-              </g>
-            ))}
+        {/* TABLE de KAY à droite avec les fiches de calcul et le rouleau de câbles */}
+        <g>
+          <rect x="700" y="420" width="230" height="16" fill="#5a4028" stroke="#1a1006" strokeWidth="2" />
+          <rect x="712" y="436" width="10" height="60" fill="#3a2818" />
+          <rect x="908" y="436" width="10" height="60" fill="#3a2818" />
+          {/* pile de FICHES de calcul (à ramasser) */}
+          {!chargees && !allume && (
+            <g transform="translate(760,410)">
+              <rect x="-16" y="-4" width="32" height="14" fill="#f0e8d0" stroke="#5a4028" strokeWidth="1" />
+              <rect x="-14" y="-8" width="32" height="14" fill="#f8f0d8" stroke="#5a4028" strokeWidth="1" />
+              <rect x="-12" y="-12" width="32" height="14" fill="#fff8e0" stroke="#5a4028" strokeWidth="1" />
+              <path d="M-8 -8 h24 M-8 -4 h20 M-8 0 h22" stroke="#3a2818" strokeWidth="0.5" />
+            </g>
+          )}
+          {/* rouleau de CÂBLES enroulés (à ramasser) */}
+          {!allume && (
+            <g transform="translate(870,410)">
+              <ellipse cx="0" cy="0" rx="20" ry="10" fill="#3a2818" />
+              {[6, 10, 14].map((r, i) => (
+                <ellipse key={i} cx="0" cy={-i * 3} rx={r + 4} ry={2.5} fill="none" stroke={["#c83020", "#3a80c8", "#c8c830"][i]} strokeWidth="2" />
+              ))}
+              {/* extrémités qui pendouillent */}
+              <path d="M10 4 q4 8 -2 14" stroke="#c83020" strokeWidth="1.5" fill="none" />
+              <path d="M-10 4 q-4 8 2 14" stroke="#3a80c8" strokeWidth="1.5" fill="none" />
+            </g>
+          )}
+        </g>
+      </PLayer>
+
+      {/* ═══ AVANT-PLAN : KAY McNULTY debout devant l'ENIAC ═══ */}
+      <PLayer depth={1}>
+        <g transform="translate(830,340)">
+          {/* corps debout en tailleur */}
+          <path d="M-24 96 Q-22 30 0 20 Q22 30 24 96 L24 130 L-24 130 Z" fill="#3a5060" />
+          {/* jupe */}
+          <path d="M-26 80 L26 80 L28 130 L-28 130 Z" fill="#243848" />
+          {/* col chemise blanc */}
+          <path d="M-6 22 L0 40 L6 22 L10 46 L-10 46 Z" fill="#efe6d2" />
+          {/* tête */}
+          <ellipse cx="0" cy="0" rx="16" ry="18" fill="#f0d0b0" />
+          {/* cheveux victory rolls */}
+          <path d="M-14 -8 Q-12 -20 0 -20 Q14 -20 14 -8 Z" fill="#5a3020" />
+          <ellipse cx="-11" cy="-4" rx="6" ry="8" fill="#6a3820" />
+          <ellipse cx="11" cy="-4" rx="6" ry="8" fill="#6a3820" />
+          {/* yeux */}
+          <circle cx="-5" cy="-2" r="1.4" fill="#5a3818" />
+          <circle cx="5" cy="-2" r="1.4" fill="#5a3818" />
+          {/* bouche rouge à lèvres */}
+          <path d="M-4 8 q4 2 8 0" stroke="#a83020" strokeWidth="1.4" fill="none" strokeLinecap="round" />
+          {/* main tenant un cahier de notes */}
+          <rect x="-32" y="60" width="12" height="16" fill="#efe6d2" stroke="#5a4028" strokeWidth="1" />
+          <path d="M-30 64 h8 M-30 68 h6 M-30 72 h8" stroke="#3a2818" strokeWidth="0.5" />
+        </g>
+
+        {/* « ? » de quête au-dessus de Kay (tant que l'ENIAC n'est pas allumé) */}
+        {!allume && (
+          <g transform="translate(830,300)" style={{ animation: "float 2s ease-in-out infinite" }}>
+            <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
+            <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
           </g>
         )}
 
-        {/* PIÈCE : les TABLES DE TIR (piles de calculs sur un bureau) */}
-        {!on && (
-          <g transform="translate(830,486)">
-            <rect x="-56" y="-6" width="112" height="12" rx="2" fill="#5a4a38" />
-            <rect x="-48" y="6" width="10" height="40" fill="#3a2e20" /><rect x="38" y="6" width="10" height="40" fill="#3a2e20" />
-            {/* deux piles de feuilles */}
-            <g transform="translate(-22,-22)">
-              {[0, 3, 6, 9].map((d, i) => <rect key={i} x={-17 + i} y={-d} width="34" height="16" fill={i % 2 ? "#f2eee4" : "#e4e0d6"} />)}
-            </g>
-            <g transform="translate(24,-16) rotate(6)">
-              {[0, 3, 6].map((d, i) => <rect key={i} x={-15 + i} y={-d} width="30" height="12" fill={i % 2 ? "#f2eee4" : "#e4e0d6"} />)}
-              <path d="M-10 -8 h20 M-10 -4 h20" stroke="#9a96a0" strokeWidth="1" />
-            </g>
-          </g>
-        )}
-
-        {/* APPARAÎT : la bande imprimée que la machine recrache */}
-        {on && (
-          <g transform="translate(830,470)" style={{ animation: "pulse 0.7s ease-out 2" }}>
-            <rect x="-56" y="10" width="112" height="12" rx="2" fill="#5a4a38" />
-            <rect x="-48" y="22" width="10" height="40" fill="#3a2e20" /><rect x="38" y="22" width="10" height="40" fill="#3a2e20" />
-            {/* le listing sort en accordéon */}
-            <path d="M-30 8 l16 -10 l16 10 l16 -10 l16 10 l14 -8" stroke="#f2eee4" strokeWidth="12" fill="none" strokeLinejoin="round" />
-            <g fill="#5a5c66" fontSize="5" fontFamily="ui-monospace,monospace">
-              <text x="-26" y="2">0110</text><text x="6" y="2">1001</text><text x="36" y="0">0111</text>
-            </g>
+        {/* bandeau de résultat quand allumé : imprimante qui crache */}
+        {allume && (
+          <g transform="translate(500,470)">
+            <rect x="-80" y="-8" width="160" height="18" fill="#f0e8d0" stroke="#5a4028" strokeWidth="1.5" />
+            <text x="0" y="4" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="10" fill="#5a3818">TRAJECTOIRE : 12.4s  ANGLE 42°  OK</text>
           </g>
         )}
       </PLayer>
-
-      <rect width="1000" height="560" fill="#0e1218" opacity="0.06" style={{ pointerEvents: "none" }} />
 
       {/* ═══ zones cliquables ═══ */}
-      <Hotspot cx={470} cy={444} r={50} label="l'ingénieure" reveal={reveal} onClick={() => action("ingenieure")} />
-      {!on && (
-        <>
-          <Hotspot cx={180} cy={478} r={46} label="tubes à vide" item="tubes_vide" reveal={reveal} onClick={() => collect("tubes_vide")} />
-          <Hotspot cx={830} cy={470} r={46} label="tables de tir" item="calcul" reveal={reveal} onClick={() => collect("calcul")} />
-        </>
+      <Hotspot cx={830} cy={370} r={54} label="Kay McNulty" reveal={reveal} onClick={() => action("kay")} />
+      {!chargees && !allume && (
+        <Hotspot cx={760} cy={410} r={26} label="pile de fiches de calcul" item="fiches_calcul" reveal={reveal} onClick={() => collect("fiches_calcul")} />
       )}
+      {!allume && (
+        <Hotspot cx={870} cy={412} r={26} label="rouleau de câbles" item="cables" reveal={reveal} onClick={() => collect("cables")} />
+      )}
+      {/* l'ENIAC = les grandes baies : cible de dépôt (support) */}
+      <Hotspot cx={220} cy={270} r={100} label={chargees ? "l'ENIAC — branche les câbles pour lancer le calcul" : "l'ENIAC — insère les fiches de calcul"} item="eniac_machine" reveal={reveal} onClick={() => action("kay")} />
+      <Hotspot cx={490} cy={370} r={60} label={chargees ? "le plugboard — programme branché" : "le plugboard — vide pour l'instant"} item="eniac_machine" reveal={reveal} onClick={() => action("kay")} />
     </svg>
   );
 }
