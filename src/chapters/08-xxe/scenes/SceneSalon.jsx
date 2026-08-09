@@ -12,8 +12,9 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    ============================================================ */
 
 export default function SceneSalon({ collect, action, reveal, made = [], flags = [] }) {
-  const posee   = flags.includes?.("tsf_posee")   || false;
-  const reliee  = flags.includes?.("tsf_reliee")  || false;
+  const posee   = !!flags.tsf_posee;
+  const reliee  = !!flags.tsf_reliee;
+  const prete   = !!flags.tsf_prete;
   const capte   = made.includes("msg_debarquement");
 
   return (
@@ -48,6 +49,21 @@ export default function SceneSalon({ collect, action, reveal, made = [], flags =
         <path d="M420 240 L430 60 L432 240 Z" fill="#3a4058" opacity="0.35" />
         {reliee && (
           <path d="M495 240 Q460 260 470 300" stroke="#c8963e" strokeWidth="1.6" fill="none" opacity="0.9" strokeDasharray="1 2" />
+        )}
+        {/* Bobine de fil d'antenne accrochée à la crémone de la fenêtre — visible tant qu'on ne l'a pas prise */}
+        {!reliee && (
+          <g transform="translate(490,150)">
+            {/* crochet + bobine */}
+            <path d="M0 -18 v10" stroke="#3a2418" strokeWidth="2" />
+            <circle cx="0" cy="0" r="14" fill="#3a2418" />
+            <circle cx="0" cy="0" r="10" fill="#c8963e" stroke="#5a3818" strokeWidth="1.5" />
+            {/* enroulements */}
+            {[3, 5, 7, 9].map((r, i) => (
+              <circle key={i} cx="0" cy="0" r={r} fill="none" stroke="#8a5820" strokeWidth="0.6" opacity="0.7" />
+            ))}
+            {/* petit fil qui pendouille */}
+            <path d="M8 6 q4 8 -2 14" stroke="#c8963e" strokeWidth="1.2" fill="none" />
+          </g>
         )}
       </PLayer>
 
@@ -86,12 +102,7 @@ export default function SceneSalon({ collect, action, reveal, made = [], flags =
           <rect x="820" y="330" width="150" height="30" fill="#5a3628" />
           <rect x="810" y="360" width="30" height="80" fill="#3a1e18" />
           <rect x="950" y="360" width="30" height="80" fill="#3a1e18" />
-          {!capte && (
-            <g>
-              <path d="M950 340 Q975 336 990 360 Q982 400 960 410 Q955 380 950 340 Z" fill="#5a2a1a" stroke="#2a1008" strokeWidth="1.5" />
-              <path d="M955 350 h30 M955 370 h30 M955 390 h30 M960 340 v70 M975 340 v70" stroke="#3a1408" strokeWidth="0.6" opacity="0.7" />
-            </g>
-          )}
+          {/* pas de couverture sur le fauteuil : elle est apportée depuis Paris (marché noir) */}
         </g>
 
         {/* TABLE BASSE avec la TSF posée dessus */}
@@ -156,14 +167,15 @@ export default function SceneSalon({ collect, action, reveal, made = [], flags =
         <Hotspot cx={83} cy={360} r={36} label="le poste TSF (dans le buffet)" item="tsf" reveal={reveal} onClick={() => collect("tsf")} />
       )}
       {!reliee && (
-        <Hotspot cx={177} cy={360} r={22} label="fil d'antenne (tiroir)" item="antenne" reveal={reveal} onClick={() => collect("antenne")} />
+        <Hotspot cx={490} cy={150} r={36} label="fil d'antenne (accroché à la fenêtre)" item="antenne" reveal={reveal} onClick={() => collect("antenne")} />
       )}
-      {!capte && (
-        <Hotspot cx={970} cy={378} r={30} label="grosse couverture" item="couverture" reveal={reveal} onClick={() => collect("couverture")} />
-      )}
+      {/* la couverture est apportée depuis T1 Paris — plus de hotspot ici */}
       <Hotspot cx={500} cy={428} r={80} label="la table du salon — pose la TSF ici" item="table" reveal={reveal} onClick={() => action("marthe")} />
-      {posee && !capte && (
+      {posee && !capte && !prete && (
         <Hotspot cx={500} cy={400} r={64} label={reliee ? "la TSF — jette-y la couverture" : "la TSF — tends-lui le fil d'antenne"} item="tsf" reveal={reveal} onClick={() => action("marthe")} />
+      )}
+      {prete && !capte && (
+        <Hotspot cx={500} cy={400} r={64} label="allumer et chercher Londres dans le brouillage" reveal={reveal} onClick={() => action("tsf_bouton")} />
       )}
     </svg>
   );

@@ -12,7 +12,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    ============================================================ */
 
 export default function SceneBBC({ collect, action, reveal, made = [], flags = [] }) {
-  const microBranche = flags.includes?.("micro_branche") || false;
+  const microBranche = !!flags.micro_branche;
   const enOnde = made.includes("msg_radio_londres");
 
   return (
@@ -119,26 +119,9 @@ export default function SceneBBC({ collect, action, reveal, made = [], flags = [
             style={microBranche ? {} : { animation: "pulse 1.6s ease-in-out infinite" }} />
         </g>
 
-        {/* le MICRO EN PLACE (quand branché) : gros micro sur pied posé sur le pupitre */}
-        {microBranche && (
-          <g transform="translate(690,320)">
-            {/* pied */}
-            <rect x="-3" y="0" width="6" height="40" fill="#2a2a2a" />
-            <ellipse cx="0" cy="42" rx="16" ry="4" fill="#2a2a2a" />
-            {/* tête du micro */}
-            <ellipse cx="0" cy="-10" rx="20" ry="26" fill="#3a3a3a" stroke="#6a6a6a" strokeWidth="2" />
-            <ellipse cx="0" cy="-10" rx="14" ry="20" fill="#1a1a1a" />
-            {[[-8, -18], [0, -18], [8, -18], [-8, -10], [0, -10], [8, -10], [-8, -2], [0, -2], [8, -2]].map(([x, y], i) => (
-              <circle key={i} cx={x} cy={y} r="1" fill="#5a5a5a" />
-            ))}
-            {/* logo BBC sous le micro */}
-            <rect x="-12" y="18" width="24" height="10" fill="#0a0a0a" />
-            <text x="0" y="26" fontSize="7" fontFamily="ui-monospace,monospace" fontWeight="800" fill="#e0d8c0" textAnchor="middle">BBC</text>
-          </g>
-        )}
-
-        {/* silhouette d'ARTHUR derrière le pupitre */}
-        <g transform="translate(700,300)">
+        {/* silhouette d'ARTHUR derrière le pupitre (dessiné AVANT le micro pour que le
+            micro passe devant lui — sinon on ne voit pas la radio) */}
+        <g transform="translate(720,300)">
           {/* torse */}
           <path d="M-46 60 Q-40 20 0 14 Q40 20 46 60 L46 100 L-46 100 Z" fill="#1a2438" />
           {/* chemise blanche + cravate */}
@@ -161,6 +144,24 @@ export default function SceneBBC({ collect, action, reveal, made = [], flags = [
           <ellipse cx="-18" cy="15" rx="5" ry="6" fill="#3a3a3a" />
           <ellipse cx="18" cy="15" rx="5" ry="6" fill="#3a3a3a" />
         </g>
+
+        {/* le MICRO EN PLACE (quand branché) — dessiné APRÈS Arthur pour passer DEVANT lui */}
+        {microBranche && (
+          <g transform="translate(690,340)">
+            {/* pied */}
+            <rect x="-3" y="0" width="6" height="40" fill="#2a2a2a" />
+            <ellipse cx="0" cy="42" rx="16" ry="4" fill="#2a2a2a" />
+            {/* tête du micro */}
+            <ellipse cx="0" cy="-16" rx="20" ry="26" fill="#3a3a3a" stroke="#6a6a6a" strokeWidth="2" />
+            <ellipse cx="0" cy="-16" rx="14" ry="20" fill="#1a1a1a" />
+            {[[-8, -24], [0, -24], [8, -24], [-8, -16], [0, -16], [8, -16], [-8, -8], [0, -8], [8, -8]].map(([x, y], i) => (
+              <circle key={i} cx={x} cy={y} r="1" fill="#5a5a5a" />
+            ))}
+            {/* logo BBC sous le micro */}
+            <rect x="-12" y="12" width="24" height="10" fill="#0a0a0a" />
+            <text x="0" y="20" fontSize="7" fontFamily="ui-monospace,monospace" fontWeight="800" fill="#e0d8c0" textAnchor="middle">BBC</text>
+          </g>
+        )}
 
         {/* « ? » Q&A d'accueil au-dessus d'Arthur (tant que le message n'est pas transmis) */}
         {!enOnde && (

@@ -77,6 +77,66 @@ export function PortraitArthur() {
   );
 }
 
+export function PortraitMarchand() {
+  return (
+    <svg viewBox="0 0 300 340" style={{ display: "block", width: "100%", height: "auto" }}>
+      <defs>
+        <radialGradient id="pMcHalo" cx="50%" cy="38%" r="62%">
+          <stop offset="0%" stopColor="#e8c8a0" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#3a2818" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="pMcSkin" x1="0" y1="0" x2="1" y2="0.3"><stop offset="0%" stopColor="#e0b088" /><stop offset="100%" stopColor="#a87860" /></linearGradient>
+      </defs>
+      <circle cx="150" cy="138" r="130" fill="url(#pMcHalo)" />
+
+      {/* manteau brun long + écharpe grise */}
+      <path d="M40 340 Q46 244 100 228 Q126 220 150 222 Q174 220 200 228 Q254 244 260 340 Z" fill="#5a3820" />
+      <path d="M100 232 L150 268 L200 232 L214 340 L86 340 Z" fill="#4a2c18" />
+      {/* écharpe en laine grise nouée */}
+      <path d="M110 230 Q150 218 190 230 L192 258 Q150 246 108 258 Z" fill="#8a8a8a" />
+      <path d="M118 246 Q150 240 182 246" stroke="#6a6a6a" strokeWidth="1.4" fill="none" />
+      {/* boutons du manteau */}
+      <circle cx="150" cy="278" r="3" fill="#3a2018" />
+      <circle cx="150" cy="298" r="3" fill="#3a2018" />
+
+      {/* cou */}
+      <path d="M137 190 L163 190 L165 228 Q150 236 135 228 Z" fill="url(#pMcSkin)" />
+
+      {/* visage plus carré */}
+      <path d="M150 88 C180 88 192 114 190 142 C188 170 172 190 150 192 C128 190 112 170 110 142 C108 114 120 88 150 88 Z" fill="url(#pMcSkin)" />
+      <path d="M116 122 Q112 152 128 178" stroke="#a87860" strokeWidth="4" fill="none" opacity="0.35" strokeLinecap="round" />
+      <ellipse cx="112" cy="142" rx="6" ry="9" fill="#c89878" />
+      <ellipse cx="188" cy="142" rx="6" ry="9" fill="#c89878" />
+
+      {/* CASQUETTE à visière (gavroche parisien) */}
+      <path d="M108 108 Q140 78 168 78 Q192 78 198 100 Q202 96 200 88 Q192 66 160 66 Q120 68 106 92 Q102 100 108 108 Z" fill="#3a2818" />
+      {/* visière */}
+      <path d="M96 108 Q130 106 202 108 L200 116 Q140 118 96 118 Z" fill="#2a1810" />
+
+      {/* SOURCILS bruns, air rusé */}
+      <path d="M124 126 Q134 122 145 126" stroke="#3a2418" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+      <path d="M155 126 Q166 122 176 126" stroke="#3a2418" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+      {/* yeux noisette, un peu rétrécis (complice) */}
+      <path d="M126 138 Q135 134 144 138 Q135 143 126 138 Z" fill="#f8efdd" />
+      <path d="M156 138 Q165 134 174 138 Q165 143 156 138 Z" fill="#f8efdd" />
+      <circle cx="135" cy="138" r="3.4" fill="#5a3a1a" />
+      <circle cx="165" cy="138" r="3.4" fill="#5a3a1a" />
+      <circle cx="136" cy="136.8" r="1" fill="#fff" />
+      <circle cx="166" cy="136.8" r="1" fill="#fff" />
+
+      {/* NEZ un peu fort */}
+      <path d="M146 156 Q150 164 154 156 M144 156 Q140 148 148 145 M156 156 Q160 148 152 145" stroke="#a87860" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+
+      {/* MOUSTACHE nourrie (marché noir des années 40) */}
+      <path d="M132 170 q18 -4 36 0 q-6 -4 -18 -4 q-12 0 -18 4 Z" fill="#3a2418" />
+      <path d="M142 170 q8 -2 16 0" stroke="#2a1810" strokeWidth="0.6" fill="none" />
+
+      {/* BOUCHE petite, en coin */}
+      <Mouth cx={150} cy={182} />
+    </svg>
+  );
+}
+
 export function PortraitMarthe() {
   return (
     <svg viewBox="0 0 300 340" style={{ display: "block", width: "100%", height: "auto" }}>

@@ -22,6 +22,7 @@ import { TsfGame } from "./chapters/xixe-tsf.jsx";
 import { PhotoGame } from "./chapters/xixe-photo.jsx";
 import { PhonoGame } from "./chapters/xixe-phono.jsx";
 import { CineGame } from "./chapters/xixe-cine.jsx";
+import { TsfReglageGame } from "./chapters/xxe-tsf-reglage.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 
@@ -1319,6 +1320,10 @@ export default function App() {
 
       {modal?.type === "cine" && (
         <CineGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_cinema")} />
+      )}
+
+      {modal?.type === "tsf_reglage" && (
+        <TsfReglageGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_debarquement")} />
       )}
 
       {modal?.type === "carte" && (
