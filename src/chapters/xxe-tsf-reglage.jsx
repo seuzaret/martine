@@ -23,9 +23,9 @@ const STATIC_ZONES = [
 /* Zone BBC : elle FUIT — son centre glisse en sinusoïde autour de 60.
    Le poste dérive naturellement, il faut suivre. */
 const BBC_CENTER = 60;
-const BBC_SWING  = 10;    // le centre oscille de 50 à 70
-const BBC_PERIOD = 4.2;   // secondes pour un cycle complet
-const BBC_HALF   = 2.5;   // demi-largeur de la zone (span = 5)
+const BBC_SWING  = 2.5;   // le centre glisse trés doucement de 57.5 à 62.5
+const BBC_PERIOD = 6;     // secondes pour un cycle complet (lent)
+const BBC_HALF   = 3;     // demi-largeur de la zone (span = 6)
 
 const HOLD_MS = 3000; // temps à tenir dans la zone BBC
 function bbcAt(elapsedMs) {
