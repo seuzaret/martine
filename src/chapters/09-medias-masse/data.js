@@ -98,10 +98,10 @@ const RECIPES = [
    LES MESSAGES (fiches + jauges 1 à 5)
    ------------------------------------------------------------ */
 const MESSAGES = {
-  msg_tv_lune: { title: "Premiers pas sur la Lune (TV en direct)", emoji: "🌕",
+  msg_tv_lune: { title: "Passer à la TV", emoji: "🌕",
     jauges: { vitesse: 5, portee: 5, capacite: 3, durabilite: 2 },
     fact: "21 juillet 1969, 3h56 (heure de Paris). Neil Armstrong pose le pied sur la Lune. Grâce au satellite (Intelsat III), l'image et le son voyagent en direct jusqu'aux téléviseurs de la planète : environ 600 millions de spectateurs regardent en même temps — un humain sur quatre. C'est le PLUS GRAND rendez-vous médiatique de l'Histoire à ce moment. Fait moins connu : la phrase d'Armstrong était préparée depuis des semaines. Et un point d'EMI : la TV met le monde en direct dans le salon, mais un MONDE CHOISI — une rédaction décide quel plan on montre, combien de temps, avec quel commentaire. Regarder le journal télévisé, ce n'est pas voir le monde, c'est voir ce que quelqu'un a sélectionné pour toi." },
-  msg_cassette: { title: "Cassette audio & magnétoscope", emoji: "📼",
+  msg_cassette: { title: "Enregistrer une cassette", emoji: "📼",
     jauges: { vitesse: 3, portee: 3, capacite: 3, durabilite: 2 },
     fact: "Cassette audio (Philips, 1963) puis magnétoscope VHS (JVC, 1976) : pour la PREMIÈRE FOIS de l'Histoire, chaque foyer peut ENREGISTRER chez soi la radio, la télé, la musique des copains — puis la copier, la prêter, l'échanger. L'industrie du disque crie déjà au « piratage » (le débat Napster de la fin des années 90 commence là). Mais attention : la bande magnétique se démagnétise avec le temps, se casse, s'aimante par erreur (un simple aimant peut tout effacer). Des archives entières de radio et de télé ont été perdues : les bandes étaient trop chères, on effaçait pour ré-enregistrer par-dessus. Un support qui EXISTE ne garantit pas la SURVIE du message." },
   msg_cd: { title: "CD-Rom & disque optique", emoji: "💿",

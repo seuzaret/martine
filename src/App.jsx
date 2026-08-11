@@ -25,6 +25,7 @@ import { CineGame } from "./chapters/xixe-cine.jsx";
 import { TsfReglageGame } from "./chapters/xxe-tsf-reglage.jsx";
 import { CassetteGame } from "./chapters/xxe-cassette.jsx";
 import { GraverCdGame } from "./chapters/xxe-graver-cd.jsx";
+import { EniacDebugGame } from "./chapters/xxe-eniac-debug.jsx";
 import Mediadex from "./engine/Mediadex.jsx";
 import MediaCard from "./engine/MediaCard.jsx";
 import { getCardMeta, playCardSound } from "./engine/mediadex.js";
@@ -1418,6 +1419,10 @@ export default function App() {
 
       {modal?.type === "graver_cd" && (
         <GraverCdGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_cd")} />
+      )}
+
+      {modal?.type === "eniac_debug" && (
+        <EniacDebugGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_eniac")} />
       )}
 
       {/* CARTE-INVENTION (façon Pokémon) qui apparaît quand un nouveau message est transmis */}

@@ -12,6 +12,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
 
 export default function SceneEniac({ collect, action, reveal, made = [], flags = [] }) {
   const chargees = !!flags.fiches_chargees;
+  const cablees  = !!flags.cables_branches;
   const allume   = made.includes("msg_eniac");
 
   /* les grandes armoires-baies alignées le long du mur du fond */
@@ -180,9 +181,29 @@ export default function SceneEniac({ collect, action, reveal, made = [], flags =
       {!allume && (
         <Hotspot cx={870} cy={412} r={26} label="rouleau de câbles" item="cables" reveal={reveal} onClick={() => collect("cables")} />
       )}
-      {/* l'ENIAC = les grandes baies : cible de dépôt (support) */}
-      <Hotspot cx={220} cy={270} r={100} label={chargees ? "l'ENIAC — branche les câbles pour lancer le calcul" : "l'ENIAC — insère les fiches de calcul"} item="eniac_machine" reveal={reveal} onClick={() => action("kay")} />
-      <Hotspot cx={490} cy={370} r={60} label={chargees ? "le plugboard — programme branché" : "le plugboard — vide pour l'instant"} item="eniac_machine" reveal={reveal} onClick={() => action("kay")} />
+      {/* l'ENIAC = les grandes baies : cible de dépôt (support) — MAIS
+          une fois les câbles branchés, clique dessus ouvre le mini-jeu
+          de débuggage (bugs + tubes grillés) avant d'accepter msg_eniac. */}
+      {!cablees && (
+        <Hotspot cx={220} cy={270} r={100} label={chargees ? "l'ENIAC — branche les câbles pour lancer le calcul" : "l'ENIAC — insère les fiches de calcul"} item="eniac_machine" reveal={reveal} onClick={() => action("kay")} />
+      )}
+      {cablees && !allume && (
+        <Hotspot cx={220} cy={270} r={100} label="l'ENIAC — débuguer avant de lancer !" reveal={reveal} onClick={() => action("eniac_debug")} />
+      )}
+      {allume && (
+        <Hotspot cx={220} cy={270} r={100} label="l'ENIAC (opérationnel)" reveal={reveal} onClick={() => action("kay")} />
+      )}
+      {/* plugboard : reste cible de dépôt tant qu'on n'a pas branché,
+          puis devient bouton du mini-jeu de débuggage comme les baies */}
+      {!cablees && (
+        <Hotspot cx={490} cy={370} r={60} label={chargees ? "le plugboard — glisse-y les câbles" : "le plugboard — vide pour l'instant"} item="eniac_machine" reveal={reveal} onClick={() => action("kay")} />
+      )}
+      {cablees && !allume && (
+        <Hotspot cx={490} cy={370} r={60} label="le plugboard — lance le débuggage" reveal={reveal} onClick={() => action("eniac_debug")} />
+      )}
+      {allume && (
+        <Hotspot cx={490} cy={370} r={60} label="le plugboard (programme lancé)" reveal={reveal} onClick={() => action("kay")} />
+      )}
     </svg>
   );
 }

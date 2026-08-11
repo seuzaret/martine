@@ -118,14 +118,14 @@ const RECIPES = [
    LES MESSAGES (fiches + jauges 1 à 5)
    ------------------------------------------------------------ */
 const MESSAGES = {
-  msg_cuneiforme: { title: "Écriture cunéiforme", emoji: "🔠",
+  msg_cuneiforme: { title: "Écrire dans l'argile", emoji: "🔠",
     jauges: { vitesse: 2, portee: 2, capacite: 4, durabilite: 5 },
     fact: "Vers −3300, dans les cités de Sumer (Uruk, Ur…), on ne compte plus les moutons de tête : trop nombreux. On presse dans l'argile molle, avec un roseau taillé (le calame), des signes en forme de coins : l'écriture cunéiforme. Elle naît pour la COMPTABILITÉ — stocks de grain, impôts, contrats. Détail énorme : le message survit désormais à celui qui l'a émis, sans se déformer. Fini le récit qui s'abîme d'oreille en oreille (le chapitre 1 !) — l'Histoire, avec un grand H, commence là. Et cuite (souvent par accident, dans l'incendie d'un palais), l'argile devient presque éternelle : on a retrouvé des centaines de milliers de tablettes.",
     wiki: "https://fr.wikipedia.org/wiki/Écriture_cunéiforme" },
   msg_sceau: { title: "Sceau / signature", emoji: "🔏",
     jauges: { vitesse: 2, portee: 2, capacite: 1, durabilite: 5 },
     fact: "Un petit cylindre de pierre gravé, qu'on roule sur l'argile fraîche : il y laisse une empreinte unique, impossible à imiter. Un sceau ne dit pas grand-chose, mais il prouve QUI a écrit, qui possède, qui s'engage. C'est l'ancêtre direct de la signature, du cachet officiel… et, à sa manière, du certificat et de la signature numérique d'aujourd'hui : comment être sûr de l'identité de celui qui envoie un message ?" },
-  msg_hieroglyphes: { title: "Hiéroglyphes", emoji: "📜",
+  msg_hieroglyphes: { title: "Écrire sur le papyrus", emoji: "📜",
     jauges: { vitesse: 3, portee: 2, capacite: 4, durabilite: 2 },
     fact: "En Égypte, on écrit sur du PAPYRUS : les tiges de la plante du Nil, tranchées, pressées, séchées, deviennent une feuille légère qu'on roule et qu'on transporte. Le Nil se change en autoroute à messages. On y trace des hiéroglyphes à l'encre. Mais ce support léger est FRAGILE : sans le climat très sec de l'Égypte, presque rien n'aurait survécu. Et écrire reste le privilège d'une petite élite de scribes — savoir écrire, c'est déjà un pouvoir." },
   msg_alphabet: { title: "Alphabet phénicien", emoji: "🔤",

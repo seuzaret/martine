@@ -101,17 +101,17 @@ const RECIPES = [
    LES MESSAGES (fiches + jauges 1 à 5)
    ------------------------------------------------------------ */
 const MESSAGES = {
-  msg_cire: { title: "Tablette de cire", emoji: "🪧",
+  msg_cire: { title: "Écrire sur la cire", emoji: "🪧",
     jauges: { vitesse: 2, portee: 1, capacite: 2, durabilite: 1 },
     fact: "Une planchette de bois remplie de cire : on y écrit au stylet, puis d'un coup du dos plat on LISSE tout pour recommencer. C'est le premier support réinscriptible de l'Histoire — le brouillon, la liste de courses, l'exercice d'écolier. Il ne dure pas, et c'est justement le but. Son lointain descendant ? L'ardoise… et la mémoire réinscriptible de nos ordinateurs (la RAM), qu'on efface et réécrit des milliards de fois." },
-  msg_fresque: { title: "Fresque de Pompéi", emoji: "🖼️",
+  msg_fresque: { title: "Peindre le mur (fresque)", emoji: "🖼️",
     jauges: { vitesse: 1, portee: 3, capacite: 3, durabilite: 4 },
     fact: "Sur un enduit encore frais, on peint à même le mur : les couleurs pénètrent le plâtre et deviennent le mur lui-même — la fresque. À Pompéi, figée par la cendre du Vésuve en l'an 79, les villas en sont couvertes. Et sur les murs des rues, des milliers de GRAFFITIS — publicités électorales, insultes, déclarations d'amour, comptes de taverne : les « réseaux sociaux » de l'Antiquité, gelés d'un coup par la lave. L'image qui décore, qui vend, qui bavarde.",
     wiki: "https://fr.wikipedia.org/wiki/Peinture_romaine" },
-  msg_inscription: { title: "Inscription monumentale", emoji: "🏛",
+  msg_inscription: { title: "Graver dans le marbre", emoji: "🏛",
     jauges: { vitesse: 1, portee: 3, capacite: 2, durabilite: 5 },
     fact: "Graver la gloire (ou la loi) dans la pierre, à l'entrée, là où tout le monde passe : voilà comment on PUBLIE officiellement dans l'Antiquité. « Nul n'est censé ignorer la loi » prend ici son sens littéral. Lent à produire, immobile… mais public, solennel et quasi éternel. Aujourd'hui encore, on grave dans la pierre ce qu'on veut rendre incontestable : monuments, plaques, mémoriaux." },
-  msg_bibliotheque: { title: "Le rouleau à la bibliothèque", emoji: "📚",
+  msg_bibliotheque: { title: "Écrire sur du parchemin", emoji: "📚",
     jauges: { vitesse: 1, portee: 3, capacite: 5, durabilite: 2 },
     fact: "Peau → parchemin → manuscrit → rouleau : un vrai livre antique, rangé à la bibliothèque. Le rêve d'Alexandrie était de rassembler en un seul lieu TOUT le savoir du monde — jusqu'à ~700 000 rouleaux. Une capacité de stockage inouïe… mais tout au même endroit, sur un support fragile. Et Alexandrie a brûlé. La leçon-mère de l'archivage, encore vraie aujourd'hui : un stock UNIQUE qui disparaît, et tout est perdu. Il faut des COPIES, réparties — jamais tous ses œufs dans le même panier." },
 };

@@ -121,14 +121,14 @@ const RECIPES = [
    LES MESSAGES (fiches + jauges 1 à 5)
    ------------------------------------------------------------ */
 const MESSAGES = {
-  msg_broderie: { title: "Broderie de Bayeux", emoji: "🧵",
+  msg_broderie: { title: "Broder une tapisserie", emoji: "🧵",
     jauges: { vitesse: 1, portee: 3, capacite: 4, durabilite: 4 },
     fact: "Près de 70 mètres de lin brodé de laine, racontant en images la conquête de l'Angleterre par Guillaume en 1066. Une BD géante, lisible même par ceux qui ne lisent pas les mots. Mais cette histoire est celle du VAINQUEUR, commandée par ses proches : c'est de la propagande. La question à se poser devant tout message : qui l'a commandé, et pour dire quoi ? (Étonnamment, cette broderie fragile a survécu près de 1000 ans.)",
     wiki: "https://fr.wikipedia.org/wiki/Tapisserie_de_Bayeux" },
-  msg_manuscrit: { title: "Manuscrit enluminé", emoji: "📖",
+  msg_manuscrit: { title: "Enluminer et écrire un livre", emoji: "📖",
     jauges: { vitesse: 2, portee: 2, capacite: 4, durabilite: 4 },
     fact: "Au scriptorium, des moines copient les livres à la main, un par un, pendant des mois. Ils enluminent les pages : lettrines dorées, miniatures peintes. Le résultat est magnifique… mais chaque livre coûte une fortune et prend une éternité. Le savoir écrit reste rare, cher, et CONTRÔLÉ par l'Église : celui qui copie choisit ce qui sera recopié — donc ce qui survivra." },
-  msg_imprimerie: { title: "Imprimerie de Gutenberg", emoji: "🖨️",
+  msg_imprimerie: { title: "Imprimer avec Gutenberg sur du papier", emoji: "🖨️",
     jauges: { vitesse: 3, portee: 5, capacite: 4, durabilite: 3 },
     fact: "Vers 1450, à Mayence, Gutenberg assemble des lettres de plomb mobiles et une presse à vis : la même page peut être tirée à des centaines d'exemplaires, vite et à bas prix. Rien de tout cela ne servirait sans un support bon marché : le PAPIER, inventé en Chine et fait de vieux chiffons broyés, dix fois moins cher que le parchemin. C'est LE grand basculement de l'histoire des médias. Les livres se multiplient, leur prix s'effondre, les lecteurs explosent — et les idées ÉCHAPPENT au contrôle (la Réforme se diffuse par l'imprimé). Pour la première fois, un message touche des MASSES. Journaux, tracts, affiches : tout en découle." },
   /* MESSAGE PERDU */

@@ -72,13 +72,13 @@ const RECIPES = [
    LES MESSAGES (fiches + jauges 1 à 5)
    ------------------------------------------------------------ */
 const MESSAGES = {
-  msg_usb: { title: "Clé USB, carte SD, SSD", emoji: "🔌",
+  msg_usb: { title: "Enregistrer un message sur clé USB", emoji: "🔌",
     jauges: { vitesse: 2, portee: 2, capacite: 5, durabilite: 2 },
     fact: "Une puce grosse comme un ongle, et voilà plus de livres que n'en contenait toute la bibliothèque d'Alexandrie — dans ta poche. En un siècle, la quantité d'informations qu'on peut ranger dans un objet a été multipliée par des milliards. Mais attention à la blague : une clé USB tient environ 10 ans avant de devenir illisible. La bibliothèque d'Alexandrie, elle, a tenu des siècles. Le plus petit et le plus puissant n'est pas le plus solide." },
-  msg_smartphone: { title: "Smartphone", emoji: "📱",
+  msg_smartphone: { title: "Enregistrer un vocal sur une messagerie en ligne", emoji: "📱",
     jauges: { vitesse: 5, portee: 5, capacite: 4, durabilite: 2 },
     fact: "Un écran tactile, le réseau mobile, et TOUS les médias de ton voyage tiennent dans un seul objet : l'appareil photo, le téléphone, la télé, la radio, le journal, le courrier, la bibliothèque, le cinéma. Tout ce que tu as fabriqué depuis Lascaux est là, dans ta main. Mais pose-toi une question : cet objet est fabriqué pour capter ton attention le plus longtemps possible. Alors à qui profite ton temps d'écran ?" },
-  msg_streaming: { title: "Streaming & cloud", emoji: "☁️",
+  msg_streaming: { title: "Enregistrer un message en direct sur le web", emoji: "☁️",
     jauges: { vitesse: 5, portee: 5, capacite: 5, durabilite: 1 },
     fact: "Musique, films, photos, devoirs : plus besoin de support ! Enfin… c'est ce qu'on dit. En vrai le support existe toujours, mais il est CHEZ QUELQU'UN D'AUTRE, dans un hangar rempli de serveurs. Tu ne possèdes plus : tu accèdes, tant que tu paies et tant que le service existe. Et le jour où l'entreprise ferme, change ses règles ou supprime ton compte ? La vraie question de ton époque : à qui confies-tu tes messages ?" },
   /* MESSAGES PERDUS */

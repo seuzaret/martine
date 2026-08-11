@@ -123,7 +123,7 @@ const RECIPES = [
    LES MESSAGES (fiches documentaires + jauges 1 à 5)
    ------------------------------------------------------------ */
 const MESSAGES = {
-  msg_poterie: { title: "Poterie ornée de la cité", emoji: "🏺",
+  msg_poterie: { title: "Poterie décorée", emoji: "🏺",
     jauges: { vitesse: 2, portee: 2, capacite: 2, durabilite: 4 },
     fact: "Un pot cuit, peint de motifs et incrusté de nacre : chaque cité, chaque clan a ses dessins. Ces motifs ne « disent » rien avec des mots, mais ils SIGNENT : « c'est nous qui l'avons fait ». C'est l'ancêtre lointain de la marque et du logo. Et pour les archéologues, une aubaine : en suivant les styles de poterie, on date les sites et on « trace » les peuples sur des milliers de kilomètres. La terre cuite, cassée en tessons, traverse les millénaires.",
     wiki: "https://fr.wikipedia.org/wiki/Poterie" },
@@ -131,11 +131,11 @@ const MESSAGES = {
     jauges: { vitesse: 1, portee: 1, capacite: 2, durabilite: 3 },
     fact: "Ahmid enferme un petit caillou par bête dans une boule d'argile, qu'il scelle. Impossible de tricher sur le nombre ! Ce geste porte un nom : un « calcul » — du latin calculus, « petit caillou » (c'est de là que vient CALCULER). C'est presque de l'écriture : la boule dit COMBIEN. Bientôt, on dessinera les signes SUR l'argile au lieu d'y cacher des cailloux — et ce sera l'écriture. Rendez-vous en Mésopotamie…",
     wiki: "https://fr.wikipedia.org/wiki/Bulle-enveloppe" },
-  msg_megalithe: { title: "Mégalithe gravé", emoji: "🗿",
+  msg_megalithe: { title: "Pierre gravée (mégalithe)", emoji: "🗿",
     jauges: { vitesse: 1, portee: 3, capacite: 2, durabilite: 5 },
     fact: "Des dizaines d'hommes tirent une pierre de plusieurs tonnes pour la dresser, gravée de symboles au burin de cuivre. Un mégalithe, c'est un message MONUMENTAL : pour les dieux, pour le roi, et pour les voisins — « ce territoire est à nous ». Le cairn de Barnenez, en Bretagne, date de ~−4500 : plus vieux que les pyramides ! Visible de loin, presque éternel… mais sans écriture complète, nous ignorons encore ce que ses bâtisseurs voulaient exactement nous dire.",
     wiki: "https://fr.wikipedia.org/wiki/Cairn_de_Barnenez" },
-  msg_tatouage: { title: "Tatouages de soin (Ötzi)", emoji: "✒️",
+  msg_tatouage: { title: "Tatouage du corps", emoji: "✒️",
     jauges: { vitesse: 1, portee: 1, capacite: 2, durabilite: 4 },
     fact: "En 1991, deux randonneurs découvrent dans un glacier des Alpes un homme mort il y a ~5300 ans : « Ötzi ». Sa peau porte 61 tatouages, faits en frottant de la suie dans de fines piqûres — souvent placés sur des articulations douloureuses : peut-être des soins, un « dossier médical » à même la peau. Le corps devient support : un message qu'on porte à vie. La glace l'a conservé cinq millénaires… mais un tatouage disparaît avec celui qui le porte." },
 };

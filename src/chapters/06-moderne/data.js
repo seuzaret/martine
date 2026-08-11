@@ -92,13 +92,13 @@ const RECIPES = [
    LES MESSAGES (fiches + jauges 1 à 5)
    ------------------------------------------------------------ */
 const MESSAGES = {
-  msg_poste: { title: "Poste royale", emoji: "📯",
+  msg_poste: { title: "Envoyer une lettre", emoji: "📯",
     jauges: { vitesse: 3, portee: 3, capacite: 3, durabilite: 2 },
     fact: "Pour faire parvenir son article à Paris, Jules le confie à la POSTE. Depuis Louis XI (1477), des messagers à cheval se relaient de poste en poste : on change de monture toutes les quelques lieues pour ne jamais s'arrêter. Ce n'est pas seulement porter une lettre — c'est un RÉSEAU, avec ses routes, ses relais, ses horaires. Le message va aussi vite que l'infrastructure qui le porte. Une idée toujours vraie : derrière chaque message qui voyage, il y a des tuyaux, des câbles, des antennes qu'on oublie… jusqu'à la panne." },
-  msg_gazettes: { title: "Gazettes & essor de la presse", emoji: "📰",
+  msg_gazettes: { title: "Écrire un article de presse", emoji: "📰",
     jauges: { vitesse: 2, portee: 4, capacite: 4, durabilite: 2 },
     fact: "L'article de Jules devient une GAZETTE, tirée à des centaines d'exemplaires. La presse imprimée existe depuis Renaudot et La Gazette (1631), sous l'œil du pouvoir (Richelieu). Mais avec la Révolution, c'est l'EXPLOSION : des centaines de journaux naissent en quelques années, on lit les nouvelles à voix haute dans les cafés, chacun a son opinion imprimée. La presse devient une force politique. Toujours se demander : qui publie cette feuille, qui la finance, et dans quel intérêt ?" },
-  msg_chappe: { title: "Télégraphe de Chappe", emoji: "🚦",
+  msg_chappe: { title: "Envoyer un message par télégraphe optique", emoji: "🚦",
     jauges: { vitesse: 4, portee: 1, capacite: 2, durabilite: 1 },
     fact: "En 1794, Claude Chappe dresse des tours à bras articulés, de colline en colline, à portée de longue-vue. Justement, la première grande nouvelle transmise ainsi fut une VICTOIRE : la reprise de Condé-sur-l'Escaut, annoncée à Paris en moins d'une heure — au lieu de plusieurs jours à cheval ! Une vitesse stupéfiante… mais réservée à l'État : le journaliste Jules, lui, n'y a pas accès. Leçon essentielle : aller vite ne veut pas dire pour tous. Un média peut être ultra-rapide ET fermé." },
   /* MESSAGE PERDU */

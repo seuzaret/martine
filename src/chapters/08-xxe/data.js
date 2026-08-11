@@ -85,18 +85,18 @@ const RECIPES = [
   /* T4 — ENIAC : deux étapes avant l'allumage */
   { a: "fiches_calcul", b: "eniac_machine", out: "fiches_chargees", gives: [], consume: ["fiches_calcul"], flag: "fiches_chargees",
     line: "📋 Kay insère la pile de fiches de calcul dans le lecteur — trajectoires d'obus, coordonnées, vitesse initiale. Il manque encore le programme, à câbler à la main." },
-  { a: "cables", b: "eniac_machine", out: "msg_eniac", msg: true, consume: ["cables"], needsFlag: "fiches_chargees",
-    line: "🔌 Kay branche les câbles un à un sur le plugboard — chaque cheminement électrique code une instruction. Elle tire le grand levier. Les 18 000 tubes s'allument, la salle vibre, le résultat sort en 30 secondes. Ce que Kay a fait à la main, on l'appelle aujourd'hui : PROGRAMMER." },
+  { a: "cables", b: "eniac_machine", out: "cables_branches", gives: [], consume: ["cables"], flag: "cables_branches", needsFlag: "fiches_chargees",
+    line: "🔌 Kay branche les câbles sur le plugboard. Les 18 000 tubes s'allument… mais ça grille de partout ! Il va falloir DÉBUGGER : clique l'ENIAC pour lancer le mini-jeu." },
 ];
 
 /* ------------------------------------------------------------
    LES MESSAGES (fiches + jauges 1 à 5)
    ------------------------------------------------------------ */
 const MESSAGES = {
-  msg_radio_londres: { title: "« Ici Londres » — la radio libre", emoji: "📻",
+  msg_radio_londres: { title: "Envoyer un message à la radio", emoji: "📻",
     jauges: { vitesse: 5, portee: 5, capacite: 2, durabilite: 1 },
     fact: "Dès juillet 1940, la BBC diffuse depuis Londres l'émission « Les Français parlent aux Français », en français, à destination de la France occupée. Écouter Londres est INTERDIT et sévèrement puni — mais des millions de gens le font, en cachette, sous une couverture. La radio franchit les frontières fermées : la censure ne peut pas fermer le ciel. À la fin de chaque émission, des « messages personnels » sont lus — de courtes phrases sans queue ni tête, en réalité des SIGNAUX CODÉS destinés aux réseaux de résistance." },
-  msg_eniac: { title: "ENIAC & les six femmes effacées", emoji: "🖥️",
+  msg_eniac: { title: "Faire un programme-message avec l'ordinateur ENIAC", emoji: "🖥️",
     jauges: { vitesse: 4, portee: 1, capacite: 3, durabilite: 2 },
     fact: "1946, université de Pennsylvanie. L'ENIAC prend vie : 30 tonnes, 18 000 tubes à vide, une salle entière. Il calcule en 30 secondes ce que 20 humains font en 20 heures. Il est né MILITAIRE — pour l'artillerie, puis pour la bombe H. Ce que l'Histoire a longtemps oublié : il est PROGRAMMÉ par SIX FEMMES — Kay McNulty, Betty Snyder, Betty Jean Jennings, Marlyn Wescoff, Frances Bilas, Ruth Lichterman. On les appelait « les ENIAC Girls ». Pendant 50 ans, elles sont restées des « opératrices » anonymes alors qu'elles avaient inventé la programmation moderne. Les femmes ont longtemps été effacées de l'histoire des sciences. Aujourd'hui encore : quand tu lis une invention, cherche QUI l'a vraiment faite. L'invisibilité est un choix, pas un hasard." },
   msg_debarquement: { title: "Le signal du Débarquement", emoji: "🌊",
@@ -115,7 +115,7 @@ const HINTS = [
   { needs: ["antenne", "tsf"], out: "tsf_reliee", text: "Tends le fil d'antenne de la fenêtre au poste (glisse l'antenne sur la TSF)." },
   { needs: ["couverture", "tsf"], out: "tsf_prete", text: "Jette la couverture sur le poste pour étouffer le son, puis clique sur la TSF pour chercher Londres." },
   { needs: ["fiches_calcul", "eniac_machine"], out: "fiches_chargees", text: "Glisse la pile de fiches de calcul sur l'ENIAC : Kay les charge dans le lecteur." },
-  { needs: ["cables", "eniac_machine"], out: "msg_eniac", text: "Glisse les câbles sur l'ENIAC : Kay câble le programme à la main, puis allume." },
+  { needs: ["cables", "eniac_machine"], out: "cables_branches", text: "Glisse les câbles sur l'ENIAC : Kay câble le programme, puis clique l'ENIAC pour le mini-jeu de débuggage." },
 ];
 
 const NEAR_MISS = [
@@ -164,6 +164,9 @@ const ACTIONS = {
   kay: { mood: "neutre",
     bubble: "Kay McNulty. Née en Irlande, émigrée à Philadelphie. Je suis mathématicienne — on nous a recrutées à six pour calculer les trajectoires d'obus à la main. Depuis qu'ils ont construit l'ENIAC, on le PROGRAMME — mais l'armée nous appelle des « opératrices ». Aide-moi : charge les fiches, branche les câbles, allume la bête.",
     say: "Kay McNulty : l'une des six programmeuses de l'ENIAC. Effacées de l'Histoire pendant 50 ans, alors qu'elles ont inventé la programmation moderne." },
+
+  eniac_debug: { modal: "eniac_debug", needsFlag: "cables_branches",
+    needMsg: "Il faut d'abord charger les fiches ET brancher les câbles. Puis on pourra débugger." },
 };
 
 /* ------------------------------------------------------------
