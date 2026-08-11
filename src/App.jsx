@@ -23,6 +23,12 @@ import { PhotoGame } from "./chapters/xixe-photo.jsx";
 import { PhonoGame } from "./chapters/xixe-phono.jsx";
 import { CineGame } from "./chapters/xixe-cine.jsx";
 import { TsfReglageGame } from "./chapters/xxe-tsf-reglage.jsx";
+import { CassetteGame } from "./chapters/xxe-cassette.jsx";
+import { GraverCdGame } from "./chapters/xxe-graver-cd.jsx";
+import Mediadex from "./engine/Mediadex.jsx";
+import MediaCard from "./engine/MediaCard.jsx";
+import { getCardMeta, playCardSound } from "./engine/mediadex.js";
+import { SosButton, SosOverlay } from "./engine/SosSignal.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 
@@ -145,6 +151,15 @@ export default function App() {
   const [cheat, setCheat] = useState(false);     // mode triche (dev) — tape « triche » pour l'ouvrir
   const [epiChoice, setEpiChoice] = useState(null); // épilogue : le support choisi par le joueur
   const [prenom, setPrenom] = useState("");      // carnet imprimable : le prénom de l'élève
+  const [mediadex, setMediadex] = useState([]);  // msg_ids des cartes-inventions découvertes
+  const [cardShowing, setCardShowing] = useState(null); // {card, message} pendant l'apparition
+  const [showMediadex, setShowMediadex] = useState(false); // l'écran Mediadex plein écran est-il ouvert ?
+  const [sosPending, setSosPending] = useState(null);   // msg_id dont on peut encore émettre le SOS
+  const [sosOpen, setSosOpen] = useState(false);         // l'animation Morse est-elle en cours ?
+  const [sosSent, setSosSent] = useState([]);            // msg_ids pour lesquels le SOS a été émis
+  const [flux, setFlux] = useState(0);                   // ⚡ jauge globale de « flux temporel »
+  const [fluxBubble, setFluxBubble] = useState(null);    // {delta, key} — anim +N/-N flottante
+  const [sosChooserOpen, setSosChooserOpen] = useState(false); // choix du support SOS fin de chapitre
   /* Confort de lecture (accessibilité) — mémorisé sur l'appareil, à part
      de la sauvegarde de partie (une même classe garde ses réglages). */
   const [a11y, setA11y] = useState(() => {
@@ -202,9 +217,9 @@ export default function App() {
      partie existante avec un état vide). */
   useEffect(() => {
     if (screen === "play" || screen === "end") {
-      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete });
+      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux });
     }
-  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete]);
+  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux]);
 
   /* CONFORT DE LECTURE : applique les classes sur <html> (le CSS fait le
      reste, moteur compris) et mémorise le choix sur l'appareil. */
@@ -218,6 +233,19 @@ export default function App() {
 
   /* la bulle d'un personnage disparaît quand on change de tableau */
   useEffect(() => { setBubble(null); }, [tab]);
+
+  /* le bouton SOS en attente se ferme dès qu'on change de tableau ou de
+     chapitre (on n'accumule pas les SOS non émis entre deux scènes). */
+  useEffect(() => { setSosPending(null); setSosOpen(false); }, [tab, chapterIndex]);
+
+  /* les objets marqués `ephemere: true` (fausses pistes d'un tableau —
+     jouets, bric-à-brac…) disparaissent du sac dès qu'on change de
+     tableau. Le champ `made` reste : ils ne réapparaîtront pas si on
+     revient dans le décor. */
+  useEffect(() => {
+    const items = chapter?.items || {};
+    setInv((v) => v.filter((id) => !items[id]?.ephemere));
+  }, [tab, chapterIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* …et dès qu'on clique AILLEURS (n'importe où sur l'écran). L'écouteur
      est en phase de CAPTURE : si le clic vise un autre personnage, la bulle
@@ -338,6 +366,7 @@ export default function App() {
     setMaxReached(s.maxReached ?? i);
     setInv(s.inv || []); setMsgs(s.msgs || []); setMade(s.made || []);
     setFlags(s.flags || {}); setCollection(s.collection || []); setQuete(s.quete || 0);
+    setMediadex(s.mediadex || []); setSosSent(s.sosSent || []); setFlux(s.flux || 0);
     setTab(s.tab ?? CHAPTERS[i].startScene);
     setDialog({ lines: ["Reprise du voyage. Je remets les circuits en route là où on s'était arrêtés."], idx: 0, mood: "neutre" });
     setScreen(s.screen === "end" ? "end" : "play");
@@ -451,6 +480,33 @@ export default function App() {
     return stopAmbience;
   }, [screen, chapterIndex, tab, muted]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  /* ⚡ Modifie la jauge de FLUX TEMPOREL avec une petite bulle animée
+     +N / -N flottante. Peut passer en négatif (plafond du chapitre non
+     bloquant pour l'instant — on calibrera). */
+  const bumpFlux = (delta) => {
+    if (!delta) return;
+    setFlux((v) => Math.round((v + delta) * 10) / 10); // arrondi 0.1
+    setFluxBubble({ delta, key: Date.now() });
+    setTimeout(() => setFluxBubble((b) => (b && b.key ? null : b)), 1400);
+  };
+
+  /* Ouvre la CARTE-INVENTION (façon Pokémon) si le message a une image
+     Wikimedia dans le Mediadex. La carte apparaît par-dessus la fiche
+     pédagogique et se ferme au bout de quelques secondes. Idempotent.
+     Déclenche aussi le bouton SOS flottant : le joueur peut émettre le
+     signal de détresse ··· −−− ··· pour être retrouvé par l'équipe. */
+  const unlockCard = (msgId, msgData) => {
+    // Le SOS n'apparaît plus par transmission — il se choisit en fin de chapitre
+    // Carte-invention (uniquement si mappée dans le Mediadex)
+    const card = getCardMeta(msgId);
+    if (!card) return;
+    setMediadex((v) => v.includes(msgId) ? v : [...v, msgId]);
+    setTimeout(() => {
+      setCardShowing({ card, message: msgData });
+      playCardSound(muted);
+    }, 500);
+  };
+
   /* Octroyer un message SANS combinaison d'objets — pour les mini-jeux
      (ex. réussir « Écris MARTINE » transmet vraiment l'alphabet).
      Idempotent : pas de doublon si le cristal est déjà obtenu. */
@@ -463,7 +519,9 @@ export default function App() {
     setCollection((c) => c.some((x) => x.id === id) ? c
       : [...c, { id, titre: m.title, emoji: m.emoji, date: chapter.date, jauges: m.jauges, fact: m.fact, perdu: false }]);
     flash(); playSfx("message");
+    bumpFlux(3);
     say(`◆ « ${m.title} » transmis au futur ! Tu l'as gagné en l'écrivant toi-même. Mes circuits se rechargent.`, "content");
+    unlockCard(id, m);
   };
 
   /* Octroyer un OBJET (dans la besace) — pour les mini-jeux qui font GAGNER
@@ -567,7 +625,9 @@ export default function App() {
            mélodie) : il part juste après l'arpège de transmission */
         if (m.sfx) setTimeout(() => playSfx(m.sfx), 950);
         say(`◆ « ${chapter.messages[rec.out].title} » transmis au futur ! Mes circuits se rechargent, je sens l'excellence revenir.`, "content");
+        bumpFlux(3);
         setTimeout(() => setModal({ type: "fact", id: rec.out }), 750);
+        unlockCard(rec.out, m);
         return;
       }
       /* Objet fabriqué classique */
@@ -581,6 +641,8 @@ export default function App() {
     const nm = findNearMiss(chapter.nearMiss, a, b);
     setShake(true); setTimeout(() => setShake(false), 500);
     playSfx("fail");
+    /* -1 flux si t'aurais dû savoir (near-miss), -0.5 sinon (bzzt aléatoire) */
+    bumpFlux(nm ? -1 : -0.5);
     say(nm ? nm.line : randomLine(chapter.failLines), "vexe");
   };
 
@@ -658,8 +720,10 @@ export default function App() {
   const jump = () => {
     if (!canJump) return;
     playSfx("jump");
-    if (isLastChapter) { setEpiChoice(null); setScreen("epilogue"); }
-    else { setTransitionTo(chapterIndex + 1); setScreen("transition"); }
+    /* Avant le saut : le joueur choisit UN support SOS parmi les inventions
+       du chapitre. Le choix octroie des points de flux temporel selon la
+       durabilité du support. Ensuite l'animation Morse joue, puis le saut. */
+    setSosChooserOpen(true);
   };
 
   /* petit style commun des boutons du bandeau */
@@ -809,10 +873,16 @@ export default function App() {
                 ▶ DÉMARRER
               </button>
             )}
-            <button onClick={() => setModal({ type: "settings" })}
-              style={{ background: "transparent", color: "#5a6678", border: "none", cursor: "pointer", fontSize: 12, fontFamily: "ui-monospace,monospace", marginTop: 4 }}>
-              ⚙ Réglages · sauvegarde
-            </button>
+            <div style={{ display: "flex", gap: 20, marginTop: 4 }}>
+              <button onClick={() => setModal({ type: "settings" })}
+                style={{ background: "transparent", color: "#5a6678", border: "none", cursor: "pointer", fontSize: 12, fontFamily: "ui-monospace,monospace" }}>
+                ⚙ Réglages · sauvegarde
+              </button>
+              <button onClick={() => setShowMediadex(true)}
+                style={{ background: "transparent", color: "#c8963e", border: "none", cursor: "pointer", fontSize: 12, fontFamily: "ui-monospace,monospace" }}>
+                🃏 Mediadex
+              </button>
+            </div>
           </div>
 
           {/* SÉLECTION DE CHAPITRE : terminés/en cours jouables,
@@ -1106,11 +1176,27 @@ export default function App() {
         <span style={{ fontSize: 17, fontWeight: 700, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>{chapter.emoji} {chapter.scenes[tab].name}</span>
         <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
           <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 13, color: "#5eff9e" }} title="Messages transmis au futur">◆ {msgs.length}/{ALL_MSGS.length}</span>
+          <span style={{ position: "relative", fontFamily: "ui-monospace,monospace", fontSize: 13, color: "#ffd166" }} title="Flux temporel — nécessaire pour rentrer chez toi">
+            ⚡ {flux}
+            {fluxBubble && (
+              <span style={{ position: "absolute", left: "50%", top: -18, transform: "translateX(-50%)",
+                fontSize: 13, fontWeight: 800, letterSpacing: 1,
+                color: fluxBubble.delta > 0 ? "#5eff9e" : "#ff7a5a",
+                animation: "fluxRise 1.3s ease-out forwards",
+                pointerEvents: "none", whiteSpace: "nowrap" }}>
+                {fluxBubble.delta > 0 ? "+" : ""}{fluxBubble.delta}
+              </span>
+            )}
+          </span>
           <button onClick={toggleMute} title={muted ? "Réactiver le son" : "Couper le son"} style={{ ...headBtn, color: muted ? "#5a6678" : "#c8d4e2" }}>{muted ? "🔇" : "🔊"}</button>
           <button onClick={hint} style={{ ...headBtn, color: "#ffd166" }}>💡</button>
           <button onClick={doReveal} title="Révéler brièvement les zones" style={headBtn}>👁</button>
-          {chapter.carte && <button onClick={() => setModal({ type: "carte" })} title="Où sommes-nous ? (carte)" style={headBtn}>🗺</button>}
+          {/* Bouton 🗺 retiré : chaque tableau porte déjà son propre décor situé.
+              Les cartes chapitre restent codées côté data.js et pourront être
+              réactivées si besoin — décommenter la ligne suivante. */}
+          {/* {chapter.carte && <button onClick={() => setModal({ type: "carte" })} title="Où sommes-nous ? (carte)" style={headBtn}>🗺</button>} */}
           <button onClick={() => setModal({ type: "journal" })} style={headBtn}>📔</button>
+          <button onClick={() => setShowMediadex(true)} title={`Mediadex (${mediadex.length} cartes)`} style={headBtn}>🃏</button>
           <button onClick={() => setModal({ type: "settings" })} title="Réglages · sauvegarde" style={headBtn}>⚙</button>
           {/* sur écran large, le saut est dans la jauge temporelle à droite ;
               sur écran étroit, on garde le bouton compact ici. */}
@@ -1325,6 +1411,78 @@ export default function App() {
       {modal?.type === "tsf_reglage" && (
         <TsfReglageGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_debarquement")} />
       )}
+
+      {modal?.type === "cassette" && (
+        <CassetteGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_cassette")} />
+      )}
+
+      {modal?.type === "graver_cd" && (
+        <GraverCdGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_cd")} />
+      )}
+
+      {/* CARTE-INVENTION (façon Pokémon) qui apparaît quand un nouveau message est transmis */}
+      {cardShowing && (
+        <MediaCard card={cardShowing.card} message={cardShowing.message}
+          onClose={() => setCardShowing(null)} />
+      )}
+
+      {/* MEDIADEX plein écran (bouton 🃏) */}
+      {showMediadex && (
+        <Mediadex unlocked={mediadex} onClose={() => setShowMediadex(false)} />
+      )}
+
+      {/* ANIMATION SOS Morse ··· −−− ··· jouée après le choix en fin de chapitre */}
+      {sosOpen && (
+        <SosOverlay muted={muted} onDone={() => {
+          setSosOpen(false);
+          // le vrai saut temporel se fait après l'animation
+          if (isLastChapter) { setEpiChoice(null); setScreen("epilogue"); }
+          else { setTransitionTo(chapterIndex + 1); setScreen("transition"); }
+        }} />
+      )}
+
+      {/* ─── CHOIX du support SOS en fin de chapitre ─── */}
+      {sosChooserOpen && (() => {
+        const chapMsgs = msgs.filter((id) => chapter.messages?.[id]).map((id) => ({ id, ...chapter.messages[id] }));
+        const alreadyChosen = sosSent.find((id) => chapMsgs.some((m) => m.id === id));
+        return (
+          <div style={{ position: "fixed", inset: 0, background: "rgba(4,8,14,0.88)", zIndex: 85, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" }}>
+            <div style={{ maxWidth: 720, width: "100%", maxHeight: "94vh", overflowY: "auto", background: "#17110a", border: "2px solid #c8963e", borderRadius: 16, padding: 24, color: "#efe6d2", fontFamily: "Palatino, Georgia, serif" }}>
+              <div style={{ textAlign: "center", fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3, color: "#e0a848" }}>🆘 CHOIX DU SUPPORT SOS · CHAPITRE {chapterIndex + 1}</div>
+              <h2 style={{ textAlign: "center", margin: "8px 0 12px", color: "#ffd166", fontSize: 22 }}>Quel support portera ton SOS ?</h2>
+              <p style={{ textAlign: "center", fontSize: 13.5, color: "#c8b090", margin: "0 0 18px" }}>
+                Tu ne peux en choisir <strong>qu'un seul</strong> par chapitre. Plus la <strong>durabilité</strong> du support est haute, plus ton signal atteint l'équipe de sauvetage — donc plus de flux temporel gagné.
+              </p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
+                {chapMsgs.map((m) => {
+                  const dur = m.jauges?.durabilite ?? 1;
+                  return (
+                    <button key={m.id}
+                      onClick={() => {
+                        setSosSent((v) => v.includes(m.id) ? v : [...v, m.id]);
+                        bumpFlux(dur);
+                        setSosChooserOpen(false);
+                        setSosOpen(true); // lance l'animation Morse, qui enchaînera sur le saut
+                      }}
+                      style={{ background: "#2a1608", border: "2px solid #5a4028", borderRadius: 10, padding: "18px 14px", cursor: "pointer", color: "inherit", fontFamily: "inherit", textAlign: "center", transition: "transform .15s, border-color .15s, box-shadow .15s" }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#e0a848"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 22px rgba(200,150,62,0.35)"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#5a4028"; e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}>
+                      <div style={{ fontSize: 40, marginBottom: 6 }}>{m.emoji}</div>
+                      <div style={{ fontWeight: 700, fontSize: 13, color: "#ffd166", lineHeight: 1.3 }}>{m.title}</div>
+                    </button>
+                  );
+                })}
+              </div>
+              {alreadyChosen && (
+                <p style={{ textAlign: "center", marginTop: 14, color: "#e08048", fontSize: 12 }}>⚠ Tu as déjà choisi un support pour ce chapitre. Le nouveau remplacera l'ancien.</p>
+              )}
+              <div style={{ marginTop: 16, textAlign: "center", fontSize: 11, color: "#7a6a4a", fontStyle: "italic" }}>
+                (Un vieux dessin pariétal dure plus longtemps qu'une cassette — c'est ça, la leçon.)
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {modal?.type === "carte" && (
         <WorldMap Carte={chapter.carte} tab={tab} titre={chapter.epoque} onClose={() => setModal(null)} />

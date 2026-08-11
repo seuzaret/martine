@@ -16,6 +16,7 @@ import SceneParis from "./scenes/SceneParis.jsx";
 import SceneBBC from "./scenes/SceneBBC.jsx";
 import SceneSalon from "./scenes/SceneSalon.jsx";
 import SceneEniac from "./scenes/SceneEniac.jsx";
+import CarteXXe from "./scenes/CarteXXe.jsx";
 import { PortraitArthur, PortraitMarthe, PortraitMarchand, PortraitKay } from "./scenes/portraits.jsx";
 
 /* ------------------------------------------------------------
@@ -206,6 +207,7 @@ const chapter = {
     marchand: PortraitMarchand,
     kay: PortraitKay,
   },
+  carte: CarteXXe,
 };
 
 export default chapter;
