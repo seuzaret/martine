@@ -30,6 +30,7 @@ import Mediadex from "./engine/Mediadex.jsx";
 import MediaCard from "./engine/MediaCard.jsx";
 import { getCardMeta, playCardSound } from "./engine/mediadex.js";
 import { SosButton, SosOverlay } from "./engine/SosSignal.jsx";
+import IntroStory from "./engine/IntroStory.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 
@@ -161,6 +162,7 @@ export default function App() {
   const [flux, setFlux] = useState(0);                   // ⚡ jauge globale de « flux temporel »
   const [fluxBubble, setFluxBubble] = useState(null);    // {delta, key} — anim +N/-N flottante
   const [sosChooserOpen, setSosChooserOpen] = useState(false); // choix du support SOS fin de chapitre
+  const [anachronismLearned, setAnachronismLearned] = useState(false); // MARTINE a-t-elle déjà expliqué les déchets temporels ?
   /* Confort de lecture (accessibilité) — mémorisé sur l'appareil, à part
      de la sauvegarde de partie (une même classe garde ses réglages). */
   const [a11y, setA11y] = useState(() => {
@@ -218,9 +220,9 @@ export default function App() {
      partie existante avec un état vide). */
   useEffect(() => {
     if (screen === "play" || screen === "end") {
-      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux });
+      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, anachronismLearned });
     }
-  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux]);
+  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, anachronismLearned]);
 
   /* CONFORT DE LECTURE : applique les classes sur <html> (le CSS fait le
      reste, moteur compris) et mémorise le choix sur l'appareil. */
@@ -319,12 +321,14 @@ export default function App() {
     setCollection(all);
   };
 
-  /* Démarre une NOUVELLE partie (tout remis à zéro, chapitre 1). */
+  /* Démarre une NOUVELLE partie (tout remis à zéro, chapitre 1).
+     Passe d'abord par l'intro narrative (6 tableaux illustrés). */
   const newGame = () => {
     setChapterIndex(0); setMaxReached(0);
     setInv([]); setMsgs([]); setMade([]); setFlags({}); setCollection([]); setQuete(0);
+    setMediadex([]); setSosSent([]); setFlux(0);
     setTab(CHAPTERS[0].startScene); setDialog({ lines: CHAPTERS[0].intro, idx: 0, mood: "neutre" });
-    setScreen("play");
+    setScreen("intro");
   };
 
   /* Charge un chapitre. L'inventaire et l'état du chapitre repartent
@@ -368,6 +372,7 @@ export default function App() {
     setInv(s.inv || []); setMsgs(s.msgs || []); setMade(s.made || []);
     setFlags(s.flags || {}); setCollection(s.collection || []); setQuete(s.quete || 0);
     setMediadex(s.mediadex || []); setSosSent(s.sosSent || []); setFlux(s.flux || 0);
+    setAnachronismLearned(s.anachronismLearned || false);
     setTab(s.tab ?? CHAPTERS[i].startScene);
     setDialog({ lines: ["Reprise du voyage. Je remets les circuits en route là où on s'était arrêtés."], idx: 0, mood: "neutre" });
     setScreen(s.screen === "end" ? "end" : "play");
@@ -390,7 +395,19 @@ export default function App() {
          puissent réagir durablement — ex. la ruche décrochée, le bœuf abattu. */
       setMade((v) => (v.includes(id) ? v : [...v, id]));
       playSfx("pickup");
-      say(`${it.emoji} ${it.name} — ${it.desc}`);
+      /* ANACHRONISME : cet objet n'a rien à faire à cette époque !
+         Première fois : MARTINE explique la mécanique de nettoyage temporel.
+         Fois suivantes : petite phrase courte, sans redite. */
+      if (it.anachronic) {
+        if (!anachronismLearned) {
+          setAnachronismLearned(true);
+          say(`${it.emoji} ${it.name} — 🚨 UN DÉCHET TEMPOREL ! ${it.desc || ''} Un agent du temps peu soigneux l'a laissé traîner ici, et ça POLLUE la ligne temporelle. Regarde : une POUBELLE TEMPORELLE 🗑️ vient d'apparaître à côté. Jette l'objet dedans pour nettoyer et gagner du flux. À partir de maintenant, ouvre l'œil : il y en a un caché à chaque époque.`, "vexe");
+        } else {
+          say(`${it.emoji} ${it.name} — Encore un déchet temporel ! Direction la poubelle 🗑️.`, "vexe");
+        }
+      } else {
+        say(`${it.emoji} ${it.name} — ${it.desc}`);
+      }
     } else {
       say(`${it.name} : déjà noté. ${it.desc}`);
     }
@@ -652,6 +669,21 @@ export default function App() {
      kind "item") ou sur un objet du décor (kind "hot"). */
   const handleDrop = (src, key, point) => {
     const [kind, val] = key.split(":");
+    /* POUBELLE TEMPORELLE : anachronisme jeté → +flux ; mauvais objet → bzzt. */
+    if (kind === "hot" && val === "poubelle_temporelle") {
+      const it = chapter.items?.[src];
+      if (it?.anachronic) {
+        setInv((v) => v.filter((x) => x !== src));
+        bumpFlux(3);
+        flash(); playSfx("success");
+        say(`✓ ${it.emoji} ${it.name} — jeté dans la poubelle temporelle. La ligne temporelle respire. +3 flux.`, "content");
+      } else {
+        setShake(true); setTimeout(() => setShake(false), 500);
+        playSfx("fail");
+        say("La poubelle temporelle sert à jeter les OBJETS ANACHRONIQUES — pas tes vraies affaires !", "vexe");
+      }
+      return;
+    }
     if ((kind === "item" || kind === "hot") && val !== src) combinePair(src, val, point);
   };
 
@@ -944,6 +976,11 @@ export default function App() {
         )}
       </div>
     );
+  }
+
+  /* ---------- écran d'INTRODUCTION narrative (6 tableaux) ---------- */
+  if (screen === "intro") {
+    return <IntroStory onDone={() => setScreen("play")} />;
   }
 
   /* ---------- écran de transition entre deux époques ---------- */
@@ -1434,6 +1471,28 @@ export default function App() {
       {/* MEDIADEX plein écran (bouton 🃏) */}
       {showMediadex && (
         <Mediadex unlocked={mediadex} onClose={() => setShowMediadex(false)} />
+      )}
+
+      {/* POUBELLE TEMPORELLE — apparaît une fois que le joueur a ramassé son
+          premier déchet temporel. Sert de cible de drop pour les items
+          marqués `anachronic: true`. */}
+      {anachronismLearned && screen === "play" && (
+        <div data-drop="hot:poubelle_temporelle"
+          title="Poubelle temporelle — jette ici les objets anachroniques (+3 flux)"
+          style={{
+            position: "fixed", bottom: 24, left: 24, zIndex: 55,
+            width: 60, height: 72, display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "center",
+            background: "linear-gradient(180deg, #4a3020 0%, #1a0e08 100%)",
+            border: "3px solid #8a5828", borderRadius: 10,
+            boxShadow: "0 4px 20px rgba(0,0,0,0.6), inset 0 -3px 0 rgba(255,255,255,0.06)",
+            fontSize: 30, cursor: "help", userSelect: "none",
+            animation: "poubelleAppear 0.6s ease-out",
+          }}>
+          🗑️
+          <span style={{ fontSize: 8, color: "#c8963e", fontFamily: "ui-monospace,monospace", letterSpacing: 1, marginTop: -2 }}>TEMPS</span>
+          <style>{`@keyframes poubelleAppear { 0% { transform: scale(0.2) rotate(-30deg); opacity: 0; } 60% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }`}</style>
+        </div>
       )}
 
       {/* ANIMATION SOS Morse ··· −−− ··· jouée après le choix en fin de chapitre */}

@@ -181,6 +181,19 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
       <Hotspot cx={300} cy={480} r={64} label="la foule" item="foule" reveal={reveal} onClick={() => collect("foule")} />
       <Hotspot cx={786} cy={484} r={54} label="la dalle à graver" item="pierre" reveal={reveal} onClick={() => collect("pierre")} />
       <Hotspot cx={70} cy={502} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
+
+      {/* ANACHRONISME : paire de lunettes de soleil posée sur une dalle */}
+      {!made.includes("lunettes_soleil") && (
+        <g transform="translate(560,494) rotate(-8)">
+          <circle cx={-9} cy={0} r={7} fill="#1a1a1a" stroke="#3a3a3a" strokeWidth="1" />
+          <circle cx={9} cy={0} r={7} fill="#1a1a1a" stroke="#3a3a3a" strokeWidth="1" />
+          <path d="M-2 0 h4" stroke="#3a3a3a" strokeWidth="1.5" />
+          <path d="M-16 -1 l-6 -3 M16 -1 l6 -3" stroke="#3a3a3a" strokeWidth="1.4" />
+          {/* petit reflet */}
+          <path d="M-11 -3 l3 -1 M7 -3 l3 -1" stroke="#7fb0e0" strokeWidth="0.8" opacity="0.6" />
+        </g>
+      )}
+      <Hotspot cx={560} cy={494} r={18} label="… quelque chose ne va pas ici" item="lunettes_soleil" reveal={reveal} onClick={() => collect("lunettes_soleil")} />
     </svg>
   );
 }

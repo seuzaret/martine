@@ -19,6 +19,10 @@ import CartePaleo from "./scenes/CartePaleo.jsx";
    id : { name (nom affiché), emoji, desc (texte quand on le ramasse) }
    ------------------------------------------------------------ */
 const ITEMS = {
+  /* ANACHRONISME — un déchet temporel abandonné par un agent maladroit.
+     À jeter dans la POUBELLE TEMPORELLE pour +3 flux. */
+  allumettes: { name: "Boîte d'allumettes", emoji: "🔥", anachronic: true, desc: "Une boîte d'allumettes en carton — ça n'existera pas avant 1826 !" },
+
   branche:  { name: "Branche souple", emoji: "🌿", desc: "Du noisetier, souple et solide. De quoi fabriquer bien des choses." },
   liane:    { name: "Liane", emoji: "🪢", desc: "Fibre végétale, résistante et élastique. Ça s'étire… et ça revient." },
   silex:    { name: "Silex taillé", emoji: "🔪", desc: "Un éclat fraîchement taillé, tranchant comme un rasoir." },

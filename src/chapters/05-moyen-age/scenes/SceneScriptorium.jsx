@@ -252,6 +252,17 @@ export default function SceneMonastere({ collect, action, reveal, made = [], fla
         <Hotspot cx={432} cy={510} r={38} label="or & couleurs d'enluminure" item="or_enlumine" reveal={reveal} onClick={() => collect("or_enlumine")} />
       )}
       <Hotspot cx={900} cy={502} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
+
+      {/* ANACHRONISME : clé USB oubliée sur un pupitre de copiste */}
+      {!made.includes("cle_usb") && (
+        <g transform="translate(680,516) rotate(20)">
+          <rect x={-10} y={-3} width={12} height={6} rx={0.5} fill="#3a80c8" stroke="#0a2038" strokeWidth="0.4" />
+          <rect x={2} y={-2} width={6} height={4} fill="#c8c8c8" />
+          <rect x={-8} y={-1} width={2} height={2} fill="#7fb0e0" />
+          <path d="M-10 -3 h-4 v6 h4" fill="none" stroke="#3a80c8" strokeWidth="0.6" />
+        </g>
+      )}
+      <Hotspot cx={680} cy={516} r={14} label="… quelque chose ne va pas ici" item="cle_usb" reveal={reveal} onClick={() => collect("cle_usb")} />
     </svg>
   );
 }

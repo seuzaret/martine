@@ -276,6 +276,17 @@ export default function SceneCampement({ collect, action, reveal, made = [], que
       <Hotspot cx={410} cy={432} r={48} label="toi" item="voix" reveal={reveal} onClick={() => collect("voix")} />
       <Hotspot cx={660} cy={488} r={58} label="branches" item="branche" reveal={reveal} onClick={() => collect("branche")} />
       <Hotspot cx={300} cy={446} r={44} label="Raya, le chef" reveal={reveal} onClick={(p) => action("raya", p)} />
+
+      {/* ANACHRONISME : petite boîte d'allumettes qui traîne juste à côté du feu.
+          Absurde en −18 000 — c'est ça, le déchet temporel à ramasser. */}
+      {!made.includes("allumettes") && (
+        <g>
+          <rect x={558} y={470} width={18} height={11} rx={1} fill="#c8382e" stroke="#5a1810" strokeWidth="0.8" transform="rotate(-6 567 476)" />
+          <rect x={561} y={472} width={12} height={4} fill="#f0e4c8" transform="rotate(-6 567 476)" />
+          <text x={567} y={475} textAnchor="middle" fontSize="3" fontFamily="ui-monospace,monospace" fontWeight="800" fill="#5a1810" transform="rotate(-6 567 476)">SAFETY</text>
+        </g>
+      )}
+      <Hotspot cx={568} cy={476} r={16} label="… quelque chose ne va pas ici" item="allumettes" reveal={reveal} onClick={() => collect("allumettes")} />
     </svg>
   );
 }

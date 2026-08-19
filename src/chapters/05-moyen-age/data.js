@@ -20,6 +20,9 @@ import CarteMoyenAge from "./scenes/CarteMoyenAge.jsx";
    LES ÉLÉMENTS
    ------------------------------------------------------------ */
 const ITEMS = {
+  /* ANACHRONISME */
+  cle_usb: { name: "Clé USB", emoji: "💾", anachronic: true, desc: "Une petite clé USB en plastique bleu — l'USB, c'est 1996. Une clé au scriptorium serait bien pratique, mais il faudrait un ordinateur pour la lire !" },
+
   /* Le château */
   fil_laine: { name: "Fil de laine coloré", emoji: "🧶", desc: "Teint de couleurs vives : rouge, ocre, bleu. De quoi broder tout un récit, image après image." },
   toile_lin: { name: "Toile de lin", emoji: "🟫", desc: "Une longue bande de lin écru, tendue sur le mur : la surface d'un immense récit cousu." },

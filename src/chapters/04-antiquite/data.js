@@ -19,6 +19,9 @@ import CarteAntiquite from "./scenes/CarteAntiquite.jsx";
    LES ÉLÉMENTS
    ------------------------------------------------------------ */
 const ITEMS = {
+  /* ANACHRONISME */
+  lunettes_soleil: { name: "Lunettes de soleil", emoji: "🕶️", anachronic: true, desc: "Des Ray-Ban en plastique noir — modèle Aviator. Les lunettes de soleil modernes datent des années 1930. Ni verre bombé, ni plastique en Antiquité." },
+
   /* Tableau 1 — l'entrée de la villa */
   voix:     { name: "Ta voix (avec Argos)", emoji: "🗣️", desc: "« Pas le temps d'écrire mille invitations ! On va les CRIER sur la place », dit Argos. Ta voix, lancée à la foule : vite et large… mais demain, il n'en restera rien." },
   foule:    { name: "La foule", emoji: "👥", support: true, desc: "La foule de Pompéi, sur la place. Une annonce criée ici fait vite le tour de la ville — mais rien n'en restera demain." },

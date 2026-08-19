@@ -224,6 +224,18 @@ export default function SceneImprimerie({ collect, action, reveal, made = [], qu
       {/* Sigismond, cible de dépôt : on lui apporte l'article → la gazette */}
       <Hotspot cx={762} cy={452} r={44} label="donner l'article à Sigismond" item="sigismond" reveal={reveal} onClick={() => action("sigismond")} />
       <Hotspot cx={910} cy={502} r={34} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
+
+      {/* ANACHRONISME : écouteurs sans fil dans leur boîtier posé sur une casse à caractères */}
+      {!made.includes("ecouteurs") && (
+        <g transform="translate(160,506)">
+          <rect x={-10} y={-4} width={20} height={10} rx={3} fill="#f0e4d0" stroke="#5a4028" strokeWidth="0.6" />
+          <ellipse cx={-5} cy={-4} rx={3} ry={2} fill="#c8c8c8" />
+          <ellipse cx={5} cy={-4} rx={3} ry={2} fill="#c8c8c8" />
+          <path d="M-5 -4 v3 M5 -4 v3" stroke="#c8c8c8" strokeWidth="0.8" />
+          <rect x={-6} y={3} width={12} height={2} fill="#7fe0a8" opacity="0.7" />
+        </g>
+      )}
+      <Hotspot cx={160} cy={504} r={16} label="… quelque chose ne va pas ici" item="ecouteurs" reveal={reveal} onClick={() => collect("ecouteurs")} />
     </svg>
   );
 }

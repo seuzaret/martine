@@ -22,6 +22,9 @@ import { PortraitMesannepada, PortraitNaram, PortraitSnefrou } from "./scenes/po
    LES ÉLÉMENTS
    ------------------------------------------------------------ */
 const ITEMS = {
+  /* ANACHRONISME */
+  stylo_bic: { name: "Stylo Bic", emoji: "🖊️", anachronic: true, desc: "Un stylo à bille en plastique — inventé par László Bíró en 1938. En cunéiforme, il ne servirait à rien !" },
+
   /* Ur */
   roseaux:  { name: "Roseaux du fleuve", emoji: "🌾", desc: "Des tiges droites et creuses, coupées au bord du canal. Taillées en pointe, elles écrivent." },
   couteau:  { name: "Couteau de silex", emoji: "🔪", desc: "Une lame tranchante. De quoi tailler un roseau en biseau — la pointe du scribe." },

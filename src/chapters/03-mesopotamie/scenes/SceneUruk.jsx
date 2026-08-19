@@ -285,6 +285,17 @@ export default function SceneUruk({ collect, action, reveal, made = [], queteQui
       <Hotspot cx={600} cy={460} r={46} label="four" item="four" reveal={reveal} onClick={() => collect("four")} />
       <Hotspot cx={90} cy={528} r={44} label="eau" item="eau" reveal={reveal} onClick={() => collect("eau")} />
       <Hotspot cx={940} cy={498} r={34} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
+
+      {/* ANACHRONISME : stylo Bic bleu dans un coin près des scribes */}
+      {!made.includes("stylo_bic") && (
+        <g transform="translate(720,520) rotate(30)">
+          <rect x={-2} y={-14} width={4} height={26} fill="#0a2058" stroke="#050820" strokeWidth="0.4" />
+          <path d="M-2 12 L0 18 L2 12 Z" fill="#0a0e14" />
+          <rect x={-2} y={-14} width={4} height={4} fill="#c8c8c8" />
+          <path d="M2 -2 l3 -1" stroke="#0a2058" strokeWidth="0.5" />
+        </g>
+      )}
+      <Hotspot cx={720} cy={520} r={16} label="… quelque chose ne va pas ici" item="stylo_bic" reveal={reveal} onClick={() => collect("stylo_bic")} />
     </svg>
   );
 }

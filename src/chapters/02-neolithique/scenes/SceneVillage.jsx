@@ -287,6 +287,17 @@ export default function SceneVillage({ collect, action, reveal, made = [] }) {
       <Hotspot cx={820} cy={468} r={70} label="troupeau" item="troupeau" reveal={reveal} onClick={() => collect("troupeau")} />
       <Hotspot cx={636} cy={506} r={34} label="cailloux noirs" item="cailloux" reveal={reveal} onClick={() => collect("cailloux")} />
       <Hotspot cx={70} cy={490} r={40} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
+
+      {/* ANACHRONISME : canette de soda écrasée près du four */}
+      {!made.includes("canette") && (
+        <g transform="translate(230,478) rotate(-15)">
+          <rect x={-6} y={-14} width={12} height={22} rx={2} fill="#c8382e" stroke="#5a1810" strokeWidth="0.8" />
+          <rect x={-5} y={-12} width={10} height={4} fill="#f0e4c8" />
+          <ellipse cx={0} cy={-14} rx={6} ry={1.5} fill="#8a2820" />
+          <text x={0} y={0} textAnchor="middle" fontSize="3" fontWeight="800" fill="#f0e4c8">COLA</text>
+        </g>
+      )}
+      <Hotspot cx={230} cy={478} r={16} label="… objet étrange" item="canette" reveal={reveal} onClick={() => collect("canette")} />
     </svg>
   );
 }

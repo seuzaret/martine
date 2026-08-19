@@ -26,6 +26,9 @@ import CarteNeolithique from "./scenes/CarteNeolithique.jsx";
    LES ÉLÉMENTS
    ------------------------------------------------------------ */
 const ITEMS = {
+  /* ANACHRONISME — déchet temporel à jeter dans la poubelle 🗑️ */
+  canette: { name: "Canette de soda", emoji: "🥤", anachronic: true, desc: "Une canette en aluminium — l'aluminium ne sera isolé qu'en 1825, et les canettes n'existent pas avant 1935 !" },
+
   /* T1 — la muraille et la grève */
   coquillage: { name: "Coquillage", emoji: "🐚", desc: "Un coquillage nacré ramassé sur la grève. Broyé ou incrusté, il fait la beauté des poteries d'ici." },
 

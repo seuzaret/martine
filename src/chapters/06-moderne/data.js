@@ -22,6 +22,9 @@ import CarteModerne from "./scenes/CarteModerne.jsx";
    LES ÉLÉMENTS
    ------------------------------------------------------------ */
 const ITEMS = {
+  /* ANACHRONISME */
+  ecouteurs: { name: "Écouteurs sans fil", emoji: "🎧", anachronic: true, desc: "Une paire de True Wireless — la première Bluetooth date de 1999, les vrais sans-fil de 2016. À l'époque de Gutenberg, ça ne captera rien !" },
+
   /* En province */
   plume:        { name: "Plume et encrier", emoji: "🖋️", desc: "De quoi écrire vite et bien. Un journaliste sans sa plume n'est qu'un badaud de plus." },
   montgolfiere: { name: "La montgolfière", emoji: "🎈", support: true, desc: "Un globe de taffetas qui s'élève au-dessus de la foule ébahie. LE spectacle du jour — un scoop pour qui saura le raconter." },
