@@ -26,6 +26,7 @@ import { TsfReglageGame } from "./chapters/xxe-tsf-reglage.jsx";
 import { CassetteGame } from "./chapters/xxe-cassette.jsx";
 import { GraverCdGame } from "./chapters/xxe-graver-cd.jsx";
 import { EniacDebugGame } from "./chapters/xxe-eniac-debug.jsx";
+import { TailleSilexGame } from "./chapters/paleo-taille-silex.jsx";
 import Mediadex from "./engine/Mediadex.jsx";
 import MediaCard from "./engine/MediaCard.jsx";
 import { getCardMeta, playCardSound } from "./engine/mediadex.js";
@@ -1460,6 +1461,10 @@ export default function App() {
 
       {modal?.type === "eniac_debug" && (
         <EniacDebugGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_eniac")} />
+      )}
+
+      {modal?.type === "taille_silex" && (
+        <TailleSilexGame onClose={() => setModal(null)} onWin={() => bumpFlux(2)} />
       )}
 
       {/* CARTE-INVENTION (façon Pokémon) qui apparaît quand un nouveau message est transmis */}

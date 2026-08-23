@@ -223,6 +223,23 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [], qu
           <circle cx="13" cy="-27" r="2.3" fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
           <path d="M8 -20 q6 -8 13 -6" stroke="#8a94a8" strokeWidth="2.3" fill="none" strokeLinecap="round" />
         </g>
+
+        {/* ANACHRONISME : smartphone posé au sol dans un coin, écran allumé */}
+        {!made.includes("smartphone") && (
+          <g transform="translate(140,510) rotate(15)">
+            <rect x={-10} y={-18} width={20} height={36} rx={3} fill="#1a1a1a" stroke="#5a5a5a" strokeWidth="1" />
+            <rect x={-9} y={-16} width={18} height={32} rx={1.5} fill="#0a1428" />
+            {/* barre de notifications */}
+            <rect x={-9} y={-16} width={18} height={4} fill="#050810" />
+            <text x={0} y={-13} textAnchor="middle" fontSize="3" fontFamily="ui-monospace,monospace" fill="#c8d4e2">12:04 ⚡</text>
+            {/* rectangles d'apps */}
+            {[[-6, -8], [0, -8], [6, -8], [-6, -2], [0, -2], [6, -2], [-6, 4], [0, 4], [6, 4]].map(([ax, ay], i) => (
+              <rect key={i} x={ax - 2} y={ay - 2} width={4} height={4} rx={0.6} fill={["#c8382e", "#3a80c8", "#e0a848", "#5aa030", "#a840c0", "#e83820", "#3ac0c0", "#e07040", "#8ac030"][i]} />
+            ))}
+            {/* bouton accueil */}
+            <circle cx={0} cy={13} r={1.5} fill="none" stroke="#5a5a5a" strokeWidth="0.8" />
+          </g>
+        )}
       </PLayer>
 
       {/* voile de grain global */}
@@ -234,6 +251,7 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [], qu
         <Hotspot cx={306} cy={476} r={40} label="le manipulateur Morse" item="code_morse" reveal={reveal} onClick={() => collect("code_morse")} />
       )}
       <Hotspot cx={856} cy={502} r={34} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
+      <Hotspot cx={140} cy={510} r={22} label="… quelque chose ne va pas ici" item="smartphone" reveal={reveal} onClick={() => collect("smartphone")} />
     </svg>
   );
 }

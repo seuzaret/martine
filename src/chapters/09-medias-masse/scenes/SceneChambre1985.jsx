@@ -201,6 +201,25 @@ export default function SceneChambre1985({ collect, action, reveal, made = [], f
             <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
           </g>
         )}
+
+        {/* ANACHRONISME : boîtier AirPods sur le parquet au premier plan */}
+        {!made.includes("airpods") && (
+          <g transform="translate(240,520) rotate(-8)">
+            {/* boîtier blanc, forme galet horizontal */}
+            <rect x={-14} y={-6} width={28} height={12} rx={5} fill="#f0e8e0" stroke="#8a8078" strokeWidth="1" />
+            {/* ligne de séparation couvercle */}
+            <path d="M-14 0 h28" stroke="#a0968a" strokeWidth="0.6" />
+            {/* les deux écouteurs qui dépassent en haut */}
+            <ellipse cx={-6} cy={-6} rx={3.5} ry={3} fill="#f0e8e0" stroke="#8a8078" strokeWidth="0.6" />
+            <ellipse cx={-6} cy={-7} rx={2} ry={1.6} fill="#3a3a3a" />
+            <path d="M-6 -4 v6" stroke="#f0e8e0" strokeWidth="2" />
+            <ellipse cx={6} cy={-6} rx={3.5} ry={3} fill="#f0e8e0" stroke="#8a8078" strokeWidth="0.6" />
+            <ellipse cx={6} cy={-7} rx={2} ry={1.6} fill="#3a3a3a" />
+            <path d="M6 -4 v6" stroke="#f0e8e0" strokeWidth="2" />
+            {/* LED verte de charge */}
+            <circle cx={0} cy={4} r={1} fill="#5eff9e" style={{ animation: "pulse 1.6s infinite" }} />
+          </g>
+        )}
       </PLayer>
 
       {/* ═══ zones cliquables ═══ */}
@@ -221,6 +240,7 @@ export default function SceneChambre1985({ collect, action, reveal, made = [], f
       {!disquettePrise && (
         <Hotspot cx={830} cy={306} r={24} label="disquette 3½ » (héritage pour + tard)" item="disquette" reveal={reveal} onClick={() => collect("disquette")} />
       )}
+      <Hotspot cx={240} cy={520} r={22} label="… quelque chose ne va pas ici" item="airpods" reveal={reveal} onClick={() => collect("airpods")} />
     </svg>
   );
 }

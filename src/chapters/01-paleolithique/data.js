@@ -11,6 +11,9 @@ import SceneInterieur from "./scenes/SceneInterieur.jsx";
 import SceneExterieur from "./scenes/SceneExterieur.jsx";
 import SceneCampement from "./scenes/SceneCampement.jsx";
 import SceneRiviere from "./scenes/SceneRiviere.jsx";
+import SceneAtelier from "./scenes/SceneAtelier.jsx";
+import SceneGue from "./scenes/SceneGue.jsx";
+import SceneCrete from "./scenes/SceneCrete.jsx";
 import { PortraitAna, PortraitRaya, PortraitDoru, PortraitKyan } from "./scenes/portraits.jsx";
 import CartePaleo from "./scenes/CartePaleo.jsx";
 
@@ -19,9 +22,22 @@ import CartePaleo from "./scenes/CartePaleo.jsx";
    id : { name (nom affiché), emoji, desc (texte quand on le ramasse) }
    ------------------------------------------------------------ */
 const ITEMS = {
-  /* ANACHRONISME — un déchet temporel abandonné par un agent maladroit.
-     À jeter dans la POUBELLE TEMPORELLE pour +3 flux. */
+  /* ANACHRONISME — un SEUL par époque, à jeter dans la poubelle temporelle. */
   allumettes: { name: "Boîte d'allumettes", emoji: "🔥", anachronic: true, desc: "Une boîte d'allumettes en carton — ça n'existera pas avant 1826 !" },
+
+  /* ─── OBJETS D'ÉPOQUE INUTILES (ephemere) ───
+     Marqués `ephemere: true` → disparaissent du sac au changement de tableau.
+     Aucune utilité pour la mission — juste pour peupler les scènes, ralentir
+     l'exploration, et faire sourire avec les répliques de MARTINE. */
+  feuille_morte: { name: "Feuille morte", emoji: "🍂", ephemere: true, desc: "Une feuille morte. Très paléolithique. Absolument inutile pour rentrer chez toi." },
+  coccinelle:    { name: "Coccinelle", emoji: "🐞", ephemere: true, desc: "Une coccinelle à sept points. Ça porte bonheur, dit-on. Ça ne recharge pas MARTINE." },
+  plume:         { name: "Plume d'oiseau", emoji: "🪶", ephemere: true, desc: "Sûrement d'un tétras. Décorative, sans plus. Repose-la avant que quelqu'un ne t'accuse de vol." },
+  escargot:      { name: "Escargot", emoji: "🐌", ephemere: true, desc: "Un escargot préhistorique. Il t'apprend la patience — pas la communication." },
+  caillou_rond:  { name: "Joli caillou", emoji: "🪨", ephemere: true, desc: "Un galet parfaitement rond. Il fera un beau presse-papier dans 20 000 ans. En attendant : rien." },
+  champignon:    { name: "Champignon", emoji: "🍄", ephemere: true, desc: "Un champignon rouge à points blancs. Sans info sur sa comestibilité, tu le reposes très vite." },
+  brindille:     { name: "Brindille", emoji: "🌿", ephemere: true, desc: "Une brindille sèche. On peut faire du feu avec, mais tu as mieux." },
+  fleur:         { name: "Petite fleur", emoji: "🌸", ephemere: true, desc: "Une fleur bleue sauvage. Jolie. Aucune vertu magique connue." },
+
 
   branche:  { name: "Branche souple", emoji: "🌿", desc: "Du noisetier, souple et solide. De quoi fabriquer bien des choses." },
   liane:    { name: "Liane", emoji: "🪢", desc: "Fibre végétale, résistante et élastique. Ça s'étire… et ça revient." },
@@ -56,8 +72,11 @@ const SCENES = [
      clan, synthétisés) démarre dans ce tableau et s'arrête en le quittant. */
   { id: "interieur", name: "Au fond de la grotte", Component: SceneInterieur, ambience: "grotte" },
   { id: "exterieur", name: "Devant la grotte",     Component: SceneExterieur },
+  { id: "atelier",   name: "L'atelier de silex",   Component: SceneAtelier },
   { id: "campement", name: "Le campement",         Component: SceneCampement },
+  { id: "crete",     name: "Le point de vue",      Component: SceneCrete },
   { id: "riviere",   name: "La rivière",           Component: SceneRiviere },
+  { id: "gue",       name: "Le gué",               Component: SceneGue },
 ];
 
 /* Pour les indices : où trouver chaque élément de base. */
@@ -238,6 +257,37 @@ const ACTIONS = {
   kyan: { mood: "neutre",
     bubble: "Je suis la mémoire du clan. Tout ce qui s'oublie meurt une seconde fois — c'est pour ça que je me souviens.",
     say: "Kyan, la mémoire du clan. Ce qu'elle sait tient dans une seule tête… fragile, non ?" },
+
+  /* ─── Nouveaux personnages / actions des tableaux ajoutés (atelier, gué, crête) ─── */
+  cheng: { mood: "neutre",
+    bubble: "Cheng, le tailleur. Chaque nodule a une intention. Frappe-le au bon endroit et l'éclat s'échappe seul.",
+    say: "Cheng, le tailleur de silex. Un art transmis de la main à la main depuis 2 millions d'années." },
+
+  pecheur: { mood: "neutre",
+    bubble: "Assis, silencieux, patient. La rivière donne à qui sait attendre.",
+    say: "Le pêcheur du gué. La patience comme technique — un savoir sans mots." },
+
+  aine: { mood: "neutre",
+    bubble: "D'ici, on voit tout. Le troupeau au sud, l'orage à l'ouest. On garde l'œil, on prévient le clan.",
+    say: "L'aîné en observation sur la crête. Un « poste-relais » avant l'invention du télégraphe." },
+
+  cairn: { mood: "neutre",
+    bubble: "Un petit tas de pierres empilées — laissé par les chasseurs qui sont passés ici. Un message très simple : « quelqu'un est venu ». Ancêtre du panneau routier.",
+    say: "Un cairn de repère. Message minimal, universel, durable." },
+
+  troupeau_loin: { mood: "neutre",
+    bubble: "Les bisons ! Une centaine, au moins, en train de brouter dans la plaine.",
+    say: "Le troupeau — nourriture, peaux, os. Il faudra le chasser un jour." },
+
+  aigle: { mood: "content",
+    bubble: "Un aigle qui plane sans battre les ailes. Il voit la souris à 300 mètres — meilleur observateur que nous.",
+    say: "L'aigle royal, œil du ciel." },
+
+  pecher: { mood: "neutre", say: "Un poisson ! Trop rapide pour l'attraper à la main. Il faudrait une lance ou un filet — pour plus tard." },
+
+  /* Actions qui ouvrent des mini-jeux */
+  tailler_silex: { modal: "taille_silex" },
+  traverser_gue: { mood: "neutre", say: "Les pierres du gué sont glissantes — sans bâton, tu risques la chute. Mieux vaut trouver un chemin plus sûr… ou attendre." },
 };
 
 /* ------------------------------------------------------------

@@ -266,6 +266,20 @@ export default function SceneCampement({ collect, action, reveal, made = [], que
         <path d="M948 560 q-8 -28 -2 -44 M970 560 q4 -24 12 -36 M992 560 q-4 -20 4 -32" stroke="#1c1810" strokeWidth="4" fill="none" />
         <path d="M420 560 q-5 -16 2 -26 M540 560 q5 -16 -1 -24" stroke="#241c12" strokeWidth="3.5" fill="none" />
       </g>
+
+      {/* ANACHRONISME : boîte d'allumettes bien à droite au sol, loin du feu.
+          Dans le PLayer premier plan pour bouger avec la parallaxe. */}
+      {!made.includes("allumettes") && (
+        <g transform="translate(840,510) rotate(-8)">
+          <rect x={-14} y={-8} width={28} height={16} rx={1.5} fill="#c8382e" stroke="#5a1810" strokeWidth="1" />
+          <rect x={-11} y={-5} width={22} height={7} fill="#f0e4c8" />
+          <text x={0} y={0} textAnchor="middle" fontSize="4.5" fontFamily="ui-monospace,monospace" fontWeight="800" fill="#5a1810">SAFETY</text>
+          <text x={0} y={7} textAnchor="middle" fontSize="3.5" fontFamily="ui-monospace,monospace" fill="#f0e4c8">MATCHES</text>
+          {/* petite allumette qui dépasse */}
+          <path d="M-14 -6 l-8 -3" stroke="#e8d5a8" strokeWidth="1.4" strokeLinecap="round" />
+          <circle cx="-22.5" cy="-9.5" r="1.2" fill="#c8382e" />
+        </g>
+      )}
       </PLayer>
 
       {/* léger voile de grain sur toute l'image */}
@@ -277,16 +291,8 @@ export default function SceneCampement({ collect, action, reveal, made = [], que
       <Hotspot cx={660} cy={488} r={58} label="branches" item="branche" reveal={reveal} onClick={() => collect("branche")} />
       <Hotspot cx={300} cy={446} r={44} label="Raya, le chef" reveal={reveal} onClick={(p) => action("raya", p)} />
 
-      {/* ANACHRONISME : petite boîte d'allumettes qui traîne juste à côté du feu.
-          Absurde en −18 000 — c'est ça, le déchet temporel à ramasser. */}
-      {!made.includes("allumettes") && (
-        <g>
-          <rect x={558} y={470} width={18} height={11} rx={1} fill="#c8382e" stroke="#5a1810" strokeWidth="0.8" transform="rotate(-6 567 476)" />
-          <rect x={561} y={472} width={12} height={4} fill="#f0e4c8" transform="rotate(-6 567 476)" />
-          <text x={567} y={475} textAnchor="middle" fontSize="3" fontFamily="ui-monospace,monospace" fontWeight="800" fill="#5a1810" transform="rotate(-6 567 476)">SAFETY</text>
-        </g>
-      )}
-      <Hotspot cx={568} cy={476} r={16} label="… quelque chose ne va pas ici" item="allumettes" reveal={reveal} onClick={() => collect("allumettes")} />
+      {/* ANACHRONISME : la boîte d'allumettes traîne au sol, loin du feu à droite */}
+      <Hotspot cx={840} cy={510} r={20} label="… quelque chose ne va pas ici" item="allumettes" reveal={reveal} onClick={() => collect("allumettes")} />
     </svg>
   );
 }

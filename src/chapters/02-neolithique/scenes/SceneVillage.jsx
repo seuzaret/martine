@@ -253,6 +253,25 @@ export default function SceneVillage({ collect, action, reveal, made = [] }) {
           <path d="M-4 560 q10 -30 4 -46 M18 560 q3 -24 14 -38 M40 560 q-6 -20 2 -34" stroke="#241a10" strokeWidth="4" fill="none" />
           <path d="M420 560 q-5 -16 2 -26 M540 560 q5 -16 -1 -24" stroke="#2c2014" strokeWidth="3.5" fill="none" />
         </g>
+
+        {/* ANACHRONISME : canette de soda écrasée bien visible sur la terre */}
+        {!made.includes("canette") && (
+          <g transform="translate(390,530) rotate(-18)">
+            {/* corps de canette (aluminium argent) */}
+            <rect x={-9} y={-22} width={18} height={36} rx={2} fill="#c8c8c8" stroke="#5a5a5a" strokeWidth="0.8" />
+            {/* bandeau rouge principal */}
+            <rect x={-9} y={-14} width={18} height={18} fill="#c8382e" />
+            {/* logo COLA en blanc */}
+            <text x={0} y={-2} textAnchor="middle" fontSize="5.5" fontFamily="Georgia,serif" fontStyle="italic" fontWeight="800" fill="#f0e4c8">Cola</text>
+            {/* dessus (ouverture) */}
+            <ellipse cx={0} cy={-22} rx={9} ry={2.4} fill="#8a8a8a" stroke="#5a5a5a" strokeWidth="0.6" />
+            <path d="M-4 -22 h8" stroke="#3a3a3a" strokeWidth="0.6" />
+            {/* dessous */}
+            <ellipse cx={0} cy={14} rx={9} ry={2} fill="#a8a8a8" />
+            {/* bosse/écrasement */}
+            <path d="M-9 -4 q4 3 18 -1" stroke="#8a2820" strokeWidth="0.6" fill="none" />
+          </g>
+        )}
       </PLayer>
 
       {/* voile de grain global */}
@@ -288,16 +307,8 @@ export default function SceneVillage({ collect, action, reveal, made = [] }) {
       <Hotspot cx={636} cy={506} r={34} label="cailloux noirs" item="cailloux" reveal={reveal} onClick={() => collect("cailloux")} />
       <Hotspot cx={70} cy={490} r={40} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
 
-      {/* ANACHRONISME : canette de soda écrasée près du four */}
-      {!made.includes("canette") && (
-        <g transform="translate(230,478) rotate(-15)">
-          <rect x={-6} y={-14} width={12} height={22} rx={2} fill="#c8382e" stroke="#5a1810" strokeWidth="0.8" />
-          <rect x={-5} y={-12} width={10} height={4} fill="#f0e4c8" />
-          <ellipse cx={0} cy={-14} rx={6} ry={1.5} fill="#8a2820" />
-          <text x={0} y={0} textAnchor="middle" fontSize="3" fontWeight="800" fill="#f0e4c8">COLA</text>
-        </g>
-      )}
-      <Hotspot cx={230} cy={478} r={16} label="… objet étrange" item="canette" reveal={reveal} onClick={() => collect("canette")} />
+      {/* ANACHRONISME : hotspot de la canette (visuel dans le PLayer premier plan) */}
+      <Hotspot cx={390} cy={520} r={22} label="… quelque chose ne va pas ici" item="canette" reveal={reveal} onClick={() => collect("canette")} />
     </svg>
   );
 }

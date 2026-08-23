@@ -218,6 +218,22 @@ export default function SceneMonastere({ collect, action, reveal, made = [], fla
             ))}
           </g>
         )}
+
+        {/* ANACHRONISME : clé USB bleu vif posée sur le sol dallé du scriptorium */}
+        {!made.includes("cle_usb") && (
+          <g transform="translate(140,520) rotate(22)">
+            <rect x={-18} y={-6} width={22} height={12} rx={1.5} fill="#2a68b0" stroke="#0a2038" strokeWidth="1" />
+            <rect x={-18} y={-6} width={22} height={4} fill="#3a80c8" />
+            {/* connecteur USB argenté */}
+            <rect x={4} y={-4} width={14} height={8} fill="#c8c8c8" stroke="#5a5a5a" strokeWidth="0.6" />
+            <rect x={7} y={-2} width={8} height={4} fill="#5a5a5a" />
+            {/* attache */}
+            <path d="M-18 -6 h-4 v12 h4" fill="none" stroke="#2a68b0" strokeWidth="1.2" />
+            <circle cx={-22} cy={0} r={2} fill="none" stroke="#c8c8c8" strokeWidth="1" />
+            {/* LED verte */}
+            <circle cx={-6} cy={0} r={1.2} fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
+          </g>
+        )}
       </PLayer>
 
       {/* voile de grain global */}
@@ -253,16 +269,7 @@ export default function SceneMonastere({ collect, action, reveal, made = [], fla
       )}
       <Hotspot cx={900} cy={502} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
 
-      {/* ANACHRONISME : clé USB oubliée sur un pupitre de copiste */}
-      {!made.includes("cle_usb") && (
-        <g transform="translate(680,516) rotate(20)">
-          <rect x={-10} y={-3} width={12} height={6} rx={0.5} fill="#3a80c8" stroke="#0a2038" strokeWidth="0.4" />
-          <rect x={2} y={-2} width={6} height={4} fill="#c8c8c8" />
-          <rect x={-8} y={-1} width={2} height={2} fill="#7fb0e0" />
-          <path d="M-10 -3 h-4 v6 h4" fill="none" stroke="#3a80c8" strokeWidth="0.6" />
-        </g>
-      )}
-      <Hotspot cx={680} cy={516} r={14} label="… quelque chose ne va pas ici" item="cle_usb" reveal={reveal} onClick={() => collect("cle_usb")} />
+      <Hotspot cx={140} cy={520} r={24} label="… quelque chose ne va pas ici" item="cle_usb" reveal={reveal} onClick={() => collect("cle_usb")} />
     </svg>
   );
 }

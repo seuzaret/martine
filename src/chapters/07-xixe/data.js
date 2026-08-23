@@ -32,6 +32,9 @@ import { PortraitJames, PortraitJamesVieux, PortraitMarconi, PortraitSean, Portr
    LES ÉLÉMENTS
    ------------------------------------------------------------ */
 const ITEMS = {
+  /* ANACHRONISME */
+  smartphone: { name: "Smartphone", emoji: "📱", anachronic: true, desc: "Un smartphone tactile — l'iPhone date de 2007, 158 ans après le Far West de James O'Sullivan. Ici, il n'a même pas de réseau." },
+
   /* héritage du chapitre 6 (voyage dans la besace) */
   pile: { name: "Pile de Volta", emoji: "⚡", heirloom: true, desc: "Ta pile du chapitre précédent : la source d'électricité qui rend possible tout ce siècle. La voilà enfin utile — apporte-la au télégraphe !" },
 

@@ -19,6 +19,10 @@ import SceneDatacenter from "./scenes/SceneDatacenter.jsx";
    LES ÉLÉMENTS
    ------------------------------------------------------------ */
 const ITEMS = {
+  /* ANACHRONISME — venu du FUTUR cette fois ! Un agent du temps de 2140
+     l'a fait tomber lors d'un saut. Objet inventé, années 2140. */
+  neurolien: { name: "Neuro-Lien™", emoji: "🧠", anachronic: true, desc: "Un petit disque translucide bio-imprimé qui se pose sur la tempe : le NEURO-LIEN™ (breveté en 2141). Il transmet directement les pensées sur le web. En 2025 il n'existe pas encore — et ça vaut mieux !" },
+
   /* HÉRITAGE du chapitre 8 — elle voyage dans la besace */
   disquette: { name: "Disquette", emoji: "💾", heirloom: true, desc: "Ta disquette des années 80, rapportée du chapitre précédent. Il y a un fichier dessus. Elle a 30 ans à peine… ça devrait aller, non ?" },
 

@@ -204,6 +204,25 @@ export default function SceneImprimerie({ collect, action, reveal, made = [], qu
             </g>
           </g>
         )}
+
+        {/* ANACHRONISME : écouteurs sans fil dans leur boîtier, posés sur une casse à caractères */}
+        {!made.includes("ecouteurs") && (
+          <g transform="translate(880,510)">
+            {/* boîtier de charge blanc, forme galet */}
+            <rect x={-18} y={-8} width={36} height={16} rx={6} fill="#f0e4d0" stroke="#5a4028" strokeWidth="1" />
+            {/* petite trace de séparation du couvercle */}
+            <path d="M-18 0 h36" stroke="#8a7860" strokeWidth="0.6" />
+            {/* deux écouteurs (True Wireless) qui dépassent */}
+            <ellipse cx={-9} cy={-8} rx={5} ry={4} fill="#f0e4d0" stroke="#5a4028" strokeWidth="0.6" />
+            <ellipse cx={-9} cy={-9} rx={3} ry={2.5} fill="#3a3a3a" />
+            <path d="M-9 -6 v6" stroke="#f0e4d0" strokeWidth="2.5" />
+            <ellipse cx={9} cy={-8} rx={5} ry={4} fill="#f0e4d0" stroke="#5a4028" strokeWidth="0.6" />
+            <ellipse cx={9} cy={-9} rx={3} ry={2.5} fill="#3a3a3a" />
+            <path d="M9 -6 v6" stroke="#f0e4d0" strokeWidth="2.5" />
+            {/* LED verte de charge */}
+            <circle cx={0} cy={6} r={1.5} fill="#5eff9e" style={{ animation: "pulse 1.6s infinite" }} />
+          </g>
+        )}
       </PLayer>
 
       {/* voile de grain global */}
@@ -225,17 +244,7 @@ export default function SceneImprimerie({ collect, action, reveal, made = [], qu
       <Hotspot cx={762} cy={452} r={44} label="donner l'article à Sigismond" item="sigismond" reveal={reveal} onClick={() => action("sigismond")} />
       <Hotspot cx={910} cy={502} r={34} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
 
-      {/* ANACHRONISME : écouteurs sans fil dans leur boîtier posé sur une casse à caractères */}
-      {!made.includes("ecouteurs") && (
-        <g transform="translate(160,506)">
-          <rect x={-10} y={-4} width={20} height={10} rx={3} fill="#f0e4d0" stroke="#5a4028" strokeWidth="0.6" />
-          <ellipse cx={-5} cy={-4} rx={3} ry={2} fill="#c8c8c8" />
-          <ellipse cx={5} cy={-4} rx={3} ry={2} fill="#c8c8c8" />
-          <path d="M-5 -4 v3 M5 -4 v3" stroke="#c8c8c8" strokeWidth="0.8" />
-          <rect x={-6} y={3} width={12} height={2} fill="#7fe0a8" opacity="0.7" />
-        </g>
-      )}
-      <Hotspot cx={160} cy={504} r={16} label="… quelque chose ne va pas ici" item="ecouteurs" reveal={reveal} onClick={() => collect("ecouteurs")} />
+      <Hotspot cx={880} cy={510} r={24} label="… quelque chose ne va pas ici" item="ecouteurs" reveal={reveal} onClick={() => collect("ecouteurs")} />
     </svg>
   );
 }

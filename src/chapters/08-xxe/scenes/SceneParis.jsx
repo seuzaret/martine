@@ -223,6 +223,24 @@ export default function SceneParis({ collect, action, reveal, made = [] }) {
           <rect x="-8" y="80" width="6" height="20" fill="#4a4038" />
           <rect x="2" y="80" width="6" height="20" fill="#4a4038" />
         </g>
+
+        {/* ANACHRONISME : télécommande TV moderne dans le caniveau, entre les pavés */}
+        {!made.includes("telecommande") && (
+          <g transform="translate(750,520) rotate(20)">
+            <rect x={-9} y={-24} width={18} height={48} rx={3} fill="#1a1a1a" stroke="#3a3a3a" strokeWidth="1" />
+            {/* écran LCD en haut */}
+            <rect x={-6} y={-20} width={12} height={5} rx={0.6} fill="#2a3050" />
+            {/* boutons */}
+            <circle cx={-4} cy={-10} r={2} fill="#c8382e" />
+            <circle cx={4} cy={-10} r={2} fill="#5a5a5a" />
+            <circle cx={0} cy={-4} r={2.5} fill="#5eff9e" />
+            {[[-4, 2], [4, 2], [-4, 8], [4, 8], [-4, 14], [4, 14], [0, 20]].map(([bx, by], i) => (
+              <rect key={i} x={bx - 2} y={by - 1.4} width={4} height={2.8} rx={0.6} fill="#5a5a5a" />
+            ))}
+            {/* petit sigle marque */}
+            <text x={0} y={-15.5} textAnchor="middle" fontSize="2.4" fontFamily="ui-monospace,monospace" fill="#c8d4e2">TV42</text>
+          </g>
+        )}
       </PLayer>
 
       {/* ═══ zones cliquables ═══ */}
@@ -233,6 +251,7 @@ export default function SceneParis({ collect, action, reveal, made = [] }) {
       <Hotspot cx={600} cy={438} r={44} label="patrouille allemande" reveal={reveal} onClick={() => action("patrouille")} />
       <Hotspot cx={55} cy={345} r={30} label="affiche VERBOTEN" reveal={reveal} onClick={() => action("affiche")} />
       <Hotspot cx={950} cy={358} r={26} label="affiche de Vichy" reveal={reveal} onClick={() => action("affiche")} />
+      <Hotspot cx={750} cy={520} r={24} label="… quelque chose ne va pas ici" item="telecommande" reveal={reveal} onClick={() => collect("telecommande")} />
     </svg>
   );
 }

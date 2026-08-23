@@ -171,6 +171,17 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
           <circle cx="13" cy="-27" r="2.3" fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
           <path d="M8 -20 q6 -8 13 -6" stroke="#8a94a8" strokeWidth="2.3" fill="none" strokeLinecap="round" />
         </g>
+
+        {/* ANACHRONISME : Ray-Ban Aviator sur une dalle de la place */}
+        {!made.includes("lunettes_soleil") && (
+          <g transform="translate(180,510) rotate(-6)">
+            <ellipse cx={-14} cy={0} rx={13} ry={9} fill="#1a1a1a" stroke="#3a3a3a" strokeWidth="1.5" />
+            <ellipse cx={14} cy={0} rx={13} ry={9} fill="#1a1a1a" stroke="#3a3a3a" strokeWidth="1.5" />
+            <path d="M-3 -2 h6" stroke="#c8c8c8" strokeWidth="2.5" />
+            <path d="M-27 -3 l-10 -5 M27 -3 l10 -5" stroke="#c8c8c8" strokeWidth="2.2" />
+            <path d="M-18 -5 q4 -2 8 -1 M10 -5 q4 -1 8 1" stroke="#7fb0e0" strokeWidth="1.5" opacity="0.7" />
+          </g>
+        )}
       </PLayer>
 
       <rect width="1000" height="560" fill="#231a10" opacity="0.06" style={{ pointerEvents: "none" }} />
@@ -182,18 +193,7 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
       <Hotspot cx={786} cy={484} r={54} label="la dalle à graver" item="pierre" reveal={reveal} onClick={() => collect("pierre")} />
       <Hotspot cx={70} cy={502} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
 
-      {/* ANACHRONISME : paire de lunettes de soleil posée sur une dalle */}
-      {!made.includes("lunettes_soleil") && (
-        <g transform="translate(560,494) rotate(-8)">
-          <circle cx={-9} cy={0} r={7} fill="#1a1a1a" stroke="#3a3a3a" strokeWidth="1" />
-          <circle cx={9} cy={0} r={7} fill="#1a1a1a" stroke="#3a3a3a" strokeWidth="1" />
-          <path d="M-2 0 h4" stroke="#3a3a3a" strokeWidth="1.5" />
-          <path d="M-16 -1 l-6 -3 M16 -1 l6 -3" stroke="#3a3a3a" strokeWidth="1.4" />
-          {/* petit reflet */}
-          <path d="M-11 -3 l3 -1 M7 -3 l3 -1" stroke="#7fb0e0" strokeWidth="0.8" opacity="0.6" />
-        </g>
-      )}
-      <Hotspot cx={560} cy={494} r={18} label="… quelque chose ne va pas ici" item="lunettes_soleil" reveal={reveal} onClick={() => collect("lunettes_soleil")} />
+      <Hotspot cx={180} cy={510} r={26} label="… quelque chose ne va pas ici" item="lunettes_soleil" reveal={reveal} onClick={() => collect("lunettes_soleil")} />
     </svg>
   );
 }

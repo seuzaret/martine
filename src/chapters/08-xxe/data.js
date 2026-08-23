@@ -23,6 +23,9 @@ import { PortraitArthur, PortraitMarthe, PortraitMarchand, PortraitKay } from ".
    LES ÉLÉMENTS
    ------------------------------------------------------------ */
 const ITEMS = {
+  /* ANACHRONISME */
+  telecommande: { name: "Télécommande TV", emoji: "🎮", anachronic: true, desc: "Une télécommande d'aujourd'hui, avec boutons rouges et numériques. La télécommande sans fil n'existe qu'à partir de 1955 (Zenith Space Command)." },
+
   /* T1 — Paris occupé */
   couverture: { name: "Grosse couverture", emoji: "🧣", desc: "Achetée au marché noir : à jeter sur le poste TSF cette nuit pour étouffer le son. Le voisin d'en face est un collabo." },
 

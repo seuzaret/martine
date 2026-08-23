@@ -242,6 +242,31 @@ export default function SceneChambre({ collect, action, reveal, made = [] }) {
           <circle cx="13" cy="-27" r="2.3" fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
           <path d="M8 -20 q6 -8 13 -6" stroke="#8a94a8" strokeWidth="2.3" fill="none" strokeLinecap="round" />
         </g>
+
+        {/* ANACHRONISME DU FUTUR : NEURO-LIEN™ (2141) posé sur le bureau.
+            Un disque bio-imprimé qui projette un hologramme neuronal. */}
+        {!made.includes("neurolien") && (
+          <g transform="translate(140,506)">
+            {/* halo violet-cyan pulsé */}
+            <circle r={38} fill="#a840c0" opacity="0.25" style={{ animation: "pulse 2s infinite" }} />
+            <circle r={24} fill="#7fe0ff" opacity="0.35" style={{ animation: "pulse 2s infinite" }} />
+            {/* disque bio-imprimé translucide (plus gros) */}
+            <ellipse cx={0} cy={2} rx={20} ry={6} fill="#c8a8e0" stroke="#7fe0ff" strokeWidth="1.5" opacity="0.9" />
+            <ellipse cx={0} cy={0} rx={16} ry={5} fill="#e0c8f0" opacity="0.85" />
+            {/* motif neuronal (nœuds reliés) */}
+            {[[-11, 0], [-4, -2], [4, 0], [11, -2]].map(([nx, ny], i) => (
+              <circle key={i} cx={nx} cy={ny} r={1.6} fill="#3a1a58" />
+            ))}
+            <path d="M-11 0 L-4 -2 L4 0 L11 -2" stroke="#5a2088" strokeWidth="1" fill="none" />
+            {/* logo « NL™ » */}
+            <text x={0} y={4} textAnchor="middle" fontSize="4" fontFamily="ui-monospace,monospace" fontWeight="800" fill="#3a1a58">NL™</text>
+            {/* hologramme triangulaire qui monte au-dessus */}
+            <g transform="translate(0,-14)">
+              <path d="M-6 0 L6 0 L0 -10 Z" fill="#7fe0ff" opacity="0.6" style={{ animation: "float 2s ease-in-out infinite" }} />
+              <path d="M-3 -4 h6 M-2 -6 h4" stroke="#7fe0ff" strokeWidth="0.8" opacity="0.7" />
+            </g>
+          </g>
+        )}
       </PLayer>
 
       <rect width="1000" height="560" fill="#0c0e1a" opacity="0.06" style={{ pointerEvents: "none" }} />
@@ -268,6 +293,7 @@ export default function SceneChambre({ collect, action, reveal, made = [] }) {
         <Hotspot cx={496} cy={438} r={32} label="photos d'enfance" item="photos_enfance" reveal={reveal} onClick={() => collect("photos_enfance")} />
       )}
       <Hotspot cx={830} cy={512} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
+      <Hotspot cx={140} cy={506} r={44} label="… quelque chose de très bizarre" item="neurolien" reveal={reveal} onClick={() => collect("neurolien")} />
     </svg>
   );
 }

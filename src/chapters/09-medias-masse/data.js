@@ -24,6 +24,9 @@ import { PortraitNathalie, PortraitJulien, PortraitCeline } from "./scenes/portr
    LES ÉLÉMENTS
    ------------------------------------------------------------ */
 const ITEMS = {
+  /* ANACHRONISME */
+  airpods: { name: "AirPods", emoji: "🎧", anachronic: true, desc: "Des AirPods d'Apple — commercialisés en 2016. Dans une chambre d'ado de 1985, ça détonne au milieu des cassettes." },
+
   /* T1 — le salon 1969 */
   antenne_rateau: { name: "Antenne râteau", emoji: "📡", desc: "L'antenne du toit, redescendue au salon pour bricolage. Une fois posée sur la TV, il faudra encore l'orienter." },
   antenne_lapin:  { name: "Oreilles de lapin", emoji: "📶", desc: "Deux tiges télescopiques en V à poser sur le téléviseur pour affiner la réception. Sans elles, l'image reste neigeuse." },
