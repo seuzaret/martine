@@ -13,6 +13,9 @@ import SceneChateau from "./scenes/SceneChateau.jsx";
 import SceneMonastere from "./scenes/SceneScriptorium.jsx";
 import SceneMoulin from "./scenes/SceneMoulin.jsx";
 import SceneGutenberg from "./scenes/SceneGutenberg.jsx";
+import SceneBourg from "./scenes/SceneBourg.jsx";
+import SceneCathedrale from "./scenes/SceneCathedrale.jsx";
+import SceneFoire from "./scenes/SceneFoire.jsx";
 import { PortraitCharles, PortraitJorge, PortraitGutenberg, PortraitPapetier } from "./scenes/portraits.jsx";
 import CarteMoyenAge from "./scenes/CarteMoyenAge.jsx";
 
@@ -49,6 +52,14 @@ const ITEMS = {
   traite_galien: { name: "Traité de médecine de Galien", emoji: "📗", desc: "La copie payée au prix fort : le remède pour le fils du paysan est écrit là-dedans. Encore faut-il savoir le LIRE… Rapporte-le à quelqu'un d'instruit, au château." },
   caracteres: { name: "Caractères mobiles", emoji: "🔡", desc: "Des centaines de petites lettres de plomb, qu'on assemble en mots, puis en pages, puis qu'on démonte pour recommencer." },
   papier:      { name: "Feuille de papier de chiffon", emoji: "📄", desc: "Une feuille tirée de la pâte de chiffons. Bien moins chère que le parchemin (fait de peau) : sans ce papier bon marché, imprimer par milliers ne servirait à rien." },
+
+  /* ÉPHÉMÈRES (disparaissent au changement de tableau) */
+  plume_oie:     { name: "Plume d'oie", emoji: "🪶", ephemere: true, desc: "Une plume d'oie ramassée près du poulailler du bourg." },
+  bout_bougie:   { name: "Bout de bougie", emoji: "🕯️", ephemere: true, desc: "Un reste de bougie en cire, à moitié consumé." },
+  verre_colore:  { name: "Morceau de verre coloré", emoji: "🔴", ephemere: true, desc: "Un éclat de vitrail rouge cassé — chef-d'œuvre miniature perdu." },
+  copeau_pierre: { name: "Copeau de pierre", emoji: "🪨", ephemere: true, desc: "Un éclat de calcaire tombé du chapiteau que sculpte le maçon." },
+  plume_taillee: { name: "Plume taillée", emoji: "✒️", ephemere: true, desc: "Une plume d'oie taillée en bec : l'outil du copiste, tombé sur le pavé." },
+  libelle:       { name: "Libelle imprimé", emoji: "📜", ephemere: true, desc: "Une feuille imprimée bon marché, tombée du colporteur. La nouvelle ancêtre du tract." },
 };
 
 /* ------------------------------------------------------------
@@ -67,6 +78,10 @@ const SCENES = [
      réclame du papier → on va le fabriquer au moulin (à droite) → on revient. */
   { id: "gutenberg", name: "L'atelier de Gutenberg",           Component: SceneGutenberg, free: true },
   { id: "moulin",    name: "Le moulin à papier",              Component: SceneMoulin,    free: true },
+  /* 3 tableaux libres supplémentaires — le monde médiéval autour de Mayence */
+  { id: "bourg",       name: "La place du bourg",              Component: SceneBourg,      free: true },
+  { id: "cathedrale",  name: "Le chantier de la cathédrale",   Component: SceneCathedrale, free: true },
+  { id: "foire",       name: "La foire aux livres de Francfort", Component: SceneFoire,    free: true },
 ];
 
 const WHERE = {
@@ -238,6 +253,69 @@ const ACTIONS = {
 
   /* ouvre la FACTURE + le jeu de paiement (quand le codex/manuscrit est prêt) */
   facture: { modal: "facture" },
+
+  /* ── LA PLACE DU BOURG ── */
+  crieur: { mood: "content",
+    bubble: "Oyez, oyez, bonnes gens ! Par ordre du seigneur, les fours banaux seront ouverts trois jours pour la Saint-Michel ! Et le colporteur passe demain à la halle !",
+    say: "Le crieur public : l'ANCÊTRE DE LA RADIO. Sur la place, à voix forte, il diffuse les décrets, les ventes, les nouvelles — pour les 95 % qui ne lisent pas." },
+  moine_mendiant: { mood: "neutre",
+    bubble: "Une piécette pour l'amour de Dieu, mon frère ? Je prie pour ton âme.",
+    say: "Un moine mendiant. Les ordres mendiants (franciscains, dominicains) prêchent aussi en public : l'Église est un des grands médias du Moyen Âge." },
+  puits: { mood: "content",
+    bubble: "Le puits de la place : on y vient chercher l'eau… et surtout jaser ! Toutes les rumeurs du bourg passent par ici.",
+    say: "L'endroit-clé du village. Nouvelles, ragots, mariages… la vraie information circule à l'oral, autour du puits." },
+  charrette: { mood: "neutre",
+    bubble: "Une charrette de foin pour l'écurie du seigneur. Tirée par un cheval, guidée par le paysan.",
+    say: "Les charrettes n'apportent pas que de la marchandise : elles apportent les NOUVELLES d'un village à l'autre. Un réseau lent, mais dense." },
+  taverne: { mood: "content",
+    bubble: "L'auberge « Au Cochon d'Or ». On y boit, on y mange, on y raconte — et parfois on y complote.",
+    say: "La taverne : lieu de sociabilité, de rumeur et parfois de sédition. Les autorités s'en méfient depuis toujours." },
+  apothicaire: { mood: "neutre",
+    bubble: "L'apothicaire vend onguents, tisanes, et parfois du bon parchemin. Regarde l'enseigne : un mortier et son pilon.",
+    say: "Les enseignes de métier : un DESSIN parle à tous, même aux illettrés. Ancêtre direct du pictogramme et du logo." },
+  clocher: { mood: "neutre",
+    bubble: "Le clocher de l'église : ses cloches sonnent l'angélus, la mort, l'alarme, la messe. Toute la vie du bourg y est rythmée.",
+    say: "Les CLOCHES : un des plus vieux médias sonores. Un code (un coup = un homme mort, deux = une femme, sonnerie rapide = incendie). Une info à des kilomètres, sans mots." },
+
+  /* ── LE CHANTIER DE LA CATHÉDRALE ── */
+  verrier: { mood: "content",
+    bubble: "Trois ans que je taille et j'assemble ces verres colorés. Le peuple ne sait pas lire ? Alors je vais leur RACONTER la Bible en images de lumière.",
+    say: "Le VITRAIL : la bande dessinée pour les 95 % d'illettrés. Le maître verrier est un raconteur d'histoires, avec le soleil comme rétro-projecteur." },
+  sculpteur: { mood: "neutre",
+    bubble: "Un chapiteau, ce sont des feuillages, des monstres, des scènes bibliques. Personne ne le regarde en détail ? Peu importe : Dieu, lui, voit tout.",
+    say: "Le sculpteur médiéval travaille pour Dieu autant que pour les hommes. Chaque décor sculpté est un MESSAGE — vice, vertu, damné, saint." },
+  rose: { mood: "content",
+    bubble: "La GRANDE ROSE : mon plus grand ouvrage. Quand le soleil la traverse, elle projette des couleurs sur tout le sol de la nef.",
+    say: "Une rose de vitrail : bijou technique ET théologique. Le message : la lumière divine qui inonde le monde. Média sensoriel absolu." },
+  vitrail: { mood: "neutre",
+    bubble: "Chaque panneau raconte une scène : Adam et Ève, l'Arche de Noé, la Nativité… La Bible pour ceux qui ne lisent pas.",
+    say: "La « Biblia pauperum » (la Bible des pauvres) : mêmes histoires que le texte, mais racontées en IMAGES. Séquentielles, comme une BD." },
+  tympan: { mood: "neutre",
+    bubble: "Au tympan, le Christ en gloire entouré des apôtres. Passé cette porte, tu entres dans le royaume de Dieu.",
+    say: "Le tympan : premier « poster » d'entrée. Message clair : où tu vas, qui règne, que faire (regarde en haut !). Signalétique religieuse." },
+  echafaudage: { mood: "neutre",
+    bubble: "Cinquante ans qu'on bâtit cette cathédrale. Nous mourrons avant qu'elle soit finie — mais nos petits-enfants la verront debout.",
+    say: "Les cathédrales sont des chantiers d'un siècle : générations d'ouvriers, quantité colossale de moyens. Le plus grand message monumental de l'époque." },
+
+  /* ── LA FOIRE AUX LIVRES DE FRANCFORT ── */
+  libraire: { mood: "content",
+    bubble: "Approche, bon ami ! Grâce à Herr Gutenberg, je vends aujourd'hui des livres qui coûtaient autrefois un troupeau ! Latin, allemand, romans de chevalerie, tout est là !",
+    say: "La Buchmesse de Francfort naît vers 1480 : première grande FOIRE AU LIVRE du monde. Les livres imprimés circulent enfin, à un prix accessible aux marchands." },
+  client_livre: { mood: "content",
+    bubble: "Un livre de médecine à ce prix ? Je le prends ! Ma femme sait lire, elle saura le déchiffrer.",
+    say: "L'imprimerie fait chuter le prix du livre de x100 ou plus. Une nouvelle classe (marchands, artisans) peut enfin lire chez elle." },
+  colporteur: { mood: "content",
+    bubble: "Libelles ! Feuilles volantes ! Une bataille en Italie, un miracle en Bavière, un scandale à Rome ! Six deniers seulement !",
+    say: "Le COLPORTEUR : distributeur de la presse populaire naissante. Feuilles bon marché, nouvelles récentes, rumeurs. Ancêtre direct du kiosque et du buzz." },
+  livres_etal: { mood: "neutre",
+    bubble: "Des LIVRES IMPRIMÉS reliés à la mode nouvelle : cuir, tranche marquée, page de titre. On les feuillette, on choisit, on emporte.",
+    say: "Reliure moderne, page de titre, format standard : l'objet-livre prend sa forme définitive vers 1500. Une révolution technique invisible mais énorme." },
+  banderole: { mood: "neutre",
+    bubble: "« Buchmesse MCDLXXX » = Foire au livre de 1480. Depuis Gutenberg, on en organise chaque printemps et chaque automne.",
+    say: "La banderole = affiche publicitaire, autre nouvelle habitude. Communiquer sur l'événement, attirer la foule : le marketing culturel existait déjà." },
+  moulin_vent: { mood: "neutre",
+    bubble: "Un moulin à vent — pour broyer le grain OU les chiffons du papetier. L'imprimerie a besoin de beaucoup, beaucoup de papier.",
+    say: "Sans moulins pour broyer les chiffons en masse, pas d'imprimerie à grande échelle. Toute révolution médiatique repose aussi sur des révolutions matérielles." },
 };
 
 /* ------------------------------------------------------------
