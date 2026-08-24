@@ -1,0 +1,193 @@
+import Hotspot from "../../../engine/Hotspot.jsx";
+import { PLayer } from "../../../engine/Parallax.jsx";
+
+/* ============================================================
+   CHAPITRE 3 — Tableau adjacent : LE CHANTIER DE LA PYRAMIDE
+   ------------------------------------------------------------
+   Meidoum (ou Rhomboïdale) : la pyramide de Snéfrou s'élève.
+   Rampe de terre battue, ouvriers qui halent un bloc sur un
+   traîneau, contremaître avec son rouleau de papyrus (les
+   comptes des rations !), palmiers, gréement de bois.
+   Cadrage désertique doré, ciel pur.
+   ============================================================ */
+
+export default function ScenePyramide({ collect, action, reveal }) {
+  return (
+    <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="py-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#7ea8cc" /><stop offset="60%" stopColor="#e8c898" /><stop offset="100%" stopColor="#f0d0a0" /></linearGradient>
+        <linearGradient id="py-sand" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#e8c078" /><stop offset="60%" stopColor="#c89858" /><stop offset="100%" stopColor="#8a6838" /></linearGradient>
+        <linearGradient id="py-pyr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#d8b078" /><stop offset="100%" stopColor="#8a6a3a" /></linearGradient>
+        <radialGradient id="py-sun" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#fff4c8" /><stop offset="60%" stopColor="#f8d878" stopOpacity="0.4" /><stop offset="100%" stopColor="#f8c058" stopOpacity="0" /></radialGradient>
+      </defs>
+
+      <PLayer depth={5}>
+        <rect width="1000" height="380" fill="url(#py-sky)" />
+        {/* soleil */}
+        <circle cx="200" cy="120" r="120" fill="url(#py-sun)" />
+        <circle cx="200" cy="120" r="34" fill="#fff8d8" />
+        {/* traînées de nuages hauts */}
+        <ellipse cx="600" cy="70" rx="130" ry="4" fill="#f8f0d8" opacity="0.55" />
+        <ellipse cx="820" cy="90" rx="100" ry="4" fill="#f8f0d8" opacity="0.5" />
+      </PLayer>
+
+      <PLayer depth={4}>
+        {/* dunes lointaines */}
+        <path d="M0 380 L0 320 Q200 290 400 310 Q600 330 800 305 Q900 295 1000 320 L1000 380 Z" fill="#d8a868" opacity="0.7" />
+        <path d="M0 380 L0 340 Q200 320 400 335 Q600 350 800 328 Q900 320 1000 340 L1000 380 Z" fill="#c89858" opacity="0.8" />
+      </PLayer>
+
+      <PLayer depth={3}>
+        {/* LA PYRAMIDE — en construction, sommet inachevé */}
+        <g transform="translate(700,380)">
+          {/* base large */}
+          <path d="M-220 0 L220 0 L60 -260 L-60 -260 Z" fill="url(#py-pyr)" stroke="#5a3820" strokeWidth="1.2" />
+          {/* pierres en gros appareil (rangées horizontales) */}
+          {Array.from({ length: 12 }).map((_, r) => {
+            const y = -r * 22;
+            const w = 220 - (r * 220) / 13;
+            return <path key={r} d={`M${-w} ${y} L${w} ${y}`} stroke="#5a3820" strokeWidth="0.6" opacity="0.7" />;
+          })}
+          {/* joints verticaux (échantillon) */}
+          {Array.from({ length: 8 }).map((_, i) => {
+            const y = -i * 22 - 10;
+            return <path key={i} d={`M-160 ${y} l0 -12 M-80 ${y} l0 -12 M0 ${y} l0 -12 M80 ${y} l0 -12 M160 ${y} l0 -12`} stroke="#5a3820" strokeWidth="0.4" opacity="0.55" />;
+          })}
+          {/* face ombrée (côté droit) */}
+          <path d="M0 -260 L60 -260 L220 0 L100 0 Z" fill="#0a0604" opacity="0.25" />
+          {/* sommet inachevé (blocs empilés) */}
+          <rect x="-32" y="-268" width="64" height="10" fill="#a0783a" stroke="#3a2410" strokeWidth="0.6" />
+          <rect x="-24" y="-280" width="46" height="12" fill="#8a6830" stroke="#3a2410" strokeWidth="0.6" />
+          <rect x="-14" y="-292" width="28" height="12" fill="#a0783a" stroke="#3a2410" strokeWidth="0.6" />
+          {/* rampe de terre battue qui monte le long du côté gauche */}
+          <path d="M-220 0 L-260 20 L-60 -260 L-60 -246 Z" fill="#a06838" stroke="#3a1810" strokeWidth="1" />
+          {/* traîneau à mi-rampe */}
+          <g transform="translate(-160,-124)">
+            <rect x="-14" y="-6" width="28" height="10" fill="#5a3818" stroke="#2a1810" strokeWidth="0.6" />
+            <path d="M-14 4 L-18 8 M14 4 L18 8" stroke="#5a3818" strokeWidth="1.4" />
+            {/* petits ouvriers qui tirent */}
+            <circle cx="-24" cy="-6" r="2" fill="#c8946a" />
+            <circle cx="-28" cy="-4" r="2" fill="#c8946a" />
+            <circle cx="18" cy="-6" r="2" fill="#c8946a" />
+          </g>
+        </g>
+      </PLayer>
+
+      <PLayer depth={2}>
+        {/* sol : sable clair du premier plan */}
+        <rect y="380" width="1000" height="180" fill="url(#py-sand)" />
+        {/* ondulations du sable */}
+        <path d="M0 440 q100 -8 200 0 q100 8 200 0 q100 -8 200 0 q100 8 200 0 q100 -8 200 0" stroke="#a07038" strokeWidth="0.8" fill="none" opacity="0.5" />
+        <path d="M0 480 q100 -6 200 0 q100 6 200 0 q100 -6 200 0 q100 6 200 0 q100 -6 200 0" stroke="#a07038" strokeWidth="0.6" fill="none" opacity="0.4" />
+        {/* PALMIER à gauche */}
+        <g transform="translate(120,400)">
+          {/* tronc */}
+          <path d="M-3 0 Q-2 -60 4 -120" stroke="#6a4020" strokeWidth="7" fill="none" strokeLinecap="round" />
+          <path d="M-2 -20 Q0 -18 2 -20 M-1 -50 Q1 -48 3 -50 M0 -80 Q2 -78 4 -80" stroke="#3a2010" strokeWidth="0.8" fill="none" />
+          {/* palmes */}
+          {[-140, -100, -60, -20, 20, 60].map((a, i) => (
+            <g key={i} transform={`translate(4,-120) rotate(${a})`}>
+              <path d="M0 0 Q20 -6 40 -2 Q20 2 0 0 Z" fill="#4a6820" stroke="#2a3810" strokeWidth="0.5" />
+              <path d="M0 0 L40 -2" stroke="#2a3810" strokeWidth="0.3" />
+            </g>
+          ))}
+          {/* dattes */}
+          <ellipse cx="4" cy="-118" rx="10" ry="4" fill="#8a4020" opacity="0.8" />
+        </g>
+        {/* second palmier plus petit à droite */}
+        <g transform="translate(950,410)">
+          <path d="M-2 0 Q-1 -50 3 -100" stroke="#6a4020" strokeWidth="5" fill="none" strokeLinecap="round" />
+          {[-140, -100, -60, -20, 20, 60].map((a, i) => (
+            <g key={i} transform={`translate(3,-100) rotate(${a})`}>
+              <path d="M0 0 Q16 -5 32 -2 Q16 2 0 0 Z" fill="#4a6820" stroke="#2a3810" strokeWidth="0.4" />
+            </g>
+          ))}
+        </g>
+        {/* petit tas de blocs de calcaire prêts */}
+        <g transform="translate(240,480)">
+          <ellipse cx="0" cy="24" rx="48" ry="6" fill="#0a0604" opacity="0.55" />
+          <rect x="-40" y="0" width="30" height="24" fill="#e0c088" stroke="#5a3820" strokeWidth="0.8" />
+          <rect x="-8" y="-4" width="30" height="28" fill="#d0b078" stroke="#5a3820" strokeWidth="0.8" />
+          <rect x="24" y="4" width="24" height="20" fill="#e0c088" stroke="#5a3820" strokeWidth="0.8" />
+          <rect x="-24" y="-24" width="28" height="20" fill="#d0b078" stroke="#5a3820" strokeWidth="0.8" />
+        </g>
+      </PLayer>
+
+      <PLayer depth={1}>
+        {/* CONTREMAÎTRE égyptien (à droite du chantier) avec son rouleau */}
+        <g transform="translate(500,480)">
+          <ellipse cx="0" cy="42" rx="20" ry="4" fill="#0a0604" opacity="0.55" />
+          {/* pagne blanc plissé (chendjit) */}
+          <path d="M-14 40 L-12 8 L12 8 L14 40 Z" fill="#f0e8d0" stroke="#8a6838" strokeWidth="0.6" />
+          <path d="M-10 12 l0 28 M-4 12 l0 28 M2 12 l0 28 M8 12 l0 28" stroke="#8a6838" strokeWidth="0.5" />
+          {/* torse nu bronzé */}
+          <path d="M-12 8 Q-14 -14 0 -20 Q14 -14 12 8 Z" fill="#a06838" stroke="#3a2010" strokeWidth="0.5" />
+          {/* collier ousekh (large collier égyptien) */}
+          <path d="M-10 -8 Q0 -2 10 -8" fill="#f0c848" stroke="#8a5820" strokeWidth="0.6" />
+          <path d="M-8 -6 Q0 -1 8 -6 M-6 -4 Q0 1 6 -4" stroke="#3a80a8" strokeWidth="0.6" fill="none" />
+          {/* épaules */}
+          <ellipse cx="-14" cy="-8" rx="5" ry="4" fill="#a06838" />
+          <ellipse cx="14" cy="-8" rx="5" ry="4" fill="#a06838" />
+          {/* bras qui tient un rouleau de papyrus */}
+          <path d="M14 -6 L28 6" stroke="#a06838" strokeWidth="4" strokeLinecap="round" />
+          <g transform="translate(28,6) rotate(20)">
+            <rect x="-2" y="-10" width="18" height="12" fill="#e8d0a0" stroke="#5a3818" strokeWidth="0.6" />
+            <path d="M-2 -8 h18 M-2 -6 h18 M-2 -4 h18 M-2 -2 h18" stroke="#8a5828" strokeWidth="0.4" />
+          </g>
+          {/* tête + coiffe némès rayée bleu/or */}
+          <ellipse cx="0" cy="-32" rx="12" ry="14" fill="#a06838" stroke="#3a2010" strokeWidth="0.6" />
+          <path d="M-14 -36 q0 -8 4 -12 q10 -6 20 0 q4 4 4 12 z" fill="#3a80a8" stroke="#1a1408" strokeWidth="0.6" />
+          <path d="M-14 -32 h28 M-14 -30 h28" stroke="#f0c848" strokeWidth="0.5" />
+          <path d="M-14 -32 L-16 -18 L-8 -12" fill="#3a80a8" stroke="#1a1408" strokeWidth="0.5" />
+          <path d="M14 -32 L16 -18 L8 -12" fill="#3a80a8" stroke="#1a1408" strokeWidth="0.5" />
+          {/* yeux à l'égyptienne, khôl allongé */}
+          <path d="M-6 -32 q3 -2 5 0 l1 1 M0 -32 q3 -2 5 0 l1 1" stroke="#0a0604" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+          <circle cx="-3" cy="-31" r="1.2" fill="#0a0604" />
+          <circle cx="3" cy="-31" r="1.2" fill="#0a0604" />
+          {/* barbiche postiche pharaonique (petite) */}
+          <path d="M-1 -20 L0 -14 L1 -20 L1 -14 L-1 -14 Z" fill="#3a2818" />
+        </g>
+        <g transform="translate(500,420)" style={{ animation: "float 2s ease-in-out infinite" }}>
+          <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
+          <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
+        </g>
+
+        {/* Ouvrier au sol qui pousse un bloc (au premier plan gauche) */}
+        <g transform="translate(340,510)">
+          <ellipse cx="0" cy="14" rx="20" ry="4" fill="#0a0604" opacity="0.5" />
+          {/* buste penché */}
+          <path d="M-14 12 Q-16 -8 0 -14 Q16 -8 14 12 Z" fill="#8a5828" stroke="#3a2010" strokeWidth="0.5" />
+          <ellipse cx="4" cy="-20" rx="9" ry="10" fill="#a06838" transform="rotate(20 4 -20)" />
+          {/* bras poussant */}
+          <path d="M12 -4 L28 -8" stroke="#a06838" strokeWidth="4" strokeLinecap="round" />
+          {/* bloc devant lui */}
+          <rect x="28" y="-14" width="22" height="20" fill="#e0c088" stroke="#5a3820" strokeWidth="0.8" />
+          <path d="M30 -8 l18 0 M30 -2 l18 0" stroke="#8a6838" strokeWidth="0.4" />
+        </g>
+
+        {/* Ephemere : éclat de calcaire + petit scarabée */}
+        <g transform="translate(700,540) rotate(20)">
+          <path d="M-6 0 L4 -4 L8 3 L-2 6 Z" fill="#e8d0a0" stroke="#5a3820" strokeWidth="0.5" />
+          <path d="M-3 -1 L4 -2" stroke="#f8e8c8" strokeWidth="0.4" />
+        </g>
+        <g transform="translate(820,538)">
+          {/* scarabée */}
+          <ellipse cx="0" cy="0" rx="7" ry="5" fill="#3a5820" stroke="#1a2810" strokeWidth="0.5" />
+          <ellipse cx="0" cy="-1" rx="6" ry="4" fill="#4a6828" opacity="0.7" />
+          <path d="M0 -5 l0 10 M-4 -3 l8 6 M-4 3 l8 -6" stroke="#1a2810" strokeWidth="0.4" fill="none" opacity="0.7" />
+          {/* pattes */}
+          <path d="M-6 -1 l-3 -2 M-6 1 l-3 0 M-6 3 l-3 2 M6 -1 l3 -2 M6 1 l3 0 M6 3 l3 2" stroke="#1a2810" strokeWidth="0.5" />
+          {/* petites cornes */}
+          <path d="M-2 -5 l-2 -2 M2 -5 l2 -2" stroke="#1a2810" strokeWidth="0.4" />
+        </g>
+      </PLayer>
+
+      <Hotspot cx={500} cy={454} r={40} label="le contremaître du chantier" reveal={reveal} onClick={() => action("contremaitre")} />
+      <Hotspot cx={340} cy={500} r={30} label="ouvrier qui pousse un bloc" reveal={reveal} onClick={() => action("ouvrier")} />
+      <Hotspot cx={700} cy={200} r={80} label="la pyramide de Snéfrou" reveal={reveal} onClick={() => action("pyramide")} />
+      <Hotspot cx={240} cy={480} r={40} label="tas de blocs de calcaire" reveal={reveal} onClick={() => action("blocs")} />
+      <Hotspot cx={700} cy={540} r={14} label="éclat de calcaire" item="eclat_calcaire" reveal={reveal} onClick={() => collect("eclat_calcaire")} />
+      <Hotspot cx={820} cy={538} r={14} label="scarabée" item="scarabee" reveal={reveal} onClick={() => collect("scarabee")} />
+    </svg>
+  );
+}

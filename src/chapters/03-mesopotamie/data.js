@@ -13,8 +13,11 @@
    ============================================================ */
 
 import SceneUruk from "./scenes/SceneUruk.jsx";
+import SceneEcoleScribe from "./scenes/SceneEcoleScribe.jsx";
 import SceneNil from "./scenes/SceneNil.jsx";
+import ScenePyramide from "./scenes/ScenePyramide.jsx";
 import ScenePhenicie from "./scenes/ScenePhenicie.jsx";
+import SceneByblos from "./scenes/SceneByblos.jsx";
 import CarteMesopotamie from "./scenes/CarteMesopotamie.jsx";
 import { PortraitMesannepada, PortraitNaram, PortraitSnefrou } from "./scenes/portraits.jsx";
 
@@ -57,23 +60,33 @@ const ITEMS = {
   encre:         { name: "Encre noire", emoji: "🖤", desc: "Suie + sève : une belle encre noire. Trempes-y ton calame pour tracer des signes." },
   calame_nil:    { name: "Calame", emoji: "🖊", desc: "Un roseau du Nil taillé en pointe fine, la plume du scribe égyptien." },
   calame_encre:  { name: "Calame encré", emoji: "🖋", keep: true, desc: "Le calame trempé dans l'encre noire : prêt à tracer les hiéroglyphes sur la feuille." },
+
+  /* ÉPHÉMÈRES (jetés au changement de tableau — de la déco à ramasser) */
+  boulette_argile: { name: "Boulette d'argile", emoji: "🟤", ephemere: true, desc: "Un petit brouillon roulé par un élève scribe." },
+  tablette_cassee: { name: "Bout de tablette cassée", emoji: "🧩", ephemere: true, desc: "Une exercice raté, cassé en deux. Les scribes aussi se trompaient !" },
+  eclat_calcaire:  { name: "Éclat de calcaire", emoji: "🪨", ephemere: true, desc: "Un éclat tombé du chantier de Snéfrou." },
+  scarabee:        { name: "Scarabée", emoji: "🪲", ephemere: true, desc: "Kheper, le scarabée sacré : symbole du soleil qui renaît chaque matin." },
+  coquillage_murex:{ name: "Coquillage murex", emoji: "🐚", ephemere: true, desc: "Un mollusque à épines. Écrasé, il donne la pourpre — la couleur des rois." },
+  algue_seche:     { name: "Algue sèche", emoji: "🌿", ephemere: true, desc: "Une algue rejetée par la Méditerranée sur la plage de Byblos." },
 };
 
 /* ------------------------------------------------------------
    LES TABLEAUX
    ------------------------------------------------------------ */
 const SCENES = [
-  /* `nextWhen` : ce qu'il faut avoir transmis pour pouvoir PARTIR au lieu
-     suivant (mode linéaire : pas de flèches, un signal apparaît près de
-     MARTINE quand ces messages sont faits). */
-  { id: "uruk",     name: "La cité d'Ur",        Component: SceneUruk, nextWhen: ["msg_cuneiforme", "msg_sceau"] },
-  { id: "nil",      name: "Les bords du Nil",     Component: SceneNil, nextWhen: ["msg_hieroglyphes"] },
-  { id: "phenicie", name: "La côte phénicienne",  Component: ScenePhenicie },
+  /* 6 tableaux : chaque lieu principal a un « voisin » libre où l'on peut
+     flâner (école du scribe, chantier de la pyramide, port de Byblos). */
+  { id: "uruk",           name: "La cité d'Ur",             Component: SceneUruk },
+  { id: "ecole_scribe",   name: "L'école du scribe (é-dubba)", Component: SceneEcoleScribe },
+  { id: "nil",            name: "Les bords du Nil",         Component: SceneNil },
+  { id: "pyramide",       name: "Le chantier de la pyramide", Component: ScenePyramide },
+  { id: "phenicie",       name: "La côte phénicienne",      Component: ScenePhenicie },
+  { id: "byblos",         name: "Le port de Byblos",        Component: SceneByblos },
 ];
 
 const WHERE = {
   roseaux: "au bord du canal, dans la cité d'Ur", couteau: "près des artisans (à Ur comme au bord du Nil)",
-  argile: "au bord du canal, dans la cité d'Ur", sceau: "auprès du roi, dans la cité d'Ur",
+  argile: "au bord du canal d'Ur, ou dans le panier de l'école du scribe", sceau: "auprès du roi, dans la cité d'Ur",
   papyrus_tiges: "au bord du Nil", roseau_nil: "au bord du Nil", bol: "au bord du Nil",
   navires: "sur la côte phénicienne",
 };
@@ -212,6 +225,48 @@ const ACTIONS = {
     bubble: "Je suis Assurbanipal, roi et grand amasseur de tablettes : j'ai réuni tout le savoir du monde en cunéiforme… sept cents signes ! Mais regarde ces marchands : avec seulement 22 signes, un par son, leurs mousses apprennent à écrire en quelques jours. Apprends ce code simple, toi aussi.",
     say: "Un code SIMPLE se répand plus vite qu'un code savant : tout le secret de l'alphabet. Grave-le sur la tablette pour l'apprendre — puis confie-le aux navires marchands." },
   alphabet: { modal: "alphabet" },
+
+  /* ── École du scribe (adjacent à Ur) ── */
+  ummia: { mood: "neutre",
+    bubble: "Je suis l'ummia, le maître de la maison des tablettes. Ici, les fils des grandes familles copient CENT signes par jour, sous ma canne. Un scribe qui écrit vite vaut plus qu'un guerrier.",
+    say: "L'é-dubba : « la maison des tablettes ». Peut-être la plus vieille école du monde ! Écrire, c'est déjà un métier — et un pouvoir." },
+  apprenti: { mood: "content",
+    bubble: "J'écris depuis l'aube, mes doigts n'en peuvent plus… mais un jour, je serai scribe du roi !",
+    say: "Recopier, recopier, recopier… c'est comme ça qu'un signe entre dans la tête. Pas très glamour, mais efficace." },
+  mur_exercices: { mood: "vexe",
+    bubble: "Ce sont des tablettes RATÉES. Le maître les accroche là pour que tout le monde voie nos fautes !",
+    say: "Le mur de la honte du scribe. Preuve rassurante : eux aussi, ils se trompaient." },
+
+  /* ── Chantier de la pyramide (adjacent au Nil) ── */
+  contremaitre: { mood: "neutre",
+    bubble: "Bienvenue au chantier du roi Snéfrou. Deux mille ouvriers, deux mille bouches à nourrir… Sans mes rouleaux de papyrus pour compter les rations, tout s'effondre en un jour.",
+    say: "Une pyramide, c'est de la logistique GÉANTE — comptes des ouvriers, des rations, des blocs. Sans l'écriture, impossible." },
+  ouvrier: { mood: "content",
+    bubble: "Un bloc de plus… j'en pousse dix par jour ! Pour la gloire du roi et une double ration de pain.",
+    say: "Non, les pyramides n'ont pas été bâties par des esclaves : ce sont des ouvriers payés (en pain et en bière), organisés en équipes." },
+  pyramide: { mood: "neutre",
+    bubble: "La pyramide de Snéfrou n'est pas encore finie. Le sommet monte, pierre après pierre.",
+    say: "Snéfrou est le pharaon qui a construit LE PLUS de pyramides. Celle de Meidoum, la Rhomboïdale, la Rouge… il expérimentait." },
+  blocs: { mood: "neutre",
+    bubble: "Des blocs de calcaire, coupés à la carrière, prêts à monter la rampe.",
+    say: "2,3 tonnes en moyenne par bloc. Multiplie par plusieurs millions… l'exploit reste hallucinant." },
+
+  /* ── Port de Byblos (adjacent à la Phénicie) ── */
+  charpentier: { mood: "content",
+    bubble: "Je taille du cèdre du Liban depuis mon enfance. Les navires que je construis portent nos idées jusqu'en Grèce, en Espagne, jusqu'aux Colonnes d'Hercule.",
+    say: "Byblos donnera son nom au grec « biblios » (livre) puis à… Bible ! Ce petit port a beaucoup pesé." },
+  squelette_navire: { mood: "neutre",
+    bubble: "Le squelette du navire : la quille et les membrures en cèdre. Bientôt il fendra les vagues.",
+    say: "Les Phéniciens sont LES marins de l'Antiquité. Pas d'empire militaire — un empire de commerce." },
+  rondins: { mood: "neutre",
+    bubble: "Du cèdre du Liban. Les Égyptiens en achetaient des cargaisons entières pour leurs temples.",
+    say: "Le cèdre pousse haut et droit, résiste à l'eau et sent bon : bois idéal pour un navire." },
+  pourpre: { mood: "neutre",
+    bubble: "Ces amphores contiennent de la POURPRE, teinture tirée du murex. Une drachme le gramme — plus cher que l'or !",
+    say: "« Phénicien » vient d'un mot grec qui veut dire « pourpre ». Toute leur richesse vient de cette teinture." },
+  navire_large: { mood: "content",
+    bubble: "Regarde ce navire ! Il file vers l'ouest, chargé de pourpre, d'huile, d'idées… et de nos 22 signes.",
+    say: "Ce sont ces bateaux qui vont diffuser l'alphabet à toute la Méditerranée. Un code voyage aussi bien qu'une marchandise." },
 };
 
 /* ------------------------------------------------------------
@@ -269,7 +324,8 @@ const chapter = {
   required: 3,
   startScene: 0,
   destination: "ANTIQUITÉ",
-  linear: true,   // navigation guidée : pas de flèches, on avance au signal de MARTINE
+  /* 6 tableaux navigables librement (‹ ›) ; la QUÊTE (portraits + bulles)
+     guide l'ordre par les paroles, pas par une flèche verte unique. */
 
   items: ITEMS,
   scenes: SCENES,
