@@ -12,6 +12,9 @@
 import SceneEntree from "./scenes/ScenePompei.jsx";
 import SceneBibliotheque from "./scenes/SceneAlexandrie.jsx";
 import SceneJardin from "./scenes/SceneForum.jsx";
+import SceneForumPompei from "./scenes/SceneForumPompei.jsx";
+import SceneThermes from "./scenes/SceneThermes.jsx";
+import ScenePort from "./scenes/ScenePort.jsx";
 import { PortraitCaius } from "./scenes/portraits.jsx";
 import CarteAntiquite from "./scenes/CarteAntiquite.jsx";
 
@@ -43,6 +46,14 @@ const ITEMS = {
   burin:    { name: "Burin", emoji: "🔨", desc: "Un ciseau et un maillet : pour entailler la pierre, lettre après lettre." },
   grattoir: { name: "Grattoir & ponce", emoji: "🔪", desc: "Une lame et une pierre ponce : pour racler et lisser la peau jusqu'à obtenir un parchemin." },
 
+  /* ÉPHÉMÈRES (disparaissent au changement de tableau) */
+  denier:       { name: "Denier romain", emoji: "🪙", ephemere: true, desc: "Une pièce d'argent : le denier, monnaie de tous les jours à Rome." },
+  tesson:       { name: "Tesson d'amphore", emoji: "🧱", ephemere: true, desc: "Un bout d'amphore cassée, sûrement plein de garum autrefois." },
+  fiole_cassee: { name: "Fiole cassée", emoji: "💎", ephemere: true, desc: "Un fragment de verre bleuté — flacon à parfum brisé aux thermes." },
+  tessera:      { name: "Tessera de mosaïque", emoji: "◾", ephemere: true, desc: "Un petit cube de pierre noire, tombé d'une mosaïque." },
+  oursin:       { name: "Oursin séché", emoji: "🦔", ephemere: true, desc: "Un test d'oursin échoué sur le quai, tout hérissé." },
+  cordage:      { name: "Bout de cordage", emoji: "🪢", ephemere: true, desc: "Un morceau de corde en fibre, comme celles des voiles romaines." },
+
   /* fabriqués */
   tablette_cire: { name: "Tablette de cire", emoji: "🟨", desc: "Une planche remplie de cire : on y écrit au stylet… et on lisse tout pour recommencer. Le brouillon de l'Antiquité." },
   peau:     { name: "Peau brute", emoji: "🟫", desc: "Une peau fraîche. Grattée et poncée, elle deviendra un parchemin." },
@@ -55,9 +66,13 @@ const ITEMS = {
    LES TABLEAUX  (tous à Pompéi ; navigation libre dans la villa)
    ------------------------------------------------------------ */
 const SCENES = [
-  { id: "entree",       name: "L'entrée de la villa", Component: SceneEntree },
-  { id: "bibliotheque", name: "La bibliothèque",      Component: SceneBibliotheque },
+  { id: "entree",       name: "L'entrée de la villa",  Component: SceneEntree },
+  { id: "bibliotheque", name: "La bibliothèque",       Component: SceneBibliotheque },
   { id: "jardin",       name: "Le jardin & l'atelier", Component: SceneJardin },
+  /* 3 tableaux adjacents, à côté de la villa, dans Pompéi ou sur le port : */
+  { id: "forum",        name: "Le forum de Pompéi",    Component: SceneForumPompei },
+  { id: "thermes",      name: "Les thermes",           Component: SceneThermes },
+  { id: "port",         name: "Le port et le Vésuve",  Component: ScenePort },
 ];
 
 const WHERE = {
@@ -165,6 +180,59 @@ const ACTIONS = {
     bubble: "Ma villa doit être la plus belle de Pompéi pour ma fête ! Aide mes artisans, l'étranger.",
     say: "Un riche marchand qui veut éblouir ses invités. À Pompéi, comme partout : montrer qu'on a réussi." },
 
+  /* ── LE FORUM DE POMPÉI ── */
+  praeco: { mood: "content",
+    bubble: "Citoyens ! Marcvs Holconivs Rufus vous invite aux JEUX du forum, sous la protection d'Isis ! Trois jours de combats, entrée libre !",
+    say: "Le PRAECO, crieur public : la radio de l'Antiquité. Une voix forte, une place bondée, et hop, tout Pompéi est au courant." },
+  lapidicida: { mood: "neutre",
+    bubble: "Trois lettres par heure, pas une de plus. Grave la loi, grave la dédicace : moi, je fais l'éternité au marteau et au burin.",
+    say: "Le lapidicida, tailleur de pierre. Métier lent, métier de patience — mais son travail va durer 2000 ans." },
+  stele_edile: { mood: "neutre",
+    bubble: "Cette stèle honore l'édile qui a payé la restauration du forum. Elle sera lue par des générations d'habitants.",
+    say: "Publier officiellement dans l'Antiquité, c'est GRAVER dans la pierre. La forme physique du droit et de la mémoire de la cité." },
+  graffitis: { mood: "content",
+    bubble: "Ce mur, c'est le VRAI journal des Pompéiens : pubs électorales, insultes, déclarations d'amour, notes de taverne… On y trouve tout !",
+    say: "« Admire, mur, de n'être pas encore tombé, tant tu portes d'inepties d'écrivains ! » : ce vrai graffiti pompéien serait comme un tweet aujourd'hui." },
+  temple: { mood: "neutre",
+    bubble: "Le grand temple de Jupiter Optimus Maximus. Au fronton, l'aigle de Rome.",
+    say: "Le temple : lui aussi porte des inscriptions, dédicaces des donateurs. Écrire, à Rome, c'est aussi honorer les dieux." },
+  vesuve_forum: { mood: "vexe",
+    bubble: "La montagne ? Bof, elle fume un peu depuis quelques semaines, ce n'est rien. Les augures ont dit que c'était bon signe.",
+    say: "Rien à signaler, disent-ils. Or on est le 24 octobre 79. Dans quelques jours, tout Pompéi sera sous six mètres de cendre. Personne ne verra venir." },
+
+  /* ── LES THERMES ── */
+  baigneurs: { mood: "content",
+    bubble: "…et je te dis que le nouvel affranchi de Trebius Valens a acheté DEUX esclaves grecs pour lui lire ses volumens pendant qu'il mange !",
+    say: "Les thermes : LA place publique de Rome. On s'y lave, on s'y masse, on y ragote — et surtout on y RÉPAND l'info. L'ancêtre du café du commerce." },
+  labrum: { mood: "neutre",
+    bubble: "Le LABRUM, vasque d'eau froide. Regarde la gravure sur le rebord : le nom du magistrat qui l'a offerte à la ville. La générosité gravée pour l'éternité !",
+    say: "Un mécène offre un équipement public → on grave son nom dessus. Publicité + reconnaissance sociale. La communication institutionnelle existait déjà." },
+  mosaique: { mood: "content",
+    bubble: "Regarde cette mosaïque : un dauphin ! On adore les dauphins à Pompéi : symbole de bonheur, de voyage… et de bains !",
+    say: "Une mosaïque, c'est un message décoratif ET narratif — parfois avec CAVE CANEM (attention au chien) à l'entrée, ancêtre du panneau. Les images parlent." },
+  strigile: { mood: "neutre",
+    bubble: "Le strigile, ça sert à racler la peau après l'huile — on ne connaît pas le savon comme toi ! Et la fiole, c'est de l'huile parfumée.",
+    say: "Petits objets du quotidien romain. Ils portent parfois le nom de leur propriétaire, gravé au poinçon : marque personnelle avant l'heure." },
+  statue: { mood: "neutre",
+    bubble: "Une statue d'Apollon (ou de Diane, on ne sait plus). Elle veille sur les baigneurs.",
+    say: "Statue = message visuel PUISSANT. Non-verbal, universel, imposant. Toujours efficace aujourd'hui : monuments, statues publiques… ou déboulonnées." },
+
+  /* ── LE PORT ET LE VÉSUVE ── */
+  marchand_port: { mood: "content",
+    bubble: "Deux cents amphores de garum vers Ostia, cent d'huile de Bétique vers Marseille… Sans mon volumen où tout est noté, je perdrais la moitié !",
+    say: "Écrire, ça permet aussi de FAIRE DU COMMERCE. Contrats, comptes, factures : sans écriture, pas d'économie complexe possible." },
+  debardeur: { mood: "content",
+    bubble: "Hop, encore une amphore de garum ! Cinquante par jour, ça me fait des bras — mais ça paie mes trois enfants et deux ânes.",
+    say: "Un porteur, un « saccarius ». Métier dur, méprisé — mais essentiel. Sans lui, rien ne quitte Pompéi." },
+  amphores_port: { mood: "neutre",
+    bubble: "Chaque amphore porte son ÉTIQUETTE peinte : contenu, poids, nom du producteur, année consulaire. Traçable !",
+    say: "Les tituli picti : de vraies étiquettes de bouteille il y a 2000 ans ! Nom, contenu, date, origine. Base de la traçabilité — et de la publicité commerciale." },
+  navire_port: { mood: "neutre",
+    bubble: "Le CORBITA, gros navire marchand romain. Il file plein sud, vers l'Afrique, chargé jusqu'à la ligne de flottaison.",
+    say: "Les routes maritimes romaines transportent les marchandises… et les VOLUMEN. La bibliothèque d'Alexandrie doit une part de ses trésors à ces bateaux." },
+  vesuve_port: { mood: "vexe",
+    bubble: "Le Vésuve fume noir depuis l'aube, et ça pue le soufre. Bizarre… mais on prépare le déchargement, allez !",
+    say: "24 octobre 79. Dans quelques heures, la colonne éruptive va monter à 33 kilomètres de haut. Pompéi et Herculanum seront ensevelies. Personne ne s'échappera à temps. Frisson." },
 };
 
 /* ------------------------------------------------------------
