@@ -13,52 +13,125 @@ export default function SceneGue({ collect, action, reveal, made = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
-        <linearGradient id="gu-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#a8b8c8" /><stop offset="100%" stopColor="#c8d0b0" /></linearGradient>
-        <linearGradient id="gu-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#6a90a8" /><stop offset="100%" stopColor="#3a5878" /></linearGradient>
-        <linearGradient id="gu-rive" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#5a4028" /><stop offset="100%" stopColor="#2a1a10" /></linearGradient>
+        <linearGradient id="gu-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#a8b8c8" /><stop offset="60%" stopColor="#c0c8b8" /><stop offset="100%" stopColor="#d0d0a8" /></linearGradient>
+        <linearGradient id="gu-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#7a9db4" /><stop offset="50%" stopColor="#5480a0" /><stop offset="100%" stopColor="#2a4868" /></linearGradient>
+        <linearGradient id="gu-rive" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#6a4830" /><stop offset="100%" stopColor="#2a1a10" /></linearGradient>
+        <radialGradient id="gu-stone" cx="30%" cy="30%" r="70%"><stop offset="0%" stopColor="#9a8878" /><stop offset="70%" stopColor="#6a5848" /><stop offset="100%" stopColor="#3a2818" /></radialGradient>
+        <filter id="gu-shimmer"><feTurbulence type="turbulence" baseFrequency="0.9" numOctaves="1" seed="5" /><feColorMatrix values="0 0 0 0 0.9 0 0 0 0 0.95 0 0 0 0 1 0 0 0 0.25 0" /></filter>
       </defs>
 
       <PLayer depth={4}>
         <rect width="1000" height="240" fill="url(#gu-sky)" />
-        {/* forêt profonde sur l'autre rive */}
-        <path d="M0 240 L0 180 Q100 140 200 180 Q300 130 400 170 Q500 120 600 160 Q700 140 800 170 Q900 130 1000 180 L1000 240 Z" fill="#2a3818" opacity="0.9" />
-        {/* silhouettes de bouleaux */}
-        {[80, 180, 320, 460, 620, 780, 920].map((x, i) => (
-          <g key={i} transform={`translate(${x},240)`}>
-            <path d={`M-2 0 L-2 -${60 + (i % 3) * 12} L2 -${60 + (i % 3) * 12} L2 0 Z`} fill="#e8e0d0" />
-            <path d="M-1 -30 h2 M-1 -45 h2" stroke="#3a2818" strokeWidth="0.6" />
-            <ellipse cx="0" cy={-(70 + (i % 3) * 12)} rx="18" ry="12" fill="#3a5820" opacity="0.85" />
+        {/* nuages doux */}
+        {[[120, 60, 60], [420, 80, 80], [780, 55, 50]].map(([x, y, r], i) => (
+          <g key={i} opacity="0.55">
+            <ellipse cx={x} cy={y} rx={r} ry="10" fill="#f0e8d0" />
+            <ellipse cx={x - 20} cy={y + 4} rx={r - 20} ry="7" fill="#f0e8d0" />
           </g>
         ))}
+        {/* collines vertes lointaines derrière la forêt */}
+        <path d="M0 240 L0 200 Q200 170 400 195 Q600 175 800 200 Q900 190 1000 200 L1000 240 Z" fill="#5a6a48" opacity="0.65" />
+        {/* forêt profonde sur l'autre rive */}
+        <path d="M0 240 L0 180 Q100 140 200 180 Q300 130 400 170 Q500 120 600 160 Q700 140 800 170 Q900 130 1000 180 L1000 240 Z" fill="#2a3818" opacity="0.92" />
+        {/* silhouettes de bouleaux améliorées, écorce blanche typique */}
+        {[80, 180, 320, 460, 620, 780, 920].map((x, i) => {
+          const h = 60 + (i % 3) * 14;
+          const foliageR = 22 + (i % 2) * 4;
+          return (
+            <g key={i} transform={`translate(${x},240)`}>
+              {/* ombre au sol */}
+              <ellipse cx="0" cy="2" rx="8" ry="2" fill="#0a0604" opacity="0.5" />
+              {/* tronc bouleau avec base plus large */}
+              <path d={`M-3 0 L-2 -${h} L2 -${h} L3 0 Z`} fill="#f0e8d8" stroke="#8a7860" strokeWidth="0.3" />
+              {/* marques noires horizontales typiques du bouleau */}
+              <path d={`M-2 -${Math.floor(h*0.2)} h4 M-2 -${Math.floor(h*0.4)} h4 M-2 -${Math.floor(h*0.6)} h4 M-2 -${Math.floor(h*0.8)} h4`} stroke="#2a1e10" strokeWidth="1.2" strokeLinecap="round" />
+              {/* petits nœuds */}
+              <circle cx="0" cy={-Math.floor(h*0.5)} r="0.8" fill="#3a2818" />
+              {/* feuillage — 3 lobes empilés pour volume */}
+              <ellipse cx="-4" cy={-(h + 6)} rx={foliageR - 4} ry={foliageR - 8} fill="#3a5820" opacity="0.85" />
+              <ellipse cx="4" cy={-(h + 4)} rx={foliageR - 6} ry={foliageR - 10} fill="#4a6828" opacity="0.85" />
+              <ellipse cx="0" cy={-(h + 14)} rx={foliageR - 2} ry={foliageR - 6} fill="#4a6a2a" opacity="0.9" />
+              {/* mini touches jaunes = feuilles au soleil */}
+              <circle cx={-6} cy={-(h + 12)} r="1.5" fill="#c8c058" opacity="0.7" />
+              <circle cx={4} cy={-(h + 8)} r="1.2" fill="#b0a848" opacity="0.6" />
+            </g>
+          );
+        })}
+        {/* vol de petits oiseaux au loin en V */}
+        <g opacity="0.6" transform="translate(560,120)">
+          <path d="M0 0 q-3 -3 -6 0 M0 0 q3 -3 6 0" stroke="#3a2818" strokeWidth="1" fill="none" strokeLinecap="round" />
+          <path d="M20 8 q-3 -3 -6 0 M20 8 q3 -3 6 0" stroke="#3a2818" strokeWidth="1" fill="none" strokeLinecap="round" />
+          <path d="M-20 6 q-3 -3 -6 0 M-20 6 q3 -3 6 0" stroke="#3a2818" strokeWidth="1" fill="none" strokeLinecap="round" />
+        </g>
       </PLayer>
 
       <PLayer depth={3}>
         {/* la rivière large — bande d'eau bleu-gris qui traverse */}
         <rect y="240" width="1000" height="200" fill="url(#gu-water)" />
+        {/* voile de miroitement (turbulence) */}
+        <rect y="240" width="1000" height="200" filter="url(#gu-shimmer)" opacity="0.7" />
+        {/* reflets de forêt sur l'eau (bandes sombres inversées) */}
+        <path d="M0 240 L1000 240 L1000 280 L0 280 Z" fill="#2a3818" opacity="0.35" />
+        <path d="M80 250 q40 8 80 0 q40 -6 80 4 M320 260 q40 6 80 -2 M580 254 q40 8 80 0 q40 -8 80 2" stroke="#1a2810" strokeWidth="2" fill="none" opacity="0.5" />
+
         {/* remous, courants */}
         {[260, 300, 340, 380, 420].map((y, i) => (
-          <path key={i} d={`M0 ${y} q80 -${4 + i} 160 0 q80 ${4 + i} 160 0 q80 -${4 + i} 160 0 q80 ${4 + i} 160 0 q80 -${4 + i} 160 0`} stroke="#a0c0d8" strokeWidth="1.2" fill="none" opacity={0.35 + (i % 2) * 0.15} />
+          <path key={i} d={`M0 ${y} q80 -${4 + i} 160 0 q80 ${4 + i} 160 0 q80 -${4 + i} 160 0 q80 ${4 + i} 160 0 q80 -${4 + i} 160 0`} stroke="#b0d0e8" strokeWidth="1.2" fill="none" opacity={0.4 + (i % 2) * 0.15} />
         ))}
-        {/* reflets brillants */}
-        {[[120, 320], [340, 300], [560, 340], [780, 310], [880, 360]].map(([x, y], i) => (
-          <ellipse key={i} cx={x} cy={y} rx="16" ry="2" fill="#f0f4e8" opacity="0.4" />
+        {/* reflets brillants animés (soleil sur l'eau) */}
+        {[[120, 320], [340, 300], [560, 340], [780, 310], [880, 360], [220, 350], [660, 380], [460, 370]].map(([x, y], i) => (
+          <ellipse key={i} cx={x} cy={y} rx="18" ry="2.5" fill="#f8f8e8" opacity="0.55" style={{ animation: `float ${2.5 + (i % 3) * 0.3}s ease-in-out infinite` }} />
         ))}
 
-        {/* 5 GROSSES PIERRES du gué en zigzag */}
+        {/* 5 GROSSES PIERRES du gué en zigzag — mieux modelées */}
         {[[120, 380], [260, 340], [420, 380], [580, 340], [740, 380]].map(([x, y], i) => (
           <g key={i} transform={`translate(${x},${y})`}>
-            <ellipse cx="0" cy="10" rx="42" ry="6" fill="#1a1408" opacity="0.5" />
-            <path d="M-40 0 Q-30 -20 0 -22 Q30 -20 40 0 L36 8 Q0 12 -36 8 Z" fill="#7a6a58" stroke="#3a2818" strokeWidth="1.5" />
-            <ellipse cx="-10" cy="-8" rx="12" ry="6" fill="#8a7a68" opacity="0.7" />
-            <path d="M-20 -2 q10 -6 20 -2" stroke="#5a4a38" strokeWidth="0.8" fill="none" opacity="0.6" />
+            {/* ombre + halo mouillé autour de la pierre */}
+            <ellipse cx="0" cy="14" rx="52" ry="8" fill="#0a1420" opacity="0.55" />
+            <ellipse cx="0" cy="10" rx="46" ry="5" fill="#2a4058" opacity="0.5" />
+            {/* corps pierre avec gradient radial */}
+            <path d="M-40 0 Q-30 -22 0 -24 Q30 -22 40 0 L36 8 Q0 12 -36 8 Z" fill="url(#gu-stone)" stroke="#1a1408" strokeWidth="1.5" />
+            {/* strates */}
+            <path d="M-32 -6 q30 -8 62 -2 M-30 4 q28 -4 58 -2" stroke="#3a2818" strokeWidth="0.6" fill="none" opacity="0.7" />
+            {/* reflet lumineux au sommet */}
+            <ellipse cx="-8" cy="-12" rx="14" ry="6" fill="#c8b8a0" opacity="0.55" />
+            {/* mousses vertes au niveau de l'eau */}
+            <path d="M-38 4 q4 -4 8 0 q-4 4 -8 0 Z" fill="#5a7030" opacity="0.85" />
+            <path d="M30 6 q4 -4 8 0 q-4 4 -8 0 Z" fill="#5a7030" opacity="0.8" />
+            {/* petites gouttes qui coulent */}
+            <circle cx="-20" cy="8" r="0.8" fill="#b0d0e8" opacity="0.7" />
+            <circle cx="20" cy="10" r="0.8" fill="#b0d0e8" opacity="0.7" />
           </g>
         ))}
 
-        {/* Poissons dans l'eau */}
+        {/* Poissons dans l'eau — corps mieux dessiné, écailles */}
         {[[180, 400], [360, 420], [500, 400], [660, 420], [820, 400]].map(([x, y], i) => (
           <g key={i} transform={`translate(${x},${y})`} style={{ animation: `float ${2 + (i % 3) * 0.4}s ease-in-out infinite` }}>
-            <path d="M0 0 Q-10 -3 -14 0 Q-10 3 0 0 L8 -2 L12 -6 L8 -2 L12 2 L8 2 L0 0 Z" fill="#5a7080" stroke="#2a3848" strokeWidth="0.6" />
-            <circle cx="-8" cy="-1" r="1" fill="#0a0806" />
+            {/* corps */}
+            <path d="M0 0 Q-10 -4 -16 0 Q-10 4 0 0 L10 -3 L14 -7 L10 -3 L14 3 L10 3 L0 0 Z" fill="#5a8098" stroke="#1a2838" strokeWidth="0.7" />
+            {/* ventre clair */}
+            <path d="M-14 1 Q-10 3 0 0" stroke="#c0e0f0" strokeWidth="1" fill="none" opacity="0.7" />
+            {/* écailles */}
+            <path d="M-10 -1 q2 -1 4 0 M-6 0 q2 -1 4 0 M-2 -1 q2 -1 4 0" stroke="#3a5060" strokeWidth="0.4" fill="none" opacity="0.7" />
+            {/* œil vif */}
+            <circle cx="-10" cy="-1" r="1.4" fill="#0a0806" />
+            <circle cx="-10.4" cy="-1.4" r="0.5" fill="#f8f8e8" />
+            {/* nageoire dorsale */}
+            <path d="M-6 -3 q3 -3 6 0" stroke="#3a5060" strokeWidth="0.6" fill="#4a6878" />
+          </g>
+        ))}
+
+        {/* Libellules qui volent au-dessus */}
+        {[[280, 268, 0.4], [700, 290, 0.6], [520, 258, 0.5]].map(([x, y, s], i) => (
+          <g key={i} transform={`translate(${x},${y}) scale(${s})`} style={{ animation: `float ${1.6 + i * 0.2}s ease-in-out infinite` }}>
+            {/* ailes translucides */}
+            <ellipse cx="-6" cy="-1" rx="6" ry="2" fill="#b0d0e8" opacity="0.55" />
+            <ellipse cx="6" cy="-1" rx="6" ry="2" fill="#b0d0e8" opacity="0.55" />
+            <ellipse cx="-4" cy="2" rx="5" ry="1.5" fill="#b0d0e8" opacity="0.5" />
+            <ellipse cx="4" cy="2" rx="5" ry="1.5" fill="#b0d0e8" opacity="0.5" />
+            {/* corps allongé bleu iridescent */}
+            <rect x="-8" y="0" width="16" height="1.4" rx="0.7" fill="#3a6a90" />
+            <rect x="-8" y="-0.4" width="16" height="0.6" fill="#78b0d8" />
           </g>
         ))}
       </PLayer>
@@ -66,35 +139,79 @@ export default function SceneGue({ collect, action, reveal, made = [] }) {
       <PLayer depth={2}>
         {/* berge proche (au sol) */}
         <path d="M0 440 L1000 440 L1000 560 L0 560 Z" fill="url(#gu-rive)" />
-        {/* cailloux au bord */}
-        {[[80, 460], [220, 470], [560, 470], [720, 460], [880, 468]].map(([x, y], i) => (
-          <path key={i} d={`M${x} ${y} q-6 -6 -12 -2 q-4 6 4 8 q10 2 12 -8 Z`} fill="#4a3820" />
+        {/* clapotis sur la berge : ligne mouillée plus claire */}
+        <path d="M0 442 q100 -3 200 0 q100 3 200 0 q100 -3 200 0 q100 3 200 0 q100 -3 200 0 L1000 448 L0 448 Z" fill="#8ab0c8" opacity="0.4" />
+        {/* petites vaguelettes qui viennent lécher la berge */}
+        <path d="M0 446 q40 -1.5 80 0 q40 1.5 80 0 q40 -1.5 80 0 q40 1.5 80 0 q40 -1.5 80 0 q40 1.5 80 0 q40 -1.5 80 0 q40 1.5 80 0 q40 -1.5 80 0 q40 1.5 80 0 q40 -1.5 80 0 q40 1.5 80 0" stroke="#c0d8e8" strokeWidth="0.8" fill="none" opacity="0.6" />
+        {/* sable/limon plus clair devant la ligne d'eau */}
+        <path d="M0 448 L1000 448 L1000 470 L0 470 Z" fill="#8a6a48" opacity="0.5" />
+        {/* cailloux au bord — plus variés, plus texturés */}
+        {[[80, 460, 1], [140, 466, 0.7], [220, 470, 1.1], [560, 470, 0.9], [620, 466, 0.6], [720, 460, 1.2], [880, 468, 0.8], [940, 462, 0.7]].map(([x, y, s], i) => (
+          <g key={i} transform={`translate(${x},${y}) scale(${s})`}>
+            <ellipse cx="0" cy="4" rx="14" ry="2" fill="#0a0604" opacity="0.5" />
+            <path d="M-14 0 q4 -8 14 -8 q10 0 14 6 q0 6 -14 6 q-14 0 -14 -4 Z" fill="#7a6858" stroke="#2a1810" strokeWidth="0.6" />
+            <ellipse cx="-4" cy="-3" rx="6" ry="2" fill="#a08878" opacity="0.6" />
+          </g>
         ))}
-        {/* herbes hautes qui cadrent */}
+        {/* petites brindilles échouées */}
+        <path d="M310 462 l30 4 M660 464 l24 -2" stroke="#3a2818" strokeWidth="1.4" strokeLinecap="round" opacity="0.7" />
+        {/* herbes hautes qui cadrent — plus fournies, avec fleurs */}
+        <g opacity="0.9">
+          <path d="M40 560 q10 -32 4 -48 M62 560 q3 -26 14 -40 M28 560 q-5 -22 10 -34 M78 560 q-2 -20 8 -30" stroke="#3a4a20" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <path d="M940 560 q-8 -30 -2 -46 M962 560 q4 -26 12 -38 M920 560 q-4 -20 6 -32 M978 560 q-5 -18 4 -28" stroke="#3a4a20" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <path d="M400 560 q-5 -16 2 -26 M540 560 q5 -16 -1 -24" stroke="#4a5828" strokeWidth="3" fill="none" strokeLinecap="round" />
+          {/* petites fleurs sauvages jaunes */}
+          <circle cx="46" cy="514" r="2" fill="#f0d048" />
+          <circle cx="76" cy="522" r="2" fill="#f0d048" />
+          <circle cx="944" cy="516" r="2" fill="#f0d048" />
+          <circle cx="974" cy="524" r="2" fill="#f0d048" />
+        </g>
+        {/* touffes de roseaux entre les herbes */}
         <g opacity="0.85">
-          <path d="M40 560 q10 -30 4 -46 M62 560 q3 -24 14 -38" stroke="#3a4a20" strokeWidth="3.5" fill="none" />
-          <path d="M940 560 q-8 -28 -2 -44 M962 560 q4 -24 12 -36" stroke="#3a4a20" strokeWidth="3.5" fill="none" />
-          <path d="M400 560 q-5 -16 2 -26 M540 560 q5 -16 -1 -24" stroke="#4a5828" strokeWidth="3" fill="none" />
+          <path d="M120 470 l-3 -30 M124 470 l1 -34 M128 470 l4 -32" stroke="#7a6a30" strokeWidth="1.5" strokeLinecap="round" />
+          <ellipse cx="122" cy="438" rx="2" ry="6" fill="#4a3818" />
+          <ellipse cx="126" cy="434" rx="2" ry="6" fill="#4a3818" />
+          <path d="M820 468 l-3 -28 M824 468 l1 -32 M828 468 l4 -30" stroke="#7a6a30" strokeWidth="1.5" strokeLinecap="round" />
+          <ellipse cx="822" cy="438" rx="2" ry="6" fill="#4a3818" />
+          <ellipse cx="826" cy="434" rx="2" ry="6" fill="#4a3818" />
         </g>
       </PLayer>
 
       <PLayer depth={1}>
-        {/* Le PÊCHEUR ancestral sur la berge, canne en bois */}
+        {/* Le PÊCHEUR ancestral sur la berge, canne en bois — mieux fini */}
         <g transform="translate(120,470)">
-          {/* jambes assises */}
-          <ellipse cx="0" cy="30" rx="26" ry="8" fill="#5a3818" />
-          {/* torse penché */}
-          <path d="M-18 20 Q-16 -14 0 -20 Q16 -14 18 20 Z" fill="#8a5828" />
-          <path d="M-20 -8 Q0 -20 20 -8 L22 12 Q0 4 -22 12 Z" fill="#5a3818" opacity="0.85" />
-          {/* tête */}
-          <ellipse cx="0" cy="-30" rx="12" ry="14" fill="#c8946a" />
-          <path d="M-10 -34 q-4 -6 3 -12 q5 8 7 -2 q3 8 6 -2 q5 6 5 12 z" fill="#3a2418" />
-          <circle cx="-3" cy="-30" r="1.4" fill="#2a1a10" />
-          <circle cx="3" cy="-30" r="1.4" fill="#2a1a10" />
-          {/* canne à pêche = branche */}
-          <path d="M10 -10 L120 -80" stroke="#5a3818" strokeWidth="3" strokeLinecap="round" />
-          <path d="M120 -80 L200 -30" stroke="#8a8078" strokeWidth="0.6" fill="none" />
-          {/* petit poisson au bout ? plus tard */}
+          {/* ombre au sol */}
+          <ellipse cx="0" cy="42" rx="30" ry="4" fill="#0a0604" opacity="0.55" />
+          {/* jambes croisées assises */}
+          <path d="M-24 30 Q-20 20 -6 22 L18 34 Q24 40 20 42 L-20 42 Q-28 40 -24 30 Z" fill="#6a4020" stroke="#2a1810" strokeWidth="0.6" />
+          {/* torse penché en avant */}
+          <path d="M-18 22 Q-16 -14 0 -20 Q16 -14 18 22 Z" fill="#9a6028" stroke="#3a2010" strokeWidth="0.6" />
+          {/* détail pelage/fourrure sur le torse */}
+          <path d="M-14 -8 q4 -3 6 0 M-6 -12 q4 -3 6 0 M6 -12 q4 -3 6 0 M-10 4 q4 -3 6 0 M4 4 q4 -3 6 0" stroke="#5a3818" strokeWidth="0.5" fill="none" opacity="0.7" />
+          {/* épaule */}
+          <ellipse cx="-16" cy="-6" rx="6" ry="4" fill="#8a5828" />
+          <ellipse cx="16" cy="-6" rx="6" ry="4" fill="#8a5828" />
+          {/* bras qui tient la canne */}
+          <path d="M14 -8 Q22 -14 26 -22" stroke="#c8946a" strokeWidth="5" strokeLinecap="round" fill="none" />
+          {/* tête plus expressive */}
+          <ellipse cx="0" cy="-30" rx="12" ry="14" fill="#c8946a" stroke="#5a3818" strokeWidth="0.6" />
+          {/* cheveux longs (chignon) */}
+          <path d="M-11 -36 q-4 -8 3 -14 q5 8 7 -2 q3 8 6 -2 q6 6 5 14 q-2 4 -6 2 q-2 3 -5 -1 q-3 3 -5 -1 q-4 2 -5 2 z" fill="#3a2418" />
+          <ellipse cx="0" cy="-42" rx="6" ry="3" fill="#3a2418" />
+          {/* barbe */}
+          <path d="M-8 -24 q4 6 8 6 q4 0 8 -6" stroke="#3a2418" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          {/* traits */}
+          <circle cx="-3.5" cy="-30" r="1.5" fill="#2a1a10" />
+          <circle cx="3.5" cy="-30" r="1.5" fill="#2a1a10" />
+          <path d="M-3 -26 q3 1.5 6 0" stroke="#5a2818" strokeWidth="0.8" fill="none" />
+          {/* nez */}
+          <path d="M0 -30 l-1.5 4 l1.5 1" stroke="#8a5828" strokeWidth="0.5" fill="none" />
+          {/* canne à pêche courbée = branche qui plie sous le poids */}
+          <path d="M26 -22 Q80 -60 130 -70 Q160 -60 155 -30" stroke="#5a3818" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+          {/* fil */}
+          <path d="M155 -30 L158 20" stroke="#c8b8a0" strokeWidth="0.6" fill="none" />
+          {/* petit flotteur */}
+          <circle cx="158" cy="18" r="2" fill="#c85028" stroke="#3a1010" strokeWidth="0.4" />
         </g>
         {/* « ? » de dialogue */}
         <g transform="translate(120,420)" style={{ animation: "float 2s ease-in-out infinite" }}>
