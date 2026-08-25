@@ -480,15 +480,23 @@ export default function App() {
 
   /* Le gros plan : il s'ouvre TOUT SEUL sur les étapes `auto` (l'accueil
      d'Ana) et se referme dès que l'étape change — pour les autres, c'est
-     le clic sur le personnage qui l'ouvre (voir `action`). */
+     le clic sur le personnage qui l'ouvre (voir `action`).
+     ⚠ Une étape auto ne doit se déclencher QU'UNE FOIS : quand on change
+     de tableau, l'accueil ne se relance pas si on est resté sur la même
+     étape. On mémorise donc « chapitre#etape » déjà déclenché. */
+  const autoFiredRef = useRef(new Set());
   useEffect(() => {
     const st = chapter.quete?.[quete];
-    setPortraitOpen(!!(st?.portrait && st.auto));
-    /* dépendance sur `tab` (pas `quete`) : l'encart auto s'ouvre à
-       l'ARRIVÉE sur un nouveau tableau. Si on le déclenchait sur `quete`,
-       la fin d'une étape ouvrirait le portrait du perso suivant sur
-       l'ancien tableau (bug « un tableau trop tôt »). */
-  }, [tab, chapterIndex]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!st?.portrait || !st.auto) { setPortraitOpen(false); return; }
+    const key = `${chapterIndex}#${quete}`;
+    if (autoFiredRef.current.has(key)) { setPortraitOpen(false); return; }
+    autoFiredRef.current.add(key);
+    setPortraitOpen(true);
+    /* dépendance sur `tab` ET `quete` : sur nouveau tableau on TENTE
+       l'ouverture (comme avant, pour éviter le bug « un tableau trop
+       tôt »), mais l'auto ne se relance jamais si l'étape est déjà
+       passée. Sur nouveau `quete`, on tente aussi (arrivée sur l'étape). */
+  }, [tab, chapterIndex, quete]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* AMBIANCE SONORE : si le tableau courant en déclare une (champ
      `ambience` dans les SCENES du data.js), elle démarre en douceur et

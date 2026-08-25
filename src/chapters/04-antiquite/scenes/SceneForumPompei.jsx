@@ -21,12 +21,17 @@ export default function SceneForumPompei({ collect, action, reveal }) {
         <filter id="fp-grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" /><feColorMatrix values="0 0 0 0 0.3 0 0 0 0 0.2 0 0 0 0 0.1 0 0 0 0.35 0" /></filter>
       </defs>
 
+      {/* ═══ Base plein cadre : ciel EN HAUT + dallage EN BAS,
+              posés DERRIÈRE toutes les couches parallax pour éviter
+              tout « décor flottant dans le vide » quand on pan. ═══ */}
+      <rect width="1000" height="380" fill="url(#fp-sky)" />
+      <rect y="380" width="1000" height="180" fill="url(#fp-dalles)" />
+
       <PLayer depth={5}>
-        <rect width="1000" height="380" fill="url(#fp-sky)" />
         {/* soleil pâle dans le ciel */}
         <circle cx="260" cy="110" r="80" fill="#f8e8b8" opacity="0.35" />
         <circle cx="260" cy="110" r="24" fill="#f8e0a0" opacity="0.7" />
-        {/* Vésuve gris au loin — cône avec petite fumée */}
+        {/* Vésuve gris au loin */}
         <path d="M600 300 L750 180 L900 300 Z" fill="#5a5060" opacity="0.75" />
         <path d="M700 240 L750 180 L800 240" fill="#3a3040" opacity="0.65" />
         <ellipse cx="750" cy="180" rx="12" ry="8" fill="#f0e0c8" opacity="0.7" />
@@ -42,7 +47,30 @@ export default function SceneForumPompei({ collect, action, reveal }) {
       </PLayer>
 
       <PLayer depth={4}>
-        {/* Temple de Jupiter à gauche (fronton triangulaire + colonnes) */}
+        {/* Bande de bâtiments PUBLICS qui court d'un bord à l'autre :
+            portique du forum (colonnade continue), macellum au fond,
+            tabularium à droite. Elle ferme la scène derrière. */}
+        <rect x="0" y="240" width="1000" height="140" fill="#c8b088" opacity="0.55" />
+        {/* petite frise/corniche au sommet du portique */}
+        <rect x="0" y="238" width="1000" height="6" fill="#8a7860" />
+        {/* colonnade continue en arrière-plan (petites colonnes) */}
+        {Array.from({ length: 22 }).map((_, i) => {
+          const x = 20 + i * 46;
+          return (
+            <g key={i}>
+              <rect x={x - 4} y="260" width="8" height="118" fill="#e0d0b8" opacity="0.85" />
+              <rect x={x - 6} y="252" width="12" height="8" fill="#c8b898" />
+              <rect x={x - 7} y="374" width="14" height="6" fill="#8a7860" />
+              <path d={`M${x - 2} 260 L${x - 2} 378 M${x + 2} 260 L${x + 2} 378`} stroke="#a89880" strokeWidth="0.3" />
+            </g>
+          );
+        })}
+        {/* Macellum (marché couvert) au centre-fond : petite silhouette avec toit */}
+        <g transform="translate(500,240)">
+          <path d="M-100 0 L100 0 L80 -46 L-80 -46 Z" fill="#8a4028" opacity="0.7" />
+          <rect x="-100" y="0" width="200" height="10" fill="#5a4028" opacity="0.8" />
+        </g>
+        {/* Temple de Jupiter à gauche (fronton triangulaire + colonnes) — grand plan */}
         <g transform="translate(180,320)">
           {/* podium */}
           <rect x="-110" y="0" width="220" height="24" fill="url(#fp-marbre)" stroke="#5a5040" strokeWidth="0.6" />
