@@ -84,13 +84,23 @@ export default function SceneThermes({ collect, action, reveal }) {
           <path d="M-30 -8 q30 -6 60 0" stroke="#f0f8f8" strokeWidth="0.6" fill="none" opacity="0.7" />
           {/* inscription latine gravée sur le rebord */}
           <text x="0" y="6" textAnchor="middle" fontSize="6" fill="#5a4030" fontFamily="Georgia, serif" fontWeight="700">CN·MELISSAEVS·APER·MAG</text>
-          {/* vapeur qui monte */}
+          {/* vapeur qui monte — 2 couches à rythmes différents */}
           <g style={{ animation: "float 3s ease-in-out infinite" }}>
             <ellipse cx="-20" cy="-30" rx="20" ry="10" fill="url(#th-vapeur)" />
             <ellipse cx="10" cy="-40" rx="24" ry="12" fill="url(#th-vapeur)" />
             <ellipse cx="30" cy="-30" rx="18" ry="9" fill="url(#th-vapeur)" />
           </g>
+          <g style={{ animation: "float 4.5s ease-in-out infinite" }} opacity="0.7">
+            <ellipse cx="-30" cy="-56" rx="26" ry="12" fill="url(#th-vapeur)" />
+            <ellipse cx="20" cy="-70" rx="30" ry="14" fill="url(#th-vapeur)" />
+            <ellipse cx="0" cy="-96" rx="34" ry="16" fill="url(#th-vapeur)" />
+          </g>
+          {/* petites gouttes qui coulent sur la vasque */}
+          <path d="M-42 12 q0 8 -2 12 M46 10 q0 8 2 14" stroke="#8ab0c8" strokeWidth="1" fill="none" opacity="0.7" />
         </g>
+        {/* Rayons de lumière obliques qui descendent de la voûte */}
+        <path d="M600 40 L820 200 L860 200 L640 40 Z" fill="#f8e8b8" opacity="0.18" />
+        <path d="M400 40 L200 200 L160 200 L360 40 Z" fill="#f8e8b8" opacity="0.15" />
       </PLayer>
 
       <PLayer depth={2}>

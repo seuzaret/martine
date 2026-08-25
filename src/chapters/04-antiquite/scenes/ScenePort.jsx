@@ -59,7 +59,15 @@ export default function ScenePort({ collect, action, reveal }) {
           </g>
           {/* petit rougeoiement suspect à la base du panache */}
           <ellipse cx="-65" cy="-214" rx="14" ry="4" fill="#e86028" opacity="0.55" />
+          {/* étincelles fines qui montent du cratère */}
+          {[[-70, -220], [-60, -216], [-55, -224]].map(([x, y], i) => (
+            <circle key={i} cx={x} cy={y} r="0.8" fill="#f8d848" opacity="0.85" style={{ animation: `float ${1.4 + i * 0.3}s ease-in-out infinite` }} />
+          ))}
         </g>
+        {/* fines cendres qui commencent à voler dans le ciel */}
+        {[[220, 200, 2.4], [420, 180, 3], [660, 210, 2], [340, 240, 2.8], [520, 220, 3.4]].map(([x, y, d], i) => (
+          <circle key={i} cx={x} cy={y} r="0.9" fill="#5a5060" opacity="0.5" style={{ animation: `float ${d}s ease-in-out infinite` }} />
+        ))}
         {/* Collines de la baie de Naples à gauche */}
         <path d="M0 380 L0 300 Q100 280 200 300 Q300 320 400 305 L400 380 Z" fill="#8a7098" opacity="0.55" />
       </PLayer>
@@ -70,10 +78,13 @@ export default function ScenePort({ collect, action, reveal }) {
         {/* vagues */}
         <path d="M0 360 q60 -3 120 0 q60 3 120 0 q60 -3 120 0 q60 3 120 0 q60 -3 120 0 q60 3 120 0 q60 -3 120 0 q60 3 120 0" stroke="#a8d0e8" strokeWidth="0.8" fill="none" opacity="0.7" />
         <path d="M0 385 q60 -3 120 0 q60 3 120 0 q60 -3 120 0 q60 3 120 0 q60 -3 120 0" stroke="#78a8c8" strokeWidth="0.8" fill="none" opacity="0.65" />
-        {/* reflets */}
+        {/* reflets solaires */}
         {[[120, 370], [340, 380], [560, 375], [880, 385]].map(([x, y], i) => (
           <ellipse key={i} cx={x} cy={y} rx="16" ry="1.6" fill="#f8f8e8" opacity="0.55" style={{ animation: `float ${2.4 + (i % 3) * 0.3}s ease-in-out infinite` }} />
         ))}
+        {/* Reflet SOMBRE du Vésuve sur l'eau */}
+        <path d="M620 340 L720 400 L820 340 Z" fill="#3a3040" opacity="0.35" />
+        <path d="M700 380 Q720 375 740 380" stroke="#5a5060" strokeWidth="0.6" fill="none" opacity="0.5" />
         {/* NAVIRE MARCHAND romain (corbita) à quai — voile carrée */}
         <g transform="translate(720,370)">
           {/* coque large et arrondie */}

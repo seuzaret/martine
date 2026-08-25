@@ -47,8 +47,8 @@ export default function SceneFoire({ collect, action, reveal }) {
       </PLayer>
 
       <PLayer depth={4}>
-        {/* BANDEROLE au-dessus de la scène */}
-        <g transform="translate(500,150)">
+        {/* BANDEROLE au-dessus de la scène — flottante au vent */}
+        <g transform="translate(500,150)" style={{ animation: "float 5s ease-in-out infinite" }}>
           <path d="M-300 -8 q300 40 600 0 L300 24 q-300 30 -600 0 Z" fill="#c85028" stroke="#5a1810" strokeWidth="1" />
           <path d="M-300 -8 q300 40 600 0" fill="none" stroke="#f0c848" strokeWidth="1.2" />
           <path d="M-300 24 q-300 30 -600 0" fill="none" stroke="#f0c848" strokeWidth="0.8" />
@@ -113,6 +113,23 @@ export default function SceneFoire({ collect, action, reveal }) {
         {/* petits pavés supplémentaires */}
         {[[500, 490], [700, 500], [900, 510]].map(([x, y], i) => (
           <ellipse key={i} cx={x} cy={y} rx="6" ry="2" fill="#5a4028" opacity="0.6" />
+        ))}
+        {/* SILHOUETTES DE FOULE lointaine derrière (têtes seulement) */}
+        <g opacity="0.65">
+          {[[80, 430, "#5a3818"], [110, 434, "#8a5828"], [140, 428, "#3a2818"], [560, 428, "#5a3818"], [590, 434, "#3a2818"], [860, 432, "#8a5828"], [890, 428, "#3a2818"], [820, 434, "#5a2818"]].map(([x, y, col], i) => (
+            <g key={i}>
+              <ellipse cx={x} cy={y} rx="6" ry="7" fill="#a06838" opacity="0.7" />
+              <path d={`M${x - 4} ${y - 4} q4 -6 8 0`} stroke={col} strokeWidth="1.2" fill="none" />
+              <path d={`M${x - 8} ${y + 5} L${x - 8} ${y + 24} L${x + 8} ${y + 24} L${x + 8} ${y + 5} Z`} fill={col} />
+            </g>
+          ))}
+        </g>
+        {/* Feuilles qui volent (libelles emportés par le vent) */}
+        {[[380, 340, 2.4], [600, 360, 3], [800, 340, 2.8]].map(([x, y, d], i) => (
+          <g key={i} transform={`translate(${x},${y}) rotate(${(i * 30) - 15})`} style={{ animation: `float ${d}s ease-in-out infinite` }} opacity="0.8">
+            <rect x="-6" y="-4" width="12" height="9" fill="#f0e8d0" stroke="#5a3818" strokeWidth="0.3" />
+            <path d="M-4 -2 h8 M-4 0 h8 M-4 2 h6" stroke="#5a3818" strokeWidth="0.25" />
+          </g>
         ))}
       </PLayer>
 

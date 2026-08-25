@@ -23,12 +23,25 @@ export default function ScenePyramide({ collect, action, reveal }) {
 
       <PLayer depth={5}>
         <rect width="1000" height="380" fill="url(#py-sky)" />
-        {/* soleil */}
+        {/* halo solaire ardent */}
         <circle cx="200" cy="120" r="120" fill="url(#py-sun)" />
+        {/* rayons brûlants */}
+        <g opacity="0.28" transform="translate(200,120)">
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((a, i) => {
+            const rad = (a * Math.PI) / 180;
+            return <line key={i} x1={Math.cos(rad) * 40} y1={Math.sin(rad) * 40} x2={Math.cos(rad) * 74} y2={Math.sin(rad) * 74} stroke="#fff4c8" strokeWidth="1.2" strokeLinecap="round" />;
+          })}
+        </g>
         <circle cx="200" cy="120" r="34" fill="#fff8d8" />
+        <circle cx="200" cy="120" r="22" fill="#fff4b0" />
         {/* traînées de nuages hauts */}
         <ellipse cx="600" cy="70" rx="130" ry="4" fill="#f8f0d8" opacity="0.55" />
         <ellipse cx="820" cy="90" rx="100" ry="4" fill="#f8f0d8" opacity="0.5" />
+        {/* vol de vautours au loin */}
+        <g opacity="0.5" transform="translate(500,200)">
+          <path d="M0 0 q-4 -4 -8 0 M0 0 q4 -4 8 0" stroke="#3a2818" strokeWidth="1.4" fill="none" strokeLinecap="round" />
+          <path d="M30 12 q-4 -4 -8 0 M30 12 q4 -4 8 0" stroke="#3a2818" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+        </g>
       </PLayer>
 
       <PLayer depth={4}>
@@ -59,6 +72,13 @@ export default function ScenePyramide({ collect, action, reveal }) {
           <rect x="-32" y="-268" width="64" height="10" fill="#a0783a" stroke="#3a2410" strokeWidth="0.6" />
           <rect x="-24" y="-280" width="46" height="12" fill="#8a6830" stroke="#3a2410" strokeWidth="0.6" />
           <rect x="-14" y="-292" width="28" height="12" fill="#a0783a" stroke="#3a2410" strokeWidth="0.6" />
+          {/* échafaudage au sommet + 2 mini-silhouettes d'ouvriers */}
+          <path d="M-24 -298 L24 -298" stroke="#3a2010" strokeWidth="1" />
+          <path d="M-20 -298 L-20 -292 M20 -298 L20 -292" stroke="#3a2010" strokeWidth="0.8" />
+          <circle cx="-10" cy="-302" r="2" fill="#c8946a" />
+          <circle cx="8" cy="-302" r="2" fill="#c8946a" />
+          {/* poussière de chantier qui s'élève */}
+          <ellipse cx="-100" cy="-100" rx="30" ry="12" fill="#e8c890" opacity="0.35" />
           {/* rampe de terre battue qui monte le long du côté gauche */}
           <path d="M-220 0 L-260 20 L-60 -260 L-60 -246 Z" fill="#a06838" stroke="#3a1810" strokeWidth="1" />
           {/* traîneau à mi-rampe */}
@@ -79,6 +99,15 @@ export default function ScenePyramide({ collect, action, reveal }) {
         {/* ondulations du sable */}
         <path d="M0 440 q100 -8 200 0 q100 8 200 0 q100 -8 200 0 q100 8 200 0 q100 -8 200 0" stroke="#a07038" strokeWidth="0.8" fill="none" opacity="0.5" />
         <path d="M0 480 q100 -6 200 0 q100 6 200 0 q100 -6 200 0 q100 6 200 0 q100 -6 200 0" stroke="#a07038" strokeWidth="0.6" fill="none" opacity="0.4" />
+        {/* traces d'empreintes de pieds nus dans le sable */}
+        {[[80, 470, 20], [140, 480, -15], [400, 476, 10], [460, 484, -20], [700, 478, 25]].map(([x, y, r], i) => (
+          <g key={i} transform={`translate(${x},${y}) rotate(${r})`}>
+            <ellipse cx="0" cy="0" rx="7" ry="4" fill="#8a6838" opacity="0.5" />
+            <ellipse cx="0" cy="-6" rx="3" ry="2" fill="#8a6838" opacity="0.45" />
+          </g>
+        ))}
+        {/* haze de chaleur qui vibre au-dessus du sable */}
+        <path d="M0 456 q80 -1 160 0 q80 1 160 0 q80 -1 160 0 q80 1 160 0" stroke="#f8e8b8" strokeWidth="0.4" fill="none" opacity="0.5" style={{ animation: "float 3s ease-in-out infinite" }} />
         {/* PALMIER à gauche */}
         <g transform="translate(120,400)">
           {/* tronc */}

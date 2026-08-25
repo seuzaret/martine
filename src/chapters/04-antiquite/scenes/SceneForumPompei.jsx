@@ -23,11 +23,19 @@ export default function SceneForumPompei({ collect, action, reveal }) {
 
       <PLayer depth={5}>
         <rect width="1000" height="380" fill="url(#fp-sky)" />
+        {/* soleil pâle dans le ciel */}
+        <circle cx="260" cy="110" r="80" fill="#f8e8b8" opacity="0.35" />
+        <circle cx="260" cy="110" r="24" fill="#f8e0a0" opacity="0.7" />
         {/* Vésuve gris au loin — cône avec petite fumée */}
         <path d="M600 300 L750 180 L900 300 Z" fill="#5a5060" opacity="0.75" />
         <path d="M700 240 L750 180 L800 240" fill="#3a3040" opacity="0.65" />
         <ellipse cx="750" cy="180" rx="12" ry="8" fill="#f0e0c8" opacity="0.7" />
         <path d="M746 176 q-6 -14 4 -22 q6 -8 -2 -18 q-8 -8 -2 -18" stroke="#c8b8a0" strokeWidth="4" fill="none" opacity="0.55" strokeLinecap="round" />
+        {/* deux mouettes qui passent */}
+        <g opacity="0.55" transform="translate(560,200)" style={{ animation: "float 4s ease-in-out infinite" }}>
+          <path d="M0 0 q-3 -3 -6 0 M0 0 q3 -3 6 0" stroke="#3a2818" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+          <path d="M22 12 q-3 -3 -6 0 M22 12 q3 -3 6 0" stroke="#3a2818" strokeWidth="1" fill="none" strokeLinecap="round" />
+        </g>
         {/* nuages */}
         <ellipse cx="180" cy="90" rx="110" ry="8" fill="#f0e0c0" opacity="0.55" />
         <ellipse cx="420" cy="110" rx="90" ry="6" fill="#f0e0c0" opacity="0.5" />
@@ -80,6 +88,9 @@ export default function SceneForumPompei({ collect, action, reveal }) {
           <text x="16" y="122" fontSize="9" fill="#8a2818" fontFamily="Georgia, serif">RVFVS · EST · HIC</text>
           {/* petit cœur */}
           <path d="M290 40 q-4 -8 -10 -4 q-4 4 4 10 l6 6 l6 -6 q8 -6 4 -10 q-6 -4 -10 4 Z" fill="#8a2818" opacity="0.75" />
+          {/* main peinte à la sanguine (empreinte au mur) */}
+          <path d="M180 30 q-3 0 -3 5 l0 12 q0 3 3 3 l14 0 q3 0 3 -3 l0 -12 q0 -5 -3 -5 Z" fill="#8a2818" opacity="0.55" />
+          <path d="M182 35 l0 -5 M186 35 l0 -6 M190 35 l0 -5 M194 35 l0 -4" stroke="#8a2818" strokeWidth="1" opacity="0.55" />
           {/* silhouette de gladiateur maladroite */}
           <g transform="translate(280,90)">
             <circle r="4" fill="#3a2010" />

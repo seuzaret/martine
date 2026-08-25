@@ -41,6 +41,19 @@ export default function SceneEcoleScribe({ collect, action, reveal }) {
         <rect x="820" y="60" width="120" height="30" fill="none" stroke="#3a1810" strokeWidth="1.5" />
         {/* halo de lampe au centre */}
         <ellipse cx="500" cy="140" rx="220" ry="80" fill="url(#ec-lampe)" />
+        {/* poussière qui danse dans le rai de lumière */}
+        {[[420, 120, 1.4], [480, 160, 2], [520, 100, 1.6], [560, 180, 2.2], [500, 200, 1.8]].map(([x, y, d], i) => (
+          <circle key={i} cx={x} cy={y} r="1.2" fill="#f8e0a0" opacity="0.65" style={{ animation: `float ${d}s ease-in-out infinite` }} />
+        ))}
+        {/* lampe à huile suspendue */}
+        <g transform="translate(500,60)">
+          <path d="M0 0 L0 30" stroke="#3a2818" strokeWidth="0.6" />
+          <path d="M-14 30 Q-14 44 -6 46 L6 46 Q14 44 14 30 Q14 24 0 22 Q-14 24 -14 30 Z" fill="#8a6828" stroke="#3a2010" strokeWidth="0.6" />
+          <path d="M-8 40 Q-8 44 0 44 Q8 44 8 40" stroke="#5a3818" strokeWidth="0.4" fill="none" />
+          <path d="M14 32 L22 30 L22 34" stroke="#3a2010" strokeWidth="0.4" fill="none" />
+          <ellipse cx="22" cy="32" rx="2.5" ry="3.5" fill="#f8c058" opacity="0.9" />
+          <ellipse cx="22" cy="30" rx="1.2" ry="2" fill="#fff4c8" opacity="0.85" />
+        </g>
       </PLayer>
 
       <PLayer depth={3}>
@@ -79,9 +92,20 @@ export default function SceneEcoleScribe({ collect, action, reveal }) {
         {/* SOL de terre battue */}
         <rect y="440" width="1000" height="120" fill="url(#ec-sol)" />
         <rect y="440" width="1000" height="120" fill="#2a1810" opacity="0.25" filter="url(#ec-grain)" />
-        {/* tapis / natte au sol devant les élèves */}
-        <ellipse cx="500" cy="500" rx="380" ry="34" fill="#5a3820" opacity="0.7" />
-        <path d="M120 500 q380 -18 760 0" stroke="#3a2010" strokeWidth="0.6" fill="none" opacity="0.7" />
+        {/* tapis / natte au sol devant les élèves — tressage détaillé */}
+        <ellipse cx="500" cy="500" rx="380" ry="34" fill="#5a3820" opacity="0.75" />
+        {/* motif tressage */}
+        {Array.from({ length: 40 }).map((_, i) => (
+          <path key={i} d={`M${140 + i * 18} 486 q6 4 12 0 q6 -4 12 0`} stroke="#3a2010" strokeWidth="0.4" fill="none" opacity="0.55" />
+        ))}
+        {Array.from({ length: 40 }).map((_, i) => (
+          <path key={`b${i}`} d={`M${140 + i * 18} 512 q6 4 12 0 q6 -4 12 0`} stroke="#3a2010" strokeWidth="0.4" fill="none" opacity="0.55" />
+        ))}
+        {/* franges tapis */}
+        <path d="M120 500 v6 M132 500 v6 M144 500 v6 M156 500 v6 M844 500 v6 M856 500 v6 M868 500 v6 M880 500 v6" stroke="#3a2010" strokeWidth="0.8" />
+        {/* poussière au sol */}
+        <ellipse cx="700" cy="530" rx="40" ry="4" fill="#3a2010" opacity="0.25" />
+        <ellipse cx="300" cy="530" rx="30" ry="3" fill="#3a2010" opacity="0.2" />
       </PLayer>
 
       <PLayer depth={1}>

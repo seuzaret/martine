@@ -29,11 +29,16 @@ export default function SceneByblos({ collect, action, reveal }) {
         {/* traînée de nuages */}
         <ellipse cx="240" cy="90" rx="130" ry="8" fill="#f0e0c0" opacity="0.6" />
         <ellipse cx="480" cy="140" rx="100" ry="6" fill="#f0e0c0" opacity="0.55" />
-        {/* mouettes */}
-        <g opacity="0.65" transform="translate(340,160)">
-          <path d="M0 0 q-3 -3 -6 0 M0 0 q3 -3 6 0" stroke="#3a2818" strokeWidth="1.2" fill="none" strokeLinecap="round" />
-          <path d="M18 12 q-3 -3 -6 0 M18 12 q3 -3 6 0" stroke="#3a2818" strokeWidth="1" fill="none" strokeLinecap="round" />
-          <path d="M-22 14 q-3 -3 -6 0 M-22 14 q3 -3 6 0" stroke="#3a2818" strokeWidth="1" fill="none" strokeLinecap="round" />
+        {/* mouettes qui planent */}
+        <g opacity="0.7" transform="translate(340,160)" style={{ animation: "float 5s ease-in-out infinite" }}>
+          <path d="M0 0 q-4 -4 -8 0 M0 0 q4 -4 8 0" stroke="#f0e8d0" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+          <path d="M0 0 q-4 -4 -8 0 M0 0 q4 -4 8 0" stroke="#3a2818" strokeWidth="1" fill="none" strokeLinecap="round" />
+          <path d="M22 14 q-3 -3 -6 0 M22 14 q3 -3 6 0" stroke="#3a2818" strokeWidth="1" fill="none" strokeLinecap="round" />
+          <path d="M-24 16 q-3 -3 -6 0 M-24 16 q3 -3 6 0" stroke="#3a2818" strokeWidth="1" fill="none" strokeLinecap="round" />
+        </g>
+        {/* petite mouette isolée qui plonge */}
+        <g opacity="0.65" transform="translate(180,220)" style={{ animation: "float 3s ease-in-out infinite" }}>
+          <path d="M0 0 q-3 -3 -6 0 M0 0 q3 -3 6 0" stroke="#3a2818" strokeWidth="1.4" fill="none" strokeLinecap="round" />
         </g>
       </PLayer>
 
@@ -62,8 +67,14 @@ export default function SceneByblos({ collect, action, reveal }) {
         {[[120, 350], [340, 356], [560, 348], [780, 356], [900, 344]].map(([x, y], i) => (
           <ellipse key={i} cx={x} cy={y} rx="16" ry="1.6" fill="#f8f8e8" opacity="0.55" style={{ animation: `float ${2.4 + (i % 3) * 0.3}s ease-in-out infinite` }} />
         ))}
+        {/* petit banc de dauphins qui saute */}
+        {[[540, 348], [560, 352], [580, 350]].map(([x, y], i) => (
+          <g key={i} transform={`translate(${x},${y})`} style={{ animation: `float ${1.6 + i * 0.2}s ease-in-out infinite` }}>
+            <path d="M-6 0 Q0 -6 6 0 Q4 2 0 1 Q-4 2 -6 0 Z" fill="#3a5878" opacity="0.85" />
+          </g>
+        ))}
         {/* NAVIRE au large (bateau phénicien avec voile carrée) */}
-        <g transform="translate(720,340)">
+        <g transform="translate(720,340)" style={{ animation: "float 5s ease-in-out infinite" }}>
           {/* coque */}
           <path d="M-40 0 Q-30 12 30 12 Q40 6 40 0 L-40 0 Z" fill="#5a3818" stroke="#2a1810" strokeWidth="0.8" />
           <path d="M-40 0 L-46 -6 M40 0 L46 -6" stroke="#3a2010" strokeWidth="1" />

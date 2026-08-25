@@ -26,6 +26,22 @@ export default function SceneBourg({ collect, action, reveal }) {
         {/* nuages */}
         <ellipse cx="240" cy="80" rx="90" ry="7" fill="#f0e0c0" opacity="0.55" />
         <ellipse cx="620" cy="110" rx="110" ry="8" fill="#f0e0c0" opacity="0.5" />
+        {/* Fumées qui montent des cheminées cachées derrière les toits */}
+        <g style={{ animation: "float 4s ease-in-out infinite" }} opacity="0.65">
+          <ellipse cx="140" cy="220" rx="10" ry="18" fill="#c8b8a0" />
+          <ellipse cx="150" cy="200" rx="14" ry="16" fill="#a89880" opacity="0.7" />
+          <ellipse cx="140" cy="180" rx="18" ry="14" fill="#c8b8a0" opacity="0.55" />
+        </g>
+        <g style={{ animation: "float 5s ease-in-out infinite" }} opacity="0.55">
+          <ellipse cx="480" cy="220" rx="8" ry="14" fill="#c8b8a0" />
+          <ellipse cx="486" cy="204" rx="12" ry="12" fill="#a89880" opacity="0.7" />
+        </g>
+        {/* volée de corbeaux autour du clocher */}
+        <g opacity="0.7" transform="translate(680,180)" style={{ animation: "float 4s ease-in-out infinite" }}>
+          <path d="M0 0 q-3 -3 -6 0 M0 0 q3 -3 6 0" stroke="#0a0806" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+          <path d="M20 8 q-3 -3 -6 0 M20 8 q3 -3 6 0" stroke="#0a0806" strokeWidth="1" fill="none" strokeLinecap="round" />
+          <path d="M-16 12 q-3 -3 -6 0 M-16 12 q3 -3 6 0" stroke="#0a0806" strokeWidth="1" fill="none" strokeLinecap="round" />
+        </g>
         {/* clocher de l'église au fond */}
         <g transform="translate(700,200)">
           <rect x="-24" y="0" width="48" height="150" fill="#a89880" stroke="#3a2818" strokeWidth="0.8" />
@@ -142,6 +158,22 @@ export default function SceneBourg({ collect, action, reveal }) {
           <circle cx="24" cy="18" r="4" fill="#3a2010" />
           <path d="M24 8 v20 M14 18 h20" stroke="#3a2010" strokeWidth="0.8" />
         </g>
+        {/* CHIEN qui dort près de la taverne */}
+        <g transform="translate(320,530)">
+          <ellipse cx="0" cy="8" rx="24" ry="4" fill="#0a0604" opacity="0.5" />
+          <ellipse cx="0" cy="0" rx="20" ry="8" fill="#8a5a2e" stroke="#2a1408" strokeWidth="0.5" />
+          <ellipse cx="-16" cy="-2" rx="8" ry="6" fill="#8a5a2e" stroke="#2a1408" strokeWidth="0.5" />
+          {/* oreille tombante */}
+          <path d="M-22 -6 q-6 4 -2 8 q4 -2 4 -6 Z" fill="#5a3818" />
+          {/* pattes */}
+          <path d="M-8 6 v6 M-2 6 v6 M6 6 v6 M12 6 v6" stroke="#5a3818" strokeWidth="2" strokeLinecap="round" />
+          {/* queue */}
+          <path d="M18 -2 q6 -2 8 4" stroke="#8a5a2e" strokeWidth="3" fill="none" strokeLinecap="round" />
+          {/* Zzz au-dessus */}
+          <text x="14" y="-14" fontSize="8" fontFamily="Georgia, serif" fill="#5a3818" opacity="0.65">z</text>
+          <text x="20" y="-20" fontSize="6" fontFamily="Georgia, serif" fill="#5a3818" opacity="0.55">z</text>
+        </g>
+
         {/* poules qui picorent */}
         {[[600, 520, 1], [640, 528, -1], [420, 530, 1]].map(([x, y, dir], i) => (
           <g key={i} transform={`translate(${x},${y}) scale(${dir},1)`}>

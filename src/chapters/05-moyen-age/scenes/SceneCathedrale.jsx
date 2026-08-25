@@ -40,6 +40,14 @@ export default function SceneCathedrale({ collect, action, reveal }) {
         <rect x="916" y="94" width="28" height="10" fill="#8a7860" stroke="#3a2818" strokeWidth="0.6" />
         {/* halo lumineux qui vient de la grande rose */}
         <circle cx="500" cy="260" r="180" fill="url(#ca-halo)" />
+        {/* rayons colorés obliques (soleil qui traverse le vitrail) */}
+        <path d="M200 340 L340 560 L360 560 L220 340 Z" fill="url(#ca-vit-r)" opacity="0.2" />
+        <path d="M800 340 L660 560 L640 560 L780 340 Z" fill="url(#ca-vit-b)" opacity="0.2" />
+        <path d="M500 240 L440 560 L470 560 L500 240 Z" fill="url(#ca-vit-j)" opacity="0.18" />
+        {/* poussière qui danse dans les rais de lumière */}
+        {[[300, 400, 2.4], [340, 460, 3], [700, 420, 2.8], [660, 480, 2.2], [500, 380, 3.4], [480, 460, 2.6]].map(([x, y, d], i) => (
+          <circle key={i} cx={x} cy={y} r="1" fill="#f8e0a0" opacity="0.65" style={{ animation: `float ${d}s ease-in-out infinite` }} />
+        ))}
       </PLayer>
 
       <PLayer depth={4}>
@@ -140,6 +148,25 @@ export default function SceneCathedrale({ collect, action, reveal }) {
                 ? <rect key={r} x={c * 84} y={440 + r * 40} width="84" height="40" fill="#3a2818" opacity="0.55" />
                 : null
             ))}
+          </g>
+        ))}
+        {/* GARGOUILLE de pierre penchée depuis le haut à gauche */}
+        <g transform="translate(90,340)">
+          <path d="M0 0 Q-8 -12 -16 -6 L-14 6 L-4 8 Z" fill="#8a7860" stroke="#3a2818" strokeWidth="0.6" />
+          <circle cx="-8" cy="-2" r="1.4" fill="#0a0806" />
+          <circle cx="-2" cy="-2" r="1.4" fill="#0a0806" />
+          {/* langue sortie */}
+          <path d="M-6 4 L-6 10 L-4 10 L-4 4 Z" fill="#8a2818" />
+          {/* dents */}
+          <path d="M-8 4 l0 2 M-4 4 l0 2" stroke="#f0e8d0" strokeWidth="0.5" />
+        </g>
+        {/* petites bougies allumées sur candelabres */}
+        {[[440, 500], [560, 500]].map(([x, y], i) => (
+          <g key={i} transform={`translate(${x},${y})`}>
+            <rect x="-2" y="0" width="4" height="20" fill="#e8dcc0" />
+            <path d="M0 0 l0 -6" stroke="#8a7048" strokeWidth="0.6" />
+            <ellipse cx="0" cy="-8" rx="1.4" ry="3" fill="#f8c058" style={{ animation: "float 1.2s ease-in-out infinite" }} />
+            <ellipse cx="0" cy="-8" rx="0.8" ry="1.8" fill="#fff4c8" />
           </g>
         ))}
         {/* prie-Dieu à droite */}
