@@ -13,25 +13,6 @@ body { margin: 0; background: #080d16; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 /* ============================================================
-   TÉLÉPHONE en PAYSAGE (petite hauteur d'écran)
-   ------------------------------------------------------------
-   Sur un vrai téléphone tenu horizontalement, la hauteur CSS
-   est très petite (~360 px). Toutes les paddings/tailles de
-   police sont en pixels absolus et prennent proportionnellement
-   trop de place → la scène 16:9 est écrasée au milieu.
-   Solution simple : ZOOM sur toute la page. Chrome + scène
-   rétrécissent ensemble, MAIS comme le chrome a une taille
-   fixe et la scène est flex:1, la scène gagne toute la place
-   libérée. Pas de refonte de layout, aucun impact desktop.
-   ============================================================ */
-@media (max-height: 500px) and (orientation: landscape) {
-  html body { zoom: 0.6; }
-}
-@media (max-height: 400px) and (orientation: landscape) {
-  html body { zoom: 0.5; }
-}
-
-/* ============================================================
    CONFORT DE LECTURE (accessibilité) — activé depuis ⚙ Réglages.
    Ces règles sont posées via des classes sur <html> par App.jsx.
    Elles utilisent `!important` À DESSEIN : c'est ce qui leur permet
