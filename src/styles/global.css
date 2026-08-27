@@ -55,6 +55,47 @@ html.a11y-calme *::after {
    ============================================================ */
 .carnet-print { display: none; }
 
+/* ============================================================
+   MODE MOBILE / TÉLÉPHONE PORTRAIT
+   ------------------------------------------------------------
+   Le jeu est conçu pour un format PAYSAGE 16:9 (vidéoprojecteur,
+   PC, tablette, téléphone tourné). Sur un téléphone étroit tenu
+   en portrait, on affiche un simple message « tourne l'écran ».
+   Seuil : ≤ 900 px de large ET orientation portrait.
+   ============================================================ */
+.rotate-hint { display: none; }
+
+@media (max-width: 900px) and (orientation: portrait) {
+  body > #root > * { display: none !important; }
+  .rotate-hint {
+    display: flex !important;
+    position: fixed; inset: 0; z-index: 99999;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 22px;
+    background: linear-gradient(180deg, #0c1220 0%, #141b28 100%);
+    color: #e8dfc8; font-family: Palatino, Georgia, serif;
+    text-align: center; padding: 24px;
+  }
+  .rotate-hint .icon { font-size: 88px; animation: rotateNudge 2.4s ease-in-out infinite; }
+  .rotate-hint h2 { font-size: 24px; margin: 0; color: #ffd166; letter-spacing: .04em; }
+  .rotate-hint p { font-size: 16px; max-width: 320px; margin: 0; opacity: .85; line-height: 1.5; }
+}
+
+@keyframes rotateNudge {
+  0%,100% { transform: rotate(0deg); }
+  40%     { transform: rotate(-90deg); }
+  60%     { transform: rotate(-90deg); }
+}
+
+/* ============================================================
+   CONFORT TACTILE (téléphone/tablette au doigt)
+   Bulles et fiches restent lisibles même en petit paysage.
+   ============================================================ */
+@media (pointer: coarse) and (max-height: 500px) {
+  /* rien de spécifique pour l'instant : les hotspots sont
+     agrandis côté composant, et la police est déjà >= 14px. */
+}
+
 @media print {
   body { background: #fff; }
   body * { visibility: hidden !important; }
