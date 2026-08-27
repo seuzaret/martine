@@ -6,12 +6,6 @@
 * { box-sizing: border-box; }
 body { margin: 0; background: #080d16; }
 
-/* Sur Chrome/Safari mobile, le navigateur GONFLE automatiquement le
-   texte quand il pense que la page n'est pas « mobile-optimisée » —
-   ce qui explique les textes gigantesques en paysage sur téléphone
-   (bulle MARTINE énorme, boutons énormes). On désactive. */
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-
 /* ============================================================
    CONFORT DE LECTURE (accessibilité) — activé depuis ⚙ Réglages.
    Ces règles sont posées via des classes sur <html> par App.jsx.
