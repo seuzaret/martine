@@ -29,47 +29,76 @@ export default function SceneForumPompei({ collect, action, reveal }) {
 
       <PLayer depth={5}>
         {/* soleil pâle dans le ciel */}
-        <circle cx="260" cy="110" r="80" fill="#f8e8b8" opacity="0.35" />
-        <circle cx="260" cy="110" r="24" fill="#f8e0a0" opacity="0.7" />
-        {/* Vésuve gris au loin */}
-        <path d="M600 300 L750 180 L900 300 Z" fill="#5a5060" opacity="0.75" />
-        <path d="M700 240 L750 180 L800 240" fill="#3a3040" opacity="0.65" />
-        <ellipse cx="750" cy="180" rx="12" ry="8" fill="#f0e0c8" opacity="0.7" />
-        <path d="M746 176 q-6 -14 4 -22 q6 -8 -2 -18 q-8 -8 -2 -18" stroke="#c8b8a0" strokeWidth="4" fill="none" opacity="0.55" strokeLinecap="round" />
+        <circle cx="180" cy="80" r="80" fill="#f8e8b8" opacity="0.35" />
+        <circle cx="180" cy="80" r="24" fill="#f8e0a0" opacity="0.7" />
+        {/* nuages hauts */}
+        <ellipse cx="360" cy="60" rx="90" ry="6" fill="#f0e0c0" opacity="0.55" />
+        <ellipse cx="540" cy="90" rx="120" ry="7" fill="#f0e0c0" opacity="0.5" />
+        {/* ═══ LE VÉSUVE, imposant, au fond du golfe ═══ */}
+        <g transform="translate(640,320)">
+          {/* silhouette du volcan bleu-gris (perspective lointaine) */}
+          <path d="M-200 0 L-60 -200 L20 -200 L200 0 Z" fill="#6a6070" opacity="0.85" />
+          {/* face ombrée à droite */}
+          <path d="M20 -200 L200 0 L120 0 L10 -190 Z" fill="#3a3040" opacity="0.55" />
+          {/* neige au sommet */}
+          <path d="M-60 -200 L20 -200 L10 -210 L-50 -210 Z" fill="#a89898" opacity="0.75" />
+          {/* cratère fumant */}
+          <ellipse cx="-20" cy="-205" rx="30" ry="6" fill="#2a2018" />
+          <path d="M-30 -212 q4 -14 -2 -22 q-4 -8 4 -18" stroke="#c8b8a0" strokeWidth="4" fill="none" opacity="0.5" strokeLinecap="round" />
+          <path d="M0 -210 q-4 -12 2 -22 q4 -8 -2 -18" stroke="#c8b8a0" strokeWidth="3" fill="none" opacity="0.45" strokeLinecap="round" />
+        </g>
         {/* deux mouettes qui passent */}
-        <g opacity="0.55" transform="translate(560,200)" style={{ animation: "float 4s ease-in-out infinite" }}>
+        <g opacity="0.55" transform="translate(360,180)" style={{ animation: "float 4s ease-in-out infinite" }}>
           <path d="M0 0 q-3 -3 -6 0 M0 0 q3 -3 6 0" stroke="#3a2818" strokeWidth="1.2" fill="none" strokeLinecap="round" />
           <path d="M22 12 q-3 -3 -6 0 M22 12 q3 -3 6 0" stroke="#3a2818" strokeWidth="1" fill="none" strokeLinecap="round" />
         </g>
-        {/* nuages */}
-        <ellipse cx="180" cy="90" rx="110" ry="8" fill="#f0e0c0" opacity="0.55" />
-        <ellipse cx="420" cy="110" rx="90" ry="6" fill="#f0e0c0" opacity="0.5" />
       </PLayer>
 
       <PLayer depth={4}>
-        {/* Bande de bâtiments PUBLICS qui court d'un bord à l'autre :
-            portique du forum (colonnade continue), macellum au fond,
-            tabularium à droite. Elle ferme la scène derrière. */}
-        <rect x="0" y="240" width="1000" height="140" fill="#c8b088" opacity="0.55" />
-        {/* petite frise/corniche au sommet du portique */}
-        <rect x="0" y="238" width="1000" height="6" fill="#8a7860" />
-        {/* colonnade continue en arrière-plan (petites colonnes) */}
-        {Array.from({ length: 22 }).map((_, i) => {
-          const x = 20 + i * 46;
+        {/* ═══ LA VILLE DE POMPÉI ═══
+            Toits en tuiles rouges qui s'étalent au pied du Vésuve.
+            Deux couches : lointaine (petites maisons floues) puis
+            proche (maisons plus détaillées avec fenêtres et cours). */}
+        {/* Couche lointaine : toits en enfilade */}
+        {Array.from({ length: 24 }).map((_, i) => {
+          const x = -20 + i * 44;
+          const h = 40 + (i * 7) % 18;
+          const y = 320 - h;
           return (
-            <g key={i}>
-              <rect x={x - 4} y="260" width="8" height="118" fill="#e0d0b8" opacity="0.85" />
-              <rect x={x - 6} y="252" width="12" height="8" fill="#c8b898" />
-              <rect x={x - 7} y="374" width="14" height="6" fill="#8a7860" />
-              <path d={`M${x - 2} 260 L${x - 2} 378 M${x + 2} 260 L${x + 2} 378`} stroke="#a89880" strokeWidth="0.3" />
+            <g key={`f${i}`} opacity="0.65">
+              <rect x={x} y={y} width={40} height={h} fill="#a06848" stroke="#5a3020" strokeWidth="0.4" />
+              {/* toit à 2 pentes */}
+              <path d={`M${x - 2} ${y} L${x + 42} ${y} L${x + 32} ${y - 12} L${x + 8} ${y - 12} Z`} fill="#8a3820" stroke="#3a1010" strokeWidth="0.4" />
             </g>
           );
         })}
-        {/* Macellum (marché couvert) au centre-fond : petite silhouette avec toit */}
-        <g transform="translate(500,240)">
-          <path d="M-100 0 L100 0 L80 -46 L-80 -46 Z" fill="#8a4028" opacity="0.7" />
-          <rect x="-100" y="0" width="200" height="10" fill="#5a4028" opacity="0.8" />
-        </g>
+        {/* Couche proche : maisons plus détaillées */}
+        {Array.from({ length: 12 }).map((_, i) => {
+          const x = -10 + i * 88;
+          const h = 60 + (i * 11) % 26;
+          const y = 340 - h;
+          return (
+            <g key={`n${i}`} opacity="0.85">
+              {/* mur ocre */}
+              <rect x={x} y={y} width={80} height={h + 20} fill="#c8a06a" stroke="#5a3020" strokeWidth="0.5" />
+              {/* frise haut de mur */}
+              <rect x={x} y={y + 4} width={80} height="3" fill="#8a5030" />
+              {/* fenêtres */}
+              <rect x={x + 12} y={y + 20} width="10" height="14" fill="#3a2010" />
+              <rect x={x + 58} y={y + 20} width="10" height="14" fill="#3a2010" />
+              <rect x={x + 12} y={y + 44} width="10" height="14" fill="#3a2010" />
+              <rect x={x + 58} y={y + 44} width="10" height="14" fill="#3a2010" />
+              {/* toit à 2 pentes en tuiles */}
+              <path d={`M${x - 4} ${y} L${x + 84} ${y} L${x + 66} ${y - 20} L${x + 14} ${y - 20} Z`} fill="#a83820" stroke="#3a1010" strokeWidth="0.5" />
+              {/* stries de tuiles */}
+              <path d={`M${x + 16} ${y - 18} l${52} 0 M${x + 14} ${y - 12} l${56} 0 M${x + 8} ${y - 4} l${68} 0`} stroke="#7a1810" strokeWidth="0.4" />
+              {/* petite cheminée */}
+              <rect x={x + 40} y={y - 30} width="8" height="12" fill="#5a3020" />
+            </g>
+          );
+        })}
+        {/* colline verte discrète au pied du Vésuve */}
+        <path d="M300 340 Q500 300 700 340 L1000 340 L1000 380 L200 380 Z" fill="#5a6848" opacity="0.5" />
         {/* Temple de Jupiter à gauche (fronton triangulaire + colonnes) — grand plan */}
         <g transform="translate(180,320)">
           {/* podium */}

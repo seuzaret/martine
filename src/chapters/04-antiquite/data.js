@@ -66,13 +66,15 @@ const ITEMS = {
    LES TABLEAUX  (tous à Pompéi ; navigation libre dans la villa)
    ------------------------------------------------------------ */
 const SCENES = [
+  /* Les 3 tableaux d'AMBIANCE (le monde autour de la villa) viennent
+     à gauche ; on démarre à la villa (index 3) et on peut naviguer en
+     arrière (le port, les thermes, le forum) via les flèches ‹. */
+  { id: "port",         name: "Le port et le Vésuve",  Component: ScenePort },
+  { id: "thermes",      name: "Les thermes",           Component: SceneThermes },
+  { id: "forum",        name: "Le forum de Pompéi",    Component: SceneForumPompei },
   { id: "entree",       name: "L'entrée de la villa",  Component: SceneEntree },
   { id: "bibliotheque", name: "La bibliothèque",       Component: SceneBibliotheque },
   { id: "jardin",       name: "Le jardin & l'atelier", Component: SceneJardin },
-  /* 3 tableaux adjacents, à côté de la villa, dans Pompéi ou sur le port : */
-  { id: "forum",        name: "Le forum de Pompéi",    Component: SceneForumPompei },
-  { id: "thermes",      name: "Les thermes",           Component: SceneThermes },
-  { id: "port",         name: "Le port et le Vésuve",  Component: ScenePort },
 ];
 
 const WHERE = {
@@ -294,7 +296,9 @@ const chapter = {
   finTexte: "« Circuits rechargés à {pct} %. Tu as vu le meilleur et le pire : la bibliothèque qui rêve de tout garder… sur un support fragile, au même endroit. La grande leçon : un savoir sans COPIES ne tient qu'à un fil. Au prochain saut, les humains vont changer le FORMAT du livre (des pages !), puis inventer une machine qui copie tout par centaines : l'imprimerie. Direction le Moyen Âge et Gutenberg. » — MARTINE",
 
   required: 3,
-  startScene: 0,
+  /* on démarre à la villa (Caius t'accueille), pas au port : les 3
+     tableaux d'ambiance sont à gauche et se visitent librement. */
+  startScene: 3,
   destination: "MOYEN ÂGE",
 
   items: ITEMS,
