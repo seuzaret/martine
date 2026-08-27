@@ -216,31 +216,6 @@ export default function SceneCathedrale({ collect, action, reveal }) {
           <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
         </g>
 
-        {/* SCULPTEUR sur son échafaudage bas qui grave un chapiteau */}
-        <g transform="translate(650,490)">
-          <ellipse cx="0" cy="40" rx="22" ry="4" fill="#0a0604" opacity="0.55" />
-          {/* petit tabouret */}
-          <rect x="-14" y="24" width="28" height="16" fill="#8a5a2e" stroke="#3a1810" strokeWidth="0.6" />
-          {/* jambes */}
-          <path d="M-6 24 L-6 8 M6 24 L6 8" stroke="#a06838" strokeWidth="5" strokeLinecap="round" />
-          {/* tunique brune */}
-          <path d="M-14 12 Q-16 -14 0 -20 Q16 -14 14 12 Z" fill="#8a5a2e" stroke="#3a2010" strokeWidth="0.5" />
-          {/* bras qui tient burin et maillet, contre chapiteau à sa droite */}
-          <path d="M-12 -4 L-24 -12" stroke="#a06838" strokeWidth="3" strokeLinecap="round" />
-          <path d="M14 -6 L22 -2" stroke="#a06838" strokeWidth="3" strokeLinecap="round" />
-          <rect x="22" y="-4" width="10" height="4" fill="#5a3818" />
-          <path d="M-24 -12 L-30 -20" stroke="#3a2010" strokeWidth="1.4" />
-          {/* tête */}
-          <ellipse cx="0" cy="-30" rx="9" ry="11" fill="#a06838" stroke="#3a2010" strokeWidth="0.5" />
-          <path d="M-8 -32 q-2 -8 4 -10 q6 4 8 -2 q4 4 6 -2 q4 6 3 12" stroke="#3a2418" strokeWidth="1.3" fill="none" />
-        </g>
-        {/* chapiteau qu'il sculpte */}
-        <g transform="translate(680,478)">
-          <rect x="0" y="0" width="30" height="20" fill="#c8b898" stroke="#3a2818" strokeWidth="0.8" />
-          <path d="M2 4 q4 -4 8 0 q4 4 8 0 q4 -4 8 0" stroke="#5a4838" strokeWidth="0.6" fill="none" />
-          <path d="M4 12 q6 -3 10 0 q4 3 10 0" stroke="#5a4838" strokeWidth="0.5" fill="none" />
-        </g>
-
         {/* Ephemere : morceau de verre coloré + copeau de pierre */}
         <g transform="translate(160,542) rotate(15)">
           <path d="M-8 -4 L8 -6 L6 4 L-6 6 Z" fill="url(#ca-vit-r)" stroke="#1a1408" strokeWidth="0.5" opacity="0.9" />
@@ -251,7 +226,6 @@ export default function SceneCathedrale({ collect, action, reveal }) {
       </PLayer>
 
       <Hotspot cx={320} cy={478} r={40} label="le maître verrier" reveal={reveal} onClick={() => action("verrier")} />
-      <Hotspot cx={650} cy={470} r={30} label="le sculpteur" reveal={reveal} onClick={() => action("sculpteur")} />
       <Hotspot cx={500} cy={240} r={90} label="la grande rose" reveal={reveal} onClick={() => action("rose")} />
       <Hotspot cx={200} cy={320} r={60} label="vitrail latéral" reveal={reveal} onClick={() => action("vitrail")} />
       <Hotspot cx={800} cy={320} r={60} label="vitrail latéral" reveal={reveal} onClick={() => action("vitrail")} />

@@ -77,11 +77,13 @@ const SCENES = [
      à côté, se parcourent LIBREMENT par les flèches ‹ › (`free`). Gutenberg
      réclame du papier → on va le fabriquer au moulin (à droite) → on revient. */
   { id: "gutenberg", name: "L'atelier de Gutenberg",           Component: SceneGutenberg, free: true },
-  { id: "moulin",    name: "Le moulin à papier",              Component: SceneMoulin,    free: true },
   /* 3 tableaux libres supplémentaires — le monde médiéval autour de Mayence */
   { id: "bourg",       name: "La place du bourg",              Component: SceneBourg,      free: true },
   { id: "cathedrale",  name: "Le chantier de la cathédrale",   Component: SceneCathedrale, free: true },
   { id: "foire",       name: "La foire aux livres de Francfort", Component: SceneFoire,    free: true },
+  /* le moulin à papier reste EN BOUT DE CHAÎNE : c'est là qu'on va
+     chercher le papier pour Gutenberg, à l'extrémité droite. */
+  { id: "moulin",    name: "Le moulin à papier",              Component: SceneMoulin,    free: true },
 ];
 
 const WHERE = {
@@ -281,9 +283,6 @@ const ACTIONS = {
   verrier: { mood: "content",
     bubble: "Trois ans que je taille et j'assemble ces verres colorés. Le peuple ne sait pas lire ? Alors je vais leur RACONTER la Bible en images de lumière.",
     say: "Le VITRAIL : la bande dessinée pour les 95 % d'illettrés. Le maître verrier est un raconteur d'histoires, avec le soleil comme rétro-projecteur." },
-  sculpteur: { mood: "neutre",
-    bubble: "Un chapiteau, ce sont des feuillages, des monstres, des scènes bibliques. Personne ne le regarde en détail ? Peu importe : Dieu, lui, voit tout.",
-    say: "Le sculpteur médiéval travaille pour Dieu autant que pour les hommes. Chaque décor sculpté est un MESSAGE — vice, vertu, damné, saint." },
   rose: { mood: "content",
     bubble: "La GRANDE ROSE : mon plus grand ouvrage. Quand le soleil la traverse, elle projette des couleurs sur tout le sol de la nef.",
     say: "Une rose de vitrail : bijou technique ET théologique. Le message : la lumière divine qui inonde le monde. Média sensoriel absolu." },

@@ -21,23 +21,66 @@ export default function SceneBourg({ collect, action, reveal }) {
         <linearGradient id="bg-toit" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8a4028" /><stop offset="100%" stopColor="#5a2818" /></linearGradient>
       </defs>
 
+      {/* ═══ Base plein cadre : ciel EN HAUT + sol EN BAS,
+              HORS parallax pour éviter tout décor flottant. ═══ */}
+      <rect width="1000" height="440" fill="url(#bg-sky)" />
+      <rect y="440" width="1000" height="120" fill="url(#bg-sol)" />
+
       <PLayer depth={5}>
-        <rect width="1000" height="360" fill="url(#bg-sky)" />
         {/* nuages */}
         <ellipse cx="240" cy="80" rx="90" ry="7" fill="#f0e0c0" opacity="0.55" />
         <ellipse cx="620" cy="110" rx="110" ry="8" fill="#f0e0c0" opacity="0.5" />
-        {/* Fumées qui montent des cheminées cachées derrière les toits */}
-        <g style={{ animation: "float 4s ease-in-out infinite" }} opacity="0.65">
-          <ellipse cx="140" cy="220" rx="10" ry="18" fill="#c8b8a0" />
-          <ellipse cx="150" cy="200" rx="14" ry="16" fill="#a89880" opacity="0.7" />
-          <ellipse cx="140" cy="180" rx="18" ry="14" fill="#c8b8a0" opacity="0.55" />
+        {/* ═══ REMPART + VILLE MÉDIÉVALE en silhouette au fond ═══ */}
+        {/* rempart avec créneaux qui traverse toute la scène */}
+        <rect x="0" y="240" width="1000" height="100" fill="#8a7860" opacity="0.75" />
+        {/* créneaux au sommet du rempart */}
+        {Array.from({ length: 25 }).map((_, i) => (
+          <rect key={i} x={i * 40} y="232" width="20" height="12" fill="#8a7860" opacity="0.75" />
+        ))}
+        {/* deux TOURS de garde qui dépassent */}
+        <g>
+          <rect x="60" y="180" width="46" height="160" fill="#7a6858" stroke="#3a2818" strokeWidth="0.5" opacity="0.85" />
+          {[64, 74, 84, 94].map((x, i) => (<rect key={i} x={x} y="170" width="6" height="12" fill="#7a6858" opacity="0.85" />))}
+          <path d="M60 180 L106 180 L92 160 L74 160 Z" fill="#4a2818" opacity="0.85" />
+          <rect x="76" y="220" width="8" height="12" fill="#1a1408" />
+          <rect x="76" y="260" width="8" height="12" fill="#1a1408" />
+          <rect x="76" y="300" width="8" height="12" fill="#1a1408" />
+        </g>
+        <g>
+          <rect x="900" y="200" width="42" height="140" fill="#7a6858" stroke="#3a2818" strokeWidth="0.5" opacity="0.85" />
+          {[904, 914, 924, 934].map((x, i) => (<rect key={i} x={x} y="190" width="6" height="12" fill="#7a6858" opacity="0.85" />))}
+          <path d="M900 200 L942 200 L928 180 L916 180 Z" fill="#4a2818" opacity="0.85" />
+          <rect x="914" y="240" width="8" height="12" fill="#1a1408" />
+          <rect x="914" y="280" width="8" height="12" fill="#1a1408" />
+        </g>
+        {/* toits en tuiles rouges de la ville derrière le rempart */}
+        {Array.from({ length: 18 }).map((_, i) => {
+          const x = 120 + i * 46;
+          const h = 30 + (i * 7) % 14;
+          const y = 232 - h;
+          return (
+            <g key={i} opacity="0.8">
+              <rect x={x} y={y} width={42} height={h} fill="#a06848" stroke="#5a3020" strokeWidth="0.3" />
+              <path d={`M${x - 2} ${y} L${x + 44} ${y} L${x + 34} ${y - 10} L${x + 8} ${y - 10} Z`} fill="#8a3820" stroke="#3a1010" strokeWidth="0.3" />
+            </g>
+          );
+        })}
+        {/* Fumées qui montent des cheminées de la ville */}
+        <g style={{ animation: "float 4s ease-in-out infinite" }} opacity="0.6">
+          <ellipse cx="220" cy="170" rx="10" ry="14" fill="#c8b8a0" />
+          <ellipse cx="230" cy="150" rx="14" ry="12" fill="#a89880" opacity="0.7" />
+          <ellipse cx="220" cy="130" rx="16" ry="12" fill="#c8b8a0" opacity="0.55" />
         </g>
         <g style={{ animation: "float 5s ease-in-out infinite" }} opacity="0.55">
-          <ellipse cx="480" cy="220" rx="8" ry="14" fill="#c8b8a0" />
-          <ellipse cx="486" cy="204" rx="12" ry="12" fill="#a89880" opacity="0.7" />
+          <ellipse cx="560" cy="170" rx="8" ry="12" fill="#c8b8a0" />
+          <ellipse cx="566" cy="152" rx="12" ry="10" fill="#a89880" opacity="0.7" />
         </g>
-        {/* volée de corbeaux autour du clocher */}
-        <g opacity="0.7" transform="translate(680,180)" style={{ animation: "float 4s ease-in-out infinite" }}>
+        <g style={{ animation: "float 6s ease-in-out infinite" }} opacity="0.55">
+          <ellipse cx="780" cy="170" rx="9" ry="12" fill="#c8b8a0" />
+          <ellipse cx="786" cy="152" rx="12" ry="10" fill="#a89880" opacity="0.7" />
+        </g>
+        {/* volée de corbeaux au-dessus des toits */}
+        <g opacity="0.7" transform="translate(400,140)" style={{ animation: "float 4s ease-in-out infinite" }}>
           <path d="M0 0 q-3 -3 -6 0 M0 0 q3 -3 6 0" stroke="#0a0806" strokeWidth="1.2" fill="none" strokeLinecap="round" />
           <path d="M20 8 q-3 -3 -6 0 M20 8 q3 -3 6 0" stroke="#0a0806" strokeWidth="1" fill="none" strokeLinecap="round" />
           <path d="M-16 12 q-3 -3 -6 0 M-16 12 q3 -3 6 0" stroke="#0a0806" strokeWidth="1" fill="none" strokeLinecap="round" />

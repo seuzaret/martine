@@ -82,8 +82,6 @@ export default function SceneThermes({ collect, action, reveal }) {
           <ellipse cx="0" cy="-6" rx="48" ry="12" fill="url(#th-eau)" stroke="#3a6878" strokeWidth="0.8" />
           {/* reflets */}
           <path d="M-30 -8 q30 -6 60 0" stroke="#f0f8f8" strokeWidth="0.6" fill="none" opacity="0.7" />
-          {/* inscription latine gravée sur le rebord */}
-          <text x="0" y="6" textAnchor="middle" fontSize="6" fill="#5a4030" fontFamily="Georgia, serif" fontWeight="700">CN·MELISSAEVS·APER·MAG</text>
           {/* vapeur qui monte — 2 couches à rythmes différents */}
           <g style={{ animation: "float 3s ease-in-out infinite" }}>
             <ellipse cx="-20" cy="-30" rx="20" ry="10" fill="url(#th-vapeur)" />
