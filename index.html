@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Les fils du temps — avec MARTINE</title>
     <meta name="description" content="Jeu sérieux d'éducation aux médias : 20 000 ans d'histoire de la communication, de la peinture de Lascaux au streaming. Pour le collège." />
     <meta name="theme-color" content="#080d16" />
@@ -11,14 +11,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- Overlay affiché uniquement sur téléphone en portrait (CSS
-         media query) : évite d'exposer le jeu dans une bande verticale
-         inutilisable. Masqué dès qu'on tourne l'appareil. -->
-    <div class="rotate-hint" aria-hidden="true">
-      <div class="icon">📱</div>
-      <h2>Tourne ton téléphone</h2>
-      <p>Le jeu est prévu en mode paysage. Tourne l'écran ou passe sur tablette / ordinateur pour jouer.</p>
-    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

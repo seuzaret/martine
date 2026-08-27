@@ -16,16 +16,7 @@ import { useDrag } from "./DragDrop.jsx";
    décors n'ont RIEN à transmettre : un simple `action("x")` suffit. */
 export const lastHotspotClick = { x: 0, y: 0 };
 
-/* Sur écran tactile grossier (téléphone/tablette au doigt), on force
-   un rayon minimum pour rendre les micro-zones (petits éphémères r=12
-   ou r=14) atteignables. `matchMedia` s'évalue une fois au chargement,
-   ce qui suffit pour l'usage réel. Sur souris/curseur fin : inchangé. */
-const TOUCH_COARSE = typeof window !== "undefined" &&
-  window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
-const TOUCH_MIN_R = 24;
-
 export default function Hotspot({ cx, cy, r = 46, onClick, reveal, label, item, support: supportProp }) {
-  if (TOUCH_COARSE && r < TOUCH_MIN_R) r = TOUCH_MIN_R;
   const drag = useDrag();
   const hovered = item && drag?.hover === `hot:${item}`;
   /* Un support est reconnu AUTOMATIQUEMENT via le data.js (item.support),
