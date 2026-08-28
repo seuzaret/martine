@@ -223,7 +223,7 @@ export default function SceneAtelier({ collect, action, reveal, made = [], inv =
 
       {/* ═══ zones cliquables ═══ */}
       <Hotspot cx={340} cy={430} r={44} label="Ough, le tailleur de silex" reveal={reveal} onClick={() => action("ough")} />
-      <Hotspot cx={500} cy={470} r={50} label="tailler un silex sur le rocher" reveal={reveal} onClick={() => action("tailler_silex")} />
+      <Hotspot cx={500} cy={470} r={50} label="rocher de taille — glisse un silex brut dessus" item="rocher_taille" reveal={reveal} onClick={() => action("tailler_silex")} />
       <Hotspot cx={760} cy={490} r={44} label="tas de silex bruts" item="silex_brut" reveal={reveal} onClick={() => collect("silex_brut")} />
       <Hotspot cx={600} cy={470} r={20} label="percuteur en bois de cerf" item="percuteur" reveal={reveal} onClick={() => collect("percuteur")} />
       <Hotspot cx={120} cy={540} r={16} label="feuille morte" item="feuille_morte" reveal={reveal} onClick={() => collect("feuille_morte")} />

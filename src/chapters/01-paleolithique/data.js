@@ -48,6 +48,7 @@ const ITEMS = {
      APPORTE un objet (glisser un outil dessus). Le moteur les affiche
      d'une autre couleur (cyan) et refuse de les ramasser. */
   paroi:    { name: "Paroi de la grotte", emoji: "🪨", support: true, desc: "Immense, lisse, à l'abri du vent et de la pluie. Un écran naturel." },
+  rocher_taille: { name: "Rocher de taille", emoji: "🪨", support: true, desc: "Un rocher plat, cerné d'éclats de silex : la table de travail d'Ough. Pose-y un silex brut (glisse-le dessus) et frappe au bon moment !" },
   feu:      { name: "Feu de camp", emoji: "🔥", support: true, desc: "Chaleur, lumière… et le lieu où le clan se rassemble le soir." },
   voix:     { name: "Ta voix", emoji: "🗣️", desc: "Le tout premier média. Livré d'origine avec chaque être humain." },
   tronc:    { name: "Tronc creux", emoji: "🪵", desc: "Un tronc échoué, évidé par l'eau. Ça résonne quand on tape dessus." },
@@ -289,7 +290,7 @@ const ACTIONS = {
   pecher: { mood: "neutre", say: "Un poisson ! Trop rapide pour l'attraper à la main. Il faudrait une lance ou un filet — pour plus tard." },
 
   /* Actions qui ouvrent des mini-jeux */
-  tailler_silex: { modal: "taille_silex", needsItem: "silex_brut",
+  tailler_silex: { modal: "taille_silex", needsItem: "silex_brut", consumeItem: "silex_brut",
     needItemMsg: "Il te faut d'abord un SILEX BRUT à tailler. Va en ramasser un au fond de la grotte, ou dans le tas à l'atelier." },
   traverser_gue: { mood: "neutre", say: "Les pierres du gué sont glissantes — sans bâton, tu risques la chute. Mieux vaut trouver un chemin plus sûr… ou attendre." },
 };

@@ -434,6 +434,13 @@ export default function App() {
         const manque = list.find((it) => !inv.includes(it));
         if (manque) { say(act.needItemMsg || `Il te faut d'abord un ${manque}.`, "vexe"); return; }
       }
+      /* Certains mini-jeux CONSOMMENT immédiatement l'objet à leur
+         ouverture (le silex brut posé sur le rocher : il n'est plus
+         dans ton sac). Réussite ou échec, l'objet ne revient pas. */
+      if (act.consumeItem) {
+        const list = Array.isArray(act.consumeItem) ? act.consumeItem : [act.consumeItem];
+        setInv((v) => v.filter((x) => !list.includes(x)));
+      }
       setModal({ type: act.modal }); return;
     }
     if (act.goto !== undefined) setTab(act.goto);
@@ -697,6 +704,20 @@ export default function App() {
         setShake(true); setTimeout(() => setShake(false), 500);
         playSfx("fail");
         say("La poubelle temporelle sert à jeter les OBJETS ANACHRONIQUES — pas tes vraies affaires !", "vexe");
+      }
+      return;
+    }
+    /* ROCHER DE TAILLE (préhistoire) : on glisse un silex brut dessus →
+       le silex quitte le sac, le mini-jeu de taille s'ouvre. Tout autre
+       objet déposé rebondit avec une réplique. */
+    if (kind === "hot" && val === "rocher_taille") {
+      if (src === "silex_brut") {
+        setInv((v) => v.filter((x) => x !== src));
+        setModal({ type: "taille_silex", from: "drop" });
+      } else {
+        setShake(true); setTimeout(() => setShake(false), 500);
+        playSfx("fail");
+        say("Ce n'est pas un silex brut. Le rocher de taille n'accepte que ça.", "vexe");
       }
       return;
     }
