@@ -9,7 +9,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    qui passe. Lieu d'observation calme, sans action complexe.
    ============================================================ */
 
-export default function SceneCrete({ collect, action, reveal, made = [] }) {
+export default function SceneCrete({ collect, action, reveal, made = [], inv = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -206,27 +206,29 @@ export default function SceneCrete({ collect, action, reveal, made = [] }) {
           <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
         </g>
 
-        {/* Objets d'époque décoratifs (ephemere) : plume, champignon, feuille */}
+        {/* Objets ephemere : disparaissent une fois ramassés */}
+        {!inv.includes("plume") && (
         <g transform="translate(440,506) rotate(20)">
-          {/* plume brune tachetée */}
           <path d="M0 -14 Q4 -10 4 0 Q4 8 -2 12 Q-4 8 -4 0 Q-4 -10 0 -14 Z" fill="#8a6a48" stroke="#3a2818" strokeWidth="0.5" />
           <path d="M0 -12 L0 10" stroke="#3a2818" strokeWidth="0.5" />
-          {/* barbes */}
           {[-8, -4, 0, 4, 8].map((y, i) => (<path key={i} d={`M-2 ${y} l-2 ${-1 - (i%2)} M2 ${y} l2 ${-1 - (i%2)}`} stroke="#5a4028" strokeWidth="0.3" />))}
         </g>
+        )}
+        {!inv.includes("champignon") && (
         <g transform="translate(140,520)">
-          {/* champignon rouge à points blancs */}
           <path d="M-8 0 Q-8 -10 0 -12 Q8 -10 8 0 Z" fill="#c8382e" stroke="#5a1810" strokeWidth="0.6" />
           <circle cx="-3" cy="-6" r="1.2" fill="#f0e4c8" />
           <circle cx="3" cy="-4" r="1" fill="#f0e4c8" />
           <circle cx="0" cy="-9" r="0.8" fill="#f0e4c8" />
-          {/* pied */}
           <rect x="-2" y="0" width="4" height="7" fill="#e8dfc8" stroke="#5a4028" strokeWidth="0.4" />
         </g>
+        )}
+        {!inv.includes("feuille_morte") && (
         <g transform="translate(700,536) rotate(45)">
           <path d="M0 0 q-10 -12 -16 -6 q-4 6 8 12 q12 4 8 -6 Z" fill="#c8632a" stroke="#5a2810" strokeWidth="0.8" />
           <path d="M-2 0 q-6 -6 -10 -4" stroke="#5a2810" strokeWidth="0.5" fill="none" />
         </g>
+        )}
       </PLayer>
 
       {/* ═══ zones cliquables ═══ */}

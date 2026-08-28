@@ -11,7 +11,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    sculpté au fond (la "BD" médiévale).
    ============================================================ */
 
-export default function SceneCathedrale({ collect, action, reveal }) {
+export default function SceneCathedrale({ collect, action, reveal, inv = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -216,13 +216,17 @@ export default function SceneCathedrale({ collect, action, reveal }) {
           <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
         </g>
 
-        {/* Ephemere : morceau de verre coloré + copeau de pierre */}
+        {/* Ephemere : morceau de verre coloré + copeau de pierre (disparaissent) */}
+        {!inv.includes("verre_colore") && (
         <g transform="translate(160,542) rotate(15)">
           <path d="M-8 -4 L8 -6 L6 4 L-6 6 Z" fill="url(#ca-vit-r)" stroke="#1a1408" strokeWidth="0.5" opacity="0.9" />
         </g>
+        )}
+        {!inv.includes("copeau_pierre") && (
         <g transform="translate(920,542) rotate(-20)">
           <path d="M-6 0 L4 -4 L8 3 L-2 6 Z" fill="#e0d0b8" stroke="#5a4838" strokeWidth="0.5" />
         </g>
+        )}
       </PLayer>
 
       <Hotspot cx={320} cy={478} r={40} label="le maître verrier" reveal={reveal} onClick={() => action("verrier")} />

@@ -9,7 +9,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    (forêt profonde). Poissons visibles, un pêcheur sur la berge.
    ============================================================ */
 
-export default function SceneGue({ collect, action, reveal, made = [] }) {
+export default function SceneGue({ collect, action, reveal, made = [], inv = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -219,19 +219,18 @@ export default function SceneGue({ collect, action, reveal, made = [] }) {
           <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
         </g>
 
-        {/* Objets d'époque décoratifs (ephemere) : escargot, petite fleur, caillou */}
+        {/* Objets ephemere : disparaissent une fois ramassés */}
+        {!inv.includes("escargot") && (
         <g transform="translate(680,528)">
-          {/* coquille en spirale */}
           <ellipse cx="0" cy="0" rx="10" ry="7" fill="#8a6a48" stroke="#3a2818" strokeWidth="1" />
           <path d="M-2 -1 q3 -3 6 0 q-2 2 -6 0 Z" fill="#5a4028" opacity="0.7" />
           <path d="M-3 -2 q4 -4 8 0 q-3 3 -8 0 Z M-2 0 q3 -2 5 0 q-2 1.5 -5 0 Z" fill="none" stroke="#5a4028" strokeWidth="0.5" />
-          {/* corps qui sort */}
           <path d="M-10 3 Q-16 5 -18 3" stroke="#8a7060" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-          {/* antennes */}
           <path d="M-16 1 l-2 -3 M-14 2 l-2 -3" stroke="#5a4028" strokeWidth="0.5" strokeLinecap="round" />
         </g>
+        )}
+        {!inv.includes("fleur") && (
         <g transform="translate(340,540)">
-          {/* petite fleur bleue */}
           {[0, 72, 144, 216, 288].map((a, i) => {
             const rad = (a * Math.PI) / 180;
             return <circle key={i} cx={Math.cos(rad) * 3} cy={Math.sin(rad) * 3} r="2.5" fill="#7fb0e0" />;
@@ -239,10 +238,13 @@ export default function SceneGue({ collect, action, reveal, made = [] }) {
           <circle cx="0" cy="0" r="1.5" fill="#e0a848" />
           <path d="M0 3 L0 12" stroke="#3a5820" strokeWidth="1" />
         </g>
+        )}
+        {!inv.includes("caillou_rond") && (
         <g transform="translate(560,548)">
           <ellipse cx="0" cy="0" rx="8" ry="5" fill="#8a8078" stroke="#3a3028" strokeWidth="0.6" />
           <path d="M-3 -1 q4 -3 6 0" stroke="#5a5048" strokeWidth="0.5" fill="none" />
         </g>
+        )}
       </PLayer>
 
       {/* ═══ zones cliquables ═══ */}

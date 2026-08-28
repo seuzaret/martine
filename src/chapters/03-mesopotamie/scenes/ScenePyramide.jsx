@@ -11,7 +11,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    Cadrage désertique doré, ciel pur.
    ============================================================ */
 
-export default function ScenePyramide({ collect, action, reveal }) {
+export default function ScenePyramide({ collect, action, reveal, inv = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -194,21 +194,22 @@ export default function ScenePyramide({ collect, action, reveal }) {
           <path d="M30 -8 l18 0 M30 -2 l18 0" stroke="#8a6838" strokeWidth="0.4" />
         </g>
 
-        {/* Ephemere : éclat de calcaire + petit scarabée */}
+        {/* Ephemere : éclat de calcaire + petit scarabée (disparaissent au ramassage) */}
+        {!inv.includes("eclat_calcaire") && (
         <g transform="translate(700,540) rotate(20)">
           <path d="M-6 0 L4 -4 L8 3 L-2 6 Z" fill="#e8d0a0" stroke="#5a3820" strokeWidth="0.5" />
           <path d="M-3 -1 L4 -2" stroke="#f8e8c8" strokeWidth="0.4" />
         </g>
+        )}
+        {!inv.includes("scarabee") && (
         <g transform="translate(820,538)">
-          {/* scarabée */}
           <ellipse cx="0" cy="0" rx="7" ry="5" fill="#3a5820" stroke="#1a2810" strokeWidth="0.5" />
           <ellipse cx="0" cy="-1" rx="6" ry="4" fill="#4a6828" opacity="0.7" />
           <path d="M0 -5 l0 10 M-4 -3 l8 6 M-4 3 l8 -6" stroke="#1a2810" strokeWidth="0.4" fill="none" opacity="0.7" />
-          {/* pattes */}
           <path d="M-6 -1 l-3 -2 M-6 1 l-3 0 M-6 3 l-3 2 M6 -1 l3 -2 M6 1 l3 0 M6 3 l3 2" stroke="#1a2810" strokeWidth="0.5" />
-          {/* petites cornes */}
           <path d="M-2 -5 l-2 -2 M2 -5 l2 -2" stroke="#1a2810" strokeWidth="0.4" />
         </g>
+        )}
       </PLayer>
 
       <Hotspot cx={500} cy={454} r={40} label="le contremaître du chantier" reveal={reveal} onClick={() => action("contremaitre")} />

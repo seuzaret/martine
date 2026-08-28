@@ -11,7 +11,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    drôlement — mais personne ne s'inquiète (encore).
    ============================================================ */
 
-export default function ScenePort({ collect, action, reveal }) {
+export default function ScenePort({ collect, action, reveal, inv = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -211,19 +211,22 @@ export default function ScenePort({ collect, action, reveal }) {
           <path d="M-8 -36 q-2 -6 4 -8 q6 4 8 -2" stroke="#3a2418" strokeWidth="1.2" fill="none" />
         </g>
 
-        {/* Ephemere : oursin séché + morceau de corde */}
+        {/* Ephemere : oursin séché + morceau de corde (disparaissent au ramassage) */}
+        {!inv.includes("oursin") && (
         <g transform="translate(160,538)">
           <circle r="8" fill="#5a4028" stroke="#2a1810" strokeWidth="0.5" />
-          {/* piquants */}
           {[0, 40, 80, 120, 160, 200, 240, 280, 320].map((a, i) => {
             const rad = (a * Math.PI) / 180;
             return <line key={i} x1={Math.cos(rad) * 8} y1={Math.sin(rad) * 8} x2={Math.cos(rad) * 14} y2={Math.sin(rad) * 14} stroke="#3a2010" strokeWidth="0.7" />;
           })}
         </g>
+        )}
+        {!inv.includes("cordage") && (
         <g transform="translate(860,540) rotate(20)">
           <path d="M-14 0 q-2 6 6 4 q6 -4 12 4 q4 -4 12 -4" stroke="#8a7048" strokeWidth="2.5" fill="none" strokeLinecap="round" />
           <path d="M-14 0 q-2 6 6 4 q6 -4 12 4 q4 -4 12 -4" stroke="#c8a878" strokeWidth="1" fill="none" strokeLinecap="round" />
         </g>
+        )}
       </PLayer>
 
       <Hotspot cx={560} cy={480} r={40} label="le marchand qui note ses comptes" reveal={reveal} onClick={() => action("marchand_port")} />

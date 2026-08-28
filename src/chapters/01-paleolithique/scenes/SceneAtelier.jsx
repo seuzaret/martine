@@ -9,7 +9,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    nodules bruts en tas. Cliquer sur le rocher → mini-jeu de taille.
    ============================================================ */
 
-export default function SceneAtelier({ collect, action, reveal, made = [] }) {
+export default function SceneAtelier({ collect, action, reveal, made = [], inv = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -131,17 +131,17 @@ export default function SceneAtelier({ collect, action, reveal, made = [] }) {
           </g>
         ))}
 
-        {/* Tas de nodules bruts à droite — plus volumineux, texturé */}
+        {/* Tas de silex bruts à droite — disparaît une fois ramassé */}
+        {!inv.includes("silex_brut") && (
         <g transform="translate(760,500)">
           <ellipse cx="0" cy="12" rx="46" ry="9" fill="#0a0604" opacity="0.55" />
           <path d="M-32 0 Q-26 -22 -6 -24 Q12 -26 28 -20 Q40 -8 32 8 L22 14 Q0 16 -22 14 L-32 8 Z" fill="url(#at-rock)" stroke="#1a0e08" strokeWidth="1.5" />
-          {/* nodules individuels bien visibles */}
           <ellipse cx="-16" cy="-8" rx="14" ry="9" fill="url(#at-nodule)" stroke="#1a0e08" strokeWidth="0.8" />
           <ellipse cx="10" cy="-10" rx="12" ry="7" fill="url(#at-nodule)" stroke="#1a0e08" strokeWidth="0.8" />
           <ellipse cx="-4" cy="-2" rx="10" ry="6" fill="url(#at-nodule)" stroke="#1a0e08" strokeWidth="0.8" />
-          {/* reflets */}
           <path d="M-20 -12 q3 -2 6 0 M6 -14 q3 -2 6 0" stroke="#c8b8a0" strokeWidth="0.6" fill="none" opacity="0.7" />
         </g>
+        )}
 
         {/* Percuteur en bois de cerf — plus détaillé */}
         <g transform="translate(600,478) rotate(-30)">
@@ -194,11 +194,15 @@ export default function SceneAtelier({ collect, action, reveal, made = [] }) {
           <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
         </g>
 
-        {/* Objets d'époque décoratifs (ephemere) : feuilles, coccinelle, brindille */}
+        {/* Objets d'époque décoratifs (ephemere) : feuilles, coccinelle, brindille
+            — disparaissent une fois dans le sac. */}
+        {!inv.includes("feuille_morte") && (
         <g transform="translate(120,540) rotate(-8)">
           <path d="M0 0 q-8 -10 -14 -6 q-4 6 6 10 q10 4 8 -4 Z" fill="#a05820" stroke="#5a2810" strokeWidth="0.8" />
           <path d="M-2 0 q-4 -6 -8 -4" stroke="#5a2810" strokeWidth="0.6" fill="none" />
         </g>
+        )}
+        {!inv.includes("coccinelle") && (
         <g transform="translate(660,542)">
           <ellipse cx="0" cy="0" rx="5" ry="4" fill="#c8382e" stroke="#3a0a0a" strokeWidth="0.5" />
           <path d="M0 -4 L0 4" stroke="#3a0a0a" strokeWidth="0.8" />
@@ -208,10 +212,13 @@ export default function SceneAtelier({ collect, action, reveal, made = [] }) {
           <circle cx="2" cy="1.5" r="0.6" fill="#3a0a0a" />
           <ellipse cx="0" cy="-4.5" rx="1.5" ry="1.2" fill="#1a0a06" />
         </g>
+        )}
+        {!inv.includes("brindille") && (
         <g transform="translate(280,528) rotate(30)">
           <path d="M0 0 L18 0" stroke="#8a6a48" strokeWidth="1.8" strokeLinecap="round" />
           <path d="M4 0 l3 -3 M9 0 l3 3 M14 0 l3 -3" stroke="#5a4028" strokeWidth="0.8" />
         </g>
+        )}
       </PLayer>
 
       {/* ═══ zones cliquables ═══ */}

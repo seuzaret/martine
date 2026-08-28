@@ -11,7 +11,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    À trouver ici : la paroi (l'écran naturel) et le silex.
    ============================================================ */
 
-export default function SceneInterieur({ collect, action, reveal, made = [], queteQui }) {
+export default function SceneInterieur({ collect, action, reveal, made = [], queteQui, inv = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -192,7 +192,9 @@ export default function SceneInterieur({ collect, action, reveal, made = [], que
       </g>
       {/* gouttes qui tombent des stalactites dans la flaque */}
       <circle cx="712" cy="480" r="1.3" fill="#cfeaff" opacity="0.6" style={{ animation: "spark 2.6s linear infinite reverse" }} />
-      {/* L'ATELIER DE TAILLE : pierre-siège, éclats, nucléus, percuteur */}
+      {/* L'ATELIER DE TAILLE : pierre-siège, éclats, nucléus, percuteur —
+          disparaît une fois qu'on a ramassé le silex brut. */}
+      {!inv.includes("silex_brut") && (
       <g transform="translate(300,505)">
         <ellipse cx="0" cy="12" rx="76" ry="13" fill="#160d06" opacity="0.8" />
         {/* pierre-siège du tailleur */}
@@ -212,6 +214,7 @@ export default function SceneInterieur({ collect, action, reveal, made = [], que
         <ellipse cx="80" cy="7" rx="15" ry="10" fill="#54544c" />
         <path d="M70 2 q10 -7 20 -1" stroke="#8a8a80" strokeWidth="1.6" fill="none" opacity="0.7" />
       </g>
+      )}
       {/* pierres éparses */}
       {[[150, 520, 9], [480, 512, 7], [590, 534, 11], [880, 516, 8]].map(([x, y, r], i) => (
         <g key={i}>

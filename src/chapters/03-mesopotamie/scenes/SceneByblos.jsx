@@ -10,7 +10,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    Méditerranée au loin. Byblos → biblios → Bible (papyrus).
    ============================================================ */
 
-export default function SceneByblos({ collect, action, reveal }) {
+export default function SceneByblos({ collect, action, reveal, inv = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -191,7 +191,8 @@ export default function SceneByblos({ collect, action, reveal }) {
           <path d="M-10 4 Q-10 22 -6 24 L6 24 Q10 22 10 4 Q10 -6 0 -10 Q-10 -6 -10 4 Z" fill="#7a3868" stroke="#3a1428" strokeWidth="0.6" />
         </g>
 
-        {/* Ephemere : coquillage murex + algue sèche */}
+        {/* Ephemere : coquillage murex + algue sèche (disparaissent au ramassage) */}
+        {!inv.includes("coquillage_murex") && (
         <g transform="translate(180,538)">
           {/* coquille murex épineuse (le fameux mollusque à pourpre) */}
           <path d="M0 -6 Q10 -2 12 6 Q10 12 0 12 Q-10 12 -12 6 Q-10 -2 0 -6 Z" fill="#e8c890" stroke="#5a3820" strokeWidth="0.6" />
@@ -200,15 +201,16 @@ export default function SceneByblos({ collect, action, reveal }) {
           <path d="M0 -6 l0 -4 M-8 -2 l-3 -2 M-10 4 l-4 0 M-8 10 l-3 3 M0 12 l0 4 M8 10 l3 3 M10 4 l4 0 M8 -2 l3 -2" stroke="#5a3820" strokeWidth="1" strokeLinecap="round" />
           <path d="M-4 4 q4 3 8 0" stroke="#a06888" strokeWidth="0.5" fill="none" opacity="0.5" />
         </g>
+        )}
+        {!inv.includes("algue_seche") && (
         <g transform="translate(920,540) rotate(-20)">
-          {/* algue verte-brune */}
           <path d="M0 0 q-3 -14 6 -18 M0 0 q3 -12 -4 -16 M0 0 q6 -8 12 -12 M0 0 q-8 -8 -14 -12" stroke="#3a5028" strokeWidth="1.5" fill="none" strokeLinecap="round" />
           <path d="M0 0 q0 4 -2 6" stroke="#3a5028" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-          {/* petits flotteurs */}
           <circle cx="6" cy="-14" r="1.4" fill="#3a5028" />
           <circle cx="-4" cy="-14" r="1.2" fill="#3a5028" />
           <circle cx="10" cy="-8" r="1.2" fill="#3a5028" />
         </g>
+        )}
       </PLayer>
 
       <Hotspot cx={390} cy={468} r={40} label="le charpentier phénicien" reveal={reveal} onClick={() => action("charpentier")} />

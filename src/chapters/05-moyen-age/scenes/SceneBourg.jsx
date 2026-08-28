@@ -10,7 +10,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    de foin, poules qui picorent, mât de la halle au centre.
    ============================================================ */
 
-export default function SceneBourg({ collect, action, reveal }) {
+export default function SceneBourg({ collect, action, reveal, inv = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -287,16 +287,20 @@ export default function SceneBourg({ collect, action, reveal }) {
           <path d="M-24 4 Q-24 12 -16 14 L-8 14 Q0 12 0 4 Z" fill="#5a3818" stroke="#2a1408" strokeWidth="0.5" />
         </g>
 
-        {/* Ephemere : plume d'oie + reliquat de bougie */}
+        {/* Ephemere : plume d'oie + bout de bougie (disparaissent au ramassage) */}
+        {!inv.includes("plume_oie") && (
         <g transform="translate(140,540) rotate(30)">
           <path d="M0 -14 Q4 -10 4 0 Q4 8 -2 12 Q-4 8 -4 0 Q-4 -10 0 -14 Z" fill="#f0e8d0" stroke="#5a3818" strokeWidth="0.4" />
           <path d="M0 -12 L0 10" stroke="#5a3818" strokeWidth="0.5" />
         </g>
+        )}
+        {!inv.includes("bout_bougie") && (
         <g transform="translate(920,540)">
           <rect x="-3" y="-8" width="6" height="16" fill="#e8dcc0" stroke="#5a3818" strokeWidth="0.4" />
           <path d="M0 -8 l0 -6" stroke="#8a7048" strokeWidth="1" />
           <ellipse cx="0" cy="-15" rx="1.2" ry="2" fill="#f8c058" />
         </g>
+        )}
       </PLayer>
 
       <Hotspot cx={700} cy={460} r={40} label="le crieur public sur son estrade" reveal={reveal} onClick={() => action("crieur")} />

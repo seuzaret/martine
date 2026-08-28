@@ -11,7 +11,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    Anachronisme géré au niveau du chapitre (stylo Bic ailleurs).
    ============================================================ */
 
-export default function SceneEcoleScribe({ collect, action, reveal }) {
+export default function SceneEcoleScribe({ collect, action, reveal, inv = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -162,7 +162,8 @@ export default function SceneEcoleScribe({ collect, action, reveal }) {
           </g>
         ))}
 
-        {/* Panier d'argile fraîche (collectable) */}
+        {/* Panier d'argile fraîche (collectable) — disparaît quand ramassé */}
+        {!inv.includes("argile") && (
         <g transform="translate(120,506)">
           <ellipse cx="0" cy="20" rx="30" ry="5" fill="#0a0604" opacity="0.55" />
           {/* panier tressé */}
@@ -174,18 +175,22 @@ export default function SceneEcoleScribe({ collect, action, reveal }) {
           <ellipse cx="8" cy="-4" rx="9" ry="5" fill="url(#ec-argile)" stroke="#3a1810" strokeWidth="0.6" />
           <ellipse cx="0" cy="-8" rx="7" ry="4" fill="url(#ec-argile)" stroke="#3a1810" strokeWidth="0.6" />
         </g>
+        )}
 
-        {/* Ephemere : boulette d'argile roulée par terre + tablette cassée */}
+        {/* Ephemere : boulette d'argile + tablette cassée (disparaissent au ramassage) */}
+        {!inv.includes("boulette_argile") && (
         <g transform="translate(420,536)">
           <circle r="6" fill="url(#ec-argile)" stroke="#3a1810" strokeWidth="0.6" />
           <path d="M-3 -1 q3 -2 5 0" stroke="#5a3818" strokeWidth="0.4" fill="none" />
         </g>
+        )}
+        {!inv.includes("tablette_cassee") && (
         <g transform="translate(560,540) rotate(15)">
-          {/* moitié de tablette cassée */}
           <path d="M-14 -6 L10 -8 L14 6 L-8 8 Z" fill="url(#ec-argile)" stroke="#3a1810" strokeWidth="0.6" />
           <path d="M14 6 L-8 8" stroke="#2a1408" strokeWidth="1" fill="none" />
           <path d="M-10 -3 l2 -2 l2 2 M-4 -3 l2 -2 l2 2 M2 -3 l2 -2 l2 2 M-10 2 l2 -2 l2 2 M-4 2 l2 -2 l2 2" stroke="#3a1810" strokeWidth="0.5" fill="none" />
         </g>
+        )}
       </PLayer>
 
       {/* zones cliquables */}

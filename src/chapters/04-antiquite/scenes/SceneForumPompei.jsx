@@ -10,7 +10,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    d'edile en train d'être gravée. Vésuve gris au loin.
    ============================================================ */
 
-export default function SceneForumPompei({ collect, action, reveal }) {
+export default function SceneForumPompei({ collect, action, reveal, inv = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -220,16 +220,20 @@ export default function SceneForumPompei({ collect, action, reveal }) {
           <path d="M-34 -22 L-28 -30" stroke="#3a2418" strokeWidth="1.4" strokeLinecap="round" />
         </g>
 
-        {/* Ephemere : denier romain + amphore cassée */}
+        {/* Ephemere : denier romain + amphore cassée (disparaissent au ramassage) */}
+        {!inv.includes("denier") && (
         <g transform="translate(680,534)">
           <circle r="8" fill="#c8a848" stroke="#8a6820" strokeWidth="0.6" />
           <text y="3" textAnchor="middle" fontSize="8" fontWeight="700" fill="#5a4010">C</text>
         </g>
+        )}
+        {!inv.includes("tesson") && (
         <g transform="translate(880,542) rotate(30)">
           <path d="M-8 -6 L-2 8 L8 6 L4 -8 Z" fill="#c88a52" stroke="#3a1810" strokeWidth="0.5" />
           <path d="M-8 -6 L-14 -12 M8 6 L14 12" stroke="#5a3818" strokeWidth="0.8" />
           <path d="M-2 8 L8 6" stroke="#3a1810" strokeWidth="1" />
         </g>
+        )}
       </PLayer>
 
       <Hotspot cx={200} cy={470} r={40} label="le crieur public (praeco)" reveal={reveal} onClick={() => action("praeco")} />

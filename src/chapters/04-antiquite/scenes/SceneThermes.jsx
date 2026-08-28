@@ -10,7 +10,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    « place publique » sociale de Rome). Vapeur qui monte.
    ============================================================ */
 
-export default function SceneThermes({ collect, action, reveal }) {
+export default function SceneThermes({ collect, action, reveal, inv = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -180,13 +180,17 @@ export default function SceneThermes({ collect, action, reveal }) {
           <ellipse cx="10" cy="-3" rx="2" ry="4" fill="#c8e0e8" opacity="0.7" />
         </g>
 
-        {/* Ephemere : petite fiole cassée + tessera de mosaïque */}
+        {/* Ephemere : petite fiole cassée + tessera (disparaissent au ramassage) */}
+        {!inv.includes("fiole_cassee") && (
         <g transform="translate(140,538) rotate(30)">
           <path d="M-6 0 L6 -2 L4 4 L-4 4 Z" fill="#a8c8d8" stroke="#3a5060" strokeWidth="0.5" opacity="0.85" />
         </g>
+        )}
+        {!inv.includes("tessera") && (
         <g transform="translate(920,540)">
           <rect x="-6" y="-6" width="12" height="12" fill="#2a2018" stroke="#8a7860" strokeWidth="0.5" transform="rotate(15)" />
         </g>
+        )}
       </PLayer>
 
       <Hotspot cx={760} cy={470} r={40} label="deux baigneurs qui discutent" reveal={reveal} onClick={() => action("baigneurs")} />

@@ -12,7 +12,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    « Buchmesse » tendue au-dessus, moulin à vent au loin.
    ============================================================ */
 
-export default function SceneFoire({ collect, action, reveal }) {
+export default function SceneFoire({ collect, action, reveal, inv = [] }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -205,15 +205,19 @@ export default function SceneFoire({ collect, action, reveal }) {
           <path d="M-3 -22 q3 3 6 0" stroke="#3a2418" strokeWidth="1.2" fill="none" />
         </g>
 
-        {/* Ephemere : plume d'oie taillée + libelle jeté */}
+        {/* Ephemere : plume taillée + libelle jeté (disparaissent au ramassage) */}
+        {!inv.includes("plume_taillee") && (
         <g transform="translate(160,542) rotate(-15)">
           <path d="M0 -14 Q4 -10 4 0 Q4 8 -2 12 Q-4 8 -4 0 Q-4 -10 0 -14 Z" fill="#f0e8d0" stroke="#5a3818" strokeWidth="0.4" />
           <path d="M0 -12 L0 10 M-2 14 L2 14" stroke="#5a3818" strokeWidth="0.5" />
         </g>
+        )}
+        {!inv.includes("libelle") && (
         <g transform="translate(920,544) rotate(30)">
           <rect x="-10" y="-6" width="20" height="14" fill="#f0e8d0" stroke="#5a3818" strokeWidth="0.4" />
           <path d="M-8 -3 h16 M-8 0 h16 M-8 3 h14 M-8 6 h12" stroke="#5a3818" strokeWidth="0.3" />
         </g>
+        )}
       </PLayer>
 
       <Hotspot cx={240} cy={370} r={40} label="le libraire de la foire" reveal={reveal} onClick={() => action("libraire")} />
