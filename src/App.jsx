@@ -427,6 +427,13 @@ export default function App() {
         const manque = list.find((f) => !flags[f] && !made.includes(f));
         if (manque) { say(act.needMsg || "Il y a une étape à faire avant.", "vexe"); return; }
       }
+      /* mini-jeu qui demande un OBJET dans le sac (ex. tailler_silex
+         a besoin d'un silex_brut à consommer). */
+      if (act.needsItem) {
+        const list = Array.isArray(act.needsItem) ? act.needsItem : [act.needsItem];
+        const manque = list.find((it) => !inv.includes(it));
+        if (manque) { say(act.needItemMsg || `Il te faut d'abord un ${manque}.`, "vexe"); return; }
+      }
       setModal({ type: act.modal }); return;
     }
     if (act.goto !== undefined) setTab(act.goto);
@@ -1472,7 +1479,30 @@ export default function App() {
       )}
 
       {modal?.type === "taille_silex" && (
-        <TailleSilexGame onClose={() => setModal(null)} onWin={() => bumpFlux(2)} />
+        <TailleSilexGame
+          onClose={() => setModal(null)}
+          /* Réussite : le silex brut se transforme en silex taillé. */
+          onWin={() => {
+            setInv((s) => {
+              const i = s.indexOf("silex_brut");
+              if (i < 0) return s.includes("silex") ? s : [...s, "silex"];
+              const next = [...s.slice(0, i), ...s.slice(i + 1)];
+              if (!next.includes("silex")) next.push("silex");
+              return next;
+            });
+            bumpFlux(2);
+            say("Silex taillé ! Un vrai outil tranchant vient de rejoindre ton sac.", "content");
+          }}
+          /* Échec : le silex brut se casse en miettes (perdu). */
+          onFail={() => {
+            setInv((s) => {
+              const i = s.indexOf("silex_brut");
+              if (i < 0) return s;
+              return [...s.slice(0, i), ...s.slice(i + 1)];
+            });
+            say("Craac ! Le silex a cassé — va en chercher un autre.", "vexe");
+          }}
+        />
       )}
 
       {/* CARTE-INVENTION (façon Pokémon) qui apparaît quand un nouveau message est transmis */}

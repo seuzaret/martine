@@ -257,7 +257,7 @@ export default function SceneInterieur({ collect, action, reveal, made = [], que
 
       {/* zones cliquables — hors couches (décalage max « rayon) */}
       <Hotspot cx={640} cy={270} r={150} label="paroi" item="paroi" support reveal={reveal} onClick={() => collect("paroi")} />
-      <Hotspot cx={310} cy={498} r={55} label="silex" item="silex" reveal={reveal} onClick={() => collect("silex")} />
+      <Hotspot cx={310} cy={498} r={55} label="silex brut" item="silex_brut" reveal={reveal} onClick={() => collect("silex_brut")} />
       <Hotspot cx={452} cy={462} r={48} label="Kyan" reveal={reveal} onClick={(p) => action("kyan", p)} />
     </svg>
   );

@@ -41,7 +41,8 @@ const ITEMS = {
 
   branche:  { name: "Branche souple", emoji: "🌿", desc: "Du noisetier, souple et solide. De quoi fabriquer bien des choses." },
   liane:    { name: "Liane", emoji: "🪢", desc: "Fibre végétale, résistante et élastique. Ça s'étire… et ça revient." },
-  silex:    { name: "Silex taillé", emoji: "🔪", desc: "Un éclat fraîchement taillé, tranchant comme un rasoir." },
+  silex_brut: { name: "Silex brut", emoji: "🪨", desc: "Un rognon de silex ramassé au fond de la grotte. Brut, gris, encore recouvert de sa croûte blanche : il ne coupe rien tel quel. À TAILLER au percuteur sur le rocher de l'atelier." },
+  silex:    { name: "Silex taillé", emoji: "🔪", desc: "Un éclat détaché du silex brut par une frappe bien placée. Tranchant comme un rasoir : l'outil de base de la Préhistoire." },
   ocre:     { name: "Ocre rouge", emoji: "🟠", desc: "Pigment minéral. Broyé, mélangé à de la graisse : de la peinture." },
   /* SUPPORTS (support: true) : fixes, ne vont PAS dans le sac. On leur
      APPORTE un objet (glisser un outil dessus). Le moteur les affiche
@@ -82,7 +83,8 @@ const SCENES = [
 /* Pour les indices : où trouver chaque élément de base. */
 const WHERE = {
   liane: "devant la grotte", ocre: "devant la grotte",
-  silex: "au fond de la grotte",
+  silex_brut: "au fond de la grotte, ou au pied du tas de silex à l'atelier",
+  silex: "à l'atelier — mais il faut d'abord le TAILLER (mini-jeu, silex brut + rocher)",
   voix: "au campement", branche: "au campement",
   tronc: "à la rivière",
 };
@@ -188,6 +190,7 @@ const MESSAGES = {
    possède tous les ingrédients (needs) est proposé.
    ------------------------------------------------------------ */
 const HINTS = [
+  { needs: ["silex_brut"], out: "silex", text: "Un silex brut ne coupe rien. Va le tailler sur le ROCHER de l'atelier — clique dessus pour ouvrir le mini-jeu." },
   { needs: ["branche", "liane"], out: "arc", text: "Quelque chose qui plie… avec quelque chose qui s'étire. Ça pourrait propulser." },
   { needs: ["branche", "silex"], out: "fleche", text: "Une branche bien droite avec une pointe qui coupe : ça pourrait voler." },
   { needs: ["arc", "fleche"], out: "arcarme", text: "Tu as l'arme et le projectile. Réunis-les." },
@@ -259,9 +262,9 @@ const ACTIONS = {
     say: "Kyan, la mémoire du clan. Ce qu'elle sait tient dans une seule tête… fragile, non ?" },
 
   /* ─── Nouveaux personnages / actions des tableaux ajoutés (atelier, gué, crête) ─── */
-  cheng: { mood: "neutre",
-    bubble: "Cheng, le tailleur. Chaque nodule a une intention. Frappe-le au bon endroit et l'éclat s'échappe seul.",
-    say: "Cheng, le tailleur de silex. Un art transmis de la main à la main depuis 2 millions d'années." },
+  ough: { mood: "neutre",
+    bubble: "Je suis Ough, tailleur de silex. Ramasse un caillou brut là-bas, pose-le sur le rocher, et frappe-le au bon moment : un éclat tranchant s'en détache.",
+    say: "Ough, le tailleur de silex. Un savoir-faire transmis de la main à la main depuis 2 millions d'années — sans un mot écrit." },
 
   pecheur: { mood: "neutre",
     bubble: "Assis, silencieux, patient. La rivière donne à qui sait attendre.",
@@ -286,7 +289,8 @@ const ACTIONS = {
   pecher: { mood: "neutre", say: "Un poisson ! Trop rapide pour l'attraper à la main. Il faudrait une lance ou un filet — pour plus tard." },
 
   /* Actions qui ouvrent des mini-jeux */
-  tailler_silex: { modal: "taille_silex" },
+  tailler_silex: { modal: "taille_silex", needsItem: "silex_brut",
+    needItemMsg: "Il te faut d'abord un SILEX BRUT à tailler. Va en ramasser un au fond de la grotte, ou dans le tas à l'atelier." },
   traverser_gue: { mood: "neutre", say: "Les pierres du gué sont glissantes — sans bâton, tu risques la chute. Mieux vaut trouver un chemin plus sûr… ou attendre." },
 };
 

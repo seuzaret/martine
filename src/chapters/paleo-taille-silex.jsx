@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 /* ============================================================
    MINI-JEU : « Tailler un silex » (atelier, Paléolithique)
    ------------------------------------------------------------
-   Un nodule de silex sur le rocher. Le percuteur en bois de cerf
+   Un silex brut de silex sur le rocher. Le percuteur en bois de cerf
    oscille au-dessus. Il faut cliquer AU MOMENT où le percuteur
    est PILE au bon angle (repère vert) — trop tôt/tard, l'éclat
    part de travers. 5 bonnes frappes en 10 essais → silex taillé.
@@ -44,8 +44,9 @@ function playHit(good) {
   } catch {}
 }
 
-export function TailleSilexGame({ onClose, onWin }) {
+export function TailleSilexGame({ onClose, onWin, onFail }) {
   const [phase, setPhase] = useState('play'); // play → won | fail
+  const failedNotifiedRef = useRef(false);
   const [good, setGood] = useState(0);
   const [tries, setTries] = useState(0);
   const [feedback, setFeedback] = useState(null); // {ok, key}
@@ -86,8 +87,15 @@ export function TailleSilexGame({ onClose, onWin }) {
     setTimeout(() => setFeedback((f) => (f && f.key ? null : f)), 400);
   };
 
-  const restart = () => { setPhase('play'); setGood(0); setTries(0); setFeedback(null); t0.current = performance.now(); };
   const failed = tries >= MAX_TRIES && good < GOAL && phase === 'play';
+  /* raté = silex CASSÉ : on prévient le parent une seule fois pour qu'il
+     retire le silex brut du sac (pas de « recommencer », c'est perdu). */
+  useEffect(() => {
+    if (failed && !failedNotifiedRef.current) {
+      failedNotifiedRef.current = true;
+      onFail?.();
+    }
+  }, [failed, onFail]);
 
   /* la position visuelle du percuteur en degrés */
   const percAngle = -35 * angle;
@@ -99,7 +107,7 @@ export function TailleSilexGame({ onClose, onWin }) {
       <div onClick={(e) => e.stopPropagation()}
         style={{ background: '#1a140a', border: '2px solid #8a5828', borderRadius: 16, padding: 20, maxWidth: 520, width: '100%', maxHeight: '92vh', overflowY: 'auto', boxShadow: '0 12px 48px rgba(0,0,0,0.7)', color: '#efe6d2', fontFamily: 'Palatino, Georgia, serif' }}>
         <div style={{ textAlign: 'center', fontFamily: 'ui-monospace,monospace', fontSize: 11, letterSpacing: 2, color: '#e0a848' }}>🪨 ATELIER DE SILEX · −18 000</div>
-        <h2 style={{ textAlign: 'center', margin: '6px 0 4px', color: '#ffd166', fontSize: 21 }}>Tailler un nodule</h2>
+        <h2 style={{ textAlign: 'center', margin: '6px 0 4px', color: '#ffd166', fontSize: 21 }}>Tailler un silex</h2>
 
         {phase === 'play' && (
           <>
@@ -112,10 +120,10 @@ export function TailleSilexGame({ onClose, onWin }) {
               {/* rocher */}
               <ellipse cx="200" cy="220" rx="140" ry="18" fill="#3a2a18" opacity="0.5" />
               <path d="M80 210 Q120 190 200 188 Q280 190 320 210 L320 226 Q280 232 200 232 Q120 230 80 226 Z" fill="#5a5048" stroke="#1a0e08" strokeWidth="2" />
-              {/* nodule au centre */}
+              {/* silex brut au centre */}
               <ellipse cx="200" cy="200" rx="30" ry="16" fill="#3a3028" stroke="#0a0806" strokeWidth="2" />
               <path d="M180 194 Q200 186 220 196" stroke="#7a6a58" strokeWidth="1.2" fill="none" opacity="0.7" />
-              {/* repère au-dessus du nodule */}
+              {/* repère au-dessus du silex brut */}
               <circle cx="200" cy="200" r="18" fill="none" stroke={zoneOk ? '#5eff9e' : '#c8a848'} strokeWidth="2" strokeDasharray="4 3" opacity="0.9" />
 
               {/* PERCUTEUR (bois de cerf) — pivote autour du haut */}
@@ -151,11 +159,12 @@ export function TailleSilexGame({ onClose, onWin }) {
             </button>
 
             {failed && (
-              <div style={{ marginTop: 10, textAlign: 'center', background: '#2a0e10', border: '1px solid #ff5030', borderRadius: 8, padding: '10px 14px', color: '#ffb0a0' }}>
-                Le nodule est cassé net. Recommence !
-                <button onClick={restart}
-                  style={{ display: 'block', margin: '8px auto 0', background: '#ff5030', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 20px', fontWeight: 800, cursor: 'pointer', fontFamily: 'ui-monospace,monospace' }}>
-                  RECOMMENCER
+              <div style={{ marginTop: 10, textAlign: 'center', background: '#2a0e10', border: '1px solid #ff5030', borderRadius: 8, padding: '10px 14px', color: '#ffb0a0', fontSize: 13.5, lineHeight: 1.5 }}>
+                <b>Craac !</b> Le silex a cassé en miettes. Ce sont des choses qui arrivent — les tailleurs préhistoriques ratent aussi (les archéologues retrouvent bien plus d'éclats ratés que d'outils réussis !).
+                <div style={{ marginTop: 6, opacity: 0.85 }}>Va ramasser un autre silex brut et réessaie.</div>
+                <button onClick={onClose}
+                  style={{ display: 'block', margin: '10px auto 0', background: '#8a3a20', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 20px', fontWeight: 800, cursor: 'pointer', fontFamily: 'ui-monospace,monospace' }}>
+                  FERMER
                 </button>
               </div>
             )}
@@ -170,7 +179,7 @@ export function TailleSilexGame({ onClose, onWin }) {
             </div>
             <div style={{ background: '#0e1420', border: '1px solid #2a3648', borderRadius: 12, padding: '14px 16px', marginTop: 10 }}>
               <p style={{ fontSize: 14.5, lineHeight: 1.65, color: '#e8eef5', margin: 0 }}>
-                « Bien vu ! Cheng vient de te transmettre un savoir-faire vieux de plus de 2 millions d'années — la TAILLE DE PIERRE. Chaque coup de percuteur détache un éclat au bord tranchant comme un rasoir. Sans écriture, cette technique se transmet DE LA MAIN À LA MAIN, du maître à l'élève, par observation et répétition. C'est déjà une forme de communication : un message que le geste imprime dans les doigts. » — MARTINE
+                « Bien vu ! Ough vient de te transmettre un savoir-faire vieux de plus de 2 millions d'années — la TAILLE DE PIERRE. Chaque coup de percuteur détache un éclat au bord tranchant comme un rasoir. Sans écriture, cette technique se transmet DE LA MAIN À LA MAIN, du maître à l'élève, par observation et répétition. C'est déjà une forme de communication : un message que le geste imprime dans les doigts. » — MARTINE
               </p>
             </div>
             <button onClick={onClose}
