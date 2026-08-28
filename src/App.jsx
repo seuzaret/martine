@@ -69,23 +69,26 @@ const TITRE_FONT = "'Cinzel', 'Trajan Pro', 'Copperplate Gothic Bold', 'Perpetua
    ============================================================ */
 function JaugeTemporelle({ transmis, requis, total, destination, canJump, onJump, isLast, bloque }) {
   const pct = Math.min(100, Math.round((transmis / requis) * 100));
+  /* Graduations tous les 5 flux (= 1 message principal). Rend visible
+     l'ampleur d'un +5 (transmission) vs d'un +3 (bonus) vs d'un -1. */
+  const nbGrads = Math.max(1, Math.floor(requis / 5)) - 1;
   return (
     <div style={{ width: 116, flex: "0 0 auto", display: "flex", flexDirection: "column", alignItems: "center", minHeight: 0,
         background: "linear-gradient(180deg,#141b28,#0c1220)", border: "1px solid #26324a", borderRadius: 12, padding: "9px 8px", gap: 7 }}>
-      <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, letterSpacing: 1.5, color: "#7fd8ff", textAlign: "center", lineHeight: 1.35 }}>⏳ RETOUR<br />VERS LE FUTUR</div>
+      <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, letterSpacing: 1.5, color: "#ffd166", textAlign: "center", lineHeight: 1.35 }}>⚡ FLUX<br />TEMPOREL</div>
 
       {/* la colonne qui se remplit (de bas en haut) */}
       <div style={{ flex: "1 1 auto", width: 30, minHeight: 54, background: "#0a1119", border: "1px solid #26324a", borderRadius: 8, position: "relative", overflow: "hidden", display: "flex", flexDirection: "column-reverse" }}>
         <div style={{ height: `${pct}%`, background: canJump ? "linear-gradient(0deg,#e8934a,#ffd166)" : "linear-gradient(0deg,#2f5a76,#7fd8ff)", transition: "height .7s cubic-bezier(.3,1.2,.5,1)", boxShadow: canJump ? "0 0 16px #ffd166" : "none" }} />
-        {/* graduations : une par trace requise */}
-        {Array.from({ length: requis - 1 }).map((_, i) => (
-          <div key={i} style={{ position: "absolute", left: 0, right: 0, bottom: `${((i + 1) / requis) * 100}%`, height: 1, background: "#0a1119" }} />
+        {/* graduations : tous les 5 flux (~ 1 message principal) */}
+        {Array.from({ length: nbGrads }).map((_, i) => (
+          <div key={i} style={{ position: "absolute", left: 0, right: 0, bottom: `${((i + 1) * 5 / requis) * 100}%`, height: 1, background: "#0a1119" }} />
         ))}
       </div>
 
-      <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, fontWeight: 700, color: canJump ? "#ffd166" : "#8fa3bd" }}>{Math.min(transmis, requis)}/{requis}</div>
+      <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, fontWeight: 700, color: canJump ? "#ffd166" : "#8fa3bd" }}>{Math.min(transmis, requis)}/{requis}⚡</div>
 
-      <button onClick={onJump} disabled={!canJump} title={canJump ? (isLast ? "Voir l'épilogue" : `Partir vers ${destination}`) : (bloque || `Aide encore ${requis - transmis} personne(s)`)}
+      <button onClick={onJump} disabled={!canJump} title={canJump ? (isLast ? "Voir l'épilogue" : `Partir vers ${destination}`) : (bloque || `Encore ${Math.max(0, Math.ceil(requis - transmis))}⚡ pour partir`)}
         style={{ width: "100%", background: canJump ? "#e8934a" : "#141b28", color: canJump ? "#160c02" : "#54607a", border: "none", borderRadius: 8, padding: "8px 4px", fontFamily: "ui-monospace,monospace", fontSize: 11, fontWeight: 800, letterSpacing: 0.5, cursor: canJump ? "pointer" : "not-allowed", lineHeight: 1.3, animation: canJump ? "glow 2.4s ease-in-out infinite" : "none" }}>
         {canJump ? (isLast ? "🌀 FIN" : "🌀 PARTIR") : "🔒"}
       </button>
@@ -560,8 +563,11 @@ export default function App() {
     setCollection((c) => c.some((x) => x.id === id) ? c
       : [...c, { id, titre: m.title, emoji: m.emoji, date: chapter.date, jauges: m.jauges, fact: m.fact, perdu: false }]);
     flash(); playSfx("message");
-    bumpFlux(3);
-    say(`◆ « ${m.title} » transmis au futur ! Tu l'as gagné en l'écrivant toi-même. Mes circuits se rechargent.`, "content");
+    /* Un message principal transmis pèse plus qu'un bonus (anachronisme, SOS,
+       mini-jeu à +3) : +5 sur la jauge flux. Un chapitre required:3 se remplit
+       donc pile avec 3 messages, et les bonus AJOUTENT au-delà. */
+    bumpFlux(5);
+    say(`◆ « ${m.title} » transmis au futur ! Tu l'as gagné en l'écrivant toi-même. Mes circuits se rechargent (+5).`, "content");
     unlockCard(id, m);
   };
 
@@ -779,8 +785,13 @@ export default function App() {
   const heritagesManquants = Object.entries(chapter.items)
     .filter(([id, it]) => it.heirloom && nextItems[id] && !inv.includes(id))
     .map(([, it]) => it.name);
-  const canJump = msgs.length >= chapter.required && heritagesManquants.length === 0;
-  const jumpBloque = msgs.length >= chapter.required && heritagesManquants.length > 0
+  /* FUSION : la jauge unique du chapitre est le FLUX. Chaque chapitre
+     exige un total = required × 5 flux (soit exactement N messages, ou
+     un mix messages + bonus). Les bonus (SOS, anachronismes, mini-jeux)
+     ne sont plus un score à part : ils comptent pour le départ. */
+  const fluxRequis = (chapter.required || 3) * 5;
+  const canJump = flux >= fluxRequis && heritagesManquants.length === 0;
+  const jumpBloque = flux >= fluxRequis && heritagesManquants.length > 0
     ? `Fabrique d'abord : ${heritagesManquants.join(", ")}` : null;
   const isLastChapter = chapterIndex >= CHAPTERS.length - 1;
   /* Saut temporel : écran de transition vers le chapitre suivant s'il
@@ -1250,9 +1261,9 @@ export default function App() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, padding: "2px 12px 6px", flexWrap: "wrap" }}>
         <span style={{ fontSize: 17, fontWeight: 700, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>{chapter.emoji} {chapter.scenes[tab].name}</span>
         <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-          <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 13, color: "#5eff9e" }} title="Messages transmis au futur">◆ {msgs.length}/{ALL_MSGS.length}</span>
-          <span style={{ position: "relative", fontFamily: "ui-monospace,monospace", fontSize: 13, color: "#ffd166" }} title="Flux temporel — nécessaire pour rentrer chez toi">
-            ⚡ {flux}
+          <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, color: "#5eff9e", opacity: 0.7 }} title="Messages transmis dans tout le voyage">◆ {msgs.length}/{ALL_MSGS.length}</span>
+          <span style={{ position: "relative", fontFamily: "ui-monospace,monospace", fontSize: 14, fontWeight: 700, color: canJump ? "#ffd166" : "#7fd8ff" }} title={`Flux temporel — ${canJump ? "prêt à partir !" : `encore ${Math.max(0, Math.ceil(fluxRequis - flux))} pour partir`}`}>
+            ⚡ {flux}/{fluxRequis}
             {fluxBubble && (
               <span style={{ position: "absolute", left: "50%", top: -18, transform: "translateX(-50%)",
                 fontSize: 13, fontWeight: 800, letterSpacing: 1,
@@ -1277,9 +1288,9 @@ export default function App() {
               sur écran étroit, on garde le bouton compact ici. */}
           {!large && (
             <button onClick={jump} disabled={!canJump}
-              title={canJump ? `Saut vers ${chapter.destination}` : (jumpBloque || `${chapter.required} messages requis pour le saut`)}
+              title={canJump ? `Saut vers ${chapter.destination}` : (jumpBloque || `Encore ${Math.max(0, Math.ceil(fluxRequis - flux))} flux pour partir`)}
               style={{ background: canJump ? "#e8934a" : "#1a2230", color: canJump ? "#111" : "#4a5568", border: "none", borderRadius: 10, padding: "7px 12px", fontSize: 13, fontWeight: 800, cursor: canJump ? "pointer" : "not-allowed", fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
-              🌀 {canJump ? `SAUT → ${chapter.destination}` : `${msgs.length}/${chapter.required}`}
+              🌀 {canJump ? `SAUT → ${chapter.destination}` : `${Math.min(flux, fluxRequis)}/${fluxRequis}⚡`}
             </button>
           )}
         </div>
@@ -1306,7 +1317,7 @@ export default function App() {
         </div>
         {/* écran large : la jauge temporelle à droite */}
         {large && (
-          <JaugeTemporelle transmis={msgs.length} requis={chapter.required} total={ALL_MSGS.length}
+          <JaugeTemporelle transmis={flux} requis={fluxRequis} total={ALL_MSGS.length}
             destination={chapter.destination} canJump={canJump} onJump={jump} isLast={isLastChapter} bloque={jumpBloque} />
         )}
       </div>
