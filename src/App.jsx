@@ -67,6 +67,20 @@ const TITRE_FONT = "'Cinzel', 'Trajan Pro', 'Copperplate Gothic Bold', 'Perpetua
    un suivi de « trouvailles » (pastilles) montre où l'on en est.
    Aucun état propre : tout vient des props (moteur/contenu séparés).
    ============================================================ */
+/* ============================================================
+   BADGE de fin de voyage — 4 paliers selon le SCORE cumulé (flux
+   gagné sur l'ensemble des chapitres, divisé par le target total).
+   Le score n'est jamais pénalisé (les malus ne le baissent pas),
+   il ne reflète que l'excellence des actions POSITIVES.
+   ============================================================ */
+function computeBadge(fluxTotal, totalTarget) {
+  const pct = totalTarget ? (fluxTotal / totalTarget) * 100 : 0;
+  if (pct >= 250) return { name: "Chronaute maître",   emoji: "🌟", color: "#ffd166", desc: "Tout fait, sans presque une erreur. Ta jauge a débordé à chaque étape." };
+  if (pct >= 200) return { name: "Chronaute expert",   emoji: "🎖️", color: "#ffb060", desc: "Presque tous les bonus rassemblés. Tu as vraiment exploré chaque époque." };
+  if (pct >= 150) return { name: "Chronaute confirmé", emoji: "🏅", color: "#7fd8ff", desc: "Tu as goûté aux à-côtés — anachronismes, SOS, mini-jeux — pas seulement au chemin balisé." };
+  return               { name: "Chronaute apprenti",   emoji: "🎓", color: "#c8d4e2", desc: "Tu as bouclé le voyage. Le strict nécessaire, et c'est déjà beaucoup." };
+}
+
 function JaugeTemporelle({ transmis, requis, total, destination, canJump, onJump, isLast, bloque }) {
   const pct = Math.min(100, Math.round((transmis / requis) * 100));
   /* Graduations tous les 5 flux (= 1 message principal). Rend visible
@@ -163,7 +177,9 @@ export default function App() {
   const [sosPending, setSosPending] = useState(null);   // msg_id dont on peut encore émettre le SOS
   const [sosOpen, setSosOpen] = useState(false);         // l'animation Morse est-elle en cours ?
   const [sosSent, setSosSent] = useState([]);            // msg_ids pour lesquels le SOS a été émis
-  const [flux, setFlux] = useState(0);                   // ⚡ jauge globale de « flux temporel »
+  const [flux, setFlux] = useState(0);                   // ⚡ jauge du chapitre courant (remise à 0 au saut)
+  const [fluxTotal, setFluxTotal] = useState(0);         // ⚡ score cumulé du voyage entier (jamais remis à 0)
+  const [bonusChapters, setBonusChapters] = useState([]);// indices des chapitres où le bonus a été debloqué (flux à ≥ target+10)
   const [fluxBubble, setFluxBubble] = useState(null);    // {delta, key} — anim +N/-N flottante
   const [sosChooserOpen, setSosChooserOpen] = useState(false); // choix du support SOS fin de chapitre
   const [anachronismLearned, setAnachronismLearned] = useState(false); // MARTINE a-t-elle déjà expliqué les déchets temporels ?
@@ -224,9 +240,9 @@ export default function App() {
      partie existante avec un état vide). */
   useEffect(() => {
     if (screen === "play" || screen === "end") {
-      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, anachronismLearned });
+      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned });
     }
-  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, anachronismLearned]);
+  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned]);
 
   /* CONFORT DE LECTURE : applique les classes sur <html> (le CSS fait le
      reste, moteur compris) et mémorise le choix sur l'appareil. */
@@ -330,7 +346,7 @@ export default function App() {
   const newGame = () => {
     setChapterIndex(0); setMaxReached(0);
     setInv([]); setMsgs([]); setMade([]); setFlags({}); setCollection([]); setQuete(0);
-    setMediadex([]); setSosSent([]); setFlux(0);
+    setMediadex([]); setSosSent([]); setFlux(0); setFluxTotal(0); setBonusChapters([]);
     setTab(CHAPTERS[0].startScene); setDialog({ lines: CHAPTERS[0].intro, idx: 0, mood: "neutre" });
     setScreen("intro");
   };
@@ -342,9 +358,19 @@ export default function App() {
      et les messages découverts, eux, sont CUMULATIFS. */
   const goToChapter = (i) => {
     const carried = inv.filter((id) => chapter.items[id]?.heirloom && CHAPTERS[i].items[id]);
+    /* AVANT de changer de chapitre : si le flux du chapitre courant
+       depasse la cible + 10, on débloque le BONUS de ce chapitre
+       (carte secrète dans la Mediadex + mention dans le carnet). */
+    const req = (chapter.required || 3) * 5;
+    if (flux >= req + 10 && !bonusChapters.includes(chapterIndex)) {
+      setBonusChapters((b) => [...b, chapterIndex]);
+    }
     setChapterIndex(i);
     setMaxReached((m) => Math.max(m, i));
     setInv(carried); setMsgs([]); setMade([]); setFlags({}); setQuete(0);
+    /* Le flux du CHAPITRE se remet à zéro (chaque chapitre a sa cible) ;
+       le score CUMULÉ (fluxTotal) est preservé pour le badge final. */
+    setFlux(0);
     setTab(CHAPTERS[i].startScene);
     setDialog({ lines: CHAPTERS[i].intro, idx: 0, mood: "neutre" });
     setScreen("play");
@@ -361,6 +387,7 @@ export default function App() {
     setChapterIndex(i);
     setMaxReached((m) => Math.max(m, i));
     setInv(seed); setMsgs([]); setMade([]); setFlags({}); setQuete(0);
+    setFlux(0); /* rejouer un chapitre : jauge fraîche, mais fluxTotal/bonus conservés */
     setTab(CHAPTERS[i].startScene);
     setDialog({ lines: CHAPTERS[i].intro, idx: 0, mood: "neutre" });
     setScreen("play");
@@ -376,6 +403,7 @@ export default function App() {
     setInv(s.inv || []); setMsgs(s.msgs || []); setMade(s.made || []);
     setFlags(s.flags || {}); setCollection(s.collection || []); setQuete(s.quete || 0);
     setMediadex(s.mediadex || []); setSosSent(s.sosSent || []); setFlux(s.flux || 0);
+    setFluxTotal(s.fluxTotal || 0); setBonusChapters(s.bonusChapters || []);
     setAnachronismLearned(s.anachronismLearned || false);
     setTab(s.tab ?? CHAPTERS[i].startScene);
     setDialog({ lines: ["Reprise du voyage. Je remets les circuits en route là où on s'était arrêtés."], idx: 0, mood: "neutre" });
@@ -529,10 +557,13 @@ export default function App() {
      bloquant pour l'instant — on calibrera). */
   const bumpFlux = (delta) => {
     if (!delta) return;
-    /* On plafonne A ZERO en bas : impossible de creuser un trou. Le -N
-       s'affiche quand même (bulle flottante) pour que le joueur voie
-       qu'il a perdu quelque chose, même sur jauge déjà vide. */
+    /* Jauge du CHAPITRE : plafonnée à 0 en bas — impossible de creuser
+       un trou invisible. Le -N s'affiche quand même en bulle flottante. */
     setFlux((v) => Math.max(0, Math.round((v + delta) * 10) / 10));
+    /* Score CUMULÉ du voyage : ne compte que les gains positifs. C'est
+       ton total « d'énergie gagnée » sur tout le voyage, qui décide de
+       ton badge final. Les erreurs ne pénalisent pas le score global. */
+    if (delta > 0) setFluxTotal((t) => Math.round((t + delta) * 10) / 10);
     setFluxBubble({ delta, key: Date.now() });
     setTimeout(() => setFluxBubble((b) => (b && b.key ? null : b)), 1400);
   };
@@ -1138,6 +1169,11 @@ export default function App() {
 
   /* ---------- écran fin ---------- */
   if (screen === "end") {
+    /* Calcul du BADGE + du score global du voyage. Le total-cible est la
+       somme des cibles chapitre (required × 5). */
+    const totalTarget = CHAPTERS.reduce((s, c) => s + (c.required || 3) * 5, 0);
+    const badge = computeBadge(fluxTotal, totalTarget);
+    const scorePct = Math.round((fluxTotal / totalTarget) * 100);
     return (
       <div style={{ minHeight: "100vh", background: "radial-gradient(ellipse at 50% 20%, #1a2f4a 0%, #080d16 70%)", padding: 20, fontFamily: "Palatino, Georgia, serif", color: "#e8eef5" }}>
         {cheatPanel}
@@ -1150,6 +1186,21 @@ export default function App() {
           <p style={{ fontFamily: "ui-monospace,monospace", color: "#5eff9e", fontSize: 18, marginTop: 14 }}>
             ◆ {msgs.length} / {ALL_MSGS.length} messages découverts
           </p>
+
+          {/* BADGE DE FIN — n'apparaît qu'au bout du voyage (dernier chapitre) */}
+          {isLastChapter && (
+            <div style={{ background: "#0e1420", border: `2px solid ${badge.color}`, borderRadius: 16, padding: "16px 20px", marginTop: 16, boxShadow: `0 0 24px ${badge.color}55` }}>
+              <div style={{ fontSize: 42, lineHeight: 1 }}>{badge.emoji}</div>
+              <div style={{ fontFamily: "ui-monospace,monospace", color: badge.color, fontSize: 20, fontWeight: 800, letterSpacing: 1.5, marginTop: 6 }}>{badge.name.toUpperCase()}</div>
+              <div style={{ fontFamily: "ui-monospace,monospace", color: badge.color, fontSize: 13, opacity: 0.85, marginTop: 2 }}>⚡ {fluxTotal} flux · {scorePct}% du voyage</div>
+              <p style={{ fontSize: 13.5, color: "#c8d4e2", lineHeight: 1.6, margin: "8px 0 0", fontStyle: "italic" }}>{badge.desc}</p>
+              {bonusChapters.length > 0 && (
+                <p style={{ fontSize: 12, color: "#ffd166", marginTop: 8, fontFamily: "ui-monospace,monospace" }}>
+                  ✨ Cartes bonus débloquées ({bonusChapters.length}) : {bonusChapters.map((i) => CHAPTERS[i]?.epoque).join(" · ")}
+                </p>
+              )}
+            </div>
+          )}
           {/* la frise du voyage + la leçon calculée à partir des jauges */}
           <div style={{ textAlign: "left", background: "#0e1420", border: "1px solid #2a3648", borderRadius: 12, padding: "10px 14px" }}>
             <Frise collection={collection} />
@@ -1707,6 +1758,26 @@ export default function App() {
           {"  ·  "}
           <strong>{collection.filter((c) => c.perdu).length}</strong> message(s) perdu(s) en route
         </p>
+
+        {/* BADGE + score cumulé — en noir et blanc, imprimable */}
+        {fluxTotal > 0 && (() => {
+          const totalTarget = CHAPTERS.reduce((s, c) => s + (c.required || 3) * 5, 0);
+          const badge = computeBadge(fluxTotal, totalTarget);
+          const scorePct = Math.round((fluxTotal / totalTarget) * 100);
+          return (
+            <div style={{ border: "2px solid #000", padding: "8px 12px", marginBottom: 14 }}>
+              <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1 }}>
+                {badge.emoji} {badge.name.toUpperCase()} — {fluxTotal} points ({scorePct}%)
+              </div>
+              <div style={{ fontSize: 11, fontStyle: "italic", marginTop: 3 }}>{badge.desc}</div>
+              {bonusChapters.length > 0 && (
+                <div style={{ fontSize: 10.5, marginTop: 4 }}>
+                  ✨ Cartes bonus débloquées : {bonusChapters.map((i) => CHAPTERS[i]?.epoque).join(" · ")}
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {epoques.map((ep) => (
           <div key={ep.date} className="cp-epoque" style={{ marginBottom: 14 }}>
