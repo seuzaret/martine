@@ -1602,7 +1602,8 @@ export default function App() {
 
       {/* MEDIADEX plein écran (bouton 🃏) */}
       {showMediadex && (
-        <Mediadex unlocked={mediadex} onClose={() => setShowMediadex(false)} />
+        <Mediadex unlocked={mediadex} onClose={() => setShowMediadex(false)}
+          fluxTotal={fluxTotal} bonusChapters={bonusChapters} />
       )}
 
       {/* POUBELLE TEMPORELLE — apparaît une fois que le joueur a ramassé son

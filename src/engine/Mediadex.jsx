@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { allCards } from './mediadex.js';
 import MediaCard from './MediaCard.jsx';
+import TrophyCard, { TrophyTile } from './TrophyCard.jsx';
 import { CHAPTERS } from '../chapters/index.js';
 
 /* ============================================================
@@ -23,10 +24,13 @@ function findMessage(msgId) {
   return null;
 }
 
-export default function Mediadex({ unlocked = [], onClose }) {
+export default function Mediadex({ unlocked = [], onClose, fluxTotal = 0, bonusChapters = [] }) {
   const cards = useMemo(() => allCards(), []);
   const [open, setOpen] = useState(null); // {card, message} ou null
+  const [trophyOpen, setTrophyOpen] = useState(false);
   const unlockedSet = new Set(unlocked);
+  /* Cible totale du voyage : somme des cibles chapitre (required × 5). */
+  const totalTarget = useMemo(() => CHAPTERS.reduce((s, c) => s + (c.required || 3) * 5, 0), []);
 
   const byChapter = {};
   for (const c of cards) (byChapter[c.chapter] ||= []).push(c);
@@ -67,6 +71,24 @@ export default function Mediadex({ unlocked = [], onClose }) {
           Chaque invention de communication transmise à MARTINE t'a offert une carte.
           Trouve-les toutes pour compléter ton Mediadex. Clique une carte connue pour la revoir.
         </p>
+
+        {/* SECTION TROPHÉE : la carte spéciale « Chronaute », visible dès qu'on a
+            joué. Évolue avec le score cumulé du voyage (fluxTotal). */}
+        <section style={{ margin: '28px 0 0' }}>
+          <h2 style={{
+            color: '#ffd166', fontSize: 15, letterSpacing: 2, fontFamily: 'ui-monospace, monospace',
+            borderBottom: '1px solid #5a4028', paddingBottom: 4,
+          }}>
+            TROPHÉE
+          </h2>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+            gap: 12, marginTop: 12,
+          }}>
+            <TrophyTile fluxTotal={fluxTotal} totalTarget={totalTarget} onClick={() => setTrophyOpen(true)} />
+          </div>
+        </section>
 
         {Object.keys(byChapter).sort((a, b) => a - b).map((chap) => (
           <section key={chap} style={{ margin: '28px 0 0' }}>
@@ -137,6 +159,10 @@ export default function Mediadex({ unlocked = [], onClose }) {
         <MediaCard card={open.card} message={open.message}
           autoCloseMs={0}
           onClose={() => setOpen(null)} />
+      )}
+      {trophyOpen && (
+        <TrophyCard fluxTotal={fluxTotal} totalTarget={totalTarget}
+          bonusChapters={bonusChapters} onClose={() => setTrophyOpen(false)} />
       )}
     </div>
   );
