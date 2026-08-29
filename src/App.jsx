@@ -79,7 +79,7 @@ function JaugeTemporelle({ transmis, requis, total, destination, canJump, onJump
 
       {/* la colonne qui se remplit (de bas en haut) */}
       <div style={{ flex: "1 1 auto", width: 30, minHeight: 54, background: "#0a1119", border: "1px solid #26324a", borderRadius: 8, position: "relative", overflow: "hidden", display: "flex", flexDirection: "column-reverse" }}>
-        <div style={{ height: `${pct}%`, background: canJump ? "linear-gradient(0deg,#e8934a,#ffd166)" : "linear-gradient(0deg,#2f5a76,#7fd8ff)", transition: "height .7s cubic-bezier(.3,1.2,.5,1)", boxShadow: canJump ? "0 0 16px #ffd166" : "none" }} />
+        <div style={{ height: `${Math.max(0, pct)}%`, background: canJump ? "linear-gradient(0deg,#e8934a,#ffd166)" : "linear-gradient(0deg,#2f5a76,#7fd8ff)", transition: "height .5s ease-out", boxShadow: canJump ? "0 0 16px #ffd166" : "none" }} />
         {/* graduations : tous les 5 flux (~ 1 message principal) */}
         {Array.from({ length: nbGrads }).map((_, i) => (
           <div key={i} style={{ position: "absolute", left: 0, right: 0, bottom: `${((i + 1) * 5 / requis) * 100}%`, height: 1, background: "#0a1119" }} />
@@ -529,7 +529,10 @@ export default function App() {
      bloquant pour l'instant — on calibrera). */
   const bumpFlux = (delta) => {
     if (!delta) return;
-    setFlux((v) => Math.round((v + delta) * 10) / 10); // arrondi 0.1
+    /* On plafonne A ZERO en bas : impossible de creuser un trou. Le -N
+       s'affiche quand même (bulle flottante) pour que le joueur voie
+       qu'il a perdu quelque chose, même sur jauge déjà vide. */
+    setFlux((v) => Math.max(0, Math.round((v + delta) * 10) / 10));
     setFluxBubble({ delta, key: Date.now() });
     setTimeout(() => setFluxBubble((b) => (b && b.key ? null : b)), 1400);
   };
@@ -657,7 +660,8 @@ export default function App() {
         setCollection((c) => c.some((x) => x.id === rec.out) ? c : [...c, { id: rec.out, titre: m.title, emoji: m.emoji, date: chapter.date, jauges: m.jauges, fact: m.fact, perdu: true }]);
         setInv((v) => cleanup(v.filter((x) => !(rec.consume || []).includes(x)), newMade));
         poof(point, m.emoji); playSfx("dissolve");
-        say(`💨 « ${m.title} »… envolé. Le message a bien existé, mais son support ne nous est jamais parvenu. Tu récupères un fragment — et une leçon.`, "neutre");
+        bumpFlux(2); /* message perdu = fragment récupéré, +2 flux (partiel) */
+        say(`💨 « ${m.title} »… envolé. Le message a bien existé, mais son support ne nous est jamais parvenu. Tu récupères un fragment (+2⚡) — et une leçon.`, "neutre");
         setTimeout(() => setModal({ type: "lost", id: rec.out }), 850);
         return;
       }
@@ -671,8 +675,8 @@ export default function App() {
         /* certains messages ont leur propre son (ex. la flûte joue sa
            mélodie) : il part juste après l'arpège de transmission */
         if (m.sfx) setTimeout(() => playSfx(m.sfx), 950);
-        say(`◆ « ${chapter.messages[rec.out].title} » transmis au futur ! Mes circuits se rechargent, je sens l'excellence revenir.`, "content");
-        bumpFlux(3);
+        say(`◆ « ${chapter.messages[rec.out].title} » transmis au futur ! Mes circuits se rechargent, je sens l'excellence revenir (+5⚡).`, "content");
+        bumpFlux(5);
         setTimeout(() => setModal({ type: "fact", id: rec.out }), 750);
         unlockCard(rec.out, m);
         return;
