@@ -688,8 +688,10 @@ export default function App() {
     const nm = findNearMiss(chapter.nearMiss, a, b);
     setShake(true); setTimeout(() => setShake(false), 500);
     playSfx("fail");
-    /* -1 flux si t'aurais dû savoir (near-miss), -0.5 sinon (bzzt aléatoire) */
-    bumpFlux(nm ? -1 : -0.5);
+    /* Malus : -1 flux si t'aurais DÛ savoir (near-miss = idée pas absurde,
+       simplement mal branchée), -2 flux si combinaison au HASARD (bzzt). Le
+       hasard coûte cher pour pousser à réfléchir avant de combiner. */
+    bumpFlux(nm ? -1 : -2);
     say(nm ? nm.line : randomLine(chapter.failLines), "vexe");
   };
 
