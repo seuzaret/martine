@@ -890,8 +890,29 @@ export default function App() {
       <div style={{ ...card, maxHeight: "88vh", overflowY: "auto" }} onClick={(e) => e.stopPropagation()}>
         <h2 style={{ marginTop: 0, color: "#5eff9e", fontFamily: "ui-monospace,monospace", letterSpacing: 2, fontSize: 16 }}>⚙ RÉGLAGES</h2>
 
+        {/* ---- Actions rapides pendant le jeu ---- */}
+        <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10.5, letterSpacing: 2, color: "#7a879e", margin: "2px 0 8px" }}>🎮 ACTIONS</div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+          <button onClick={() => { setModal(null); toggleMute(); }}
+            style={{ background: "#141b26", color: muted ? "#5a6678" : "#c8d4e2", border: "1px solid #2a3648", borderRadius: 10, padding: "11px 12px", fontWeight: 700, cursor: "pointer", fontSize: 14, textAlign: "left" }}>
+            {muted ? "🔇 Son coupé" : "🔊 Son activé"}
+          </button>
+          <button onClick={() => { setModal(null); hint(); }}
+            style={{ background: "#141b26", color: "#ffd166", border: "1px solid #2a3648", borderRadius: 10, padding: "11px 12px", fontWeight: 700, cursor: "pointer", fontSize: 14, textAlign: "left" }}>
+            💡 Indice
+          </button>
+          <button onClick={() => { setModal(null); doReveal(); }}
+            style={{ background: "#141b26", color: "#c8d4e2", border: "1px solid #2a3648", borderRadius: 10, padding: "11px 12px", fontWeight: 700, cursor: "pointer", fontSize: 14, textAlign: "left" }}>
+            👁 Révéler les zones
+          </button>
+          <button onClick={() => setModal({ type: "journal" })}
+            style={{ background: "#141b26", color: "#c8d4e2", border: "1px solid #2a3648", borderRadius: 10, padding: "11px 12px", fontWeight: 700, cursor: "pointer", fontSize: 14, textAlign: "left" }}>
+            📔 Carnet de bord
+          </button>
+        </div>
+
         {/* ---- Confort de lecture (accessibilité) ---- */}
-        <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10.5, letterSpacing: 2, color: "#7a879e", margin: "2px 0 8px" }}>👁 CONFORT DE LECTURE</div>
+        <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10.5, letterSpacing: 2, color: "#7a879e", margin: "16px 0 8px" }}>👁 CONFORT DE LECTURE</div>
         <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
           <Toggle on={a11y.gros} onToggle={() => setA11y((s) => ({ ...s, gros: !s.gros }))}
             label="Texte plus grand" hint="Pour le vidéoprojecteur et le fond de la classe." />
@@ -1318,7 +1339,8 @@ export default function App() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, padding: "2px 12px 6px", flexWrap: "wrap" }}>
         <span style={{ fontSize: 17, fontWeight: 700, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>{chapter.emoji} {chapter.scenes[tab].name}</span>
         <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-          <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, color: "#5eff9e", opacity: 0.7 }} title="Messages transmis dans tout le voyage">◆ {msgs.length}/{ALL_MSGS.length}</span>
+          {/* seule jauge visible : le flux temporel. Petite bulle +N/-N flottante
+              qui monte à chaque gain ou perte, feedback direct. */}
           <span style={{ position: "relative", fontFamily: "ui-monospace,monospace", fontSize: 14, fontWeight: 700, color: canJump ? "#ffd166" : "#7fd8ff" }} title={`Flux temporel — ${canJump ? "prêt à partir !" : `encore ${Math.max(0, Math.ceil(fluxRequis - flux))} pour partir`}`}>
             ⚡ {flux}/{fluxRequis}
             {fluxBubble && (
@@ -1331,18 +1353,12 @@ export default function App() {
               </span>
             )}
           </span>
-          <button onClick={toggleMute} title={muted ? "Réactiver le son" : "Couper le son"} style={{ ...headBtn, color: muted ? "#5a6678" : "#c8d4e2" }}>{muted ? "🔇" : "🔊"}</button>
-          <button onClick={hint} style={{ ...headBtn, color: "#ffd166" }}>💡</button>
-          <button onClick={doReveal} title="Révéler brièvement les zones" style={headBtn}>👁</button>
-          {/* Bouton 🗺 retiré : chaque tableau porte déjà son propre décor situé.
-              Les cartes chapitre restent codées côté data.js et pourront être
-              réactivées si besoin — décommenter la ligne suivante. */}
-          {/* {chapter.carte && <button onClick={() => setModal({ type: "carte" })} title="Où sommes-nous ? (carte)" style={headBtn}>🗺</button>} */}
-          <button onClick={() => setModal({ type: "journal" })} style={headBtn}>📔</button>
+          {/* deux boutons seulement dans le bandeau — Mediadex et Réglages.
+              Le son, l'indice, la révélation, le carnet sont dans Réglages. */}
           <button onClick={() => setShowMediadex(true)} title={`Mediadex (${mediadex.length} cartes)`} style={headBtn}>🃏</button>
-          <button onClick={() => setModal({ type: "settings" })} title="Réglages · sauvegarde" style={headBtn}>⚙</button>
-          {/* sur écran large, le saut est dans la jauge temporelle à droite ;
-              sur écran étroit, on garde le bouton compact ici. */}
+          <button onClick={() => setModal({ type: "settings" })} title="Réglages, son, indice, carnet…" style={headBtn}>⚙</button>
+          {/* Sur écran étroit uniquement, le bouton compact de SAUT reste
+              dans le bandeau (sinon on l'a dans la jauge temporelle à droite). */}
           {!large && (
             <button onClick={jump} disabled={!canJump}
               title={canJump ? `Saut vers ${chapter.destination}` : (jumpBloque || `Encore ${Math.max(0, Math.ceil(fluxRequis - flux))} flux pour partir`)}
