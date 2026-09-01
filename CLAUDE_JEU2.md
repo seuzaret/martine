@@ -57,17 +57,20 @@ Un remède existerait, à base d'un ingrédient très ancien (à définir —
 plante préhistorique, minéral millénaire, technique de préparation
 oubliée). Personne ne sait exactement lequel, ni où le trouver.
 
-### 2.3 La pionnière disparue
+### 2.3 Camille, la pionnière disparue
 
-Il y a longtemps, avant même l'arrivée du joueur, **une chronaute
-pionnière** est partie dans le passé chercher ce remède. Elle
-connaissait à peu près les époques. Elle est partie avec la
-**deuxième** MARTINE (celle que le joueur n'utilise pas). Elle n'est
-jamais rentrée. Depuis, il ne reste qu'UNE MARTINE, celle du joueur.
+Il y a longtemps, avant même l'arrivée du joueur, **Camille** — la
+chronaute-pionnière, la première à avoir voyagé dans le temps — est
+partie chercher ce remède. Elle a pris la deuxième MARTINE (celle que
+le joueur n'utilise pas). Elle n'est jamais rentrée. Depuis, il ne
+reste qu'UNE MARTINE, celle du joueur.
 
-Elle a laissé des **notes** dans les époques qu'elle a traversées —
-son journal de bord, des indices sur ce qu'elle cherchait, sur ce
-qu'elle a compris. Ces notes traversent le temps mais sont éparpillées.
+Camille a laissé des **notes** dans les époques qu'elle a traversées —
+un mot ici, une gravure là, une phrase peinte sur un mur ailleurs.
+Chaque note s'inscrit sur le SUPPORT CARACTÉRISTIQUE de son époque
+(paroi de grotte, tablette d'argile, papyrus, manuscrit, gazette
+imprimée, télégramme…). Le joueur les collecte comme des indices
+d'enquête.
 
 ### 2.4 Le raccord entre jeu 1 et jeu 2
 
@@ -142,57 +145,87 @@ DU TEMPS — LE DISCERNEMENT ».
 
 ### 3.1 Boucle principale
 
-1. Le joueur démarre → tirage au sort de l'**époque cible** parmi les 9.
-2. Il navigue librement entre les 9 chapitres (déjà connus, décors
-   inchangés).
-3. Dans chaque tableau, il cherche des **indices** (2 ou 3 par époque).
-4. Les indices lui disent CHAUD / FROID par rapport à l'époque cible
-   (visuellement : MARTINE dit « je sens quelque chose ici »).
-5. Une fois la bonne époque identifiée, il trouve la **pionnière**
-   cachée dans un tableau.
-6. Elle lui demande un **objet local** à trouver (mini-quête).
-7. Objet trouvé → retour au futur → écran de fin.
+1. **Identification** : au démarrage d'une partie, l'élève entre son
+   prénom (« bienvenue, Léa »). Une sauvegarde par prénom, utile en
+   classe (chaque élève retrouve son voyage au CDI).
+2. Tirage au sort de l'**époque cible** parmi les 9.
+3. Le joueur navigue librement entre les 9 chapitres (déjà connus,
+   décors inchangés).
+4. Dans chaque tableau, il ramasse des **notes** de Camille laissées
+   sur les supports caractéristiques de l'époque. Certains PNJ
+   existants gagnent aussi une **réplique conditionnelle** (« une
+   drôle de voyageuse est passée »).
+5. En croisant les notes, le joueur comprend dans quelle époque
+   Camille est bloquée.
+6. Dans la bonne époque, Camille est **cachée dans le décor** —
+   hotspot discret à trouver.
+7. Elle demande un **objet local** à récupérer (petite énigme).
+8. Objet trouvé → retour au futur → écran de fin.
 
-### 3.2 Système d'indices
+### 3.2 Système d'indices — les notes de Camille sur les supports
 
-Trois catégories par époque :
+**Pas de chaud/froid, pas de boussole MARTINE**. Le joueur reconstitue
+le parcours de Camille comme un historien : par les traces
+matérielles qu'elle a laissées sur le SUPPORT CARACTÉRISTIQUE de chaque
+époque. C'est la mécanique-clé, et elle recolle au fil rouge du jeu 1
+(chaque époque a son support).
 
-- **Note de la pionnière** (1 hotspot par époque) — un morceau de
-  parchemin, page de carnet, gravure moderne, selon le support-clé de
-  l'époque. La note est neutre dans les mauvaises époques
-  (« j'ai fait halte ici, je repars vers le nord »). Dans la bonne
-  époque, elle dit précisément ce qu'elle cherche.
-- **PNJ témoin** — les personnages EXISTANTS du jeu 1 gagnent une
-  réplique conditionnelle : « une drôle de dame est passée » (ou pas).
-  Répliques réutilisent le portrait déjà fait.
-- **Objet moderne oublié** — SEULEMENT dans la bonne époque. Un petit
-  objet incongru caché dans le décor (téléphone en argile,
-  bandeau électronique dans les vitraux…).
+| Époque | Support de la note de Camille |
+|---|---|
+| Paléo | Peinture sur paroi de grotte |
+| Néo | Gravure sur mégalithe / tatouage sur figurine |
+| Mésopotamie | Tablette d'argile cunéiforme |
+| Antiquité | Rouleau de papyrus ou inscription romaine |
+| MA | Enluminure marginale dans un manuscrit |
+| Moderne | Feuille imprimée / gazette |
+| XIXe | Télégramme Morse ou plaque photographique |
+| XXe | Cassette audio ou photo argentique |
+| XXIe | Fichier corrompu sur un smartphone abandonné |
 
-### 3.3 Le pool de pionnières
+Chaque note est un objet qui entre dans le sac (comme un fragment).
+Cliquer dessus **révèle son contenu** dans une modale, avec l'illusion
+que c'est écrit sur le support de l'époque (police, couleur, cadrage
+adaptés).
 
-Six profils tirés au sort en début de partie, chacun avec :
-- Un **nom** et un **portrait** (nouveau).
-- Un **objet à retrouver** dans son époque (l'ingrédient du remède).
-- Une **énigme locale** simple (donner le bon objet parmi 2-3 pièges).
-- Une **réplique de retrouvailles** distinctive.
+- **Notes des mauvaises époques** : Camille raconte ce qu'elle a fait
+  d'ambiance, mais rien de décisif (« j'ai étudié la fresque, ce n'est
+  pas ici, je repars »).
+- **Note de la bonne époque** : elle décrit précisément où elle est
+  bloquée (« je me suis abritée près du grand mégalithe », « je campe
+  dans la 3e alcôve du monastère »).
 
-Exemples (à affiner) :
-1. **Léa la scribe** — ingénieure textile, cherche des fibres organiques
-   millénaires. Bloquée au Néolithique.
-2. **Marco l'archiviste** — spécialiste des supports durables. Bloqué à
-   la bibliothèque d'Alexandrie.
-3. **Sara la biologiste** — cherche un pigment médicinal préhistorique
-   dans l'ocre de Lascaux.
-4. **Kenji le mécanicien** — bloqué à l'atelier de Gutenberg (les pièces
-   de sa MARTINE cassée).
-5. **Nadia la codeuse** — cherche l'algorithme perdu du télégraphe
-   Morse au XIXe.
-6. **Owen le musicien** — bloqué à Pompéi, cherche une fréquence
-   sonore ancienne.
+**En complément** : 2 ou 3 PNJ par époque gagnent une réplique
+conditionnelle du type « une drôle de voyageuse est passée » — clic
+sur eux, dialogue court. Répliques réutilisent les portraits existants.
 
-Chaque pionnière ramène **une variante de remède** et un ton différent
-au retour (plus émouvant, plus scientifique, plus humoristique…).
+**Facteur chance et facteur enquête cohabitent** : rien n'empêche le
+joueur de cliquer partout dans la bonne époque et tomber sur Camille
+sans avoir lu une seule note. Rare, mais possible. L'enquête est la
+voie normale ; la chance ne bloque pas les têtes brûlées.
+
+**Combien de notes suffisent** : 2 ou 3 notes suffisent pour
+comprendre. Pas de gate technique, on lit chaque note en la ramassant.
+
+### 3.3 Personnage unique : Camille
+
+**Un seul personnage**, pas de pool tiré au sort. Cette révision par
+rapport à la V0 de la note : la richesse vient de l'aléatoire de
+l'**époque** (9 possibilités, ~9 rejouabilités), pas de la variété des
+persos à retrouver. Un seul personnage à créer, mieux fouillé, avec
+une vraie voix.
+
+- **Nom** : Camille (prénom non-genré en français — chaque joueur, garçon
+  ou fille, s'y projette sans être troublé).
+- **Fonction** : chronaute-pionnière, la première à avoir voyagé avec la
+  MARTINE-jumelle. Partie il y a dix ans. Personne ne l'a revue.
+- **Portrait** : traits doux et légèrement androgynes, cheveux mi-longs
+  attachés, tunique de voyage neutre. Un seul portrait, réutilisé
+  partout.
+
+Ce qui varie d'une partie à l'autre : **l'époque où elle est bloquée**
+et **la nature de l'objet à trouver** dans cette époque. La conversation
+de retrouvailles adapte quelques répliques selon l'époque, sans
+multiplier les portraits.
 
 ### 3.4 Le remède
 
@@ -228,11 +261,19 @@ mini-quête, pas deux.
 
 - **Un nouveau tableau « Le futur »** avec les chronautes (utilisé aux
   raccords jeu 1 → jeu 2 → jeu 3).
-- **6 portraits de pionnières** (SVG comme les portraits existants).
-- **9 hotspots « note de la pionnière »** (un par époque).
-- **9 hotspots « objet moderne oublié »** (un par époque, seule la bonne
-  époque révèle le sien à cette partie).
-- **6 mini-scènes de retrouvailles** (dialogue + énigme locale).
+- **1 portrait de Camille** (SVG comme les portraits existants, traits
+  androgynes).
+- **3 portraits chronautes du futur** : Elias (chef), Mira (ingénieure),
+  et le cadre-photo de Camille.
+- **9 hotspots « note de Camille »** (un par époque, sur le support
+  caractéristique — paroi peinte, tablette d'argile, papyrus, etc.).
+- **9 mini-modales « lire la note »** (rendu qui imite le support).
+- **~18 répliques conditionnelles** sur les PNJ existants du jeu 1
+  (2 par époque : « une drôle de voyageuse est passée »).
+- **9 mini-scènes de retrouvailles** (une par époque possible où Camille
+  peut être bloquée) + l'énigme locale associée.
+- **Système d'identification** au démarrage : saisie du prénom,
+  sauvegarde par prénom.
 - **Écran de fin du jeu 2** avec guérison des chronautes + teaser jeu 3.
 - **Système de tirage au sort** au démarrage d'une partie.
 - **Système d'indices « chaud/froid »** dans MARTINE.
@@ -285,13 +326,13 @@ Divergent). Ne pas édulcorer.
 
 ## 7. Questions ouvertes (à trancher au fil du dev)
 
-- **Twist « la pionnière = toi-plus-vieux »** : gardé en réserve ou
-  intégré dès le jeu 2 ?
+- **Twist « Camille = toi-plus-vieux »** : gardé en réserve ou intégré
+  dès le jeu 2 ? Le prénom neutre le rend possible sans reformulation.
 - **Réutiliser la sauvegarde du jeu 1** : le jeu 2 démarre-t-il
   uniquement après complétion du jeu 1, ou est-il jouable en autonome
   (mode découverte) ?
-- **Identification des élèves** (une sauvegarde par prénom) : à faire
-  avant ou pendant le jeu 2 ?
+- **Identification des élèves** : validée, à intégrer dès la fin du
+  jeu 1 (nouvelle scène des chronautes) pour être prête au jeu 2.
 - **Contribution de la pionnière au badge Mediadex** : elle donne une
   carte spéciale à la fin ? Une variante trophée « Chronaute-sauveteur » ?
 
