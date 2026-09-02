@@ -152,6 +152,7 @@ export default function App() {
   const [screen, setScreen] = useState("title"); // title | play | transition | end
   const [transitionTo, setTransitionTo] = useState(null); // chapitre visé pendant la transition
   const [maxReached, setMaxReached] = useState(0); // plus haut chapitre débloqué (menu titre)
+  const [mode, setMode] = useState("jeu1");        // "jeu1" (voyage principal) | "jeu2" (enquête Al3x1A)
   const [tab, setTab] = useState(CHAPTERS[0].startScene); // tableau courant
   const [dialog, setDialog] = useState({ lines: CHAPTERS[0].intro, idx: 0, mood: "neutre" });
   const [inv, setInv] = useState([]);            // besace (identifiants d'objets)
@@ -241,9 +242,9 @@ export default function App() {
      partie existante avec un état vide). */
   useEffect(() => {
     if (screen === "play" || screen === "end") {
-      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom });
+      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, mode }, mode);
     }
-  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom]);
+  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, mode]);
 
   /* CONFORT DE LECTURE : applique les classes sur <html> (le CSS fait le
      reste, moteur compris) et mémorise le choix sur l'appareil. */
@@ -345,11 +346,20 @@ export default function App() {
   /* Démarre une NOUVELLE partie (tout remis à zéro, chapitre 1).
      Passe d'abord par l'intro narrative (6 tableaux illustrés). */
   const newGame = () => {
+    setMode("jeu1");
     setChapterIndex(0); setMaxReached(0);
     setInv([]); setMsgs([]); setMade([]); setFlags({}); setCollection([]); setQuete(0);
     setMediadex([]); setSosSent([]); setFlux(0); setFluxTotal(0); setBonusChapters([]);
     setTab(CHAPTERS[0].startScene); setDialog({ lines: CHAPTERS[0].intro, idx: 0, mood: "neutre" });
     setScreen("intro");
+  };
+
+  /* Démarre une NOUVELLE PARTIE DE JEU 2 (« Al3x1A ») — placeholder
+     tant que les mécaniques du jeu 2 ne sont pas prêtes. */
+  const newGameJeu2 = () => {
+    setMode("jeu2");
+    setInv([]); setMsgs([]); setMade([]); setFlags({}); setQuete(0);
+    setScreen("jeu2Placeholder");
   };
 
   /* Charge un chapitre. L'inventaire et l'état du chapitre repartent
@@ -394,10 +404,13 @@ export default function App() {
     setScreen("play");
   };
 
-  /* Reprend la partie sauvegardée (bouton « Reprendre »). */
-  const resume = () => {
-    const s = loadSave();
+  /* Reprend la partie sauvegardée (bouton « Reprendre »). Le SLOT à
+     charger est passé en argument : "jeu1" par défaut, "jeu2" quand
+     on reprend le jeu 2. */
+  const resume = (slot = "jeu1") => {
+    const s = loadSave(slot);
     if (!s) { newGame(); return; }
+    setMode(s.mode || slot);
     const i = s.chapterIndex ?? 0;
     setChapterIndex(i);
     setMaxReached(s.maxReached ?? i);
@@ -962,8 +975,13 @@ export default function App() {
 
   /* ---------- écran titre ---------- */
   if (screen === "title") {
-    const saved = loadSave();
+    const saved = loadSave("jeu1");
     const saveExists = saved !== null;
+    /* JEU 2 débloqué si le voyage principal a été terminé au moins
+       une fois (l'écran end a été atteint). Le save existe encore et
+       porte ce marqueur. */
+    const jeu1Fini = !!(saved && saved.screen === "end");
+    const savedJeu2 = loadSave("jeu2");
     /* chapitres débloqués : le plus haut atteint, lu aussi dans la
        sauvegarde (car `maxReached` repart à 0 tant qu'on n'a pas repris) */
     const menuMax = Math.max(maxReached, saved?.maxReached ?? saved?.chapterIndex ?? 0);
@@ -1026,6 +1044,33 @@ export default function App() {
                 ▶ DÉMARRER
               </button>
             )}
+
+            {/* ─── BOUTON JEU 2 ─── se débloque après avoir fini le jeu 1 */}
+            <div style={{ marginTop: 8, padding: "10px 16px", border: `1px ${jeu1Fini ? "solid" : "dashed"} ${jeu1Fini ? "#7fd8ff" : "#2a3648"}`, borderRadius: 12, minWidth: 300, display: "flex", flexDirection: "column", alignItems: "center", gap: 8, opacity: jeu1Fini ? 1 : 0.55 }}>
+              <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, letterSpacing: 3, color: "#7fd8ff" }}>SUITE DE L'AVENTURE</div>
+              {savedJeu2 ? (
+                <>
+                  <button onClick={() => resume("jeu2")}
+                    style={{ background: "#7fd8ff", color: "#06110b", border: "none", borderRadius: 10, padding: "10px 22px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 2, boxShadow: "0 0 18px rgba(127,216,255,0.45)" }}>
+                    ▶ REPRENDRE JEU 2 — AL3X1A
+                  </button>
+                  <button onClick={() => setModal({ type: "confirmNewJeu2" })}
+                    style={{ background: "transparent", color: "#8fa3bd", border: "1px solid #2a3648", borderRadius: 8, padding: "6px 14px", fontSize: 11, cursor: "pointer", fontFamily: "ui-monospace,monospace" }}>
+                    ↺ Nouvelle enquête
+                  </button>
+                </>
+              ) : jeu1Fini ? (
+                <button onClick={() => setModal({ type: "askPrenom", after: newGameJeu2 })}
+                  style={{ background: "#7fd8ff", color: "#06110b", border: "none", borderRadius: 10, padding: "10px 22px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 2, boxShadow: "0 0 18px rgba(127,216,255,0.45)" }}>
+                  ▶ JEU 2 — AL3X1A
+                </button>
+              ) : (
+                <div style={{ fontSize: 12, color: "#5a6678", fontStyle: "italic", textAlign: "center" }}>
+                  🔒 À débloquer en terminant le voyage principal.
+                </div>
+              )}
+            </div>
+
             <div style={{ display: "flex", gap: 20, marginTop: 4 }}>
               <button onClick={() => setModal({ type: "settings" })}
                 style={{ background: "transparent", color: "#5a6678", border: "none", cursor: "pointer", fontSize: 12, fontFamily: "ui-monospace,monospace" }}>
@@ -1089,7 +1134,21 @@ export default function App() {
               </p>
               <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                 <button onClick={() => setModal(null)} style={{ flex: 1, background: "#1a2536", color: "#e8eef5", border: "1px solid #2a3648", borderRadius: 10, padding: "12px", fontWeight: 700, cursor: "pointer" }}>Annuler</button>
-                <button onClick={() => { clearSave(); setModal({ type: "askPrenom", after: newGame }); }} style={{ flex: 1, background: "#e8934a", color: "#111", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer" }}>Nouvelle partie</button>
+                <button onClick={() => { clearSave("jeu1"); setModal({ type: "askPrenom", after: newGame }); }} style={{ flex: 1, background: "#e8934a", color: "#111", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer" }}>Nouvelle partie</button>
+              </div>
+            </div>
+          </div>
+        )}
+        {modal?.type === "confirmNewJeu2" && (
+          <div style={overlay} onClick={() => setModal(null)}>
+            <div style={card} onClick={(e) => e.stopPropagation()}>
+              <h2 style={{ marginTop: 0, color: "#7fd8ff", fontSize: 20, textAlign: "center" }}>Effacer l'enquête en cours ?</h2>
+              <p style={{ fontSize: 14, color: "#c8d4e2", lineHeight: 1.6 }}>
+                Une nouvelle enquête Al3x1A remplacera ta progression jeu 2 sauvegardée. Ton voyage principal (jeu 1) est indépendant, il ne sera pas touché.
+              </p>
+              <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                <button onClick={() => setModal(null)} style={{ flex: 1, background: "#1a2536", color: "#e8eef5", border: "1px solid #2a3648", borderRadius: 10, padding: "12px", fontWeight: 700, cursor: "pointer" }}>Annuler</button>
+                <button onClick={() => { clearSave("jeu2"); setModal({ type: "askPrenom", after: newGameJeu2 }); }} style={{ flex: 1, background: "#7fd8ff", color: "#06110b", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer" }}>Nouvelle enquête</button>
               </div>
             </div>
           </div>
@@ -1157,6 +1216,42 @@ export default function App() {
      S'affiche juste après le saut depuis le DERNIER chapitre, avant
      l'épilogue. Elias, Mira, portrait-cadre d'Al3x1A. Séquence de
      dialogues scriptée. Fin de la séquence → écran épilogue. */
+  /* ---------- écran PLACEHOLDER du JEU 2 (Al3x1A) ---------------------
+     Écran d'attente en construction : le jeu 2 démarre, l'infrastructure
+     est prête (mode, slot séparé, save par prénom), mais les mécaniques
+     (notes sur supports, retrouvailles, remède) arrivent dans la prochaine
+     étape. Bouton retour au menu titre. */
+  if (screen === "jeu2Placeholder") {
+    return (
+      <div style={{ minHeight: "100vh", background: "radial-gradient(ellipse at 50% 30%, #14233a 0%, #080d16 70%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, fontFamily: "Palatino, Georgia, serif", color: "#e8eef5" }}>
+        {cheatPanel}
+        <div style={{ maxWidth: 540, textAlign: "center" }}>
+          <div style={{ fontSize: 58 }}>🌀</div>
+          <div style={{ fontFamily: "ui-monospace,monospace", color: "#7fd8ff", letterSpacing: 3, fontSize: 12, marginTop: 6 }}>JEU 2 · AL3X1A</div>
+          <h1 style={{ fontFamily: TITRE_FONT, fontSize: 38, textTransform: "uppercase", letterSpacing: "0.09em", background: "linear-gradient(100deg, #7fd8ff 0%, #ffd166 60%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", margin: "8px 0 4px" }}>
+            En construction
+          </h1>
+          <p style={{ fontSize: 15, lineHeight: 1.65, color: "#c8d4e2", marginTop: 14 }}>
+            L'enquête pour retrouver Al3x1A n'est pas encore prête à jouer.
+            Ta partie de jeu 2 est déjà réservée dans un slot séparé — dès
+            que les notes, les époques et le remède seront branchés, tu
+            reprendras ici même sans rien perdre.
+          </p>
+          <p style={{ fontSize: 13, lineHeight: 1.6, color: "#8fa3bd", marginTop: 12, fontStyle: "italic" }}>
+            En attendant, tu peux rejouer le voyage principal pour explorer
+            les époques que tu n'as pas encore visitées.
+          </p>
+          <div style={{ marginTop: 24, display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+            <button onClick={() => { setMode("jeu1"); setScreen("title"); }}
+              style={{ background: "#141b26", color: "#c8d4e2", border: "1px solid #2a3648", borderRadius: 10, padding: "10px 20px", fontWeight: 700, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
+              ← Retour au menu
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (screen === "chronautes") {
     return (
       <>
