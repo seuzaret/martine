@@ -34,6 +34,7 @@ import { SosButton, SosOverlay } from "./engine/SosSignal.jsx";
 import IntroStory from "./engine/IntroStory.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
+import StationChronautes from "./chapters/epilogue/StationChronautes.jsx";
 
 /* Police « épique » du titre : on tente d'abord de belles polices gravées
    (souvent présentes sur les PC scolaires via Office), avec repli élégant.
@@ -1114,6 +1115,19 @@ export default function App() {
     );
   }
 
+  /* ---------- écran CHRONAUTES : rencontre au futur (2287) ---------------
+     S'affiche juste après le saut depuis le DERNIER chapitre, avant
+     l'épilogue. Elias, Mira, portrait-cadre de Camille. Séquence de
+     dialogues scriptée. Fin de la séquence → écran épilogue. */
+  if (screen === "chronautes") {
+    return (
+      <>
+        {cheatPanel}
+        <StationChronautes onContinue={() => setScreen("epilogue")} />
+      </>
+    );
+  }
+
   /* ---------- écran ÉPILOGUE : « Ton message pour +20 000 ans » ----------
      Pas de décor, pas de besace : une question, des supports, et une
      réponse argumentée de MARTINE. Il n'y a pas de bonne réponse — le
@@ -1244,6 +1258,18 @@ export default function App() {
                   {EPILOGUE.DEBAT_TITRE}
                 </h2>
                 <p style={{ fontSize: 14, lineHeight: 1.65, color: "#c8d4e2", fontStyle: "italic", margin: 0 }}>« {EPILOGUE.DEBAT} »</p>
+              </div>
+
+              {/* Teaser du JEU 2 : LA PIONNIÈRE — s'affiche après la fin du voyage. */}
+              <div style={{ border: "2px dashed #7fd8ff", borderRadius: 12, padding: "18px 20px", marginTop: 16, background: "radial-gradient(ellipse at 50% 50%, rgba(127,216,255,0.08), transparent)", textAlign: "center" }}>
+                <div style={{ fontSize: 38, marginBottom: 8 }}>🌀</div>
+                <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3, color: "#7fd8ff", marginBottom: 6 }}>À BIENTÔT DANS LES FILS DU TEMPS</div>
+                <div style={{ fontFamily: TITRE_FONT, fontSize: 26, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", background: "linear-gradient(100deg, #7fd8ff 0%, #ffd166 60%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", lineHeight: 1.15 }}>
+                  La Pionnière
+                </div>
+                <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#c8d4e2", margin: "10px auto 0", maxWidth: 460, fontStyle: "italic" }}>
+                  Camille est quelque part dans les époques que tu viens de traverser. Bientôt, tu pourras la chercher — et lui ramener enfin le remède qu'elle est partie trouver.
+                </p>
               </div>
             </>
           )}
@@ -1649,7 +1675,7 @@ export default function App() {
         <SosOverlay muted={muted} onDone={() => {
           setSosOpen(false);
           // le vrai saut temporel se fait après l'animation
-          if (isLastChapter) { setEpiChoice(null); setScreen("epilogue"); }
+          if (isLastChapter) { setEpiChoice(null); setScreen("chronautes"); }
           else { setTransitionTo(chapterIndex + 1); setScreen("transition"); }
         }} />
       )}
