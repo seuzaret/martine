@@ -194,147 +194,220 @@ function DecorStation() {
         <radialGradient id="st-sun" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#fff4c8" stopOpacity="0.7" /><stop offset="100%" stopColor="#f8c058" stopOpacity="0" /></radialGradient>
       </defs>
       {/* CIEL doux post-apo lumineux */}
-      <rect width="1000" height="380" fill="url(#st-sky)" />
-      {/* soleil chaleureux */}
-      <circle cx="180" cy="120" r="100" fill="url(#st-sun)" />
-      <circle cx="180" cy="120" r="28" fill="#fff4c8" opacity="0.9" />
-      {/* nuages */}
-      <ellipse cx="440" cy="90" rx="120" ry="8" fill="#f0e0c0" opacity="0.55" />
-      <ellipse cx="740" cy="130" rx="100" ry="6" fill="#f0e0c0" opacity="0.5" />
-      {/* Collines lointaines avec vestiges de villes */}
-      <path d="M0 340 L0 260 Q100 240 200 250 Q300 260 400 245 Q500 260 600 240 Q700 260 800 245 Q900 260 1000 250 L1000 340 Z" fill="#6a7898" opacity="0.6" />
-      {/* silhouettes de gratte-ciels effondrés au loin */}
-      {[[220, 260, 40, 60], [340, 245, 30, 75], [610, 240, 45, 80], [780, 250, 35, 65], [880, 245, 40, 70]].map(([x, y, w, h], i) => (
-        <g key={i} opacity="0.7">
-          <path d={`M${x} ${y} L${x} ${y - h} L${x + w * 0.6} ${y - h + 8} L${x + w * 0.6} ${y - h * 0.7} L${x + w} ${y - h * 0.6} L${x + w} ${y}`} fill="#3a4858" />
-          {/* fenêtres cassées */}
-          <path d={`M${x + 4} ${y - h * 0.7} l3 3 M${x + 12} ${y - h * 0.5} l3 3 M${x + 20} ${y - h * 0.3} l3 3`} stroke="#7a8898" strokeWidth="0.5" opacity="0.6" />
-        </g>
-      ))}
-      {/* nature reprend ses droits — mousses vertes sur les vestiges */}
-      <path d="M200 258 q6 -6 12 0 M340 244 q4 -4 8 0 M620 240 q6 -4 12 0" stroke="#5a7048" strokeWidth="1.5" fill="none" opacity="0.7" />
+      <rect width="1000" height="280" fill="url(#st-sky)" />
+      {/* soleil chaleureux au loin */}
+      <circle cx="180" cy="80" r="80" fill="url(#st-sun)" />
+      <circle cx="180" cy="80" r="24" fill="#fff4c8" opacity="0.9" />
+      {/* nuages doux + traînée */}
+      <ellipse cx="440" cy="60" rx="120" ry="7" fill="#f0e0c0" opacity="0.6" />
+      <ellipse cx="740" cy="90" rx="100" ry="5" fill="#f0e0c0" opacity="0.5" />
+      <ellipse cx="620" cy="120" rx="140" ry="4" fill="#e0c898" opacity="0.35" />
+      {/* traînée orange lointaine (pollution résiduelle qui s'estompe) */}
+      <ellipse cx="500" cy="180" rx="500" ry="10" fill="#c88848" opacity="0.15" />
 
-      {/* SOL de terre battue avec chemin en dalles */}
-      <rect y="340" width="1000" height="220" fill="url(#st-sol)" />
-      {/* jardins hydroponiques en rangs (arrière-plan) */}
-      {[[100, 380], [220, 388], [340, 380], [880, 388]].map(([x, y], i) => (
+      {/* Oiseaux au loin (V) — la vie revient */}
+      <g opacity="0.55" transform="translate(560,140)">
+        <path d="M0 0 q-3 -3 -6 0 M0 0 q3 -3 6 0" stroke="#3a2818" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+        <path d="M22 12 q-3 -3 -6 0 M22 12 q3 -3 6 0" stroke="#3a2818" strokeWidth="1" fill="none" strokeLinecap="round" />
+        <path d="M-22 12 q-3 -3 -6 0 M-22 12 q3 -3 6 0" stroke="#3a2818" strokeWidth="1" fill="none" strokeLinecap="round" />
+      </g>
+
+      {/* MONTAGNES LOINTAINES (bleu-lavande) */}
+      <path d="M0 280 L0 200 Q120 170 240 190 Q360 175 480 195 Q600 175 720 200 Q840 175 960 195 L1000 200 L1000 280 Z" fill="#8898b0" opacity="0.5" />
+      {/* neige sur les sommets */}
+      <path d="M120 175 l16 12 l-10 4 l-6 -8 z M480 195 l14 8 l-8 4 l-6 -6 z M720 200 l12 8 l-8 4 l-4 -6 z" fill="#f0f0e8" opacity="0.7" />
+
+      {/* Collines rapprochées avec vestiges de villes */}
+      <path d="M0 280 L0 220 Q80 200 160 210 Q240 220 320 205 Q400 220 480 200 Q560 220 640 205 Q720 220 800 205 Q880 220 1000 210 L1000 280 Z" fill="#6a7898" opacity="0.75" />
+      {/* Silhouettes de gratte-ciels EFFONDRÉS au loin, plus nombreux, plus détaillés */}
+      {[[80, 220, 30, 70, 0.85], [140, 218, 28, 55, 0.6], [220, 215, 40, 90, 0.9], [280, 220, 24, 45, 0.75], [340, 210, 32, 100, 0.95], [400, 218, 26, 60, 0.8], [500, 215, 36, 95, 0.9], [560, 220, 22, 40, 0.7], [610, 210, 44, 105, 0.95], [680, 218, 28, 65, 0.8], [750, 212, 34, 85, 0.9], [820, 218, 26, 55, 0.75], [880, 210, 38, 90, 0.85], [940, 218, 24, 50, 0.7]].map(([x, y, w, h, o], i) => {
+        // certains gratte-ciels sont effondrés en biais
+        const cassure = i % 3 === 1;
+        const inclinaison = i % 4 === 2 ? 6 : 0;
+        return (
+          <g key={i} opacity={o} transform={`translate(${x},${y}) rotate(${inclinaison})`}>
+            {cassure ? (
+              // silhouette cassée en son milieu
+              <path d={`M0 0 L0 -${h * 0.6} L${w * 0.3} -${h * 0.7} L${w * 0.5} -${h * 0.4} L${w} -${h * 0.5} L${w} 0 Z`} fill="#2a3448" />
+            ) : (
+              <path d={`M0 0 L0 -${h} L${w * 0.6} -${h + 4} L${w * 0.6} -${h * 0.65} L${w} -${h * 0.55} L${w} 0 Z`} fill="#2a3448" />
+            )}
+            {/* fenêtres carrées cassées */}
+            {Array.from({ length: Math.floor(h / 12) }).map((_, k) => (
+              <g key={k}>
+                <rect x={w * 0.15} y={-h + k * 12 + 4} width="3" height="3" fill={k % 2 ? "#0a0c14" : "#5a6878"} opacity="0.7" />
+                <rect x={w * 0.4} y={-h + k * 12 + 4} width="3" height="3" fill={k % 3 ? "#0a0c14" : "#5a6878"} opacity="0.7" />
+                <rect x={w * 0.7} y={-h + k * 12 + 4} width="3" height="3" fill={k % 2 ? "#0a0c14" : "#5a6878"} opacity="0.7" />
+              </g>
+            ))}
+            {/* poutrelles d'acier apparentes au sommet cassé */}
+            {cassure && (
+              <path d={`M${w * 0.3} -${h * 0.7} L${w * 0.35} -${h * 0.8} M${w * 0.4} -${h * 0.72} L${w * 0.42} -${h * 0.85}`} stroke="#5a5060" strokeWidth="0.6" opacity="0.7" />
+            )}
+          </g>
+        );
+      })}
+
+      {/* Végétation qui reprend ses droits — lierre, mousses vertes qui remontent sur les vestiges */}
+      <path d="M50 220 q4 -20 8 -30 M180 218 q6 -30 12 -50 M280 220 q4 -20 8 -35 M400 218 q5 -22 10 -38 M560 220 q4 -22 8 -36 M700 218 q6 -30 12 -50 M820 218 q4 -20 8 -36 M940 218 q3 -18 6 -30" stroke="#4a6828" strokeWidth="1.5" fill="none" opacity="0.75" />
+      {/* touffes vertes au sommet des gratte-ciels effondrés */}
+      {[[100, 155], [240, 130], [365, 115], [520, 125], [630, 110], [770, 130], [900, 125]].map(([x, y], i) => (
+        <ellipse key={i} cx={x} cy={y} rx="8" ry="4" fill="#5a7838" opacity="0.85" />
+      ))}
+      {/* petit arbre pionnier sur une tour effondrée */}
+      <g transform="translate(370,110)">
+        <path d="M0 0 L0 -12" stroke="#3a2818" strokeWidth="1.2" />
+        <ellipse cx="0" cy="-14" rx="6" ry="4" fill="#4a6828" />
+        <ellipse cx="-2" cy="-16" rx="5" ry="3" fill="#5a7838" />
+      </g>
+
+      {/* SOL de terre battue — commence sous les collines */}
+      <rect y="280" width="1000" height="280" fill="url(#st-sol)" />
+      {/* Fissures et détritus sur le sol (côté désaffecté) */}
+      <path d="M0 340 q60 -3 120 3 q80 6 160 -2 q80 -5 160 4 q80 6 160 -3 q80 -5 160 3 q80 6 160 -2" stroke="#3a2818" strokeWidth="0.6" fill="none" opacity="0.7" />
+      <path d="M0 400 q100 4 200 -3 q100 -5 200 4 q100 5 200 -2 q100 -5 200 3 q100 4 200 -2" stroke="#3a2818" strokeWidth="0.6" fill="none" opacity="0.5" />
+      {/* débris épars, tôles rouillées au sol, câbles pendants */}
+      <path d="M60 470 q20 -6 40 2 q-16 4 -40 -2 Z" fill="#7a3818" opacity="0.7" />
+      <path d="M920 480 q-16 -4 -32 4 q12 4 32 -4 Z" fill="#7a3818" opacity="0.65" />
+      <path d="M420 490 l30 0 l-2 6 l-26 0 z" fill="#4a5060" opacity="0.7" />
+      <path d="M780 500 l24 -2 l-3 8 l-20 0 z" fill="#4a5060" opacity="0.65" />
+      {/* jardins hydroponiques en rangs (au premier plan) */}
+      {[[100, 490], [220, 500], [860, 490]].map(([x, y], i) => (
         <g key={i}>
-          <ellipse cx={x} cy={y} rx="60" ry="8" fill="#3a4a28" opacity="0.7" />
-          {[0, 15, 30, 45].map((dx, j) => (
-            <path key={j} d={`M${x - 40 + dx * 2} ${y - 4} q2 -8 4 -12`} stroke="#4a6a30" strokeWidth="1.4" fill="none" />
+          <ellipse cx={x} cy={y} rx="70" ry="8" fill="#3a4a28" opacity="0.75" />
+          {[0, 12, 24, 36, 48].map((dx, j) => (
+            <path key={j} d={`M${x - 48 + dx * 2} ${y - 4} q2 -12 4 -18`} stroke="#4a6a30" strokeWidth="1.4" fill="none" />
           ))}
+          {/* fleurs oranges = tomates */}
+          <circle cx={x - 20} cy={y - 12} r="2" fill="#e86028" />
+          <circle cx={x + 10} cy={y - 14} r="2" fill="#e86028" />
         </g>
       ))}
 
-      {/* ÉOLIENNE bricolée à gauche */}
-      <g transform="translate(80,340)">
-        <rect x="-3" y="0" width="6" height="-80" fill="#8a8890" />
-        <circle cx="0" cy="-80" r="4" fill="#5a5860" />
+      {/* ÉOLIENNE bricolée à gauche, plus haute pour se voir */}
+      <g transform="translate(80,290)">
+        <rect x="-3" y="0" width="6" height="120" fill="#8a8890" stroke="#3a4048" strokeWidth="0.4" />
+        {/* haubans */}
+        <path d="M0 40 L-30 120 M0 40 L30 120" stroke="#5a5860" strokeWidth="0.5" opacity="0.7" />
+        <circle cx="0" cy="0" r="5" fill="#5a5860" stroke="#2a2830" strokeWidth="0.5" />
         {/* pales en tôle rouillée */}
-        <g style={{ animation: "spin 8s linear infinite", transformOrigin: "0 -80px" }}>
-          <path d="M0 -80 L-3 -110 L3 -110 Z" fill="#a06848" />
-          <path d="M0 -80 L26 -70 L26 -66 Z" fill="#a06848" />
-          <path d="M0 -80 L-3 -50 L3 -50 Z" fill="#a06848" />
-          <path d="M0 -80 L-26 -90 L-26 -94 Z" fill="#a06848" />
+        <g style={{ animation: "spin 10s linear infinite", transformOrigin: "0 0" }}>
+          <path d="M0 0 L-4 -34 L4 -34 Z" fill="#a06848" stroke="#5a3018" strokeWidth="0.4" />
+          <path d="M0 0 L30 -8 L30 -4 Z" fill="#a06848" stroke="#5a3018" strokeWidth="0.4" />
+          <path d="M0 0 L-4 34 L4 34 Z" fill="#a06848" stroke="#5a3018" strokeWidth="0.4" />
+          <path d="M0 0 L-30 8 L-30 4 Z" fill="#a06848" stroke="#5a3018" strokeWidth="0.4" />
         </g>
       </g>
 
       {/* PANNEAUX SOLAIRES patchés à droite */}
-      <g transform="translate(900,360)">
-        {/* structure */}
+      <g transform="translate(920,340)">
         <path d="M-40 0 L40 0 L60 -60 L-20 -60 Z" fill="#1a2038" stroke="#3a4058" strokeWidth="1" />
-        {/* cellules avec quelques manquantes/patch */}
         {[[-30, -50], [-10, -50], [10, -50], [30, -50], [-25, -30], [-5, -30], [15, -30], [35, -30], [-20, -10], [0, -10], [20, -10], [40, -10]].map(([x, y], i) => (
           <rect key={i} x={x} y={y} width="16" height="14" fill={i === 3 || i === 8 ? "#5a3818" : "#3a5090"} stroke="#0a1830" strokeWidth="0.4" />
         ))}
-        {/* support */}
-        <rect x="-4" y="0" width="8" height="20" fill="#5a5860" />
+        {/* patch de bâche sur une cellule cassée */}
+        <path d="M-12 -46 L-2 -50 L6 -46 L-2 -38 Z" fill="#a04828" opacity="0.6" />
+        <rect x="-4" y="0" width="8" height="30" fill="#5a5860" stroke="#2a2830" strokeWidth="0.4" />
       </g>
 
-      {/* DÔME GÉODÉSIQUE bricolé au centre-arrière */}
-      <g transform="translate(500,380)">
-        {/* base */}
-        <ellipse cx="0" cy="10" rx="140" ry="12" fill="#1a1408" opacity="0.55" />
-        {/* dôme */}
-        <path d="M-140 8 A 140 100 0 0 1 140 8 Z" fill="url(#st-dome)" stroke="#3a4858" strokeWidth="1.5" />
-        {/* nervures géodésiques (triangles) */}
-        <path d="M-140 8 L-90 -70 L-30 -95 L30 -95 L90 -70 L140 8 M-140 8 L-70 -90 L0 -100 L70 -90 L140 8 M-90 -70 L-30 -95 L-70 -50 L-30 -95 L0 -60 L30 -95 L70 -50 L90 -70" stroke="#3a4858" strokeWidth="0.8" fill="none" opacity="0.7" />
-        {/* patch de bâche colorée sur un triangle (pièce cousue) */}
-        <path d="M-70 -50 L-30 -95 L0 -60 Z" fill="#a04828" opacity="0.5" />
+      {/* DÔME GÉODÉSIQUE bricolé au centre-arrière — remonté */}
+      <g transform="translate(500,290)">
+        <ellipse cx="0" cy="10" rx="130" ry="10" fill="#1a1408" opacity="0.55" />
+        <path d="M-130 8 A 130 90 0 0 1 130 8 Z" fill="url(#st-dome)" stroke="#3a4858" strokeWidth="1.5" />
+        {/* nervures géodésiques */}
+        <path d="M-130 8 L-85 -60 L-30 -85 L30 -85 L85 -60 L130 8 M-130 8 L-65 -80 L0 -90 L65 -80 L130 8 M-85 -60 L0 -55 L85 -60 M-30 -85 L-65 -80 L0 -55 L65 -80 L30 -85" stroke="#3a4858" strokeWidth="0.8" fill="none" opacity="0.7" />
+        {/* patch de bâche colorée cousue */}
+        <path d="M-65 -50 L-30 -85 L0 -55 Z" fill="#a04828" opacity="0.5" />
+        <path d="M40 -50 L65 -80 L85 -60 Z" fill="#3a80a8" opacity="0.4" />
+        {/* fissures dans le dôme (côté désaffecté) */}
+        <path d="M-100 -20 l-4 -6 M-60 -55 l-3 -5 M50 -40 l4 -6" stroke="#1a1408" strokeWidth="0.5" opacity="0.6" />
         {/* porte au centre */}
         <path d="M-16 8 L-16 -20 Q-16 -30 0 -30 Q16 -30 16 -20 L16 8 Z" fill="#3a2818" stroke="#1a1408" strokeWidth="0.8" />
         <circle cx="10" cy="-10" r="1.4" fill="#c8a848" />
         {/* lumière chaleureuse qui filtre */}
         <path d="M-14 6 L14 6 L14 -18 L-14 -18 Z" fill="#f8d878" opacity="0.35" />
-        {/* antenne + reception au sommet */}
-        <path d="M0 -105 L0 -130" stroke="#5a5860" strokeWidth="1.5" />
-        <circle cx="0" cy="-135" r="4" fill="#5eff9e" style={{ animation: "pulse 2s infinite" }} />
+        {/* antenne + réception au sommet */}
+        <path d="M0 -95 L0 -125" stroke="#5a5860" strokeWidth="1.5" />
+        <circle cx="0" cy="-130" r="4" fill="#5eff9e" style={{ animation: "pulse 2s infinite" }} />
       </g>
 
-      {/* MARTINE-JUMELLE (Camille) posée sur une plateforme à droite du dôme */}
-      <g transform="translate(720,410)">
-        {/* plateforme */}
-        <rect x="-40" y="0" width="80" height="30" fill="#5a5860" stroke="#1a1408" strokeWidth="1" />
+      {/* MARTINE-JUMELLE (Camille) — remontée sur sa plateforme */}
+      <g transform="translate(760,340)">
+        <rect x="-40" y="0" width="80" height="28" fill="#5a5860" stroke="#1a1408" strokeWidth="1" />
         <rect x="-42" y="-2" width="84" height="4" fill="#3a4048" />
+        {/* rouille / fissure sur la plateforme */}
+        <path d="M-30 6 l60 0 M-20 14 l40 0" stroke="#2a2028" strokeWidth="0.4" opacity="0.6" />
         {/* corps noix de la MARTINE, poussière/patine */}
-        <ellipse cx="0" cy="-24" rx="30" ry="28" fill="#7a5028" stroke="#3a1810" strokeWidth="1.5" opacity="0.85" />
-        <path d="M-22 -34 q22 -8 44 0 M-24 -24 q24 -6 48 0 M-22 -14 q22 -6 44 0" stroke="#3a1810" strokeWidth="0.4" fill="none" opacity="0.5" />
+        <ellipse cx="0" cy="-24" rx="28" ry="26" fill="#7a5028" stroke="#3a1810" strokeWidth="1.5" opacity="0.85" />
+        <path d="M-20 -32 q20 -8 40 0 M-22 -22 q22 -6 44 0 M-20 -12 q20 -6 40 0" stroke="#3a1810" strokeWidth="0.4" fill="none" opacity="0.5" />
+        {/* poussière/toiles d'araignée */}
+        <path d="M-24 -30 L-14 -22 M22 -34 L14 -26" stroke="#a8a898" strokeWidth="0.3" opacity="0.5" />
         {/* œil éteint (gris/noir) */}
-        <circle cx="0" cy="-28" r="10" fill="#3a3838" stroke="#1a1408" strokeWidth="1" />
+        <circle cx="0" cy="-28" r="9" fill="#3a3838" stroke="#1a1408" strokeWidth="1" />
         <circle cx="0" cy="-28" r="4" fill="#1a1808" />
         {/* antenne pliée */}
-        <path d="M0 -50 L4 -60 L-2 -68" stroke="#3a2018" strokeWidth="1.5" fill="none" />
-        <circle cx="-2" cy="-68" r="2.4" fill="#5a5858" />
-        {/* RUBAN NOIR DE DEUIL noué autour du milieu */}
-        <path d="M-32 -20 Q0 -14 32 -20 L34 -14 Q0 -8 -34 -14 Z" fill="#1a1408" stroke="#0a0806" strokeWidth="0.5" />
+        <path d="M0 -48 L4 -58 L-2 -66" stroke="#3a2018" strokeWidth="1.5" fill="none" />
+        <circle cx="-2" cy="-66" r="2.4" fill="#5a5858" />
+        {/* RUBAN NOIR DE DEUIL */}
+        <path d="M-30 -20 Q0 -14 30 -20 L32 -14 Q0 -8 -32 -14 Z" fill="#1a1408" stroke="#0a0806" strokeWidth="0.5" />
         <path d="M-4 -10 L-8 4 L-2 -2 L2 -2 L8 4 L4 -10" fill="#1a1408" stroke="#0a0806" strokeWidth="0.5" />
-        {/* petite plaque gravée */}
-        <rect x="-24" y="8" width="48" height="10" fill="#c8b8a0" stroke="#5a4028" strokeWidth="0.5" />
-        <text x="0" y="16" textAnchor="middle" fontSize="6" fontFamily="Georgia, serif" fontWeight="700" fill="#3a2818">CAMILLE · 2277</text>
+        {/* plaque gravée */}
+        <rect x="-24" y="6" width="48" height="10" fill="#c8b8a0" stroke="#5a4028" strokeWidth="0.5" />
+        <text x="0" y="14" textAnchor="middle" fontSize="6" fontFamily="Georgia, serif" fontWeight="700" fill="#3a2818">CAMILLE · 2277</text>
       </g>
 
-      {/* ELIAS debout au centre-gauche */}
-      <g transform="translate(340,430)">
-        <ellipse cx="0" cy="94" rx="30" ry="4" fill="#0a0604" opacity="0.55" />
+      {/* Câbles pendants du plafond (côté désaffecté) */}
+      <path d="M240 0 q-4 40 8 80" stroke="#3a2818" strokeWidth="1.4" fill="none" opacity="0.7" />
+      <path d="M240 0 q-4 40 8 80" stroke="#5a4028" strokeWidth="0.6" fill="none" opacity="0.7" />
+      <path d="M820 0 q4 30 -6 60" stroke="#3a2818" strokeWidth="1.2" fill="none" opacity="0.7" />
+
+      {/* ELIAS debout au centre-gauche — REMONTÉ pour être visible */}
+      <g transform="translate(320,320)">
+        <ellipse cx="0" cy="66" rx="30" ry="4" fill="#0a0604" opacity="0.55" />
         {/* jambes en pantalon de lin */}
-        <rect x="-14" y="30" width="10" height="70" fill="#8a6848" stroke="#5a3820" strokeWidth="0.6" />
-        <rect x="4" y="30" width="10" height="70" fill="#8a6848" stroke="#5a3820" strokeWidth="0.6" />
+        <rect x="-14" y="20" width="10" height="46" fill="#8a6848" stroke="#5a3820" strokeWidth="0.6" />
+        <rect x="4" y="20" width="10" height="46" fill="#8a6848" stroke="#5a3820" strokeWidth="0.6" />
         {/* tunique large */}
-        <path d="M-24 40 Q-26 -14 -4 -24 L4 -24 Q26 -14 24 40 Z" fill="#c8a878" stroke="#5a3818" strokeWidth="0.8" />
-        <path d="M-6 -22 L-6 40 M6 -22 L6 40" stroke="#8a6848" strokeWidth="0.5" />
+        <path d="M-22 30 Q-24 -12 -4 -22 L4 -22 Q24 -12 22 30 Z" fill="#c8a878" stroke="#5a3818" strokeWidth="0.8" />
+        <path d="M-6 -20 L-6 30 M6 -20 L6 30" stroke="#8a6848" strokeWidth="0.5" />
         {/* épaules */}
-        <ellipse cx="-22" cy="-12" rx="6" ry="5" fill="#e0b898" />
-        <ellipse cx="22" cy="-12" rx="6" ry="5" fill="#e0b898" />
+        <ellipse cx="-20" cy="-10" rx="6" ry="5" fill="#e0b898" />
+        <ellipse cx="20" cy="-10" rx="6" ry="5" fill="#e0b898" />
         {/* bras qui s'ouvrent en accueil */}
-        <path d="M-22 -10 Q-38 8 -42 32" stroke="#e0b898" strokeWidth="8" fill="none" strokeLinecap="round" />
-        <path d="M22 -10 Q38 8 42 32" stroke="#e0b898" strokeWidth="8" fill="none" strokeLinecap="round" />
+        <path d="M-20 -8 Q-34 8 -38 26" stroke="#e0b898" strokeWidth="8" fill="none" strokeLinecap="round" />
+        <path d="M20 -8 Q34 8 38 26" stroke="#e0b898" strokeWidth="8" fill="none" strokeLinecap="round" />
         {/* tête */}
-        <ellipse cx="0" cy="-42" rx="14" ry="18" fill="#e0b898" stroke="#5a3818" strokeWidth="0.8" />
+        <ellipse cx="0" cy="-38" rx="13" ry="16" fill="#e0b898" stroke="#5a3818" strokeWidth="0.8" />
         {/* cheveux blancs */}
-        <path d="M-12 -50 q4 -18 12 -20 q8 2 12 20 q-4 -4 -12 -2 q-8 -2 -12 2 Z" fill="#e8e8e0" />
+        <path d="M-11 -46 q4 -16 11 -18 q7 2 11 18 q-4 -4 -11 -2 q-7 -2 -11 2 Z" fill="#e8e8e0" />
         {/* barbe */}
-        <path d="M-9 -34 q9 12 18 0 q-1 8 -5 12 q-5 3 -8 0 q-4 -4 -5 -12 z" fill="#e8e8e0" />
-        <circle cx="-4" cy="-42" r="1.4" fill="#2a3860" />
-        <circle cx="4" cy="-42" r="1.4" fill="#2a3860" />
+        <path d="M-8 -32 q8 12 16 0 q-1 8 -5 12 q-4 3 -6 0 q-4 -4 -5 -12 z" fill="#e8e8e0" />
+        <circle cx="-4" cy="-38" r="1.4" fill="#2a3860" />
+        <circle cx="4" cy="-38" r="1.4" fill="#2a3860" />
         {/* médaille au cou */}
-        <circle cx="0" cy="-12" r="5" fill="#c8a848" stroke="#8a6820" strokeWidth="0.6" />
+        <circle cx="0" cy="-10" r="4.5" fill="#c8a848" stroke="#8a6820" strokeWidth="0.6" />
+      </g>
+      {/* « ? » de dialogue au-dessus d'Elias */}
+      <g transform="translate(320,258)" style={{ animation: "float 2s ease-in-out infinite" }}>
+        <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
+        <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
       </g>
 
-      {/* MIRA à droite du dôme, s'appuie sur la MARTINE-jumelle */}
-      <g transform="translate(660,470)">
-        <ellipse cx="0" cy="54" rx="24" ry="4" fill="#0a0604" opacity="0.55" />
+      {/* MIRA à droite du dôme — REMONTÉE pour être visible */}
+      <g transform="translate(660,335)">
+        <ellipse cx="0" cy="52" rx="24" ry="4" fill="#0a0604" opacity="0.55" />
         {/* jambes en salopette */}
-        <rect x="-10" y="-4" width="8" height="60" fill="#3a5878" stroke="#0e1830" strokeWidth="0.6" />
-        <rect x="2" y="-4" width="8" height="60" fill="#3a5878" stroke="#0e1830" strokeWidth="0.6" />
+        <rect x="-10" y="-4" width="8" height="54" fill="#3a5878" stroke="#0e1830" strokeWidth="0.6" />
+        <rect x="2" y="-4" width="8" height="54" fill="#3a5878" stroke="#0e1830" strokeWidth="0.6" />
         {/* torse en veste d'ingénieure */}
         <path d="M-18 4 Q-20 -22 -4 -30 L4 -30 Q20 -22 18 4 Z" fill="#3a5878" stroke="#0e1830" strokeWidth="0.6" />
         {/* poche outils */}
         <rect x="-14" y="-14" width="12" height="14" fill="#2a4868" stroke="#0e1830" strokeWidth="0.4" />
         <path d="M-11 -18 L-11 -22 L-6 -22 L-6 -18" stroke="#c8b8a0" strokeWidth="1.2" />
-        {/* épaules bronzées */}
+        {/* épaules */}
         <ellipse cx="-16" cy="-18" rx="5" ry="4" fill="#c8946a" />
         <ellipse cx="16" cy="-18" rx="5" ry="4" fill="#c8946a" />
-        {/* bras droit qui pointe la MARTINE-jumelle (main tendue) */}
+        {/* bras droit qui pointe la MARTINE-jumelle */}
         <path d="M18 -14 Q30 -22 44 -30" stroke="#c8946a" strokeWidth="5" strokeLinecap="round" fill="none" />
         {/* tête */}
         <ellipse cx="0" cy="-42" rx="12" ry="14" fill="#c8946a" stroke="#5a3818" strokeWidth="0.6" />
@@ -346,6 +419,11 @@ function DecorStation() {
         <rect x="11" y="-24" width="4" height="2" fill="#7fd8ff" />
         <circle cx="-4" cy="-42" r="1.4" fill="#2a1810" />
         <circle cx="4" cy="-42" r="1.4" fill="#2a1810" />
+      </g>
+      {/* « ? » de dialogue au-dessus de Mira */}
+      <g transform="translate(660,270)" style={{ animation: "float 2s ease-in-out infinite" }}>
+        <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
+        <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
       </g>
     </svg>
   );
