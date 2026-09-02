@@ -11,22 +11,37 @@ import { useState } from "react";
    Fin de la séquence : bouton « Continuer » → épilogue.
    ============================================================ */
 
-const DIALOGUES = [
-  { perso: "elias", mood: "content",
-    text: "Te voilà. Tu ne me connais pas encore. Moi, si — j'ai lu tes messages, ceux qui nous sont parvenus. Bienvenue à la station des chronautes." },
-  { perso: "elias", mood: "neutre",
-    text: "Nous sommes en 2287. Il y a longtemps, tout le numérique s'est éteint d'un coup. Un jour, deux jours, plus rien. Ni serveurs, ni disques, ni photos. Cinq siècles de mémoire humaine, envolés." },
-  { perso: "elias", mood: "content",
-    text: "On a survécu grâce à ce qui restait sur les vieux murs, dans les vieux livres, gravé, imprimé, brodé. Grâce à toi, à ta traversée des époques, on connaît enfin CE QUI DURE. Tu viens de nous rendre notre mémoire, morceau par morceau." },
-  { perso: "mira", mood: "neutre",
-    text: "Salut, moi c'est Mira. Je suis l'ingénieure de la station. Cette machine, à côté de la tienne… c'est sa sœur. Elle est là depuis dix ans. Elle attend Camille, sa pilote." },
-  { perso: "elias", mood: "vexe",
-    text: "Il y a autre chose. Un mal étrange nous ronge : on perd nos souvenirs, un peu chaque jour. Ceux qui l'oublient tout, oublient qu'ils l'oublient. C'est cruel." },
-  { perso: "camille", mood: "neutre",
-    text: "Camille est partie il y a longtemps, dans le passé, chercher un remède. Elle savait où aller. Elle ne nous a jamais donné signe de vie. On l'attend." },
-  { perso: "elias", mood: "content",
-    text: "Tu es le seul, aujourd'hui, à avoir traversé les époques comme elle. Tu la retrouverais ?" },
-];
+/* Dialogues groupés PAR PERSONNAGE. Le joueur clique sur le "?" au-dessus
+   de chaque perso pour ouvrir sa séquence. L'ordre est libre, mais le
+   bouton "Continuer" n'apparaît qu'une fois tous les trois écoutés. */
+const DIALOGUES_PAR_PERSO = {
+  elias: [
+    { mood: "content",
+      text: "Te voilà. Tu ne me connais pas encore. Moi, si — j'ai lu tes messages, ceux qui nous sont parvenus. Bienvenue à la station des chronautes. Je m'appelle Elias." },
+    { mood: "neutre",
+      text: "Nous sommes en 2287. Il y a longtemps, tout le numérique s'est éteint d'un coup. Un jour, deux jours, plus rien. Ni serveurs, ni disques, ni photos. Cinq siècles de mémoire humaine, envolés." },
+    { mood: "content",
+      text: "On a survécu grâce à ce qui restait sur les vieux murs, dans les vieux livres, gravé, imprimé, brodé. Grâce à toi, à ta traversée des époques, on connaît enfin CE QUI DURE. Tu viens de nous rendre notre mémoire, morceau par morceau." },
+    { mood: "vexe",
+      text: "Mais il y a autre chose. Un mal étrange nous ronge : on perd nos souvenirs, un peu chaque jour. Ceux qui l'oublient tout, oublient qu'ils l'oublient. C'est cruel. Parle à Mira, elle t'expliquera. Et regarde le portrait sur la MARTINE-jumelle." },
+  ],
+  mira: [
+    { mood: "content",
+      text: "Salut, moi c'est Mira, l'ingénieure de la station. Cette machine, à côté de la tienne… c'est sa sœur. Elle est là depuis dix ans." },
+    { mood: "neutre",
+      text: "Elle attend sa pilote. Camille est partie chercher un remède contre la maladie de la mémoire, il y a longtemps. On n'a jamais eu de ses nouvelles. Regarde son portrait." },
+  ],
+  camille: [
+    { mood: "neutre",
+      text: "Camille est partie il y a longtemps, dans le passé, chercher un remède. Elle savait où aller. Elle ne nous a jamais donné signe de vie. On l'attend depuis dix ans." },
+    { mood: "content",
+      text: "Tu es le seul, aujourd'hui, à avoir traversé les époques comme elle. Retourne voir Elias — il a quelque chose à te demander." },
+  ],
+  finale: [
+    { mood: "content",
+      text: "Tu as tout entendu. Alors voilà : tu es le seul chronaute qui connaisse encore les époques. Camille est là-bas, quelque part. Tu la retrouverais ?" },
+  ],
+};
 
 /* -------------------- PORTRAITS SVG -------------------- */
 function PortraitElias({ mood = "neutre" }) {
@@ -184,7 +199,7 @@ const PORTRAITS = { elias: PortraitElias, mira: PortraitMira, camille: PortraitC
 const NAMES = { elias: "Elias", mira: "Mira", camille: "Photo de Camille" };
 
 /* -------------------- DÉCOR DE LA STATION -------------------- */
-function DecorStation() {
+function DecorStation({ onClickPerso, done }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ width: "100%", height: "100%", display: "block" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -361,8 +376,10 @@ function DecorStation() {
       <path d="M240 0 q-4 40 8 80" stroke="#5a4028" strokeWidth="0.6" fill="none" opacity="0.7" />
       <path d="M820 0 q4 30 -6 60" stroke="#3a2818" strokeWidth="1.2" fill="none" opacity="0.7" />
 
-      {/* ELIAS debout au centre-gauche — REMONTÉ pour être visible */}
-      <g transform="translate(320,320)">
+      {/* ELIAS debout au centre-gauche — cliquable */}
+      <g transform="translate(320,320)" onClick={() => onClickPerso?.("elias")} style={{ cursor: "pointer" }}>
+        {/* zone cliquable élargie invisible */}
+        <rect x="-50" y="-60" width="100" height="130" fill="transparent" />
         <ellipse cx="0" cy="66" rx="30" ry="4" fill="#0a0604" opacity="0.55" />
         {/* jambes en pantalon de lin */}
         <rect x="-14" y="20" width="10" height="46" fill="#8a6848" stroke="#5a3820" strokeWidth="0.6" />
@@ -387,14 +404,23 @@ function DecorStation() {
         {/* médaille au cou */}
         <circle cx="0" cy="-10" r="4.5" fill="#c8a848" stroke="#8a6820" strokeWidth="0.6" />
       </g>
-      {/* « ? » de dialogue au-dessus d'Elias */}
-      <g transform="translate(320,258)" style={{ animation: "float 2s ease-in-out infinite" }}>
-        <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
-        <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
-      </g>
+      {/* « ? » de dialogue au-dessus d'Elias — disparaît une fois écouté */}
+      {!done?.elias && (
+        <g transform="translate(320,258)" onClick={() => onClickPerso?.("elias")} style={{ animation: "float 2s ease-in-out infinite", cursor: "pointer" }}>
+          <circle r="16" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
+          <text y="6" textAnchor="middle" fontSize="20" fontWeight="800" fill="#3a2410">?</text>
+        </g>
+      )}
+      {done?.elias && (
+        <g transform="translate(320,258)">
+          <circle r="10" fill="#5eff9e" stroke="#2a4028" strokeWidth="1.5" opacity="0.8" />
+          <text y="4" textAnchor="middle" fontSize="12" fontWeight="800" fill="#0a2010">✓</text>
+        </g>
+      )}
 
-      {/* MIRA à droite du dôme — REMONTÉE pour être visible */}
-      <g transform="translate(660,335)">
+      {/* MIRA à droite du dôme — cliquable */}
+      <g transform="translate(660,335)" onClick={() => onClickPerso?.("mira")} style={{ cursor: "pointer" }}>
+        <rect x="-40" y="-60" width="90" height="120" fill="transparent" />
         <ellipse cx="0" cy="52" rx="24" ry="4" fill="#0a0604" opacity="0.55" />
         {/* jambes en salopette */}
         <rect x="-10" y="-4" width="8" height="54" fill="#3a5878" stroke="#0e1830" strokeWidth="0.6" />
@@ -420,69 +446,143 @@ function DecorStation() {
         <circle cx="-4" cy="-42" r="1.4" fill="#2a1810" />
         <circle cx="4" cy="-42" r="1.4" fill="#2a1810" />
       </g>
-      {/* « ? » de dialogue au-dessus de Mira */}
-      <g transform="translate(660,270)" style={{ animation: "float 2s ease-in-out infinite" }}>
-        <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
-        <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
+      {/* « ? » au-dessus de Mira — apparaît quand Elias a été écouté */}
+      {done?.elias && !done?.mira && (
+        <g transform="translate(660,270)" onClick={() => onClickPerso?.("mira")} style={{ animation: "float 2s ease-in-out infinite", cursor: "pointer" }}>
+          <circle r="16" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
+          <text y="6" textAnchor="middle" fontSize="20" fontWeight="800" fill="#3a2410">?</text>
+        </g>
+      )}
+      {done?.mira && (
+        <g transform="translate(660,270)">
+          <circle r="10" fill="#5eff9e" stroke="#2a4028" strokeWidth="1.5" opacity="0.8" />
+          <text y="4" textAnchor="middle" fontSize="12" fontWeight="800" fill="#0a2010">✓</text>
+        </g>
+      )}
+      {/* Zone cliquable sur la MARTINE-jumelle avec le portrait de Camille */}
+      <g transform="translate(760,290)" onClick={() => onClickPerso?.("camille")} style={{ cursor: done?.mira ? "pointer" : "default" }}>
+        <rect x="-45" y="-30" width="90" height="80" fill="transparent" />
       </g>
+      {done?.mira && !done?.camille && (
+        <g transform="translate(760,265)" onClick={() => onClickPerso?.("camille")} style={{ animation: "float 2s ease-in-out infinite", cursor: "pointer" }}>
+          <circle r="16" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
+          <text y="6" textAnchor="middle" fontSize="20" fontWeight="800" fill="#3a2410">?</text>
+        </g>
+      )}
+      {done?.camille && (
+        <g transform="translate(760,265)">
+          <circle r="10" fill="#5eff9e" stroke="#2a4028" strokeWidth="1.5" opacity="0.8" />
+          <text y="4" textAnchor="middle" fontSize="12" fontWeight="800" fill="#0a2010">✓</text>
+        </g>
+      )}
     </svg>
   );
 }
 
 /* -------------------- LE COMPOSANT PRINCIPAL -------------------- */
 export default function StationChronautes({ prenom, onContinue }) {
+  /* perso courant dont on lit les dialogues (null = personne, on voit
+     juste le décor et les ? cliquables). Idx = index dans la séquence
+     du perso courant. */
+  const [perso, setPerso] = useState(null);
   const [idx, setIdx] = useState(0);
-  const step = DIALOGUES[idx];
-  const isLast = idx >= DIALOGUES.length - 1;
-  const Portrait = PORTRAITS[step.perso];
-  const persoName = NAMES[step.perso];
+  /* Marqueurs de qui a été écouté — active les ? suivants + le bouton
+     Continuer une fois tout le monde entendu. */
+  const [done, setDone] = useState({ elias: false, mira: false, camille: false });
+  const allDone = done.elias && done.mira && done.camille;
+  /* Après avoir parlé aux 3, le clic sur Elias déclenche la question
+     finale (séquence "finale"). Une fois celle-ci lue, bouton Continuer. */
+  const [finalHeard, setFinalHeard] = useState(false);
+
+  const openPerso = (id) => {
+    /* garde-fou : Mira n'est cliquable qu'après Elias, Camille après Mira. */
+    if (id === "mira" && !done.elias) return;
+    if (id === "camille" && !done.mira) return;
+    /* Elias après tout le monde → séquence finale */
+    if (id === "elias" && allDone && !finalHeard) {
+      setPerso("finale"); setIdx(0); return;
+    }
+    setPerso(id); setIdx(0);
+  };
+
+  const closeDialogue = () => {
+    if (perso === "finale") { setFinalHeard(true); setPerso(null); return; }
+    if (perso) { setDone((d) => ({ ...d, [perso]: true })); setPerso(null); }
+  };
+
+  const dialoguesActifs = perso ? DIALOGUES_PAR_PERSO[perso] : null;
+  const step = dialoguesActifs?.[idx];
+  const isLast = dialoguesActifs && idx >= dialoguesActifs.length - 1;
+  const Portrait = perso && PORTRAITS[perso === "finale" ? "elias" : perso];
+  const persoName = perso === "finale" ? "Elias" : NAMES[perso] || "";
 
   return (
     <div style={{ height: "100dvh", overflow: "hidden", background: "#080d16", display: "flex", flexDirection: "column", position: "relative" }}>
-      {/* Décor plein cadre */}
+      {/* Décor plein cadre — cliquable */}
       <div style={{ position: "absolute", inset: 0 }}>
-        <DecorStation />
+        <DecorStation onClickPerso={openPerso} done={done} />
       </div>
       {/* bandeau titre */}
-      <div style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "10px 12px 0", background: "linear-gradient(180deg,#0c1220ee 0%,#0c122000 100%)" }}>
+      <div style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "10px 12px 0", background: "linear-gradient(180deg,#0c1220ee 0%,#0c122000 100%)", pointerEvents: "none" }}>
         <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3, color: "#ffd166" }}>ÉPILOGUE · LA STATION DES CHRONAUTES · 2287</div>
+        {!perso && !allDone && (
+          <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, color: "#7fd8ff", marginTop: 4, opacity: 0.85 }}>
+            Clique sur Elias pour commencer.
+          </div>
+        )}
+        {!perso && allDone && !finalHeard && (
+          <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, color: "#ffd166", marginTop: 4 }}>
+            Retourne voir Elias pour sa question.
+          </div>
+        )}
       </div>
 
       {/* espaceur pour laisser voir le décor */}
       <div style={{ flex: 1 }} />
 
-      {/* Portrait + dialogue collés en bas */}
-      <div style={{ position: "relative", zIndex: 2, padding: "12px 20px 20px", background: "linear-gradient(180deg,#0c122000 0%,#0c1220ee 40%,#080d16 100%)", display: "flex", gap: 16, alignItems: "flex-end" }}>
-        {/* portrait */}
-        <div style={{ width: 160, height: 190, flex: "0 0 auto", borderRadius: 12, overflow: "hidden", border: "2px solid #ffd166", boxShadow: "0 8px 32px rgba(0,0,0,0.65)" }}>
-          <Portrait mood={step.mood} />
-        </div>
-        {/* bulle de dialogue */}
-        <div style={{ flex: 1, background: "#0e1420ee", border: "1px solid #2a3648", borderRadius: 12, padding: "12px 16px", minHeight: 140, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          <div>
-            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 2, color: "#ffd166", marginBottom: 6 }}>
-              {persoName.toUpperCase()}
+      {/* Portrait + dialogue collés en bas — s'affichent SEULEMENT quand
+          on a cliqué sur un perso. Sinon on voit juste le décor. */}
+      {perso && step && (
+        <div style={{ position: "relative", zIndex: 2, padding: "12px 20px 20px", background: "linear-gradient(180deg,#0c122000 0%,#0c1220ee 40%,#080d16 100%)", display: "flex", gap: 16, alignItems: "flex-end", animation: "fadein 0.3s ease-out" }}>
+          <div style={{ width: 160, height: 190, flex: "0 0 auto", borderRadius: 12, overflow: "hidden", border: "2px solid #ffd166", boxShadow: "0 8px 32px rgba(0,0,0,0.65)" }}>
+            <Portrait mood={step.mood} />
+          </div>
+          <div style={{ flex: 1, background: "#0e1420ee", border: "1px solid #2a3648", borderRadius: 12, padding: "12px 16px", minHeight: 140, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <div>
+              <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 2, color: "#ffd166", marginBottom: 6 }}>
+                {persoName.toUpperCase()}
+              </div>
+              <p style={{ fontSize: 15, lineHeight: 1.6, color: "#e8eef5", margin: 0 }}>
+                « {step.text.replace("{prenom}", prenom || "chronaute")} »
+              </p>
             </div>
-            <p style={{ fontSize: 15, lineHeight: 1.6, color: "#e8eef5", margin: 0 }}>
-              « {step.text.replace("{prenom}", prenom || "chronaute")} »
-            </p>
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
-            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, color: "#8fa3bd" }}>{idx + 1} / {DIALOGUES.length}</div>
-            {!isLast ? (
-              <button onClick={() => setIdx(idx + 1)}
-                style={{ background: "#141b26", color: "#ffd166", border: "1px solid #5a4a20", borderRadius: 10, padding: "9px 18px", fontWeight: 700, cursor: "pointer", fontSize: 14, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
-                Suite ▸
-              </button>
-            ) : (
-              <button onClick={onContinue}
-                style={{ background: "#e8934a", color: "#160c02", border: "none", borderRadius: 10, padding: "10px 22px", fontWeight: 800, cursor: "pointer", fontSize: 14, fontFamily: "ui-monospace,monospace", letterSpacing: 1, boxShadow: "0 0 18px rgba(232,150,74,0.55)", animation: "glow 2.4s ease-in-out infinite" }}>
-                Continuer ▸
-              </button>
-            )}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+              <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, color: "#8fa3bd" }}>{idx + 1} / {dialoguesActifs.length}</div>
+              {!isLast ? (
+                <button onClick={() => setIdx(idx + 1)}
+                  style={{ background: "#141b26", color: "#ffd166", border: "1px solid #5a4a20", borderRadius: 10, padding: "9px 18px", fontWeight: 700, cursor: "pointer", fontSize: 14, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
+                  Suite ▸
+                </button>
+              ) : (
+                <button onClick={closeDialogue}
+                  style={{ background: "#141b26", color: "#5eff9e", border: "1px solid #2a4028", borderRadius: 10, padding: "9px 18px", fontWeight: 700, cursor: "pointer", fontSize: 14, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
+                  Fermer ✕
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Bouton CONTINUER — n'apparaît qu'une fois la question finale entendue */}
+      {finalHeard && !perso && (
+        <div style={{ position: "absolute", left: "50%", bottom: 40, transform: "translateX(-50%)", zIndex: 3 }}>
+          <button onClick={onContinue}
+            style={{ background: "#e8934a", color: "#160c02", border: "none", borderRadius: 10, padding: "14px 32px", fontWeight: 800, cursor: "pointer", fontSize: 16, fontFamily: "ui-monospace,monospace", letterSpacing: 2, boxShadow: "0 0 24px rgba(232,150,74,0.7)", animation: "glow 2.4s ease-in-out infinite" }}>
+            J'ACCEPTE ▸
+          </button>
+        </div>
+      )}
     </div>
   );
 }
