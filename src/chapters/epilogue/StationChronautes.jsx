@@ -7,7 +7,7 @@ import { useState } from "react";
    Décor post-apo LUMINEUX (dôme géodésique bricolé, panneaux
    solaires patchés, jardins hydroponiques, MARTINE-jumelle
    rangée avec un ruban de deuil). Séquence de dialogues
-   scriptée : Elias, Mira, portrait-cadre de Camille.
+   scriptée : Elias, Mira, portrait-cadre d'Al3x1A.
    Fin de la séquence : bouton « Continuer » → épilogue.
    ============================================================ */
 
@@ -29,17 +29,17 @@ const DIALOGUES_PAR_PERSO = {
     { mood: "content",
       text: "Salut, moi c'est Mira, l'ingénieure de la station. Cette machine, à côté de la tienne… c'est sa sœur. Elle est là depuis dix ans." },
     { mood: "neutre",
-      text: "Elle attend sa pilote. Camille est partie chercher un remède contre la maladie de la mémoire, il y a longtemps. On n'a jamais eu de ses nouvelles. Regarde son portrait." },
+      text: "Elle attend son pilote. Al3x1A est parti dans le passé chercher un remède contre la maladie de la mémoire, il y a longtemps. On n'a jamais eu de nouvelles de cette personne. Regarde son portrait." },
   ],
   camille: [
     { mood: "neutre",
-      text: "Camille est partie il y a longtemps, dans le passé, chercher un remède. Elle savait où aller. Elle ne nous a jamais donné signe de vie. On l'attend depuis dix ans." },
+      text: "Al3x1A a pris la route il y a longtemps, dans le passé, pour trouver un remède. Cette personne connaissait bien les époques. Aucune nouvelle depuis. On attend, tout simplement, depuis dix ans." },
     { mood: "content",
-      text: "Tu es le seul, aujourd'hui, à avoir traversé les époques comme elle. Retourne voir Elias — il a quelque chose à te demander." },
+      text: "Tu es le seul chronaute, aujourd'hui, à avoir traversé les époques comme Al3x1A. Retourne voir Elias — il a quelque chose à te demander." },
   ],
   finale: [
     { mood: "content",
-      text: "Tu as tout entendu. Alors voilà : tu es le seul chronaute qui connaisse encore les époques. Camille est là-bas, quelque part. Tu la retrouverais ?" },
+      text: "Tu as tout entendu. Alors voilà : tu es le seul chronaute qui connaisse encore les époques. Al3x1A est là-bas, quelque part. Tu retrouverais cette personne ?" },
   ],
 };
 
@@ -145,8 +145,8 @@ function PortraitMira({ mood = "neutre" }) {
   );
 }
 
-/* Camille apparaît dans un CADRE-photo posé sur la MARTINE-jumelle. */
-function PortraitCamilleCadre({ mood = "neutre" }) {
+/* Al3x1A apparaît dans un CADRE-photo posé sur la MARTINE-jumelle. */
+function PortraitAl3x1ACadre({ mood = "neutre" }) {
   return (
     <svg viewBox="0 0 200 240" style={{ width: "100%", height: "100%", display: "block" }}>
       <defs>
@@ -190,17 +190,17 @@ function PortraitCamilleCadre({ mood = "neutre" }) {
       {/* légère cicatrice fine sur la joue (souvenir de voyage) */}
       <path d="M124 92 l4 8" stroke="#8a5828" strokeWidth="0.6" opacity="0.6" />
       {/* légende sous le portrait */}
-      <text x="100" y="235" textAnchor="middle" fontSize="9" fontFamily="ui-monospace,monospace" letterSpacing="1.5" fill="#8a7860">CAMILLE — DISPARUE 2277</text>
+      <text x="100" y="235" textAnchor="middle" fontSize="9" fontFamily="ui-monospace,monospace" letterSpacing="1.5" fill="#8a7860">AL3X1A · DISPARU·E 2277</text>
     </svg>
   );
 }
 
-const PORTRAITS = { elias: PortraitElias, mira: PortraitMira, camille: PortraitCamilleCadre };
+const PORTRAITS = { elias: PortraitElias, mira: PortraitMira, camille: PortraitAl3x1ACadre };
 
 /* Export : la portrait d'Elias est réutilisée dans l'écran ÉPILOGUE
    pour son ultime question sur le support à choisir. */
 export { PortraitElias };
-const NAMES = { elias: "Elias", mira: "Mira", camille: "Photo de Camille" };
+const NAMES = { elias: "Elias", mira: "Mira", camille: "Portrait d'Al3x1A" };
 
 /* -------------------- DÉCOR DE LA STATION -------------------- */
 function DecorStation({ onClickPerso, done }) {
@@ -350,7 +350,7 @@ function DecorStation({ onClickPerso, done }) {
         <circle cx="0" cy="-130" r="4" fill="#5eff9e" style={{ animation: "pulse 2s infinite" }} />
       </g>
 
-      {/* MARTINE-JUMELLE (Camille) — remontée sur sa plateforme */}
+      {/* MARTINE-JUMELLE (Al3x1A) — remontée sur sa plateforme */}
       <g transform="translate(760,340)">
         <rect x="-40" y="0" width="80" height="28" fill="#5a5860" stroke="#1a1408" strokeWidth="1" />
         <rect x="-42" y="-2" width="84" height="4" fill="#3a4048" />
@@ -372,7 +372,7 @@ function DecorStation({ onClickPerso, done }) {
         <path d="M-4 -10 L-8 4 L-2 -2 L2 -2 L8 4 L4 -10" fill="#1a1408" stroke="#0a0806" strokeWidth="0.5" />
         {/* plaque gravée */}
         <rect x="-24" y="6" width="48" height="10" fill="#c8b8a0" stroke="#5a4028" strokeWidth="0.5" />
-        <text x="0" y="14" textAnchor="middle" fontSize="6" fontFamily="Georgia, serif" fontWeight="700" fill="#3a2818">CAMILLE · 2277</text>
+        <text x="0" y="14" textAnchor="middle" fontSize="6" fontFamily="Georgia, serif" fontWeight="700" fill="#3a2818">AL3X1A · 2277</text>
       </g>
 
       {/* Câbles pendants du plafond (côté désaffecté) */}
@@ -465,7 +465,7 @@ function DecorStation({ onClickPerso, done }) {
           <text y="4" textAnchor="middle" fontSize="12" fontWeight="800" fill="#0a2010">✓</text>
         </g>
       )}
-      {/* Zone cliquable sur la MARTINE-jumelle avec le portrait de Camille */}
+      {/* Zone cliquable sur la MARTINE-jumelle avec le portrait de Al3x1A */}
       <g transform="translate(760,290)" onClick={() => onClickPerso?.("camille")} style={{ cursor: done?.mira ? "pointer" : "default" }}>
         <rect x="-45" y="-30" width="90" height="80" fill="transparent" />
       </g>
@@ -501,7 +501,7 @@ export default function StationChronautes({ prenom, onContinue }) {
   const [finalHeard, setFinalHeard] = useState(false);
 
   const openPerso = (id) => {
-    /* garde-fou : Mira n'est cliquable qu'après Elias, Camille après Mira. */
+    /* garde-fou : Mira n'est cliquable qu'après Elias, Al3x1A après Mira. */
     if (id === "mira" && !done.elias) return;
     if (id === "camille" && !done.mira) return;
     /* Elias après tout le monde → séquence finale */

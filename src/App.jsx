@@ -1123,7 +1123,7 @@ export default function App() {
 
   /* ---------- écran CHRONAUTES : rencontre au futur (2287) ---------------
      S'affiche juste après le saut depuis le DERNIER chapitre, avant
-     l'épilogue. Elias, Mira, portrait-cadre de Camille. Séquence de
+     l'épilogue. Elias, Mira, portrait-cadre d'Al3x1A. Séquence de
      dialogues scriptée. Fin de la séquence → écran épilogue. */
   if (screen === "chronautes") {
     return (
@@ -1282,7 +1282,7 @@ export default function App() {
                   La Pionnière
                 </div>
                 <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#c8d4e2", margin: "10px auto 0", maxWidth: 460, fontStyle: "italic" }}>
-                  Camille est quelque part dans les époques que tu viens de traverser. Bientôt, tu pourras la chercher — et lui ramener enfin le remède qu'elle est partie trouver.
+                  Al3x1A est quelque part dans les époques que tu viens de traverser. Bientôt, tu pourras retrouver cette personne — et lui rapporter enfin le remède qu'elle est allée chercher.
                 </p>
               </div>
             </>

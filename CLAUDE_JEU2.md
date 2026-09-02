@@ -1,4 +1,4 @@
-# MARTINE — Jeu 2 : « La Pionnière »
+# MARTINE — Jeu 2 : « Al3x1A »
 
 > Note de conception de la suite du jeu MARTINE. Fait suite à `CLAUDE.md`
 > (jeu 1). Public : élèves de collège au CDI, temps libre.
@@ -57,15 +57,15 @@ Un remède existerait, à base d'un ingrédient très ancien (à définir —
 plante préhistorique, minéral millénaire, technique de préparation
 oubliée). Personne ne sait exactement lequel, ni où le trouver.
 
-### 2.3 Camille, la pionnière disparue
+### 2.3 Al3x1A, la pionnière disparue
 
-Il y a longtemps, avant même l'arrivée du joueur, **Camille** — la
+Il y a longtemps, avant même l'arrivée du joueur, **Al3x1A** — la
 chronaute-pionnière, la première à avoir voyagé dans le temps — est
 partie chercher ce remède. Elle a pris la deuxième MARTINE (celle que
 le joueur n'utilise pas). Elle n'est jamais rentrée. Depuis, il ne
 reste qu'UNE MARTINE, celle du joueur.
 
-Camille a laissé des **notes** dans les époques qu'elle a traversées —
+Al3x1A a laissé des **notes** dans les époques qu'elle a traversées —
 un mot ici, une gravure là, une phrase peinte sur un mur ailleurs.
 Chaque note s'inscrit sur le SUPPORT CARACTÉRISTIQUE de son époque
 (paroi de grotte, tablette d'argile, papyrus, manuscrit, gazette
@@ -90,7 +90,7 @@ scène post-XXIe) :
    Il présente la maladie de la mémoire. Il montre le portrait de la
    pionnière. Il te propose de partir la retrouver.
 5. **Choix** — le joueur accepte, la scène se termine sur « À BIENTÔT
-   DANS LES FILS DU TEMPS — LA PIONNIÈRE » (teaser).
+   DANS LES FILS DU TEMPS — AL3X1A » (teaser).
 
 Cette séquence peut être **jouée comme un tableau supplémentaire** du
 jeu 1 : décor du futur, PNJ des chronautes, dialogues courts, un
@@ -151,26 +151,26 @@ DU TEMPS — LE DISCERNEMENT ».
 2. Tirage au sort de l'**époque cible** parmi les 9.
 3. Le joueur navigue librement entre les 9 chapitres (déjà connus,
    décors inchangés).
-4. Dans chaque tableau, il ramasse des **notes** de Camille laissées
+4. Dans chaque tableau, il ramasse des **notes** de Al3x1A laissées
    sur les supports caractéristiques de l'époque. Certains PNJ
    existants gagnent aussi une **réplique conditionnelle** (« une
    drôle de voyageuse est passée »).
 5. En croisant les notes, le joueur comprend dans quelle époque
-   Camille est bloquée.
-6. Dans la bonne époque, Camille est **cachée dans le décor** —
+   Al3x1A est bloquée.
+6. Dans la bonne époque, Al3x1A est **cachée dans le décor** —
    hotspot discret à trouver.
 7. Elle demande un **objet local** à récupérer (petite énigme).
 8. Objet trouvé → retour au futur → écran de fin.
 
-### 3.2 Système d'indices — les notes de Camille sur les supports
+### 3.2 Système d'indices — les notes de Al3x1A sur les supports
 
 **Pas de chaud/froid, pas de boussole MARTINE**. Le joueur reconstitue
-le parcours de Camille comme un historien : par les traces
+le parcours de Al3x1A comme un historien : par les traces
 matérielles qu'elle a laissées sur le SUPPORT CARACTÉRISTIQUE de chaque
 époque. C'est la mécanique-clé, et elle recolle au fil rouge du jeu 1
 (chaque époque a son support).
 
-| Époque | Support de la note de Camille |
+| Époque | Support de la note de Al3x1A |
 |---|---|
 | Paléo | Peinture sur paroi de grotte |
 | Néo | Gravure sur mégalithe / tatouage sur figurine |
@@ -187,7 +187,7 @@ Cliquer dessus **révèle son contenu** dans une modale, avec l'illusion
 que c'est écrit sur le support de l'époque (police, couleur, cadrage
 adaptés).
 
-- **Notes des mauvaises époques** : Camille raconte ce qu'elle a fait
+- **Notes des mauvaises époques** : Al3x1A raconte ce qu'elle a fait
   d'ambiance, mais rien de décisif (« j'ai étudié la fresque, ce n'est
   pas ici, je repars »).
 - **Note de la bonne époque** : elle décrit précisément où elle est
@@ -199,14 +199,14 @@ conditionnelle du type « une drôle de voyageuse est passée » — clic
 sur eux, dialogue court. Répliques réutilisent les portraits existants.
 
 **Facteur chance et facteur enquête cohabitent** : rien n'empêche le
-joueur de cliquer partout dans la bonne époque et tomber sur Camille
+joueur de cliquer partout dans la bonne époque et tomber sur Al3x1A
 sans avoir lu une seule note. Rare, mais possible. L'enquête est la
 voie normale ; la chance ne bloque pas les têtes brûlées.
 
 **Combien de notes suffisent** : 2 ou 3 notes suffisent pour
 comprendre. Pas de gate technique, on lit chaque note en la ramassant.
 
-### 3.3 Personnage unique : Camille
+### 3.3 Personnage unique : Al3x1A
 
 **Un seul personnage**, pas de pool tiré au sort. Cette révision par
 rapport à la V0 de la note : la richesse vient de l'aléatoire de
@@ -214,7 +214,7 @@ l'**époque** (9 possibilités, ~9 rejouabilités), pas de la variété des
 persos à retrouver. Un seul personnage à créer, mieux fouillé, avec
 une vraie voix.
 
-- **Nom** : Camille (prénom non-genré en français — chaque joueur, garçon
+- **Nom** : Al3x1A (prénom non-genré en français — chaque joueur, garçon
   ou fille, s'y projette sans être troublé).
 - **Fonction** : chronaute-pionnière, la première à avoir voyagé avec la
   MARTINE-jumelle. Partie il y a dix ans. Personne ne l'a revue.
@@ -261,16 +261,16 @@ mini-quête, pas deux.
 
 - **Un nouveau tableau « Le futur »** avec les chronautes (utilisé aux
   raccords jeu 1 → jeu 2 → jeu 3).
-- **1 portrait de Camille** (SVG comme les portraits existants, traits
+- **1 portrait de Al3x1A** (SVG comme les portraits existants, traits
   androgynes).
 - **3 portraits chronautes du futur** : Elias (chef), Mira (ingénieure),
-  et le cadre-photo de Camille.
-- **9 hotspots « note de Camille »** (un par époque, sur le support
+  et le cadre-photo de Al3x1A.
+- **9 hotspots « note de Al3x1A »** (un par époque, sur le support
   caractéristique — paroi peinte, tablette d'argile, papyrus, etc.).
 - **9 mini-modales « lire la note »** (rendu qui imite le support).
 - **~18 répliques conditionnelles** sur les PNJ existants du jeu 1
   (2 par époque : « une drôle de voyageuse est passée »).
-- **9 mini-scènes de retrouvailles** (une par époque possible où Camille
+- **9 mini-scènes de retrouvailles** (une par époque possible où Al3x1A
   peut être bloquée) + l'énigme locale associée.
 - **Système d'identification** au démarrage : saisie du prénom,
   sauvegarde par prénom.
@@ -326,7 +326,7 @@ Divergent). Ne pas édulcorer.
 
 ## 7. Questions ouvertes (à trancher au fil du dev)
 
-- **Twist « Camille = toi-plus-vieux »** : gardé en réserve ou intégré
+- **Twist « Al3x1A = toi-plus-vieux »** : gardé en réserve ou intégré
   dès le jeu 2 ? Le prénom neutre le rend possible sans reformulation.
 - **Réutiliser la sauvegarde du jeu 1** : le jeu 2 démarre-t-il
   uniquement après complétion du jeu 1, ou est-il jouable en autonome
