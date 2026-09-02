@@ -869,6 +869,12 @@ export default function App() {
             style={{ ...cheatBtn, width: 30, textAlign: "center", padding: "6px 0" }}>{i + 1}</button>
         ))}
       </div>
+      <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, color: "#8a7a9a", margin: "10px 0 4px" }}>Écrans de fin :</div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+        <button style={cheatBtn} onClick={() => { setChapterIndex(CHAPTERS.length - 1); setScreen("chronautes"); }}>🌀 Station des chronautes</button>
+        <button style={cheatBtn} onClick={() => { setChapterIndex(CHAPTERS.length - 1); setEpiChoice(null); setScreen("epilogue"); }}>❓ Épilogue (support ?)</button>
+        <button style={cheatBtn} onClick={() => { setChapterIndex(CHAPTERS.length - 1); setScreen("end"); }}>🏁 Écran de fin</button>
+      </div>
       <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 9.5, color: "#6a5a7a", marginTop: 8 }}>tape « triche » pour fermer</div>
     </div>
   );
