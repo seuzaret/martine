@@ -12,11 +12,13 @@
    - CONCLUSION / DEBAT : le mot de la fin, sur l'écran de bilan.
    ============================================================ */
 
-/* La question posée au joueur, en arrivant. */
+/* La question posée au joueur, en arrivant.
+   ELIAS parle : c'est son ultime question, avant que le joueur ne
+   reparte pour retrouver Camille. Fait suite à la scène chronautes. */
 export const QUESTION = [
-  "Une dernière chose, humain. Mes circuits sont rechargés, je peux te ramener chez toi.",
-  "Mais avant : tu viens de voir 20 000 ans de messages. La peinture de Lascaux, l'argile d'Uruk, le parchemin des moines, l'imprimerie, le télégraphe, la radio, le cloud…",
-  "Alors à ton tour. Tu veux laisser un message aux humains de dans 20 000 ans.",
+  "Attends — une toute dernière chose avant que tu ne repartes.",
+  "Tu viens de voir 20 000 ans de messages. La peinture de Lascaux, l'argile d'Uruk, le parchemin des moines, l'imprimerie, le télégraphe, la radio, le cloud… tu sais mieux que personne ce qui dure et ce qui s'efface.",
+  "Alors dis-moi : si toi, aujourd'hui, tu devais laisser un message aux humains de dans 20 000 ans — quel support choisirais-tu ?",
 ];
 
 export const QUESTION_TITRE = "Quel support choisis-tu ?";

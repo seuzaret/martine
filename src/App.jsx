@@ -34,7 +34,7 @@ import { SosButton, SosOverlay } from "./engine/SosSignal.jsx";
 import IntroStory from "./engine/IntroStory.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
-import StationChronautes from "./chapters/epilogue/StationChronautes.jsx";
+import StationChronautes, { PortraitElias } from "./chapters/epilogue/StationChronautes.jsx";
 
 /* Police « épique » du titre : on tente d'abord de belles polices gravées
    (souvent présentes sur les PC scolaires via Office), avec repli élégant.
@@ -1145,11 +1145,19 @@ export default function App() {
       <div style={{ minHeight: "100vh", background: "radial-gradient(ellipse at 50% 20%, #1a2f4a 0%, #080d16 70%)", padding: 20, fontFamily: "Palatino, Georgia, serif", color: "#e8eef5" }}>
         {cheatPanel}
         <div style={{ maxWidth: 660, margin: "0 auto", textAlign: "center" }}>
+          {/* Portrait : ELIAS pour la question (il vient de te la poser),
+              MARTINE pour la réponse (elle est l'experte des supports). */}
           <div style={{ display: "flex", justifyContent: "center", marginTop: 14 }}>
-            <Avatar mood={choisi ? "content" : "neutre"} size={92} date="+20 000" />
+            {choisi ? (
+              <Avatar mood="content" size={92} date="+20 000" />
+            ) : (
+              <div style={{ width: 92, height: 110, borderRadius: 12, overflow: "hidden", border: "2px solid #ffd166", boxShadow: "0 6px 18px rgba(0,0,0,0.5)" }}>
+                <PortraitElias mood="content" />
+              </div>
+            )}
           </div>
-          <div style={{ fontFamily: "ui-monospace,monospace", color: "#5eff9e", letterSpacing: 3, fontSize: 11, marginTop: 8 }}>
-            ÉPILOGUE
+          <div style={{ fontFamily: "ui-monospace,monospace", color: choisi ? "#5eff9e" : "#ffd166", letterSpacing: 3, fontSize: 11, marginTop: 8 }}>
+            {choisi ? "MARTINE" : "ELIAS · ULTIME QUESTION"}
           </div>
 
           {!choisi ? (

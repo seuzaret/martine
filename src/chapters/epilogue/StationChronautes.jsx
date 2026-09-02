@@ -196,6 +196,10 @@ function PortraitCamilleCadre({ mood = "neutre" }) {
 }
 
 const PORTRAITS = { elias: PortraitElias, mira: PortraitMira, camille: PortraitCamilleCadre };
+
+/* Export : la portrait d'Elias est réutilisée dans l'écran ÉPILOGUE
+   pour son ultime question sur le support à choisir. */
+export { PortraitElias };
 const NAMES = { elias: "Elias", mira: "Mira", camille: "Photo de Camille" };
 
 /* -------------------- DÉCOR DE LA STATION -------------------- */
@@ -404,14 +408,16 @@ function DecorStation({ onClickPerso, done }) {
         {/* médaille au cou */}
         <circle cx="0" cy="-10" r="4.5" fill="#c8a848" stroke="#8a6820" strokeWidth="0.6" />
       </g>
-      {/* « ? » de dialogue au-dessus d'Elias — disparaît une fois écouté */}
-      {!done?.elias && (
+      {/* « ? » au-dessus d'Elias — jaune tant qu'il n'a pas fini de parler ;
+          vert ✓ entre les étapes, PUIS RE-JAUNE une fois tous les autres
+          écoutés (ultime question). */}
+      {(!done?.elias || done?.finalReady) && (
         <g transform="translate(320,258)" onClick={() => onClickPerso?.("elias")} style={{ animation: "float 2s ease-in-out infinite", cursor: "pointer" }}>
           <circle r="16" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
           <text y="6" textAnchor="middle" fontSize="20" fontWeight="800" fill="#3a2410">?</text>
         </g>
       )}
-      {done?.elias && (
+      {done?.elias && !done?.finalReady && (
         <g transform="translate(320,258)">
           <circle r="10" fill="#5eff9e" stroke="#2a4028" strokeWidth="1.5" opacity="0.8" />
           <text y="4" textAnchor="middle" fontSize="12" fontWeight="800" fill="#0a2010">✓</text>
@@ -518,9 +524,10 @@ export default function StationChronautes({ prenom, onContinue }) {
 
   return (
     <div style={{ height: "100dvh", overflow: "hidden", background: "#080d16", display: "flex", flexDirection: "column", position: "relative" }}>
-      {/* Décor plein cadre — cliquable */}
+      {/* Décor plein cadre — cliquable. On passe un flag "finalReady"
+          quand les 3 persos sont écoutés → le ? d'Elias redevient jaune. */}
       <div style={{ position: "absolute", inset: 0 }}>
-        <DecorStation onClickPerso={openPerso} done={done} />
+        <DecorStation onClickPerso={openPerso} done={{ ...done, finalReady: allDone && !finalHeard }} />
       </div>
       {/* bandeau titre */}
       <div style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "10px 12px 0", background: "linear-gradient(180deg,#0c1220ee 0%,#0c122000 100%)", pointerEvents: "none" }}>
