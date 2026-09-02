@@ -17,7 +17,7 @@ import { useState } from "react";
 const DIALOGUES_PAR_PERSO = {
   elias: [
     { mood: "content",
-      text: "Te voilà. Tu ne me connais pas encore. Moi, si — j'ai lu tes messages, ceux qui nous sont parvenus. Bienvenue à la station des chronautes. Je m'appelle Elias." },
+      text: "Te voilà, {prenom}. Tu ne me connais pas encore. Moi, si — j'ai lu tes messages, ceux qui nous sont parvenus. Bienvenue à la station des chronautes. Je m'appelle Elias." },
     { mood: "neutre",
       text: "Nous sommes en 2287. Il y a longtemps, tout le numérique s'est éteint d'un coup. Un jour, deux jours, plus rien. Ni serveurs, ni disques, ni photos. Cinq siècles de mémoire humaine, envolés." },
     { mood: "content",

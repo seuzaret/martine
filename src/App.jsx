@@ -241,9 +241,9 @@ export default function App() {
      partie existante avec un état vide). */
   useEffect(() => {
     if (screen === "play" || screen === "end") {
-      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned });
+      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom });
     }
-  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned]);
+  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom]);
 
   /* CONFORT DE LECTURE : applique les classes sur <html> (le CSS fait le
      reste, moteur compris) et mémorise le choix sur l'appareil. */
@@ -406,8 +406,10 @@ export default function App() {
     setMediadex(s.mediadex || []); setSosSent(s.sosSent || []); setFlux(s.flux || 0);
     setFluxTotal(s.fluxTotal || 0); setBonusChapters(s.bonusChapters || []);
     setAnachronismLearned(s.anachronismLearned || false);
+    if (s.prenom) setPrenom(s.prenom);
     setTab(s.tab ?? CHAPTERS[i].startScene);
-    setDialog({ lines: ["Reprise du voyage. Je remets les circuits en route là où on s'était arrêtés."], idx: 0, mood: "neutre" });
+    const nom = s.prenom ? `, ${s.prenom}` : "";
+    setDialog({ lines: [`Reprise du voyage${nom}. Je remets les circuits en route là où on s'était arrêtés.`], idx: 0, mood: "neutre" });
     setScreen(s.screen === "end" ? "end" : "play");
   };
 
@@ -1004,6 +1006,11 @@ export default function App() {
           <div style={{ marginTop: 26, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
             {saveExists ? (
               <>
+                {saved?.prenom && (
+                  <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, color: "#5eff9e", opacity: 0.85, letterSpacing: 2 }}>
+                    ► Salut, {saved.prenom} !
+                  </div>
+                )}
                 <button onClick={resume}
                   style={{ background: "#5eff9e", color: "#06110b", border: "none", borderRadius: 12, padding: "14px 34px", fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 2, boxShadow: "0 0 24px rgba(94,255,158,0.4)" }}>
                   ▶ REPRENDRE
@@ -1014,7 +1021,7 @@ export default function App() {
                 </button>
               </>
             ) : (
-              <button onClick={newGame}
+              <button onClick={() => setModal({ type: "askPrenom", after: newGame })}
                 style={{ background: "#5eff9e", color: "#06110b", border: "none", borderRadius: 12, padding: "14px 34px", fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 2, boxShadow: "0 0 24px rgba(94,255,158,0.4)" }}>
                 ▶ DÉMARRER
               </button>
@@ -1082,8 +1089,33 @@ export default function App() {
               </p>
               <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                 <button onClick={() => setModal(null)} style={{ flex: 1, background: "#1a2536", color: "#e8eef5", border: "1px solid #2a3648", borderRadius: 10, padding: "12px", fontWeight: 700, cursor: "pointer" }}>Annuler</button>
-                <button onClick={() => { clearSave(); setModal(null); newGame(); }} style={{ flex: 1, background: "#e8934a", color: "#111", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer" }}>Nouvelle partie</button>
+                <button onClick={() => { clearSave(); setModal({ type: "askPrenom", after: newGame }); }} style={{ flex: 1, background: "#e8934a", color: "#111", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer" }}>Nouvelle partie</button>
               </div>
+            </div>
+          </div>
+        )}
+        {modal?.type === "askPrenom" && (
+          <div style={overlay} onClick={() => setModal(null)}>
+            <div style={{ ...card, textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
+              <div style={{ fontSize: 40, marginBottom: 6 }}>👋</div>
+              <h2 style={{ marginTop: 0, color: "#5eff9e", fontFamily: "ui-monospace,monospace", letterSpacing: 2, fontSize: 16 }}>COMMENT T'APPELLES-TU ?</h2>
+              <p style={{ fontSize: 13.5, color: "#c8d4e2", lineHeight: 1.55, margin: "8px 0 14px" }}>
+                MARTINE veut noter ton prénom pour ton carnet de bord, et te reconnaître si tu reviens jouer.
+              </p>
+              <form onSubmit={(e) => { e.preventDefault(); const cb = modal.after; setModal(null); if (cb) cb(); }}
+                style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <input autoFocus value={prenom} onChange={(e) => setPrenom(e.target.value.slice(0, 24))}
+                  placeholder="Ton prénom (ou un pseudo)"
+                  style={{ background: "#0e1420", color: "#e8eef5", border: "1px solid #2a3648", borderRadius: 10, padding: "12px 14px", fontSize: 16, fontFamily: "Palatino, Georgia, serif", textAlign: "center" }} />
+                <button type="submit"
+                  style={{ background: "#5eff9e", color: "#06110b", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer", fontSize: 15, fontFamily: "ui-monospace,monospace", letterSpacing: 2 }}>
+                  ▶ EMBARQUER
+                </button>
+                <button type="button" onClick={() => { const cb = modal.after; setModal(null); if (cb) cb(); }}
+                  style={{ background: "transparent", color: "#5a6678", border: "none", cursor: "pointer", fontSize: 12, fontFamily: "ui-monospace,monospace" }}>
+                  (passer)
+                </button>
+              </form>
             </div>
           </div>
         )}
@@ -1129,7 +1161,7 @@ export default function App() {
     return (
       <>
         {cheatPanel}
-        <StationChronautes onContinue={() => setScreen("epilogue")} />
+        <StationChronautes prenom={prenom} onContinue={() => setScreen("epilogue")} />
       </>
     );
   }
