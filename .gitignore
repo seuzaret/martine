@@ -1,3 +1,80 @@
+# ============================================================
+# MARTINE — projet Vite + React
+# ============================================================
+
+# Dépendances
 node_modules/
+.pnp
+.pnp.js
+jspm_packages/
+
+# Build de production (regénéré par `npm run build`)
 dist/
+dist-ssr/
+build/
+
+# Cache & logs
+.vite/
+.cache/
+.parcel-cache/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Rapports de couverture / tests
+coverage/
+*.lcov
+.nyc_output/
+
+# Variables d'environnement locales (ne jamais versionner)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 *.local
+
+# Fichiers d'éditeurs / IDE
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+
+# Fichiers Nextcloud (synchro)
+.sync-conflict-*
+.~lock.*
+
+# Sauvegardes & brouillons
+*.bak
+*.tmp
+*.orig
+*.swp
+scratch/
+notes-persos/
+
+# Captures d'écran locales
+Screenshot_*.jpg
+Screenshot_*.png
+capture-*.png
+
+# Outils Anthropic / Claude Code
+.claude/
+.aider*
+CLAUDE-*.local.md
