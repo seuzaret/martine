@@ -35,6 +35,10 @@ import IntroStory from "./engine/IntroStory.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 import StationChronautes, { PortraitElias } from "./chapters/epilogue/StationChronautes.jsx";
+import { JEU2 } from "./chapters/epilogue/jeu2Data.js";
+import NoteAl3x1A from "./chapters/epilogue/NoteAl3x1A.jsx";
+import RetrouvaillesAl3x1A from "./chapters/epilogue/RetrouvaillesAl3x1A.jsx";
+import FinJeu2 from "./chapters/epilogue/FinJeu2.jsx";
 
 /* Police « épique » du titre : on tente d'abord de belles polices gravées
    (souvent présentes sur les PC scolaires via Office), avec repli élégant.
@@ -153,6 +157,11 @@ export default function App() {
   const [transitionTo, setTransitionTo] = useState(null); // chapitre visé pendant la transition
   const [maxReached, setMaxReached] = useState(0); // plus haut chapitre débloqué (menu titre)
   const [mode, setMode] = useState("jeu1");        // "jeu1" (voyage principal) | "jeu2" (enquête Al3x1A)
+  const [jeu2Target, setJeu2Target] = useState(-1); // index du chapitre où Al3x1A est bloqué·e
+  const [jeu2Notes, setJeu2Notes] = useState([]);  // chapitres où la note a été lue (indices)
+  const [jeu2Found, setJeu2Found] = useState(false); // Al3x1A a été trouvé·e ?
+  const [openNote, setOpenNote] = useState(null);  // { chapitre } → affiche la modale de note
+  const [openRetrouvailles, setOpenRetrouvailles] = useState(false);
   const [tab, setTab] = useState(CHAPTERS[0].startScene); // tableau courant
   const [dialog, setDialog] = useState({ lines: CHAPTERS[0].intro, idx: 0, mood: "neutre" });
   const [inv, setInv] = useState([]);            // besace (identifiants d'objets)
@@ -242,9 +251,9 @@ export default function App() {
      partie existante avec un état vide). */
   useEffect(() => {
     if (screen === "play" || screen === "end") {
-      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, mode }, mode);
+      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, mode, jeu2Target, jeu2Notes, jeu2Found }, mode);
     }
-  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, mode]);
+  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, mode, jeu2Target, jeu2Notes, jeu2Found]);
 
   /* CONFORT DE LECTURE : applique les classes sur <html> (le CSS fait le
      reste, moteur compris) et mémorise le choix sur l'appareil. */
@@ -354,12 +363,26 @@ export default function App() {
     setScreen("intro");
   };
 
-  /* Démarre une NOUVELLE PARTIE DE JEU 2 (« Al3x1A ») — placeholder
-     tant que les mécaniques du jeu 2 ne sont pas prêtes. */
+  /* Démarre une NOUVELLE PARTIE DE JEU 2 (« Al3x1A »). Tire au sort
+     l'époque cible parmi les 9 chapitres du voyage principal, puis
+     démarre au chapitre 0 (ex : la Préhistoire) pour laisser le joueur
+     explorer. Notes vides, Al3x1A pas encore trouvé·e. */
   const newGameJeu2 = () => {
     setMode("jeu2");
-    setInv([]); setMsgs([]); setMade([]); setFlags({}); setQuete(0);
-    setScreen("jeu2Placeholder");
+    const target = Math.floor(Math.random() * JEU2.length);
+    setJeu2Target(target);
+    setJeu2Notes([]);
+    setJeu2Found(false);
+    setChapterIndex(0); setMaxReached(CHAPTERS.length - 1);
+    setInv([]); setMsgs([]); setMade([]); setFlags({}); setCollection([]); setQuete(0);
+    setFlux(0); setFluxTotal(0); setBonusChapters([]);
+    setTab(CHAPTERS[0].startScene);
+    setDialog({ lines: [
+      `Nouvelle mission, ${prenom || "chronaute"} : retrouver Al3x1A.`,
+      "Cette personne a laissé des notes dans les époques qu'elle a traversées, chacune sur le support de son temps : peinture, argile, papyrus, manuscrit, gazette, télégramme…",
+      "Trouve-les, lis-les, et déduis dans quelle époque Al3x1A est bloqué·e. Fouille les scènes — cette personne est cachée quelque part. Ta MARTINE t'attend.",
+    ], idx: 0, mood: "neutre" });
+    setScreen("play");
   };
 
   /* Charge un chapitre. L'inventaire et l'état du chapitre repartent
@@ -420,6 +443,10 @@ export default function App() {
     setFluxTotal(s.fluxTotal || 0); setBonusChapters(s.bonusChapters || []);
     setAnachronismLearned(s.anachronismLearned || false);
     if (s.prenom) setPrenom(s.prenom);
+    /* état spécifique jeu 2 (silencieusement ignoré si absent) */
+    setJeu2Target(s.jeu2Target ?? -1);
+    setJeu2Notes(s.jeu2Notes || []);
+    setJeu2Found(s.jeu2Found || false);
     setTab(s.tab ?? CHAPTERS[i].startScene);
     const nom = s.prenom ? `, ${s.prenom}` : "";
     setDialog({ lines: [`Reprise du voyage${nom}. Je remets les circuits en route là où on s'était arrêtés.`], idx: 0, mood: "neutre" });
@@ -890,6 +917,16 @@ export default function App() {
         <button style={cheatBtn} onClick={() => { setChapterIndex(CHAPTERS.length - 1); setEpiChoice(null); setScreen("epilogue"); }}>❓ Épilogue (support ?)</button>
         <button style={cheatBtn} onClick={() => { setChapterIndex(CHAPTERS.length - 1); setScreen("end"); }}>🏁 Écran de fin</button>
       </div>
+      <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, color: "#8a7a9a", margin: "10px 0 4px" }}>Jeu 2 (Al3x1A) :</div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+        <button style={cheatBtn} onClick={newGameJeu2}>🎲 Démarrer nouveau Jeu 2</button>
+        <button style={cheatBtn} onClick={() => { if (mode === "jeu2" && jeu2Target >= 0) { setChapterIndex(jeu2Target); setTab(JEU2[jeu2Target].al3x1aHotspot.tab); } }} title="Aller directement au chapitre cible d'Al3x1A">📍 Aller à Al3x1A</button>
+        {mode === "jeu2" && jeu2Target >= 0 && (
+          <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, color: "#c88aff", padding: "3px 6px" }}>
+            Cible : ch.{jeu2Target + 1} · notes : {jeu2Notes.length}/9
+          </div>
+        )}
+      </div>
       <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 9.5, color: "#6a5a7a", marginTop: 8 }}>tape « triche » pour fermer</div>
     </div>
   );
@@ -1216,11 +1253,20 @@ export default function App() {
      S'affiche juste après le saut depuis le DERNIER chapitre, avant
      l'épilogue. Elias, Mira, portrait-cadre d'Al3x1A. Séquence de
      dialogues scriptée. Fin de la séquence → écran épilogue. */
-  /* ---------- écran PLACEHOLDER du JEU 2 (Al3x1A) ---------------------
-     Écran d'attente en construction : le jeu 2 démarre, l'infrastructure
-     est prête (mode, slot séparé, save par prénom), mais les mécaniques
-     (notes sur supports, retrouvailles, remède) arrivent dans la prochaine
-     étape. Bouton retour au menu titre. */
+  /* ---------- écran FIN JEU 2 ------------------------------------------ */
+  if (screen === "finJeu2") {
+    return (
+      <>
+        {cheatPanel}
+        <FinJeu2
+          prenom={prenom}
+          remede={jeu2Target >= 0 ? JEU2[jeu2Target]?.remede : null}
+          onRetour={() => { setMode("jeu1"); setScreen("title"); }} />
+      </>
+    );
+  }
+
+  /* ---------- écran PLACEHOLDER du JEU 2 (obsolète mais gardé pour compat) */
   if (screen === "jeu2Placeholder") {
     return (
       <div style={{ minHeight: "100vh", background: "radial-gradient(ellipse at 50% 30%, #14233a 0%, #080d16 70%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, fontFamily: "Palatino, Georgia, serif", color: "#e8eef5" }}>
@@ -1506,8 +1552,12 @@ export default function App() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, padding: "2px 12px 6px", flexWrap: "wrap" }}>
         <span style={{ fontSize: 17, fontWeight: 700, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>{chapter.emoji} {chapter.scenes[tab].name}</span>
         <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-          {/* seule jauge visible : le flux temporel. Petite bulle +N/-N flottante
-              qui monte à chaque gain ou perte, feedback direct. */}
+          {/* JEU 2 : compteur de notes trouvées à la place de la jauge flux */}
+          {mode === "jeu2" ? (
+            <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 14, fontWeight: 700, color: "#7fd8ff" }} title="Notes d'Al3x1A trouvées">
+              🔎 {jeu2Notes.length}/9 notes
+            </span>
+          ) : (
           <span style={{ position: "relative", fontFamily: "ui-monospace,monospace", fontSize: 14, fontWeight: 700, color: canJump ? "#ffd166" : "#7fd8ff" }} title={`Flux temporel — ${canJump ? "prêt à partir !" : `encore ${Math.max(0, Math.ceil(fluxRequis - flux))} pour partir`}`}>
             ⚡ {flux}/{fluxRequis}
             {fluxBubble && (
@@ -1520,13 +1570,14 @@ export default function App() {
               </span>
             )}
           </span>
+          )}
           {/* deux boutons seulement dans le bandeau — Mediadex et Réglages.
               Le son, l'indice, la révélation, le carnet sont dans Réglages. */}
           <button onClick={() => setShowMediadex(true)} title={`Mediadex (${mediadex.length} cartes)`} style={headBtn}>🃏</button>
           <button onClick={() => setModal({ type: "settings" })} title="Réglages, son, indice, carnet…" style={headBtn}>⚙</button>
           {/* Sur écran étroit uniquement, le bouton compact de SAUT reste
               dans le bandeau (sinon on l'a dans la jauge temporelle à droite). */}
-          {!large && (
+          {!large && mode !== "jeu2" && (
             <button onClick={jump} disabled={!canJump}
               title={canJump ? `Saut vers ${chapter.destination}` : (jumpBloque || `Encore ${Math.max(0, Math.ceil(fluxRequis - flux))} flux pour partir`)}
               style={{ background: canJump ? "#e8934a" : "#1a2230", color: canJump ? "#111" : "#4a5568", border: "none", borderRadius: 10, padding: "7px 12px", fontSize: 13, fontWeight: 800, cursor: canJump ? "pointer" : "not-allowed", fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
@@ -1553,12 +1604,66 @@ export default function App() {
           <div style={{ width: decorBox ? decorBox.w : "100%", height: decorBox ? decorBox.h : "100%", position: "relative" }}>
             <Scene scenes={chapter.scenes} tab={tab} onTab={setTab} sceneProps={sceneProps} sparkle={sparkle} linear={chapter.linear}
               canAdvance={!!(chapter.linear && !chapter.scenes[tab].free && chapter.scenes[tab + 1] && (chapter.scenes[tab].nextWhen || []).every((id) => made.includes(id)))} />
+            {/* ═══ JEU 2 : overlay des hotspots note + Al3x1A ═══
+                On dessine par-dessus la scène (viewBox aligné 1000×560,
+                position absolute, pointerEvents:none pour laisser passer
+                les clics ailleurs). Les hotspots eux-mêmes captent leurs
+                propres clics. */}
+            {mode === "jeu2" && !openRetrouvailles && (
+              (() => {
+                const cfg = JEU2[chapterIndex];
+                if (!cfg) return null;
+                const noteHere = cfg.noteHotspot?.tab === tab && !jeu2Notes.includes(chapterIndex);
+                const al3x1aHere = chapterIndex === jeu2Target && cfg.al3x1aHotspot?.tab === tab && !jeu2Found;
+                return (
+                  <svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice"
+                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
+                    <g style={{ pointerEvents: "auto" }}>
+                      {noteHere && (
+                        <g onClick={() => setOpenNote({ chapitre: chapterIndex })}
+                          transform={`translate(${cfg.noteHotspot.cx},${cfg.noteHotspot.cy})`}
+                          style={{ cursor: "pointer", animation: "float 2s ease-in-out infinite" }}>
+                          <circle r={cfg.noteHotspot.r} fill="rgba(255,209,102,0.15)" stroke="#ffd166" strokeWidth="2" strokeDasharray="4 4" />
+                          <circle r="18" fill="#ffd166" />
+                          <text y="7" textAnchor="middle" fontSize="24" fontWeight="800" fill="#3a2410">✎</text>
+                        </g>
+                      )}
+                      {al3x1aHere && (
+                        <g onClick={() => { setJeu2Found(true); setOpenRetrouvailles(true); }}
+                          transform={`translate(${cfg.al3x1aHotspot.cx},${cfg.al3x1aHotspot.cy})`}
+                          style={{ cursor: "pointer", animation: "float 2s ease-in-out infinite" }}>
+                          <circle r={cfg.al3x1aHotspot.r} fill="rgba(127,216,255,0.15)" stroke="#7fd8ff" strokeWidth="2" strokeDasharray="4 4" />
+                          <circle r="22" fill="#7fd8ff" />
+                          <text y="8" textAnchor="middle" fontSize="26" fontWeight="800" fill="#0a1830">?</text>
+                        </g>
+                      )}
+                    </g>
+                  </svg>
+                );
+              })()
+            )}
           </div>
         </div>
         {/* écran large : la jauge temporelle à droite */}
-        {large && (
+        {large && mode !== "jeu2" && (
           <JaugeTemporelle transmis={flux} requis={fluxRequis} total={ALL_MSGS.length}
             destination={chapter.destination} canJump={canJump} onJump={jump} isLast={isLastChapter} bloque={jumpBloque} />
+        )}
+        {/* JEU 2 : petite colonne d'aide qui remplace la jauge — liste des
+            notes trouvées + rappel de la mission. */}
+        {large && mode === "jeu2" && (
+          <div style={{ width: 116, flex: "0 0 auto", display: "flex", flexDirection: "column", background: "linear-gradient(180deg,#0e1c2a,#0a1420)", border: "1px solid #26324a", borderRadius: 12, padding: "9px 8px", gap: 6, overflowY: "auto" }}>
+            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, letterSpacing: 1.5, color: "#7fd8ff", textAlign: "center", lineHeight: 1.35 }}>🔎 NOTES<br />D'AL3X1A</div>
+            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 22, fontWeight: 800, color: "#7fd8ff", textAlign: "center" }}>{jeu2Notes.length}/9</div>
+            <div style={{ height: 1, background: "#26324a", margin: "4px 0" }} />
+            <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              {CHAPTERS.map((c, i) => (
+                <div key={c.id} style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, color: jeu2Notes.includes(i) ? "#7fd8ff" : "#4a5568", padding: "2px 0", borderLeft: `2px solid ${jeu2Notes.includes(i) ? "#7fd8ff" : "#26324a"}`, paddingLeft: 5 }}>
+                  {jeu2Notes.includes(i) ? "✓" : "·"} ch.{i + 1}
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
 
@@ -1748,6 +1853,31 @@ export default function App() {
 
       {modal?.type === "eniac_debug" && (
         <EniacDebugGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_eniac")} />
+      )}
+
+      {/* Modales spécifiques au JEU 2 */}
+      {openNote && (() => {
+        const cfg = JEU2[openNote.chapitre];
+        const isRight = openNote.chapitre === jeu2Target;
+        const text = isRight ? cfg.noteRightText : cfg.noteWrongText;
+        return (
+          <NoteAl3x1A
+            support={cfg.support}
+            text={text}
+            chapitreNom={CHAPTERS[openNote.chapitre]?.epoque || ""}
+            onClose={() => {
+              /* Marque la note comme lue (retire le hotspot) */
+              setJeu2Notes((v) => v.includes(openNote.chapitre) ? v : [...v, openNote.chapitre]);
+              setOpenNote(null);
+            }} />
+        );
+      })()}
+      {openRetrouvailles && jeu2Target >= 0 && (
+        <RetrouvaillesAl3x1A
+          prenom={prenom}
+          remede={JEU2[jeu2Target]?.remede}
+          chapitreNom={CHAPTERS[jeu2Target]?.epoque || ""}
+          onDone={() => { setOpenRetrouvailles(false); setScreen("finJeu2"); }} />
       )}
 
       {modal?.type === "taille_silex" && (
