@@ -474,9 +474,13 @@ export default function App() {
          Première fois : MARTINE explique la mécanique de nettoyage temporel.
          Fois suivantes : petite phrase courte, sans redite. */
       if (it.anachronic) {
+        /* Au ramassage, MARTINE ne donne QUE le nom + le signal
+           « déchet temporel » — pas la description (spoiler). C'est
+           quand l'élève JETTE l'objet dans la poubelle qu'il découvre
+           l'explication complète, en récompense. */
         if (!anachronismLearned) {
           setAnachronismLearned(true);
-          say(`${it.emoji} ${it.name} — 🚨 UN DÉCHET TEMPOREL ! ${it.desc || ''} Un agent du temps peu soigneux l'a laissé traîner ici, et ça POLLUE la ligne temporelle. Regarde : une POUBELLE TEMPORELLE 🗑️ vient d'apparaître à côté. Jette l'objet dedans pour nettoyer et gagner du flux. À partir de maintenant, ouvre l'œil : il y en a un caché à chaque époque.`, "vexe");
+          say(`${it.emoji} ${it.name} — 🚨 DÉCHET TEMPOREL ! Cet objet n'a rien à faire ici. Un agent du temps peu soigneux l'a laissé traîner et ça POLLUE la ligne temporelle. Direction la POUBELLE TEMPORELLE 🗑️ en bas à gauche — jette-le dedans pour nettoyer et gagner du flux. Il y en a un caché à chaque époque, ouvre l'œil.`, "vexe");
         } else {
           say(`${it.emoji} ${it.name} — Encore un déchet temporel ! Direction la poubelle 🗑️.`, "vexe");
         }
@@ -580,11 +584,13 @@ export default function App() {
     if (autoFiredRef.current.has(key)) { setPortraitOpen(false); return; }
     autoFiredRef.current.add(key);
     setPortraitOpen(true);
-    /* dépendance sur `tab` ET `quete` : sur nouveau tableau on TENTE
-       l'ouverture (comme avant, pour éviter le bug « un tableau trop
-       tôt »), mais l'auto ne se relance jamais si l'étape est déjà
-       passée. Sur nouveau `quete`, on tente aussi (arrivée sur l'étape). */
-  }, [tab, chapterIndex, quete]); // eslint-disable-line react-hooks/exhaustive-deps
+    /* dépendance sur `tab` uniquement (pas `quete`) : l'auto se
+       déclenche à l'ARRIVÉE sur un nouveau tableau, pas dès qu'une
+       étape s'achève. Sinon, quand un message est transmis, l'étape
+       suivante (souvent située sur le tableau SUIVANT) s'ouvre en
+       force sur le tableau courant — bug « portrait un tableau trop
+       tôt ». Le joueur clique sur le personnage suivant pour parler. */
+  }, [tab, chapterIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* AMBIANCE SONORE : si le tableau courant en déclare une (champ
      `ambience` dans les SCENES du data.js), elle démarre en douceur et
@@ -785,7 +791,10 @@ export default function App() {
         setInv((v) => v.filter((x) => x !== src));
         bumpFlux(3);
         flash(); playSfx("success");
-        say(`✓ ${it.emoji} ${it.name} — jeté dans la poubelle temporelle. La ligne temporelle respire. +3 flux.`, "content");
+        /* Récompense pédagogique : c'est ICI qu'on apprend POURQUOI
+           l'objet est anachronique (la desc complète). Ordre : nom,
+           puis explication historique, puis félicitations + gain. */
+        say(`✓ ${it.emoji} ${it.name} — jeté dans la poubelle temporelle. ${it.desc || ""} La ligne temporelle respire. +3 flux.`, "content");
       } else {
         setShake(true); setTimeout(() => setShake(false), 500);
         playSfx("fail");
@@ -1539,6 +1548,11 @@ export default function App() {
           ligne (à gauche). Présente sur chaque tableau. */}
       <div style={{ position: "relative", textAlign: "center", padding: "6px 12px 0", minHeight: 20 }}>
         <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", fontFamily: "ui-monospace,monospace", fontSize: 10, letterSpacing: 2, color: "#e8934a", whiteSpace: "nowrap" }}>{chapter.bandeau}</span>
+        {prenom && (
+          <span style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", fontFamily: "ui-monospace,monospace", fontSize: 10, letterSpacing: 2, color: "#5eff9e", whiteSpace: "nowrap", opacity: 0.85 }} title="C'est toi qui joues cette partie">
+            👤 {prenom}
+          </span>
+        )}
         <span style={{ fontFamily: TITRE_FONT, fontSize: 19, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", background: "linear-gradient(100deg, #e8a24a, #ffd166 45%, #e86a4a)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
           Les fils du temps
         </span>
@@ -1919,12 +1933,14 @@ export default function App() {
           fluxTotal={fluxTotal} bonusChapters={bonusChapters} />
       )}
 
-      {/* POUBELLE TEMPORELLE — apparaît une fois que le joueur a ramassé son
-          premier déchet temporel. Sert de cible de drop pour les items
-          marqués `anachronic: true`. */}
-      {anachronismLearned && screen === "play" && (
+      {/* POUBELLE TEMPORELLE — toujours visible en jeu (mode jeu 1
+          uniquement). L'élève doit apprendre à la reconnaître même
+          avant d'avoir croisé son premier déchet — sinon c'est trop
+          facile de rater les objets anachroniques. Cible de drop pour
+          les items marqués `anachronic: true`. */}
+      {screen === "play" && mode !== "jeu2" && (
         <div data-drop="hot:poubelle_temporelle"
-          title="Poubelle temporelle — jette ici les objets anachroniques (+3 flux)"
+          title="Poubelle temporelle — glisse-y les objets qui n'ont rien à faire à cette époque (+3 flux)"
           style={{
             position: "fixed", bottom: 24, left: 24, zIndex: 55,
             width: 60, height: 72, display: "flex", flexDirection: "column",
