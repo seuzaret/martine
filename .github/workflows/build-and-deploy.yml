@@ -1,0 +1,57 @@
+# Build automatique du jeu Martine à chaque push sur main.
+# - installe les dépendances
+# - lance `npm run build` (Vite → dossier dist/)
+# - copie le résultat dans docs/ (servi par GitHub Pages)
+# - commit docs/ si le contenu a changé
+#
+# Pour désactiver : supprimer ce fichier et git push.
+
+name: Build et deploie sur GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+# Empêche la boucle infinie : le commit fait par ce workflow
+# ne redéclenche pas le workflow (car son message contient [skip ci]).
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Installer les dependances
+        run: npm ci
+
+      - name: Construire le jeu
+        run: npm run build
+
+      - name: Copier dist/ vers docs/
+        run: |
+          rm -rf docs
+          mv dist docs
+          # GitHub Pages ignore les dossiers commencant par _ sauf si on ajoute .nojekyll
+          touch docs/.nojekyll
+
+      - name: Commit et push docs/ si change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs
+          if git diff --cached --quiet; then
+            echo "Aucun changement dans docs/ — rien a committer."
+          else
+            git commit -m "Build auto de docs/ [skip ci]"
+            git push
+          fi
