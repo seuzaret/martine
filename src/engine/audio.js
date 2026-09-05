@@ -5,7 +5,7 @@
    (oscillateurs + enveloppes de volume). Avantages : zéro
    téléchargement, zéro question de licence, poids nul.
 
-   API : playSfx('pickup'|'craft'|'success'|'message'|'fail'|'jump'|'dissolve')
+   API : playSfx('pickup'|'craft'|'success'|'message'|'fail'|'jump'|'warp'|'dissolve')
    - pickup   : petit blip doux (on ramasse un élément)
    - craft    : deux notes montantes (objet fabriqué)
    - success  : arpège joyeux (événement réussi, ex. la chasse)
@@ -116,6 +116,26 @@ const SFX = {
   jump: (c) => {
     tone(c, { f: 180, f1: 1200, d: 0.7, type: "sine", v: 0.2 });
     tone(c, { f: 90, f1: 600, d: 0.7, type: "triangle", v: 0.1 });
+  },
+  /* SAUT TEMPOREL du jeu 2 : bien plus long et plus « brut » que jump.
+     Approche du VWORP TARDIS : plusieurs oscillateurs légèrement désaccordés
+     qui montent/descendent en vagues, une note grave qui tient la basse,
+     un souffle aigu qui l'accompagne. Durée ~2,5 s pour couvrir l'anim
+     visuelle. */
+  warp: (c) => {
+    /* Basse grave, sinueuse : monte puis redescend, comme une machine qui
+       force son passage. Deux oscillateurs sawtooth légèrement désaccordés
+       donnent le « grain » métallique du TARDIS. */
+    tone(c, { f: 55, f1: 90, t: 0.00, d: 1.2, type: "sawtooth", v: 0.14 });
+    tone(c, { f: 57, f1: 92, t: 0.00, d: 1.2, type: "sawtooth", v: 0.10 });
+    tone(c, { f: 90, f1: 45, t: 1.20, d: 1.3, type: "sawtooth", v: 0.13 });
+    tone(c, { f: 92, f1: 46, t: 1.20, d: 1.3, type: "sawtooth", v: 0.10 });
+    /* Souffle médium en triangle : donne la sensation « d'air brassé » */
+    tone(c, { f: 280, f1: 520, t: 0.05, d: 1.1, type: "triangle", v: 0.06 });
+    tone(c, { f: 520, f1: 260, t: 1.25, d: 1.15, type: "triangle", v: 0.06 });
+    /* Ping cristallin à l'atterrissage (moment où le décor apparaît). */
+    tone(c, { f: 880, f1: 1760, t: 2.20, d: 0.35, type: "sine", v: 0.11 });
+    tone(c, { f: 1320, t: 2.30, d: 0.5, type: "sine", v: 0.06 });
   },
   /* message perdu : glissando DESCENDANT et doux, mélancolique
      (l'inverse du "jump" ascendant) — le message s'évapore, sans

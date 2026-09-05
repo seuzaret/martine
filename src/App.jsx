@@ -436,7 +436,7 @@ export default function App() {
   const [jeu2Warp, setJeu2Warp] = useState(null);  // { i, nom } pendant l'anim
   const travelJeu2 = (i) => {
     if (i === chapterIndex) return;
-    playSfx("jump");
+    playSfx("warp");
     setBubble(null);
     const nom = CHAPTERS[i].epoque || CHAPTERS[i].bandeau || `chapitre ${i + 1}`;
     setJeu2Warp({ i, nom });
@@ -449,15 +449,15 @@ export default function App() {
     if (landingTab === noteTab && scenes.length > 1) {
       landingTab = (landingTab + 1) % scenes.length;
     }
-    /* L'anim TARDIS dure ~1 s. Le vrai changement d'époque se fait à
-       mi-parcours pour que le décor soit déjà en place au moment où
-       l'overlay se dissipe. */
+    /* Anim TARDIS de 2,5 s : le décor est remplacé à 1,6 s (juste après
+       le "ping" cristallin d'atterrissage du son warp), l'overlay se
+       dissipe à 2,5 s → arrivée douce dans l'époque. */
     setTimeout(() => {
       setChapterIndex(i);
       setTab(landingTab);
       say(`🌀 Cap sur ${nom}. Explore les tableaux — les notes ne se laissent pas trouver toutes seules.`, "neutre");
-    }, 500);
-    setTimeout(() => setJeu2Warp(null), 1000);
+    }, 1600);
+    setTimeout(() => setJeu2Warp(null), 2500);
   };
 
   /* Reprend la partie sauvegardée (bouton « Reprendre »). Le SLOT à
@@ -2091,17 +2091,17 @@ export default function App() {
               </radialGradient>
             </defs>
             {[
-              { r: 88, w: 3, dur: "1s", dir: 1, op: 0.75, dash: "8 6" },
-              { r: 66, w: 2.4, dur: "0.7s", dir: -1, op: 0.85, dash: "12 4" },
-              { r: 46, w: 2, dur: "0.5s", dir: 1, op: 0.9, dash: "6 3" },
+              { r: 88, w: 3, dur: "2.4s", dir: 1, op: 0.75, dash: "8 6" },
+              { r: 66, w: 2.4, dur: "1.6s", dir: -1, op: 0.85, dash: "12 4" },
+              { r: 46, w: 2, dur: "1s", dir: 1, op: 0.9, dash: "6 3" },
             ].map((a, i) => (
               <g key={i} style={{ animation: `spin ${a.dur} linear infinite`, transformOrigin: "center", transform: a.dir === -1 ? "scale(-1,1)" : undefined }}>
                 <circle r={a.r} fill="none" stroke="#7fd8ff" strokeWidth={a.w} strokeDasharray={a.dash} opacity={a.op} />
               </g>
             ))}
-            {/* Le cœur lumineux qui pulse */}
-            <circle r="30" fill="url(#warp-core)" style={{ animation: "pulse 0.55s ease-in-out infinite" }} />
-            <circle r="8" fill="#ffffff" style={{ animation: "pulse 0.35s ease-in-out infinite" }} />
+            {/* Le cœur lumineux qui pulse plus lentement pour un effet plus grave */}
+            <circle r="30" fill="url(#warp-core)" style={{ animation: "pulse 1.4s ease-in-out infinite" }} />
+            <circle r="8" fill="#ffffff" style={{ animation: "pulse 0.9s ease-in-out infinite" }} />
           </svg>
           {/* Nom de l'époque, superposé au vortex */}
           <div style={{ position: "absolute", textAlign: "center", pointerEvents: "none" }}>
