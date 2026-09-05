@@ -428,17 +428,36 @@ export default function App() {
   };
 
   /* JEU 2 : voyage temporel LIBRE. Le joueur clique une époque dans le
-     sélecteur (colonne de droite ou barre en bas) → MARTINE nous téléporte
-     dans cette époque, sur son premier tableau. On ne remet pas l'inv/
-     l'historique à zéro : les notes trouvées et Al3x1A restent acquis. */
+     sélecteur (colonne de droite ou barre en bas) → petit tourbillon
+     temporel plein écran (style TARDIS), puis atterrissage. On ne remet
+     pas l'inv/l'historique à zéro : les notes trouvées et Al3x1A restent
+     acquis. L'atterrissage EVITE le tableau qui contient la note — sinon
+     l'élève la voit tout de suite, aucune exploration. */
+  const [jeu2Warp, setJeu2Warp] = useState(null);  // { i, nom } pendant l'anim
   const travelJeu2 = (i) => {
     if (i === chapterIndex) return;
     playSfx("jump");
-    setChapterIndex(i);
-    setTab(CHAPTERS[i].startScene);
     setBubble(null);
     const nom = CHAPTERS[i].epoque || CHAPTERS[i].bandeau || `chapitre ${i + 1}`;
-    say(`🌀 Cap sur ${nom}. Cherche les traces d'Al3x1A dans le décor.`, "neutre");
+    setJeu2Warp({ i, nom });
+    /* Choix du tableau d'arrivée : startScene par défaut, MAIS si c'est
+       le tableau de la note d'Al3x1A on décale de 1 (modulo nb de tableaux)
+       — l'élève doit fouiller pour trouver la note. */
+    const scenes = CHAPTERS[i].scenes || [];
+    const noteTab = JEU2[i]?.noteHotspot?.tab ?? -1;
+    let landingTab = CHAPTERS[i].startScene ?? 0;
+    if (landingTab === noteTab && scenes.length > 1) {
+      landingTab = (landingTab + 1) % scenes.length;
+    }
+    /* L'anim TARDIS dure ~1 s. Le vrai changement d'époque se fait à
+       mi-parcours pour que le décor soit déjà en place au moment où
+       l'overlay se dissipe. */
+    setTimeout(() => {
+      setChapterIndex(i);
+      setTab(landingTab);
+      say(`🌀 Cap sur ${nom}. Explore les tableaux — les notes ne se laissent pas trouver toutes seules.`, "neutre");
+    }, 500);
+    setTimeout(() => setJeu2Warp(null), 1000);
   };
 
   /* Reprend la partie sauvegardée (bouton « Reprendre »). Le SLOT à
@@ -602,6 +621,10 @@ export default function App() {
      étape. On mémorise donc « chapitre#etape » déjà déclenché. */
   const autoFiredRef = useRef(new Set());
   useEffect(() => {
+    /* En JEU 2, la quête de jeu 1 n'est pas active — pas de portrait
+       auto qui viendrait re-jouer une étape du voyage principal alors
+       qu'on enquête sur Al3x1A. */
+    if (mode === "jeu2") { setPortraitOpen(false); return; }
     const st = chapter.quete?.[quete];
     if (!st?.portrait || !st.auto) { setPortraitOpen(false); return; }
     const key = `${chapterIndex}#${quete}`;
@@ -1690,33 +1713,47 @@ export default function App() {
         {/* JEU 2 : petite colonne d'aide qui remplace la jauge — liste des
             notes trouvées + rappel de la mission. */}
         {large && mode === "jeu2" && (
-          <div style={{ width: 128, flex: "0 0 auto", display: "flex", flexDirection: "column", background: "linear-gradient(180deg,#0e1c2a,#0a1420)", border: "1px solid #26324a", borderRadius: 12, padding: "9px 8px", gap: 6, overflowY: "auto" }}>
+          <div style={{ width: 132, flex: "0 0 auto", display: "flex", flexDirection: "column", background: "linear-gradient(180deg,#0e1c2a,#0a1420)", border: "1px solid #26324a", borderRadius: 12, padding: "9px 8px", gap: 6, overflowY: "auto" }}>
             <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, letterSpacing: 1.5, color: "#7fd8ff", textAlign: "center", lineHeight: 1.35 }}>🔎 NOTES<br />D'AL3X1A</div>
             <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 22, fontWeight: 800, color: "#7fd8ff", textAlign: "center" }}>{jeu2Notes.length}/{JEU2.length}</div>
             <div style={{ height: 1, background: "#26324a", margin: "4px 0" }} />
-            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 8, letterSpacing: 1.2, color: "#7fd8ff", textAlign: "center", opacity: 0.75 }}>🌀 VOYAGER</div>
-            {/* Sélecteur d'époques : chaque ligne est cliquable, MARTINE téléporte
-                le joueur au premier tableau du chapitre choisi. Le chapitre courant
-                est mis en évidence, les notes trouvées ont un ✓ vert. */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 8, letterSpacing: 1.5, color: "#7fd8ff", textAlign: "center", opacity: 0.8 }}>🌀 VOYAGER</div>
+            {/* Sélecteur d'époques : grille 2 colonnes de pastilles-emoji.
+                Le chapitre courant a un halo doré + pulse, les notes trouvées
+                un ✓ vert en coin, les autres restent lisibles mais discrets. */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 5 }}>
               {CHAPTERS.map((c, i) => {
                 const has = jeu2Notes.includes(i);
                 const isHere = i === chapterIndex;
                 return (
                   <button key={c.id} onClick={() => travelJeu2(i)}
-                    title={c.epoque || `Chapitre ${i + 1}`}
+                    title={`${c.epoque || 'Chapitre ' + (i + 1)} — ${has ? 'note trouvée' : 'à explorer'}`}
                     style={{
-                      fontFamily: "ui-monospace,monospace", fontSize: 10,
-                      color: isHere ? "#ffd166" : (has ? "#7fd8ff" : "#8a9cb0"),
-                      background: isHere ? "rgba(255,209,102,0.09)" : "transparent",
-                      border: "none",
-                      padding: "3px 4px 3px 7px",
-                      borderLeft: `2px solid ${isHere ? "#ffd166" : (has ? "#7fd8ff" : "#26324a")}`,
-                      textAlign: "left",
+                      position: "relative",
+                      aspectRatio: "1 / 1",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 22,
+                      color: "#e8eef5",
+                      background: isHere
+                        ? "radial-gradient(circle at 50% 40%, rgba(255,209,102,0.35), rgba(232,150,74,0.12) 65%, transparent)"
+                        : has
+                          ? "radial-gradient(circle at 50% 40%, rgba(127,216,255,0.22), transparent 70%)"
+                          : "rgba(255,255,255,0.03)",
+                      border: `1.5px solid ${isHere ? "#ffd166" : (has ? "#5aa8d8" : "#2a3a52")}`,
+                      borderRadius: 10,
                       cursor: isHere ? "default" : "pointer",
-                      transition: "background .12s",
-                    }}>
-                    {has ? "✓" : (isHere ? "▸" : "·")} ch.{i + 1}
+                      opacity: isHere || has ? 1 : 0.72,
+                      transition: "opacity .15s, transform .15s, box-shadow .15s",
+                      boxShadow: isHere ? "0 0 12px rgba(255,209,102,0.55), inset 0 0 12px rgba(255,209,102,0.15)" : "none",
+                      animation: isHere ? "pulse 2.2s ease-in-out infinite" : "none",
+                    }}
+                    onMouseEnter={(e) => { if (!isHere) e.currentTarget.style.transform = "scale(1.08)"; }}
+                    onMouseLeave={(e) => { if (!isHere) e.currentTarget.style.transform = "scale(1)"; }}>
+                    {c.emoji || "•"}
+                    {has && (
+                      <span style={{ position: "absolute", top: -2, right: -2, fontSize: 9, background: "#5eff9e", color: "#062516", borderRadius: "50%", width: 14, height: 14, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, boxShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>✓</span>
+                    )}
+                    <span style={{ position: "absolute", bottom: 1, fontSize: 7, opacity: 0.55, fontFamily: "ui-monospace,monospace", letterSpacing: 0.5, color: isHere ? "#ffd166" : "#8a9cb0" }}>{i + 1}</span>
                   </button>
                 );
               })}
@@ -1726,23 +1763,34 @@ export default function App() {
         {/* JEU 2, petit écran : le sélecteur d'époques passe en barre horizontale
             juste au-dessus de la console MARTINE (pas de colonne dispo à droite). */}
         {!large && mode === "jeu2" && (
-          <div style={{ position: "absolute", left: 8, right: 8, bottom: 138, display: "flex", gap: 4, overflowX: "auto", padding: "6px 8px", background: "rgba(14,28,42,0.92)", border: "1px solid #26324a", borderRadius: 10, zIndex: 40 }}>
-            <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, letterSpacing: 1.2, color: "#7fd8ff", alignSelf: "center", opacity: 0.75, flex: "0 0 auto" }}>🌀</span>
+          <div style={{ position: "absolute", left: 8, right: 8, bottom: 138, display: "flex", gap: 5, overflowX: "auto", padding: "6px 8px", background: "rgba(14,28,42,0.92)", border: "1px solid #26324a", borderRadius: 10, zIndex: 40 }}>
+            <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, alignSelf: "center", opacity: 0.85, flex: "0 0 auto" }}>🌀</span>
             {CHAPTERS.map((c, i) => {
               const has = jeu2Notes.includes(i);
               const isHere = i === chapterIndex;
               return (
                 <button key={c.id} onClick={() => travelJeu2(i)}
-                  title={c.epoque || `Chapitre ${i + 1}`}
+                  title={`${c.epoque || 'Chapitre ' + (i + 1)} — ${has ? 'note trouvée' : 'à explorer'}`}
                   style={{
-                    fontFamily: "ui-monospace,monospace", fontSize: 11, fontWeight: 700,
-                    color: isHere ? "#ffd166" : (has ? "#7fd8ff" : "#8a9cb0"),
-                    background: isHere ? "rgba(255,209,102,0.12)" : "transparent",
-                    border: `1px solid ${isHere ? "#ffd166" : (has ? "#3a5a7a" : "#26324a")}`,
-                    borderRadius: 6, padding: "3px 8px",
-                    cursor: isHere ? "default" : "pointer", flex: "0 0 auto",
+                    position: "relative",
+                    width: 42, height: 42, flex: "0 0 auto",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 22, color: "#e8eef5",
+                    background: isHere
+                      ? "radial-gradient(circle at 50% 40%, rgba(255,209,102,0.35), rgba(232,150,74,0.12) 65%, transparent)"
+                      : has
+                        ? "radial-gradient(circle at 50% 40%, rgba(127,216,255,0.22), transparent 70%)"
+                        : "rgba(255,255,255,0.04)",
+                    border: `1.5px solid ${isHere ? "#ffd166" : (has ? "#5aa8d8" : "#2a3a52")}`,
+                    borderRadius: 10,
+                    cursor: isHere ? "default" : "pointer",
+                    boxShadow: isHere ? "0 0 10px rgba(255,209,102,0.55)" : "none",
+                    animation: isHere ? "pulse 2.2s ease-in-out infinite" : "none",
                   }}>
-                  {has ? "✓" : ""}{i + 1}
+                  {c.emoji || "•"}
+                  {has && (
+                    <span style={{ position: "absolute", top: -2, right: -2, fontSize: 8, background: "#5eff9e", color: "#062516", borderRadius: "50%", width: 12, height: 12, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900 }}>✓</span>
+                  )}
                 </button>
               );
             })}
@@ -2024,6 +2072,42 @@ export default function App() {
           🗑️
           <span style={{ fontSize: 7, color: "#c8963e", fontFamily: "ui-monospace,monospace", letterSpacing: 1, marginTop: -3 }}>TEMPS</span>
           <style>{`@keyframes poubelleAppear { 0% { transform: scale(0.2) rotate(-30deg); opacity: 0; } 60% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }`}</style>
+        </div>
+      )}
+
+      {/* JEU 2 : petite anim TARDIS quand on change d'époque via le sélecteur.
+          Overlay plein écran avec vortex + nom de l'époque, ~1 s ; à mi-course
+          on remplace le décor (voir travelJeu2). Aucune interaction pendant. */}
+      {jeu2Warp && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 90, background: "radial-gradient(circle at 50% 50%, rgba(127,216,255,0.32), rgba(4,10,20,0.94) 60%)", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto", animation: "fadein 0.18s ease-out" }}>
+          {/* Le vortex : 3 anneaux qui tournent à des vitesses différentes,
+              en dégradés bleus, avec un cœur lumineux. */}
+          <svg viewBox="-100 -100 200 200" style={{ width: "min(72vmin, 620px)", height: "min(72vmin, 620px)", filter: "drop-shadow(0 0 40px rgba(127,216,255,0.55))" }}>
+            <defs>
+              <radialGradient id="warp-core" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="35%" stopColor="#7fd8ff" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#5aa8d8" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            {[
+              { r: 88, w: 3, dur: "1s", dir: 1, op: 0.75, dash: "8 6" },
+              { r: 66, w: 2.4, dur: "0.7s", dir: -1, op: 0.85, dash: "12 4" },
+              { r: 46, w: 2, dur: "0.5s", dir: 1, op: 0.9, dash: "6 3" },
+            ].map((a, i) => (
+              <g key={i} style={{ animation: `spin ${a.dur} linear infinite`, transformOrigin: "center", transform: a.dir === -1 ? "scale(-1,1)" : undefined }}>
+                <circle r={a.r} fill="none" stroke="#7fd8ff" strokeWidth={a.w} strokeDasharray={a.dash} opacity={a.op} />
+              </g>
+            ))}
+            {/* Le cœur lumineux qui pulse */}
+            <circle r="30" fill="url(#warp-core)" style={{ animation: "pulse 0.55s ease-in-out infinite" }} />
+            <circle r="8" fill="#ffffff" style={{ animation: "pulse 0.35s ease-in-out infinite" }} />
+          </svg>
+          {/* Nom de l'époque, superposé au vortex */}
+          <div style={{ position: "absolute", textAlign: "center", pointerEvents: "none" }}>
+            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, letterSpacing: 4, color: "#7fd8ff", opacity: 0.9, marginBottom: 6, textShadow: "0 0 10px rgba(127,216,255,0.8)" }}>SAUT TEMPOREL</div>
+            <div style={{ fontFamily: TITRE_FONT, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: "#fff", textShadow: "0 0 22px rgba(127,216,255,0.9), 0 0 40px rgba(127,216,255,0.6)" }}>{jeu2Warp.nom}</div>
+          </div>
         </div>
       )}
 
