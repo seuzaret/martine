@@ -433,13 +433,13 @@ export default function App() {
      pas l'inv/l'historique à zéro : les notes trouvées et Al3x1A restent
      acquis. L'atterrissage EVITE le tableau qui contient la note — sinon
      l'élève la voit tout de suite, aucune exploration. */
-  const [jeu2Warp, setJeu2Warp] = useState(null);  // { i, nom } pendant l'anim
+  const [jeu2Warp, setJeu2Warp] = useState(null);  // { i, nom, phase } pendant l'anim ; phase "vortex" puis "flash"
   const travelJeu2 = (i) => {
     if (i === chapterIndex) return;
     playSfx("warp");
     setBubble(null);
     const nom = CHAPTERS[i].epoque || CHAPTERS[i].bandeau || `chapitre ${i + 1}`;
-    setJeu2Warp({ i, nom });
+    setJeu2Warp({ i, nom, phase: "vortex" });
     /* Choix du tableau d'arrivée : startScene par défaut, MAIS si c'est
        le tableau de la note d'Al3x1A on décale de 1 (modulo nb de tableaux)
        — l'élève doit fouiller pour trouver la note. */
@@ -449,15 +449,17 @@ export default function App() {
     if (landingTab === noteTab && scenes.length > 1) {
       landingTab = (landingTab + 1) % scenes.length;
     }
-    /* Anim TARDIS de 2,5 s : le décor est remplacé à 1,6 s (juste après
-       le "ping" cristallin d'atterrissage du son warp), l'overlay se
-       dissipe à 2,5 s → arrivée douce dans l'époque. */
+    /* Anim TARDIS de 3,2 s en 3 phases :
+       0.0 → 2.1 s : vortex qui tourne + son warp
+       2.1 → 2.4 s : FLASH blanc éclatant (matérialisation) + swap du décor
+       2.4 → 3.2 s : le flash s'estompe, le nouveau décor apparaît en fondu */
     setTimeout(() => {
+      setJeu2Warp((w) => w && { ...w, phase: "flash" });
       setChapterIndex(i);
       setTab(landingTab);
       say(`🌀 Cap sur ${nom}. Explore les tableaux — les notes ne se laissent pas trouver toutes seules.`, "neutre");
-    }, 1600);
-    setTimeout(() => setJeu2Warp(null), 2500);
+    }, 2100);
+    setTimeout(() => setJeu2Warp(null), 3200);
   };
 
   /* Reprend la partie sauvegardée (bouton « Reprendre »). Le SLOT à
@@ -2057,10 +2059,10 @@ export default function App() {
         </div>
       )}
 
-      {/* JEU 2 : petite anim TARDIS quand on change d'époque via le sélecteur.
-          Overlay plein écran avec vortex + nom de l'époque, ~1 s ; à mi-course
-          on remplace le décor (voir travelJeu2). Aucune interaction pendant. */}
-      {jeu2Warp && (
+      {/* JEU 2 : anim TARDIS quand on change d'époque via la frise.
+          3 phases : vortex 2,1 s → FLASH éclatant 0,3 s (matérialisation
+          du nouveau décor) → estompement 0,8 s. Aucune interaction possible. */}
+      {jeu2Warp && jeu2Warp.phase === "vortex" && (
         <div style={{ position: "fixed", inset: 0, zIndex: 90, background: "radial-gradient(circle at 50% 50%, rgba(127,216,255,0.32), rgba(4,10,20,0.94) 60%)", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto", animation: "fadein 0.18s ease-out" }}>
           {/* Le vortex : 3 anneaux qui tournent à des vitesses différentes,
               en dégradés bleus, avec un cœur lumineux. */}
@@ -2090,6 +2092,19 @@ export default function App() {
             <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, letterSpacing: 4, color: "#7fd8ff", opacity: 0.9, marginBottom: 6, textShadow: "0 0 10px rgba(127,216,255,0.8)" }}>SAUT TEMPOREL</div>
             <div style={{ fontFamily: TITRE_FONT, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: "#fff", textShadow: "0 0 22px rgba(127,216,255,0.9), 0 0 40px rgba(127,216,255,0.6)" }}>{jeu2Warp.nom}</div>
           </div>
+        </div>
+      )}
+      {/* FLASH final : éclair blanc éclatant qui remplace le vortex quand
+          on se matérialise dans la nouvelle époque, puis s'estompe pour
+          révéler le décor. */}
+      {jeu2Warp && jeu2Warp.phase === "flash" && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 90, pointerEvents: "auto", background: "white", animation: "warpFlash 1.1s ease-out forwards" }}>
+          <style>{`@keyframes warpFlash {
+            0% { background: rgba(255,255,255,0.98); box-shadow: inset 0 0 200px 40px rgba(127,216,255,0.9); }
+            15% { background: rgba(220,240,255,0.95); }
+            45% { background: rgba(180,220,255,0.55); }
+            100% { background: rgba(180,220,255,0); }
+          }`}</style>
         </div>
       )}
 
