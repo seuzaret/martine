@@ -480,7 +480,7 @@ export default function App() {
            l'explication complète, en récompense. */
         if (!anachronismLearned) {
           setAnachronismLearned(true);
-          say(`${it.emoji} ${it.name} — 🚨 DÉCHET TEMPOREL ! Cet objet n'a rien à faire ici. Un agent du temps peu soigneux l'a laissé traîner et ça POLLUE la ligne temporelle. Direction la POUBELLE TEMPORELLE 🗑️ en bas à gauche — jette-le dedans pour nettoyer et gagner du flux. Il y en a un caché à chaque époque, ouvre l'œil.`, "vexe");
+          say(`${it.emoji} ${it.name} — 🚨 DÉCHET TEMPOREL ! Cet objet n'a rien à faire ici : un agent du temps peu soigneux l'a laissé traîner et ça POLLUE la ligne temporelle. Vite, une POUBELLE TEMPORELLE 🗑️ vient d'apparaître en bas à gauche — glisse le déchet dedans pour nettoyer et gagner du flux. Il y en a un caché à chaque époque, ouvre l'œil.`, "vexe");
         } else {
           say(`${it.emoji} ${it.name} — Encore un déchet temporel ! Direction la poubelle 🗑️.`, "vexe");
         }
@@ -1075,7 +1075,7 @@ export default function App() {
                     ► Salut, {saved.prenom} !
                   </div>
                 )}
-                <button onClick={resume}
+                <button onClick={() => resume("jeu1")}
                   style={{ background: "#5eff9e", color: "#06110b", border: "none", borderRadius: 12, padding: "14px 34px", fontSize: 16, fontWeight: 800, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 2, boxShadow: "0 0 24px rgba(94,255,158,0.4)" }}>
                   ▶ REPRENDRE
                 </button>
@@ -1933,27 +1933,28 @@ export default function App() {
           fluxTotal={fluxTotal} bonusChapters={bonusChapters} />
       )}
 
-      {/* POUBELLE TEMPORELLE — toujours visible en jeu (mode jeu 1
-          uniquement). L'élève doit apprendre à la reconnaître même
-          avant d'avoir croisé son premier déchet — sinon c'est trop
-          facile de rater les objets anachroniques. Cible de drop pour
-          les items marqués `anachronic: true`. */}
-      {screen === "play" && mode !== "jeu2" && (
+      {/* POUBELLE TEMPORELLE — apparaît quand l'élève ramasse son
+          PREMIER déchet anachronique (via `anachronismLearned`). Elle
+          sort en même temps que le message de MARTINE qui explique la
+          mécanique → l'élève voit littéralement l'outil apparaître
+          quand il en a besoin. Cible de drop pour les items marqués
+          `anachronic: true`. Mode jeu 1 uniquement. */}
+      {screen === "play" && mode !== "jeu2" && anachronismLearned && (
         <div data-drop="hot:poubelle_temporelle"
           title="Poubelle temporelle — glisse-y les objets qui n'ont rien à faire à cette époque (+3 flux)"
           style={{
-            position: "fixed", bottom: 24, left: 24, zIndex: 55,
-            width: 60, height: 72, display: "flex", flexDirection: "column",
+            position: "fixed", bottom: 18, left: 18, zIndex: 55,
+            width: 48, height: 56, display: "flex", flexDirection: "column",
             alignItems: "center", justifyContent: "center",
             background: "linear-gradient(180deg, #4a3020 0%, #1a0e08 100%)",
-            border: "3px solid #8a5828", borderRadius: 10,
-            boxShadow: "0 4px 20px rgba(0,0,0,0.6), inset 0 -3px 0 rgba(255,255,255,0.06)",
-            fontSize: 30, cursor: "help", userSelect: "none",
+            border: "2px solid #8a5828", borderRadius: 8,
+            boxShadow: "0 3px 14px rgba(0,0,0,0.55), inset 0 -2px 0 rgba(255,255,255,0.06)",
+            fontSize: 24, cursor: "help", userSelect: "none",
             animation: "poubelleAppear 0.6s ease-out",
           }}>
           🗑️
-          <span style={{ fontSize: 8, color: "#c8963e", fontFamily: "ui-monospace,monospace", letterSpacing: 1, marginTop: -2 }}>TEMPS</span>
-          <style>{`@keyframes poubelleAppear { 0% { transform: scale(0.2) rotate(-30deg); opacity: 0; } 60% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }`}</style>
+          <span style={{ fontSize: 7, color: "#c8963e", fontFamily: "ui-monospace,monospace", letterSpacing: 1, marginTop: -3 }}>TEMPS</span>
+          <style>{`@keyframes poubelleAppear { 0% { transform: scale(0.2) rotate(-30deg); opacity: 0; } 60% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }`}</style>
         </div>
       )}
 

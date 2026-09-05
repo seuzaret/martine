@@ -252,7 +252,7 @@ function SlideNight({ onNext }) {
     // Préchargement dès le mount — comme ça au moment où on play(), le fichier est en cache
     try {
       const a = new Audio('assets/sounds/phone-vibrate.wav');
-      a.loop = true; a.volume = 1.0; a.preload = 'auto';
+      a.loop = true; a.volume = 0.35; a.preload = 'auto';
       a.load();
       audioRef.current = a;
     } catch {}
