@@ -222,7 +222,7 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
         <path d="M306 304 q4 32 -8 56 q-7 22 2 40" stroke="#527232" strokeWidth="3.5" fill="none" style={{ animation: "sway 3.6s ease-in-out infinite", transformOrigin: "306px 304px", transformBox: "view-box" }} />
         <path d="M288 294 q11 30 0 58 q-5 18 2 34" stroke="#324a22" strokeWidth="3" fill="none" />
         {[[300, 336, -1], [291, 366, 1], [303, 398, -1], [296, 322, 1], [286, 384, -1]].map(([x, y, s], i) => (
-          <path key={i} d={`M${x} ${y} q${8 * s} -3 ${10 * s} -10 q-${9 * s} 1 -${10 * s} 10 Z`} fill={i % 2 ? "#527232" : "#46632c"} />
+          <path key={i} d={`M${x} ${y} q${8 * s} -3 ${10 * s} -10 q${-9 * s} 1 ${-10 * s} 10 Z`} fill={i % 2 ? "#527232" : "#46632c"} />
         ))}
         <path d="M298 306 q-4 20 2 38" stroke="#5d7a36" strokeWidth="1.5" fill="none" opacity="0.7" />
       </g>

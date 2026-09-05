@@ -437,6 +437,12 @@ export default function App() {
   const [jeu2Warp, setJeu2Warp] = useState(null);  // { i, nom, phase } pendant l'anim ; phase "vortex" puis "flash"
   const travelJeu2 = (i) => {
     if (i === chapterIndex) return;
+    /* GARDE anti-course : si un saut est deja en cours, on l'ignore.
+       Sinon on peut empiler deux setTimeouts qui se marchent dessus
+       (setChapterIndex/setTab d'un saut plus ancien qui reecrit le nouveau
+       apres coup) — bug potentiel « on atterrit dans le mauvais chapitre »
+       ou « ecran vortex qui ne finit pas ». */
+    if (jeu2Warp) return;
     playSfx("warp");
     setBubble(null);
     const nom = CHAPTERS[i].epoque || CHAPTERS[i].bandeau || `chapitre ${i + 1}`;
