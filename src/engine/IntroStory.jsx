@@ -178,6 +178,10 @@ function Bubble({ x, y, w = 260, text, from = 'left', color = 'default' }) {
   const LINE = 18;
   const PAD_TOP = 16;
   const PAD_BOT = 14;
+  /* La HAUTEUR de la bulle est calculée sur le texte COMPLET (pas
+     progressif) — sinon la bulle « grandit » en même temps que le
+     texte, effet moche. On garde la géométrie stable, seul le texte
+     apparaît lettre par lettre. */
   const h = PAD_TOP + PAD_BOT + lines.length * LINE;
   const top = -h / 2;
   const firstBaseline = top + PAD_TOP + 13;
@@ -185,17 +189,50 @@ function Bubble({ x, y, w = 260, text, from = 'left', color = 'default' }) {
   const fill = color === 'alert' ? '#fff0c8' : '#fff9e8';
   const stroke = color === 'alert' ? '#e0a848' : '#5a4028';
   const textFill = color === 'alert' ? '#3a2010' : '#1a1408';
+
+  /* ═══ EFFET MACHINE À ÉCRIRE ═══
+     On concatène toutes les lignes avec un séparateur `\n`, puis on
+     révèle les caractères un à un (~28 ms/lettre). Un clic n'importe
+     où sur la bulle SAUTE à la fin (pour les lecteurs rapides ou une
+     démo en classe). Quand le texte change, on repart de zéro. */
+  const fullText = lines.join('\n');
+  const [nShown, setNShown] = useState(0);
+  useEffect(() => {
+    setNShown(0);
+    if (!fullText) return;
+    const step = 28;
+    let i = 0;
+    const id = setInterval(() => {
+      i += 1;
+      setNShown(i);
+      if (i >= fullText.length) clearInterval(id);
+    }, step);
+    return () => clearInterval(id);
+  }, [fullText]);
+  /* Reconstruit les lignes RÉVÉLÉES à partir du texte plein tronqué,
+     en respectant les sauts. La dernière ligne partielle porte le
+     curseur clignotant `▮` tant que la révélation n'est pas terminée. */
+  const shownFull = fullText.slice(0, nShown);
+  const shownLines = shownFull.split('\n');
+  const done = nShown >= fullText.length;
+
   return (
-    <g transform={`translate(${x},${y})`}>
+    <g transform={`translate(${x},${y})`} onClick={() => setNShown(fullText.length)} style={{ cursor: done ? 'default' : 'pointer' }}>
       <rect x={-w/2} y={top} width={w} height={h} rx={12} fill={fill} stroke={stroke} strokeWidth="2" />
       <path d={from === 'left'
         ? `M${-w/4} ${bottom} L${-w/4 - 8} ${bottom + 16} L${-w/4 + 12} ${bottom + 2} Z`
         : `M${w/4} ${bottom} L${w/4 + 8} ${bottom + 16} L${w/4 - 12} ${bottom + 2} Z`}
         fill={fill} stroke={stroke} strokeWidth="2" />
       <text x={0} y={firstBaseline} textAnchor="middle" fontFamily="Palatino, Georgia, serif" fontSize="13" fill={textFill}>
-        {lines.map((line, i) => (
-          <tspan key={i} x={0} dy={i === 0 ? 0 : LINE}>{line}</tspan>
-        ))}
+        {lines.map((line, i) => {
+          const shown = shownLines[i] ?? '';
+          const isLast = i === shownLines.length - 1 && !done;
+          return (
+            <tspan key={i} x={0} dy={i === 0 ? 0 : LINE}>
+              {shown}{isLast ? '▮' : ''}
+            </tspan>
+          );
+        })}
       </text>
     </g>
   );
@@ -757,20 +794,76 @@ function SlidePrehistoric({ onDone }) {
         <ellipse cx="640" cy="430" rx="72" ry="22" fill="#2a1408" opacity="0.85" />
         <ellipse cx="640" cy="428" rx="58" ry="14" fill="#4a2818" opacity="0.65" />
 
-        {/* JOUEUR GROGGY — assis au sol, dos courbé, en train de reprendre
-            ses esprits. Au premier dialogue : des étoiles ✨ tournent autour
-            de sa tête (il est sonné). Elles disparaissent au 3e dialogue,
-            quand il commence à comprendre ce qui se passe. */}
+        {/* JOUEUR GROGGY — un·e ado moderne (jean, t-shirt bleu, baskets)
+            projeté·e hors de MARTINE. Assis au sol, dos courbé, il/elle
+            reprend ses esprits. Étoiles ✨ tournantes pendant qu'il est
+            sonné (dialogues 0 et 1), disparaissent au 3e (il comprend). */}
         <g transform="translate(400,410)">
-          {/* Corps courbé vers l'avant, comme quelqu'un qui vient de tomber */}
-          <path d="M-22 62 Q-24 40 -14 20 L-14 -8 Q-14 -18 -4 -18 L16 -18 Q26 -18 26 -8 L26 34 Q30 50 34 62 Z" fill="#1a1408" />
-          {/* Tête légèrement penchée (dépité, sonné) */}
-          <g transform="rotate(-12) translate(-3,-30)">
-            <ellipse cx="0" cy="0" rx="14" ry="16" fill="#1a1408" />
-            <path d="M-14 -6 q0 -8 8 -10 q8 2 10 -4 q4 6 10 4 q6 4 8 10 z" fill="#0a0604" />
+          {/* JAMBES en jean : plié·e·s l'une repliée, l'autre étendue */}
+          {/* jambe étendue vers la gauche (au sol) */}
+          <path d="M-8 50 Q-30 56 -52 52 L-56 62 L-4 62 Z" fill="#3a5580" stroke="#243554" strokeWidth="1" />
+          {/* baskets */}
+          <ellipse cx="-52" cy="60" rx="8" ry="4" fill="#f8f8f8" stroke="#2a2a2a" strokeWidth="0.8" />
+          <path d="M-58 60 L-46 60" stroke="#2a2a2a" strokeWidth="0.6" />
+          {/* jambe repliée devant */}
+          <path d="M-4 30 Q-8 50 12 60 L18 44 Q22 34 12 24 Z" fill="#3a5580" stroke="#243554" strokeWidth="1" />
+          <ellipse cx="16" cy="60" rx="9" ry="4" fill="#f8f8f8" stroke="#2a2a2a" strokeWidth="0.8" />
+
+          {/* TORSE : t-shirt bleu-vif, un peu débraillé (encolure de travers) */}
+          <path d="M-20 30 Q-22 12 -18 -4 L-14 -8 Q-14 -14 -4 -14 L14 -14 Q24 -14 24 -8 L22 -4 Q28 12 26 30 L18 34 L-14 34 Z" fill="#5eaadd" stroke="#2a5478" strokeWidth="1" />
+          {/* Petit détail : encolure ronde */}
+          <path d="M-8 -8 Q0 -4 8 -8" stroke="#2a5478" strokeWidth="1.2" fill="none" />
+          {/* Manche courte visible sur bras droit tendu */}
+          <path d="M22 -6 L28 8" stroke="#2a5478" strokeWidth="1" />
+
+          {/* BRAS GAUCHE : posé au sol (appui) */}
+          <path d="M-20 4 Q-38 20 -46 34" stroke="#e8b088" strokeWidth="8" fill="none" strokeLinecap="round" />
+          {/* main gauche posée au sol */}
+          <circle cx="-46" cy="34" r="5" fill="#e8b088" stroke="#a06844" strokeWidth="0.8" />
+
+          {/* BRAS DROIT : tendu vers MARTINE (comme pour la relever) */}
+          <path d="M22 0 Q42 14 60 8" stroke="#e8b088" strokeWidth="8" fill="none" strokeLinecap="round" />
+          {/* main droite : doigts ouverts vers MARTINE */}
+          <g transform="translate(60,8)">
+            <circle r="5" fill="#e8b088" stroke="#a06844" strokeWidth="0.8" />
+            <path d="M2 -3 L8 -6 M4 0 L10 0 M2 3 L8 6" stroke="#a06844" strokeWidth="0.7" strokeLinecap="round" />
           </g>
-          {/* main tendue à droite vers MARTINE (comme pour la relever) */}
-          <path d="M26 40 Q34 24 48 12 Q58 6 68 4" stroke="#1a1408" strokeWidth="14" fill="none" strokeLinecap="round" />
+
+          {/* TÊTE penchée sur le côté (sonné). Peau, cheveux bruns qui
+              retombent, oreille visible, expression un peu hébétée. */}
+          <g transform="rotate(-14) translate(-3,-30)">
+            {/* cou */}
+            <path d="M-4 12 L4 12 L4 18 L-4 18 Z" fill="#d89c78" />
+            {/* visage */}
+            <ellipse cx="0" cy="0" rx="14" ry="16" fill="#e8b088" stroke="#8a5030" strokeWidth="0.8" />
+            {/* cheveux mi-longs, ébouriffés par le crash */}
+            <path d="M-14 -6 Q-16 -14 -8 -18 Q-4 -22 2 -20 Q10 -22 14 -14 Q16 -6 12 0 L14 -2 Q10 -12 4 -10 Q-2 -14 -8 -8 Q-12 -6 -14 -2 Z" fill="#5a3818" />
+            {/* mèche qui retombe sur le front */}
+            <path d="M-6 -10 Q-4 -4 -8 0" stroke="#3a2010" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+            {/* oreille */}
+            <path d="M-13 -2 Q-15 0 -14 4 Q-12 5 -12 2" fill="#d89c78" stroke="#8a5030" strokeWidth="0.5" />
+            {/* Yeux : au step 0-1 fermés à moitié (sonné) ; step 2+ ouverts */}
+            {step < 2 ? (
+              <>
+                <path d="M-6 0 Q-4 -2 -2 0" stroke="#2a1808" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+                <path d="M2 0 Q4 -2 6 0" stroke="#2a1808" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+              </>
+            ) : (
+              <>
+                <ellipse cx="-4" cy="0" rx="1.6" ry="1.8" fill="#2a1808" />
+                <ellipse cx="4" cy="0" rx="1.6" ry="1.8" fill="#2a1808" />
+              </>
+            )}
+            {/* Bouche : rondelette de surprise puis un léger sourire */}
+            {step < 2 ? (
+              <ellipse cx="0" cy="7" rx="2" ry="1.5" fill="#5a2818" />
+            ) : (
+              <path d="M-3 7 Q0 9 3 7" stroke="#5a2818" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+            )}
+            {/* Petite rougeur sur la joue (choc) */}
+            <ellipse cx="-8" cy="4" rx="2.5" ry="1.4" fill="#e88068" opacity="0.5" />
+          </g>
+
           {/* ÉTOILES ✨ qui tournent autour de la tête pendant qu'il est sonné.
               Trois étoiles à 120° chacune, sur une orbite qui tourne.
               Disparaissent quand step >= 2 (il a repris ses esprits). */}
@@ -778,8 +871,8 @@ function SlidePrehistoric({ onDone }) {
             <g style={{ animation: 'dizzyOrbit 2.4s linear infinite', transformOrigin: '-3px -30px' }}>
               {[0, 120, 240].map((angle, i) => {
                 const rad = angle * Math.PI / 180;
-                const x = -3 + Math.cos(rad) * 22;
-                const y = -30 + Math.sin(rad) * 8;
+                const x = -3 + Math.cos(rad) * 24;
+                const y = -34 + Math.sin(rad) * 8;
                 return (
                   <text key={i} x={x} y={y} fontSize="14" textAnchor="middle" fill="#ffd166"
                     style={{ animation: `dizzyStar 1.2s ease-in-out infinite ${i * 0.3}s` }}>✦</text>
