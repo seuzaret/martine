@@ -143,7 +143,7 @@ const ACTIONS = {
    ------------------------------------------------------------ */
 const chapter = {
   id: "09-xxie",
-  bandeau: "CHAPITRE 9 · AUJOURD'HUI",
+  bandeau: "CHAPITRE 10 · AUJOURD'HUI",
   date: "AUJOURD'HUI",
   epoque: "XXIe siècle",
   emoji: "📱",

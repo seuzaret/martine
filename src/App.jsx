@@ -1569,7 +1569,7 @@ export default function App() {
           {/* JEU 2 : compteur de notes trouvées à la place de la jauge flux */}
           {mode === "jeu2" ? (
             <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 14, fontWeight: 700, color: "#7fd8ff" }} title="Notes d'Al3x1A trouvées">
-              🔎 {jeu2Notes.length}/9 notes
+              🔎 {jeu2Notes.length}/{JEU2.length} notes
             </span>
           ) : (
           <span style={{ position: "relative", fontFamily: "ui-monospace,monospace", fontSize: 14, fontWeight: 700, color: canJump ? "#ffd166" : "#7fd8ff" }} title={`Flux temporel — ${canJump ? "prêt à partir !" : `encore ${Math.max(0, Math.ceil(fluxRequis - flux))} pour partir`}`}>
@@ -1668,7 +1668,7 @@ export default function App() {
         {large && mode === "jeu2" && (
           <div style={{ width: 116, flex: "0 0 auto", display: "flex", flexDirection: "column", background: "linear-gradient(180deg,#0e1c2a,#0a1420)", border: "1px solid #26324a", borderRadius: 12, padding: "9px 8px", gap: 6, overflowY: "auto" }}>
             <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, letterSpacing: 1.5, color: "#7fd8ff", textAlign: "center", lineHeight: 1.35 }}>🔎 NOTES<br />D'AL3X1A</div>
-            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 22, fontWeight: 800, color: "#7fd8ff", textAlign: "center" }}>{jeu2Notes.length}/9</div>
+            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 22, fontWeight: 800, color: "#7fd8ff", textAlign: "center" }}>{jeu2Notes.length}/{JEU2.length}</div>
             <div style={{ height: 1, background: "#26324a", margin: "4px 0" }} />
             <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
               {CHAPTERS.map((c, i) => (
