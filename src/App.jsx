@@ -35,6 +35,7 @@ import IntroStory from "./engine/IntroStory.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 import StationChronautes, { PortraitElias } from "./chapters/epilogue/StationChronautes.jsx";
+import BriefingMission from "./chapters/epilogue/BriefingMission.jsx";
 import { JEU2 } from "./chapters/epilogue/jeu2Data.js";
 import NoteAl3x1A from "./chapters/epilogue/NoteAl3x1A.jsx";
 import RetrouvaillesAl3x1A from "./chapters/epilogue/RetrouvaillesAl3x1A.jsx";
@@ -974,6 +975,7 @@ export default function App() {
       <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, color: "#8a7a9a", margin: "10px 0 4px" }}>Écrans de fin :</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
         <button style={cheatBtn} onClick={() => { setChapterIndex(CHAPTERS.length - 1); setScreen("chronautes"); }}>🌀 Station des chronautes</button>
+        <button style={cheatBtn} onClick={() => { setChapterIndex(CHAPTERS.length - 1); setScreen("briefing"); }}>🎯 Salle temporelle (briefing)</button>
         <button style={cheatBtn} onClick={() => { setChapterIndex(CHAPTERS.length - 1); setEpiChoice(null); setScreen("epilogue"); }}>❓ Épilogue (support ?)</button>
         <button style={cheatBtn} onClick={() => { setChapterIndex(CHAPTERS.length - 1); setScreen("end"); }}>🏁 Écran de fin</button>
       </div>
@@ -1362,7 +1364,19 @@ export default function App() {
     return (
       <>
         {cheatPanel}
-        <StationChronautes prenom={prenom} onContinue={() => setScreen("epilogue")} />
+        {/* Après la rencontre des chronautes, on passe par la SALLE
+            TEMPORELLE (briefing) où MARTINE réparée remet la frise, puis
+            on enchaîne sur l'épilogue "Ton support pour +20 000 ans". */}
+        <StationChronautes prenom={prenom} onContinue={() => setScreen("briefing")} />
+      </>
+    );
+  }
+
+  if (screen === "briefing") {
+    return (
+      <>
+        {cheatPanel}
+        <BriefingMission prenom={prenom} onAccept={() => setScreen("epilogue")} />
       </>
     );
   }
@@ -1507,16 +1521,23 @@ export default function App() {
                 <p style={{ fontSize: 14, lineHeight: 1.65, color: "#c8d4e2", fontStyle: "italic", margin: 0 }}>« {EPILOGUE.DEBAT} »</p>
               </div>
 
-              {/* Teaser du JEU 2 : LA PIONNIÈRE — s'affiche après la fin du voyage. */}
+              {/* Teaser du JEU 2 : LA PIONNIÈRE — s'affiche après la fin du voyage.
+                  Bouton "PARTIR MAINTENANT" pour lancer jeu 2 DIRECTEMENT
+                  sans repasser par le menu titre. */}
               <div style={{ border: "2px dashed #7fd8ff", borderRadius: 12, padding: "18px 20px", marginTop: 16, background: "radial-gradient(ellipse at 50% 50%, rgba(127,216,255,0.08), transparent)", textAlign: "center" }}>
                 <div style={{ fontSize: 38, marginBottom: 8 }}>🌀</div>
-                <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3, color: "#7fd8ff", marginBottom: 6 }}>À BIENTÔT DANS LES FILS DU TEMPS</div>
+                <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3, color: "#7fd8ff", marginBottom: 6 }}>MISSION EN ATTENTE</div>
                 <div style={{ fontFamily: TITRE_FONT, fontSize: 26, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", background: "linear-gradient(100deg, #7fd8ff 0%, #ffd166 60%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", lineHeight: 1.15 }}>
-                  La Pionnière
+                  Retrouver Al3x1A
                 </div>
-                <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#c8d4e2", margin: "10px auto 0", maxWidth: 460, fontStyle: "italic" }}>
-                  Al3x1A est quelque part dans les époques que tu viens de traverser. Bientôt, tu pourras retrouver cette personne — et lui rapporter enfin le remède qu'elle est allée chercher.
+                <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#c8d4e2", margin: "10px auto 14px", maxWidth: 460, fontStyle: "italic" }}>
+                  La pionnière est bloquée quelque part dans les époques que tu viens de traverser. Grâce à la frise chronologique que MARTINE t'a remise, tu peux voyager librement et recouper les indices pour la retrouver.
                 </p>
+                <button onClick={newGameJeu2}
+                  style={{ background: "#7fd8ff", color: "#06110b", border: "none", borderRadius: 12, padding: "12px 26px", fontSize: 15, fontWeight: 900, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 2, boxShadow: "0 0 22px rgba(127,216,255,0.55)" }}>
+                  ▶ PARTIR MAINTENANT
+                </button>
+                <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, color: "#7a879e", marginTop: 8 }}>ou reviens plus tard depuis le menu titre</div>
               </div>
             </>
           )}
