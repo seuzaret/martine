@@ -1507,20 +1507,12 @@ export default function App() {
             )}
           </div>
 
-          {/* Le MOT DE LA FIN : seulement au bout du voyage (dernier chapitre),
-              après l'épilogue. Puis la question laissée ouverte pour la classe. */}
+          {/* NB : la CONCLUSION de MARTINE + la QUESTION DE DÉBAT étaient
+              affichées ici au bout du voyage — retirées car ça faisait beaucoup
+              de texte à lire d'un coup (l'élève vient de finir l'épilogue et
+              a déjà lu la conclusion argumentée de son support choisi). */}
           {isLastChapter && (
             <>
-              <div style={{ background: "#101827", border: "1px solid #2a3648", borderRadius: 12, padding: "14px 18px", marginTop: 14, textAlign: "left" }}>
-                <p style={{ fontSize: 15, lineHeight: 1.7, color: "#e8eef5", margin: 0 }}>« {EPILOGUE.CONCLUSION} » — MARTINE</p>
-              </div>
-              <div style={{ border: "2px solid #ffd166", borderRadius: 12, padding: "16px 18px", marginTop: 12 }}>
-                <h2 style={{ fontFamily: "ui-monospace,monospace", color: "#ffd166", fontSize: 17, letterSpacing: 1, margin: "0 0 8px" }}>
-                  {EPILOGUE.DEBAT_TITRE}
-                </h2>
-                <p style={{ fontSize: 14, lineHeight: 1.65, color: "#c8d4e2", fontStyle: "italic", margin: 0 }}>« {EPILOGUE.DEBAT} »</p>
-              </div>
-
               {/* Teaser du JEU 2 : LA PIONNIÈRE — s'affiche après la fin du voyage.
                   Bouton "PARTIR MAINTENANT" pour lancer jeu 2 DIRECTEMENT
                   sans repasser par le menu titre. */}
@@ -1542,20 +1534,27 @@ export default function App() {
             </>
           )}
 
-          <div style={{ textAlign: "left", marginTop: 18 }}>
-            {ALL_MSGS.map((id) =>
-              msgs.includes(id) ? (
-                <div key={id} style={{ background: "#101827", border: "1px solid #2a3648", borderRadius: 12, padding: "10px 14px", marginBottom: 8 }}>
-                  <strong>{chapter.messages[id].emoji} {chapter.messages[id].title}</strong>
-                  <p style={{ fontSize: 13, color: "#b8c4d4", margin: "4px 0 0", lineHeight: 1.5 }}>{chapter.messages[id].fact}</p>
-                </div>
-              ) : (
-                <div key={id} style={{ background: "#0d1320", border: "1px dashed #2a3648", borderRadius: 12, padding: "10px 14px", marginBottom: 8, color: "#7a879e" }}>
-                  ❓ Message non découvert — rejoue pour le trouver !
-                </div>
-              )
-            )}
-          </div>
+          {/* Récap des messages du chapitre : fiches trouvées + cases grises
+              pour les non-découverts. UTILE en fin de chapitre intermédiaire
+              (l'élève voit ce qu'il peut aller chercher en rejouant), mais
+              CACHÉ au bout du voyage : le bilan global (frise + badge +
+              teaser jeu 2) suffit largement. */}
+          {!isLastChapter && (
+            <div style={{ textAlign: "left", marginTop: 18 }}>
+              {ALL_MSGS.map((id) =>
+                msgs.includes(id) ? (
+                  <div key={id} style={{ background: "#101827", border: "1px solid #2a3648", borderRadius: 12, padding: "10px 14px", marginBottom: 8 }}>
+                    <strong>{chapter.messages[id].emoji} {chapter.messages[id].title}</strong>
+                    <p style={{ fontSize: 13, color: "#b8c4d4", margin: "4px 0 0", lineHeight: 1.5 }}>{chapter.messages[id].fact}</p>
+                  </div>
+                ) : (
+                  <div key={id} style={{ background: "#0d1320", border: "1px dashed #2a3648", borderRadius: 12, padding: "10px 14px", marginBottom: 8, color: "#7a879e" }}>
+                    ❓ Message non découvert — rejoue pour le trouver !
+                  </div>
+                )
+              )}
+            </div>
+          )}
           <button onClick={restart}
             style={{ margin: "18px 0 40px", background: "transparent", color: "#5eff9e", border: "2px solid #5eff9e", borderRadius: 12, padding: "12px 26px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "ui-monospace,monospace" }}>
             ↺ REJOUER LE CHAPITRE
