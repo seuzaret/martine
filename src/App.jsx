@@ -535,6 +535,16 @@ export default function App() {
       return;
     }
     let bubbleText = act.bubble, sayText = act.say, mood = act.mood;
+    /* MODE JEU 2 : si le personnage a une variante `jeu2` dans ses actions,
+       elle prend le pas sur ses paroles de jeu 1 (le joueur est un
+       chronaute qui repasse — pas un nouveau venu). Le clan et les
+       inventeurs le RECONNAISSENT, ou évoquent une drôle de voyageuse
+       passée par là il y a longtemps. */
+    if (mode === "jeu2" && act.jeu2) {
+      bubbleText = act.jeu2.bubble ?? bubbleText;
+      sayText = act.jeu2.say ?? sayText;
+      mood = act.jeu2.mood ?? mood;
+    }
     if (step && step.perso === name) {
       bubbleText = step.bubble ?? act.bubble;
       sayText = step.say ?? act.say;
@@ -1607,7 +1617,7 @@ export default function App() {
         {/* écran large : la besace en colonne à gauche du décor */}
         {large && (
           <div style={{ width: 104, flex: "0 0 auto", display: "flex", flexDirection: "column", minHeight: 0 }}>
-            <InventoryBar items={chapter.items} inv={inv} shake={shake} vertical />
+            <InventoryBar items={chapter.items} inv={inv} shake={shake} vertical mode={mode} />
             {/* mini-carte dockée sous la besace (si le chapitre a une carte) */}
             {chapter.carte && <MiniMap Carte={chapter.carte} tab={tab} label={chapter.scenes[tab].name} onOpen={() => setModal({ type: "carte" })} />}
           </div>
@@ -1704,7 +1714,7 @@ export default function App() {
       </div>
 
       {/* besace : en bas, seulement sur écran étroit / tablette */}
-      {!large && <InventoryBar items={chapter.items} inv={inv} shake={shake} />}
+      {!large && <InventoryBar items={chapter.items} inv={inv} shake={shake} mode={mode} />}
 
       {/* particules de réussite (au point de la combinaison) */}
       {fx && <Particles key={fx.key} x={fx.x} y={fx.y} big={fx.big} />}

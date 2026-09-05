@@ -226,13 +226,22 @@ const ACTIONS = {
   /* Charles Bannister & le frère Jorge : leurs vraies répliques sont dans QUETE. */
   charles: { mood: "neutre",
     bubble: "Je suis Charles Bannister, seigneur de ce château. Sers-moi bien, l'étranger, et tu seras logé et nourri.",
-    say: "Un seigneur médiéval : il tient la terre, la justice, et veut qu'on chante sa gloire." },
+    say: "Un seigneur médiéval : il tient la terre, la justice, et veut qu'on chante sa gloire.",
+    jeu2: {
+      bubble: "Toi ? Encore ? Bienvenue, chronaute. Il y a de longues lunes, une autre dame étrange est venue. Elle a demandé asile au monastère, puis elle a disparu.",
+      say: "Le seigneur se souvient d'Al3x1A — elle a laissé une trace au scriptorium, va voir Jorge." } },
   jorge: { mood: "neutre",
     bubble: "Bienvenue au monastère, voyageur. Ici, nous gardons et recopions le savoir du monde, une page à la fois.",
-    say: "Le moine copiste : la mémoire du monde tient sur ses épaules… et sur une seule bougie." },
+    say: "Le moine copiste : la mémoire du monde tient sur ses épaules… et sur une seule bougie.",
+    jeu2: {
+      bubble: "Ah, un autre ami du temps. Une voyageuse aux vêtements gris est venue autrefois — elle a glissé une enluminure dans les marges d'un de nos livres. Cherche-la.",
+      say: "Al3x1A a caché une note dans les marges d'un manuscrit. Un vrai geste de copiste." } },
   gutenberg: { mood: "neutre",
     bubble: "Un moine met un an à copier un livre, et y glisse des fautes. Moi, j'en veux MILLE, tous pareils ! Il me faut des lettres SÉPARÉES, qu'on range et qu'on réutilise.",
-    say: "Ça, c'est LA grande idée : les caractères mobiles. Fonds-lui des lettres de plomb, et donne-lui une presse." },
+    say: "Ça, c'est LA grande idée : les caractères mobiles. Fonds-lui des lettres de plomb, et donne-lui une presse.",
+    jeu2: {
+      bubble: "Encore un voyageur du futur ! Une autre est passée avant toi — elle m'a supplié de lui imprimer une note en trois exemplaires. Cette dame était en avance sur son temps.",
+      say: "Al3x1A savait que copier, c'est se protéger de l'oubli. Elle a imprimé sa note ici." } },
 
   /* Le moulin à papier : le papetier (guide) et le chiffonnier (ramasseur). */
   papetier: { mood: "neutre",

@@ -172,10 +172,16 @@ const ACTIONS = {
   /* Les personnages — leurs vraies répliques d'étape sont dans QUETE. */
   james: { mood: "content",
     bubble: "James O'Sullivan, pour vous servir ! Émigré d'Irlande, venu chercher fortune ici. Et je l'ai trouvée !",
-    say: "James O'Sullivan : un Irlandais parti tenter sa chance dans l'Ouest américain." },
+    say: "James O'Sullivan : un Irlandais parti tenter sa chance dans l'Ouest américain.",
+    jeu2: {
+      bubble: "Encore un voyageur du futur ! J'en ai vu passer une autre — une dame en tunique grise qui parlait un anglais bizarre. Elle a télégraphié un message étrange, puis elle est repartie.",
+      say: "James se souvient d'Al3x1A. Un télégramme dans les archives — c'est la piste." } },
   photographe: { mood: "neutre",
     bubble: "Bienvenue dans mon studio de daguerréotype ! Une plaque de cuivre argentée, un peu de mercure, du soleil… et je fixe votre visage pour toujours.",
-    say: "Le photographe : il expose une plaque sensible dans sa chambre en bois — 15 secondes de pose, immobile !" },
+    say: "Le photographe : il expose une plaque sensible dans sa chambre en bois — 15 secondes de pose, immobile !",
+    jeu2: {
+      bubble: "Une autre chronaute est venue se faire tirer le portrait il y a longtemps. Une belle plaque — je l'ai gardée en collection. Un visage que je n'ai jamais oublié.",
+      say: "Al3x1A a laissé son visage sur une plaque de daguerréotype. Un support pour l'éternité — enfin, presque." } },
   "james-vieux": { mood: "neutre",
     bubble: "James O'Sullivan, encore là, plus vieux d'un demi-siècle. J'ai fait installer chez moi la dernière merveille de Mr. Edison : un phonographe. Je veux graver ma voix pour mes petits-enfants — qu'après ma mort, on m'entende encore.",
     say: "James âgé : sa vie est derrière lui. Il tente d'envoyer un message… au futur." },
@@ -184,7 +190,10 @@ const ACTIONS = {
     say: "Le fils de James : il actionne la manivelle du phonographe." },
   marconi: { mood: "vexe",
     bubble: "Guglielmo Marconi. Un paquebot coule au large et nous captons ses bips de détresse. Il faut agir — MAINTENANT.",
-    say: "Marconi : père de la TSF (télégraphie sans fil). L'urgence de sa vie : sauver les rescapés du Titanic." },
+    say: "Marconi : père de la TSF (télégraphie sans fil). L'urgence de sa vie : sauver les rescapés du Titanic.",
+    jeu2: {
+      bubble: "Chronaute ! Vous êtes plusieurs à vouloir m'aider ce siècle-ci. Une autre est venue déjà — elle savait déjà tout, elle a laissé un télégramme codé. Elle disait s'appeler Al3x1A.",
+      say: "Marconi n'a pas eu le temps de comprendre — l'urgence du Titanic prime toujours." } },
   ouvreuse: { mood: "neutre",
     bubble: "Bienvenue au Nickelodeon, 5 cents la place ! Ce soir, un film émouvant : « Saved from the Titanic ». Mais notre projectionniste est malade — sauras-tu tourner la manivelle à la bonne vitesse ?",
     say: "L'ouvreuse : elle t'invite à monter dans la cabine et à projeter le film." },

@@ -18,7 +18,7 @@ import { useDrag } from "./DragDrop.jsx";
    (voir App.jsx) : la besace reste courte.
    ============================================================ */
 
-export function InventoryBar({ items, inv, shake, vertical = false }) {
+export function InventoryBar({ items, inv, shake, vertical = false, mode = "jeu1" }) {
   const { dragId, hover, selected, dragProps } = useDrag();
 
   /* le panneau « cuir » de la besace (texture discrète + reliure) et les
@@ -83,7 +83,9 @@ export function InventoryBar({ items, inv, shake, vertical = false }) {
         </div>
         {inv.length === 0 ? (
           <div style={{ fontSize: 11.5, color: "#7a879e", fontStyle: "italic", lineHeight: 1.4, textAlign: "center" }}>
-            Vide. Observe les décors et touche ce qui te semble utile.
+            {mode === "jeu2"
+              ? "Cherche les traces d'Al3x1A. Chaque note est sur le support caractéristique de l'époque."
+              : "Vide. Observe les décors et touche ce qui te semble utile."}
           </div>
         ) : (
           /* les objets s'empilent de haut en bas ; ça défile s'il y en a beaucoup */
@@ -105,7 +107,7 @@ export function InventoryBar({ items, inv, shake, vertical = false }) {
     <div style={{ ...CUIR, borderLeft: "none", borderRight: "none", borderBottom: "none", WebkitUserSelect: "none", userSelect: "none", animation: shake ? "shake .5s" : "none" }}>
       <div style={{ maxWidth: 980, margin: "0 auto", padding: "6px 12px 8px" }}>
         <div style={{ fontSize: 10, letterSpacing: 1.5, color: "#c9a877", fontFamily: "ui-monospace,monospace", marginBottom: 5 }}>
-          🎒 SAC ({inv.length}) — glisse un élément sur un autre ou sur le décor pour combiner
+          🎒 SAC ({inv.length}){mode === "jeu2" ? " — cherche les notes d'Al3x1A dans le décor" : " — glisse un élément sur un autre ou sur le décor pour combiner"}
           {selected && <span style={{ color: "#ffd166" }}> · {items[selected].name} en main : touche une cible…</span>}
         </div>
         {inv.length === 0 ? (

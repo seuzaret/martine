@@ -142,7 +142,10 @@ const ACTIONS = {
 
   marchand: { mood: "neutre",
     bubble: "Une grosse couverture, madame ? J'en ai une chaude — mais pas de ticket, hein ? On se comprend. Et cette nuit, écoutez Londres, ça vaut le coup.",
-    say: "Le marchand clandestin : marché noir sous une arcade. Il vend ce qui manque, il informe qui écoute." },
+    say: "Le marchand clandestin : marché noir sous une arcade. Il vend ce qui manque, il informe qui écoute.",
+    jeu2: {
+      bubble: "Une dame en tunique grise m'a acheté une TSF il y a longtemps. Elle voulait ENREGISTRER quelque chose — pas écouter. Je n'ai jamais compris.",
+      say: "Al3x1A a enregistré une bande. Un support fragile, mais c'était son choix." } },
 
   patrouille: { mood: "vexe",
     bubble: "Halt ! Papiere !",
@@ -158,7 +161,10 @@ const ACTIONS = {
 
   marthe: { mood: "neutre",
     bubble: "Chut ! Marthe Dupont. Cette nuit on écoute Londres — c'est interdit, on s'en fiche. Sors la TSF du buffet, tends l'antenne, jette la couverture pour étouffer le son.",
-    say: "Marthe Dupont : elle va écouter Radio Londres, comme des millions de Français en cachette." },
+    say: "Marthe Dupont : elle va écouter Radio Londres, comme des millions de Français en cachette.",
+    jeu2: {
+      bubble: "Chronaute ? Oh oui, une autre est venue avant vous. Une femme aux cheveux courts. Elle a écouté avec moi, puis elle a laissé une cassette sous mon buffet.",
+      say: "Al3x1A a caché sa cassette chez Marthe. Un bon endroit — Marthe garde tout." } },
 
   /* action ouvrant le mini-jeu de réglage de fréquence sur la TSF prête */
   tsf_bouton: { modal: "tsf_reglage", needsFlag: "tsf_prete",
@@ -166,7 +172,10 @@ const ACTIONS = {
 
   kay: { mood: "neutre",
     bubble: "Kay McNulty. Née en Irlande, émigrée à Philadelphie. Je suis mathématicienne — on nous a recrutées à six pour calculer les trajectoires d'obus à la main. Depuis qu'ils ont construit l'ENIAC, on le PROGRAMME — mais l'armée nous appelle des « opératrices ». Aide-moi : charge les fiches, branche les câbles, allume la bête.",
-    say: "Kay McNulty : l'une des six programmeuses de l'ENIAC. Effacées de l'Histoire pendant 50 ans, alors qu'elles ont inventé la programmation moderne." },
+    say: "Kay McNulty : l'une des six programmeuses de l'ENIAC. Effacées de l'Histoire pendant 50 ans, alors qu'elles ont inventé la programmation moderne.",
+    jeu2: {
+      bubble: "Encore un·e chronaute ! Vous êtes plusieurs à venir voir l'ENIAC. Une dame comme vous a stocké une donnée sur les cartes perforées, autrefois — un fichier étrange.",
+      say: "Kay a laissé les cartes d'Al3x1A dans les archives — un support qui dure, quand on sait le lire." } },
 
   eniac_debug: { modal: "eniac_debug", needsFlag: "cables_branches",
     needMsg: "Il faut d'abord charger les fiches ET brancher les câbles. Puis on pourra débugger." },

@@ -180,15 +180,24 @@ const ACTIONS = {
   /* Caius (repli ; ses vraies répliques sont dans QUETE) */
   caius: { mood: "neutre",
     bubble: "Ma villa doit être la plus belle de Pompéi pour ma fête ! Aide mes artisans, l'étranger.",
-    say: "Un riche marchand qui veut éblouir ses invités. À Pompéi, comme partout : montrer qu'on a réussi." },
+    say: "Un riche marchand qui veut éblouir ses invités. À Pompéi, comme partout : montrer qu'on a réussi.",
+    jeu2: {
+      bubble: "Encore un chronaute chez moi ! Vous n'êtes jamais que de passage — ma villa, elle, restera. Enfin… tant que le Vésuve dormira.",
+      say: "Caius se croit éternel — il ne sait pas encore que le 24 août 79 est proche. Mais Al3x1A, elle, savait." } },
 
   /* ── LE FORUM DE POMPÉI ── */
   praeco: { mood: "content",
     bubble: "Citoyens ! Marcvs Holconivs Rufus vous invite aux JEUX du forum, sous la protection d'Isis ! Trois jours de combats, entrée libre !",
-    say: "Le PRAECO, crieur public : la radio de l'Antiquité. Une voix forte, une place bondée, et hop, tout Pompéi est au courant." },
+    say: "Le PRAECO, crieur public : la radio de l'Antiquité. Une voix forte, une place bondée, et hop, tout Pompéi est au courant.",
+    jeu2: {
+      bubble: "J'ai vu passer bien des étrangers ! Il y a longtemps, une femme aux vêtements gris a dicté quelque chose au scribe du forum. Une drôle de personne.",
+      say: "Le praeco voit tout, entend tout — Al3x1A n'est pas passée inaperçue." } },
   lapidicida: { mood: "neutre",
     bubble: "Trois lettres par heure, pas une de plus. Grave la loi, grave la dédicace : moi, je fais l'éternité au marteau et au burin.",
-    say: "Le lapidicida, tailleur de pierre. Métier lent, métier de patience — mais son travail va durer 2000 ans." },
+    say: "Le lapidicida, tailleur de pierre. Métier lent, métier de patience — mais son travail va durer 2000 ans.",
+    jeu2: {
+      bubble: "Il y a longtemps, une drôle de voyageuse m'a demandé de graver son nom sur un rouleau au lieu de la pierre. J'ai refusé — la pierre seule dure.",
+      say: "Le lapidicida se souvient d'Al3x1A. Il n'a jamais compris pourquoi elle voulait écrire sur du papyrus." } },
   stele_edile: { mood: "neutre",
     bubble: "Cette stèle honore l'édile qui a payé la restauration du forum. Elle sera lue par des générations d'habitants.",
     say: "Publier officiellement dans l'Antiquité, c'est GRAVER dans la pierre. La forme physique du droit et de la mémoire de la cité." },

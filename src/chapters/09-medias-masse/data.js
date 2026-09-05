@@ -144,18 +144,27 @@ const ACTIONS = {
 
   nathalie: { mood: "content",
     bubble: "Nathalie, 12 ans ! Cette nuit, papa m'a réveillée à 3h du matin : les Américains marchent sur la LUNE ! Sauf que l'image est TOUTE NEIGEUSE. Aide-moi à régler l'antenne, sinon je vais rater l'Histoire !",
-    say: "Nathalie : 600 millions de personnes regardent en même temps. Il faut vite régler l'antenne râteau, puis les oreilles de lapin." },
+    say: "Nathalie : 600 millions de personnes regardent en même temps. Il faut vite régler l'antenne râteau, puis les oreilles de lapin.",
+    jeu2: {
+      bubble: "T'es qui, toi ? Papa a dit qu'une autre dame bizarre en tunique grise est venue dans notre salon pour regarder la Lune. Elle a laissé quelque chose sur un CD.",
+      say: "Al3x1A a partagé le grand moment lunaire avec cette famille. Un souvenir gravé sur CD." } },
 
   julien: { mood: "content",
     bubble: "Julien, 15 ans ! Mon groupe préféré passe à 17h à la radio ! J'ai une cassette TDK 60 minutes prête dans la platine de droite. Aide-moi à appuyer sur PLAY+REC pile au bon moment pour l'avoir sans le speaker par-dessus.",
-    say: "Julien : avec la cassette, chacun peut enregistrer chez soi. L'industrie du disque n'est PAS contente." },
+    say: "Julien : avec la cassette, chacun peut enregistrer chez soi. L'industrie du disque n'est PAS contente.",
+    jeu2: {
+      bubble: "T'es cool, chronaute ! Une dame comme toi m'a filé son adresse un jour — sur un CD gravé, la classe. J'ai jamais réussi à le lire, il est plus dans le tiroir.",
+      say: "Al3x1A a fait un CD pour Julien — et déjà, dix ans après, illisible. La leçon est là." } },
 
   platine_rec: { modal: "cassette", needsFlag: "cassette_chargee",
     needMsg: "Il faut d'abord glisser une cassette dans la platine." },
 
   celine: { mood: "neutre",
     bubble: "Céline, 25 ans, cadre en informatique. On vient de me livrer un GRAVEUR de CD-Rom au bureau — la classe ! Aide-moi à graver mon premier disque. On dit qu'un CD dure 100 ans… on verra bien.",
-    say: "Céline : le CD-Rom, censé être « inaltérable ». Sauf que 30 ans plus tard, la couche métallique se décolle." },
+    say: "Céline : le CD-Rom, censé être « inaltérable ». Sauf que 30 ans plus tard, la couche métallique se décolle.",
+    jeu2: {
+      bubble: "Chronaute ? Une collègue étrange m'a demandé un CD vierge une fois. Elle a gravé un truc dessus, puis elle est partie. J'aimerais bien la revoir, cette Al3x1A.",
+      say: "Al3x1A a gravé un CD ici. Le disque est peut-être encore lisible — ou pas." } },
 
   graver_cd: { modal: "graver_cd", needsFlag: "cd_charge",
     needMsg: "Insère d'abord un CD-Rom vierge dans le lecteur du PC (glisse la pile de CD sur l'unité centrale)." },

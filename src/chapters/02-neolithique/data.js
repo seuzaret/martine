@@ -200,19 +200,28 @@ const ACTIONS = {
     say: "Le roi Tannis. Un chef, des impôts, une cité fortifiée : au Néolithique, l'humanité s'organise pour de bon." },
   jala: { mood: "content",
     bubble: "Nos poteries sont les plus belles du pays. Chaque motif dit : « ça vient de chez nous ».",
-    say: "Jala, la potière. Ses motifs sont la « marque » de la cité — l'ancêtre du logo." },
+    say: "Jala, la potière. Ses motifs sont la « marque » de la cité — l'ancêtre du logo.",
+    jeu2: {
+      bubble: "Toi ! Encore ! Prends une poterie si tu veux — je te fais un prix chronaute.",
+      say: "Jala te reconnaît, évidemment. Un bon commerçant n'oublie jamais un visage." } },
   ahmid: { mood: "vexe",
     bubble: "Compter des bêtes de tête, c'est se faire voler à coup sûr. Il me faut mieux.",
     say: "Ahmid, le marchand. Son problème de comptes va faire naître… l'écriture. Rien que ça." },
   imir: { mood: "neutre",
     bubble: "Nous dressons des pierres pour honorer le roi et les dieux. Elles nous survivront de mille ans.",
-    say: "Imir, le prêtre. Le mégalithe : un message monumental, pour l'éternité." },
+    say: "Imir, le prêtre. Le mégalithe : un message monumental, pour l'éternité.",
+    jeu2: {
+      bubble: "Une voyageuse du ciel est passée il y a bien des saisons. Elle a gravé une marque étrange sur l'un de nos mégalithes. Va donc la voir.",
+      say: "Al3x1A a laissé sa trace sur la pierre — Imir s'en souvient : rien ne s'oublie chez ceux qui gravent." } },
   doka: { mood: "neutre",
     bubble: "Le silex, ça casse. Depuis qu'on connaît le métal, plus rien ne m'arrête… si j'en ai.",
     say: "Doka, le tailleur de pierre. Il lui faut des outils de cuivre, solides." },
   otzi: { mood: "vexe",
     bubble: "Cette mine me ronge les os. Le froid, l'humidité… j'ai mal partout.",
-    say: "L'homme des glaces — notre Ötzi. Il cherche des tatouages de soin qui ne s'effacent jamais." },
+    say: "L'homme des glaces — notre Ötzi. Il cherche des tatouages de soin qui ne s'effacent jamais.",
+    jeu2: {
+      bubble: "Une autre voyageuse en tunique grise est venue. Elle voulait un tatouage aussi — une petite étoile, ici, sur la main.",
+      say: "Ötzi porte les marques de tout ce qui l'a touché — et il se souvient qu'Al3x1A est venue chercher un tatouage." } },
 };
 
 /* ------------------------------------------------------------

@@ -203,7 +203,10 @@ const ACTIONS = {
      Leurs vraies répliques d'étape sont dans QUETE ; ceci sert de repli. */
   mesannepada: { mood: "neutre",
     bubble: "Je suis Mesannepada, roi d'Ur. Rends-toi utile, étranger, et tu seras traité en ami.",
-    say: "Un vrai roi, dans une vraie cité. On est loin de la grotte du chapitre 1 !" },
+    say: "Un vrai roi, dans une vraie cité. On est loin de la grotte du chapitre 1 !",
+    jeu2: {
+      bubble: "Encore un voyageur des étoiles ! Vous êtes bien nombreux ces temps-ci à traverser mon royaume.",
+      say: "Mesannepada s'habitue aux chronautes. Un bon signe : Al3x1A est passée aussi." } },
   naram: { mood: "vexe",
     bubble: "Le berger jure vingt bêtes, le prêtre en note dix-huit… et moi, je perds la tête ! Il me faut une trace SÛRE.",
     say: "Et c'est comme ça, pour compter, que va naître l'écriture. Fabrique-lui de quoi noter." },
@@ -220,10 +223,16 @@ const ACTIONS = {
   /* Nil & Phénicie (inchangés) */
   scribe: { mood: "neutre",
     bubble: "L'argile, c'est solide : ça durera mille ans. Mais le pharaon veut que son ordre parte à l'autre bout du royaume, et ce pauvre âne n'en porte que vingt tablettes ! Il me faudrait un support LÉGER. Quelque chose qui pousse ici, au bord de l'eau…",
-    say: "Léger et transportable : le papyrus. Plus pratique que l'argile… mais bien plus fragile. On n'a rien sans rien." },
+    say: "Léger et transportable : le papyrus. Plus pratique que l'argile… mais bien plus fragile. On n'a rien sans rien.",
+    jeu2: {
+      bubble: "Une voyageuse en tunique grise m'a demandé du papyrus, autrefois. Elle m'a laissé une tablette en échange — je l'ai gardée dans les archives.",
+      say: "Le scribe garde tout — la tablette d'Al3x1A est peut-être encore là, quelque part dans Uruk." } },
   assurbanipal: { mood: "neutre",
     bubble: "Je suis Assurbanipal, roi et grand amasseur de tablettes : j'ai réuni tout le savoir du monde en cunéiforme… sept cents signes ! Mais regarde ces marchands : avec seulement 22 signes, un par son, leurs mousses apprennent à écrire en quelques jours. Apprends ce code simple, toi aussi.",
-    say: "Un code SIMPLE se répand plus vite qu'un code savant : tout le secret de l'alphabet. Grave-le sur la tablette pour l'apprendre — puis confie-le aux navires marchands." },
+    say: "Un code SIMPLE se répand plus vite qu'un code savant : tout le secret de l'alphabet. Grave-le sur la tablette pour l'apprendre — puis confie-le aux navires marchands.",
+    jeu2: {
+      bubble: "Chronaute, ma bibliothèque contient TOUT — même la tablette d'une drôle de voyageuse en tunique grise. Elle disait s'appeler Al3x1A. Cherche-la parmi les rayonnages.",
+      say: "Al3x1A a laissé une tablette dans la plus grande bibliothèque de l'Antiquité. Assurbanipal sait qui elle est." } },
   alphabet: { modal: "alphabet" },
 
   /* ── École du scribe (adjacent à Ur) ── */
