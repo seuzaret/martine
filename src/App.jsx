@@ -427,6 +427,20 @@ export default function App() {
     setScreen("play");
   };
 
+  /* JEU 2 : voyage temporel LIBRE. Le joueur clique une époque dans le
+     sélecteur (colonne de droite ou barre en bas) → MARTINE nous téléporte
+     dans cette époque, sur son premier tableau. On ne remet pas l'inv/
+     l'historique à zéro : les notes trouvées et Al3x1A restent acquis. */
+  const travelJeu2 = (i) => {
+    if (i === chapterIndex) return;
+    playSfx("jump");
+    setChapterIndex(i);
+    setTab(CHAPTERS[i].startScene);
+    setBubble(null);
+    const nom = CHAPTERS[i].epoque || CHAPTERS[i].bandeau || `chapitre ${i + 1}`;
+    say(`🌀 Cap sur ${nom}. Cherche les traces d'Al3x1A dans le décor.`, "neutre");
+  };
+
   /* Reprend la partie sauvegardée (bouton « Reprendre »). Le SLOT à
      charger est passé en argument : "jeu1" par défaut, "jeu2" quand
      on reprend le jeu 2. */
@@ -1676,17 +1690,62 @@ export default function App() {
         {/* JEU 2 : petite colonne d'aide qui remplace la jauge — liste des
             notes trouvées + rappel de la mission. */}
         {large && mode === "jeu2" && (
-          <div style={{ width: 116, flex: "0 0 auto", display: "flex", flexDirection: "column", background: "linear-gradient(180deg,#0e1c2a,#0a1420)", border: "1px solid #26324a", borderRadius: 12, padding: "9px 8px", gap: 6, overflowY: "auto" }}>
+          <div style={{ width: 128, flex: "0 0 auto", display: "flex", flexDirection: "column", background: "linear-gradient(180deg,#0e1c2a,#0a1420)", border: "1px solid #26324a", borderRadius: 12, padding: "9px 8px", gap: 6, overflowY: "auto" }}>
             <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, letterSpacing: 1.5, color: "#7fd8ff", textAlign: "center", lineHeight: 1.35 }}>🔎 NOTES<br />D'AL3X1A</div>
             <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 22, fontWeight: 800, color: "#7fd8ff", textAlign: "center" }}>{jeu2Notes.length}/{JEU2.length}</div>
             <div style={{ height: 1, background: "#26324a", margin: "4px 0" }} />
+            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 8, letterSpacing: 1.2, color: "#7fd8ff", textAlign: "center", opacity: 0.75 }}>🌀 VOYAGER</div>
+            {/* Sélecteur d'époques : chaque ligne est cliquable, MARTINE téléporte
+                le joueur au premier tableau du chapitre choisi. Le chapitre courant
+                est mis en évidence, les notes trouvées ont un ✓ vert. */}
             <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              {CHAPTERS.map((c, i) => (
-                <div key={c.id} style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, color: jeu2Notes.includes(i) ? "#7fd8ff" : "#4a5568", padding: "2px 0", borderLeft: `2px solid ${jeu2Notes.includes(i) ? "#7fd8ff" : "#26324a"}`, paddingLeft: 5 }}>
-                  {jeu2Notes.includes(i) ? "✓" : "·"} ch.{i + 1}
-                </div>
-              ))}
+              {CHAPTERS.map((c, i) => {
+                const has = jeu2Notes.includes(i);
+                const isHere = i === chapterIndex;
+                return (
+                  <button key={c.id} onClick={() => travelJeu2(i)}
+                    title={c.epoque || `Chapitre ${i + 1}`}
+                    style={{
+                      fontFamily: "ui-monospace,monospace", fontSize: 10,
+                      color: isHere ? "#ffd166" : (has ? "#7fd8ff" : "#8a9cb0"),
+                      background: isHere ? "rgba(255,209,102,0.09)" : "transparent",
+                      border: "none",
+                      padding: "3px 4px 3px 7px",
+                      borderLeft: `2px solid ${isHere ? "#ffd166" : (has ? "#7fd8ff" : "#26324a")}`,
+                      textAlign: "left",
+                      cursor: isHere ? "default" : "pointer",
+                      transition: "background .12s",
+                    }}>
+                    {has ? "✓" : (isHere ? "▸" : "·")} ch.{i + 1}
+                  </button>
+                );
+              })}
             </div>
+          </div>
+        )}
+        {/* JEU 2, petit écran : le sélecteur d'époques passe en barre horizontale
+            juste au-dessus de la console MARTINE (pas de colonne dispo à droite). */}
+        {!large && mode === "jeu2" && (
+          <div style={{ position: "absolute", left: 8, right: 8, bottom: 138, display: "flex", gap: 4, overflowX: "auto", padding: "6px 8px", background: "rgba(14,28,42,0.92)", border: "1px solid #26324a", borderRadius: 10, zIndex: 40 }}>
+            <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, letterSpacing: 1.2, color: "#7fd8ff", alignSelf: "center", opacity: 0.75, flex: "0 0 auto" }}>🌀</span>
+            {CHAPTERS.map((c, i) => {
+              const has = jeu2Notes.includes(i);
+              const isHere = i === chapterIndex;
+              return (
+                <button key={c.id} onClick={() => travelJeu2(i)}
+                  title={c.epoque || `Chapitre ${i + 1}`}
+                  style={{
+                    fontFamily: "ui-monospace,monospace", fontSize: 11, fontWeight: 700,
+                    color: isHere ? "#ffd166" : (has ? "#7fd8ff" : "#8a9cb0"),
+                    background: isHere ? "rgba(255,209,102,0.12)" : "transparent",
+                    border: `1px solid ${isHere ? "#ffd166" : (has ? "#3a5a7a" : "#26324a")}`,
+                    borderRadius: 6, padding: "3px 8px",
+                    cursor: isHere ? "default" : "pointer", flex: "0 0 auto",
+                  }}>
+                  {has ? "✓" : ""}{i + 1}
+                </button>
+              );
+            })}
           </div>
         )}
       </div>
