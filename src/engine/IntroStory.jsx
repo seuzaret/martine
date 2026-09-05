@@ -708,12 +708,19 @@ function SlidePrehistoric({ onDone }) {
           })}
         </g>
 
-        {/* Mammouth juste devant la forêt à gauche */}
+        {/* Mammouth juste devant la forêt à gauche — la tête est tournée vers
+            le crash (curieux), et ses défenses pointent vers MARTINE : petit
+            détail qui donne vie à la scène. */}
         <g transform="translate(180,300)">
           <ellipse cx="0" cy="0" rx="46" ry="26" fill="#1a0e04" />
-          <ellipse cx="-40" cy="-2" rx="18" ry="14" fill="#1a0e04" />
-          <path d="M-56 4 Q-70 20 -64 30 Q-56 32 -52 24" stroke="#1a0e04" strokeWidth="6" fill="none" strokeLinecap="round" />
-          <path d="M-52 -4 Q-62 -8 -58 -14" stroke="#e8dfc8" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+          {/* La tête tourne LENTEMENT (comme s'il examinait le vaisseau écrasé) */}
+          <g style={{ animation: 'mammothLook 8s ease-in-out infinite', transformOrigin: '-40px 0px' }}>
+            <ellipse cx="-40" cy="-2" rx="18" ry="14" fill="#1a0e04" />
+            <path d="M-56 4 Q-70 20 -64 30 Q-56 32 -52 24" stroke="#1a0e04" strokeWidth="6" fill="none" strokeLinecap="round" />
+            <path d="M-52 -4 Q-62 -8 -58 -14" stroke="#e8dfc8" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+            {/* petit œil visible */}
+            <circle cx="-46" cy="-4" r="1.5" fill="#f0d090" />
+          </g>
           <rect x="-30" y="20" width="9" height="24" fill="#1a0e04" />
           <rect x="-10" y="22" width="9" height="22" fill="#1a0e04" />
           <rect x="10" y="22" width="9" height="22" fill="#1a0e04" />
@@ -735,18 +742,82 @@ function SlidePrehistoric({ onDone }) {
           <path d="M-4 0 Q-2 -8 2 -12 Q4 -6 2 0 Z" fill="#ff8030" />
         </g>
 
-        {/* Silhouette du personnage à genoux (au centre) */}
+        {/* ═══ ZONE DU CRASH ═══
+            Deux éléments : le CRATÈRE de MARTINE (avec traînée de terre
+            retournée pointant vers MARTINE — sillon d'atterrissage) et le
+            joueur GROGGY qui vient d'être éjecté. */}
+        {/* Sillon d'atterrissage : la trace du glissement de MARTINE au sol */}
+        <path d="M 380 480 Q 500 430 640 420" stroke="#2a1408" strokeWidth="42" fill="none" strokeLinecap="round" opacity="0.7" />
+        <path d="M 380 480 Q 500 430 640 420" stroke="#4a2818" strokeWidth="26" fill="none" strokeLinecap="round" opacity="0.55" />
+        {/* Éclats projetés autour du sillon */}
+        {[[420, 450], [480, 442], [540, 448], [600, 440], [660, 455], [520, 468], [590, 465]].map(([x, y], i) => (
+          <ellipse key={i} cx={x} cy={y} rx="4" ry="1.5" fill="#1a0e04" opacity="0.7" />
+        ))}
+        {/* Cratère autour de MARTINE : elliptique, terre remuée */}
+        <ellipse cx="640" cy="430" rx="72" ry="22" fill="#2a1408" opacity="0.85" />
+        <ellipse cx="640" cy="428" rx="58" ry="14" fill="#4a2818" opacity="0.65" />
+
+        {/* JOUEUR GROGGY — assis au sol, dos courbé, en train de reprendre
+            ses esprits. Au premier dialogue : des étoiles ✨ tournent autour
+            de sa tête (il est sonné). Elles disparaissent au 3e dialogue,
+            quand il commence à comprendre ce qui se passe. */}
         <g transform="translate(400,410)">
-          <path d="M-24 60 L-24 -10 Q-24 -20 -14 -20 L14 -20 Q24 -20 24 -10 L24 60 Z" fill="#1a1408" />
-          <ellipse cx="0" cy="-30" rx="14" ry="16" fill="#1a1408" />
-          <path d="M-14 -36 q0 -8 8 -10 q8 2 10 -4 q4 6 10 4 q6 4 8 10 z" fill="#0a0604" />
-          {/* main tendue à droite vers MARTINE */}
-          <path d="M24 60 Q30 40 40 20 Q50 8 60 6" stroke="#1a1408" strokeWidth="16" fill="none" strokeLinecap="round" />
+          {/* Corps courbé vers l'avant, comme quelqu'un qui vient de tomber */}
+          <path d="M-22 62 Q-24 40 -14 20 L-14 -8 Q-14 -18 -4 -18 L16 -18 Q26 -18 26 -8 L26 34 Q30 50 34 62 Z" fill="#1a1408" />
+          {/* Tête légèrement penchée (dépité, sonné) */}
+          <g transform="rotate(-12) translate(-3,-30)">
+            <ellipse cx="0" cy="0" rx="14" ry="16" fill="#1a1408" />
+            <path d="M-14 -6 q0 -8 8 -10 q8 2 10 -4 q4 6 10 4 q6 4 8 10 z" fill="#0a0604" />
+          </g>
+          {/* main tendue à droite vers MARTINE (comme pour la relever) */}
+          <path d="M26 40 Q34 24 48 12 Q58 6 68 4" stroke="#1a1408" strokeWidth="14" fill="none" strokeLinecap="round" />
+          {/* ÉTOILES ✨ qui tournent autour de la tête pendant qu'il est sonné.
+              Trois étoiles à 120° chacune, sur une orbite qui tourne.
+              Disparaissent quand step >= 2 (il a repris ses esprits). */}
+          {step < 2 && (
+            <g style={{ animation: 'dizzyOrbit 2.4s linear infinite', transformOrigin: '-3px -30px' }}>
+              {[0, 120, 240].map((angle, i) => {
+                const rad = angle * Math.PI / 180;
+                const x = -3 + Math.cos(rad) * 22;
+                const y = -30 + Math.sin(rad) * 8;
+                return (
+                  <text key={i} x={x} y={y} fontSize="14" textAnchor="middle" fill="#ffd166"
+                    style={{ animation: `dizzyStar 1.2s ease-in-out infinite ${i * 0.3}s` }}>✦</text>
+                );
+              })}
+            </g>
+          )}
         </g>
 
-        {/* MARTINE plus petite et posée SUR LE CÔTÉ droit — clic pour dialogue */}
-        <g transform="translate(640,410)">
+        {/* ═══ MARTINE CRASHÉE ═══
+            À droite, penchée dans son cratère. Autour d'elle : de la fumée
+            qui monte, des étincelles électriques (circuits abîmés). Elle
+            se redresse progressivement — inclinée aux premiers dialogues,
+            droite à partir du 3e (elle a « rebooté »). */}
+        {/* FUMÉE : 3 volutes qui montent et se dissipent en boucle */}
+        {[
+          { x: 620, delay: '0s', dur: '3.6s', drift: 8 },
+          { x: 640, delay: '1.2s', dur: '4s', drift: -6 },
+          { x: 660, delay: '2.1s', dur: '3.2s', drift: 10 },
+        ].map((s, i) => (
+          <g key={i} style={{ animation: `smokeRise ${s.dur} ease-out infinite`, animationDelay: s.delay, transformOrigin: `${s.x}px 400px` }}>
+            <circle cx={s.x} cy="400" r="8" fill="#8a8a8a" opacity="0.35" />
+            <circle cx={s.x + s.drift/2} cy="380" r="10" fill="#a0a0a0" opacity="0.28" />
+            <circle cx={s.x + s.drift} cy="360" r="12" fill="#c0c0c0" opacity="0.2" />
+          </g>
+        ))}
+        {/* MARTINE — inclinée au début, droite quand elle a repris ses esprits */}
+        <g transform={`translate(640,410) rotate(${step < 3 ? -15 : 0})`} style={{ transition: 'transform 0.8s ease-out' }}>
           <circle r="46" fill="url(#s7-halo)" style={{ animation: 'martinePulse 2s ease-in-out infinite' }} />
+          {/* ÉTINCELLES électriques autour d'elle tant qu'elle n'est pas OK */}
+          {step < 3 && (
+            <g style={{ animation: 'sparkFlicker 0.4s steps(2) infinite' }}>
+              <path d="M -32 -18 L -28 -10 L -34 -8 L -30 0" stroke="#ffe066" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+              <path d="M 30 -20 L 34 -14 L 28 -12 L 32 -6" stroke="#8ae0ff" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+              <circle cx="-30" cy="-15" r="2" fill="#fff4a0" />
+              <circle cx="32" cy="-18" r="2" fill="#a0e0ff" />
+            </g>
+          )}
           <MartineNut scale={1.1} mood={step >= 3 ? 'content' : 'casse'} talking={!lastStep} date="−18 000"
             onClick={lastStep ? undefined : clickMartine}
             cursor={lastStep ? 'default' : 'pointer'} />
@@ -796,6 +867,28 @@ function SlidePrehistoric({ onDone }) {
           @keyframes firePulse { 0%, 100% { opacity: 0.85; transform: scale(1); } 50% { opacity: 1; transform: scale(1.06); } }
           @keyframes martinePulse { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.15); } }
           @keyframes personneCall { 0%, 100% { opacity: 0.75; transform: scale(1); } 50% { opacity: 1; transform: scale(1.08); } }
+          @keyframes smokeRise {
+            0% { transform: translateY(0) scale(0.6); opacity: 0; }
+            15% { opacity: 0.7; }
+            100% { transform: translateY(-90px) scale(1.4); opacity: 0; }
+          }
+          @keyframes sparkFlicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.15; }
+            100% { opacity: 1; }
+          }
+          @keyframes dizzyOrbit {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          @keyframes dizzyStar {
+            0%, 100% { opacity: 0.9; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.25); }
+          }
+          @keyframes mammothLook {
+            0%, 60%, 100% { transform: rotate(0deg); }
+            70%, 85% { transform: rotate(-18deg); }
+          }
         `}</style>
       </svg>
     </div>
