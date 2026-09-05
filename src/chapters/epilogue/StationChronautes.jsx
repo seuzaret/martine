@@ -1,4 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+/* Petit hook TYPEWRITER local — révèle un texte lettre par lettre.
+   Repart de zéro dès que `text` change. `skip()` affiche tout d'un coup. */
+function useTypewriter(text, speed = 32) {
+  const [shown, setShown] = useState("");
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    setShown(""); setDone(false);
+    if (!text) { setDone(true); return; }
+    let i = 0;
+    const iv = setInterval(() => {
+      i += 1;
+      setShown(text.slice(0, i));
+      if (i >= text.length) { clearInterval(iv); setDone(true); }
+    }, speed);
+    return () => clearInterval(iv);
+  }, [text, speed]);
+  return { shown, done, skip: () => { setShown(text); setDone(true); } };
+}
 
 /* ============================================================
    STATION DES CHRONAUTES — la scène du futur
@@ -486,6 +505,51 @@ function DecorStation({ onClickPerso, done }) {
 }
 
 /* -------------------- LE COMPOSANT PRINCIPAL -------------------- */
+/* Boîte de dialogue d'un chronaute : portrait + texte typewriter + boutons.
+   Extraite en composant pour que le hook useTypewriter puisse s'appuyer sur
+   step.text sans re-monter la parent tree. Le bouton "Suite/Fermer" reste
+   grisé tant que la révélation n'est pas terminée ; cliquer sur le texte
+   saute à la fin (utile en démo classe). */
+function ChronauteDialogueBox({ step, persoName, prenom, idx, total, isLast, onNext, onClose, Portrait }) {
+  const rawText = step.text.replace("{prenom}", prenom || "chronaute");
+  const { shown, done, skip } = useTypewriter(rawText);
+  return (
+    <div style={{ position: "relative", zIndex: 2, padding: "12px 20px 20px", background: "linear-gradient(180deg,#0c122000 0%,#0c1220ee 40%,#080d16 100%)", display: "flex", gap: 16, alignItems: "flex-end", animation: "fadein 0.3s ease-out" }}>
+      <div style={{ width: 160, height: 190, flex: "0 0 auto", borderRadius: 12, overflow: "hidden", border: "2px solid #ffd166", boxShadow: "0 8px 32px rgba(0,0,0,0.65)" }}>
+        <Portrait mood={step.mood} />
+      </div>
+      <div style={{ flex: 1, background: "#0e1420ee", border: "1px solid #2a3648", borderRadius: 12, padding: "12px 16px", minHeight: 140, display: "flex", flexDirection: "column", justifyContent: "space-between", cursor: done ? "default" : "pointer" }}
+        onClick={() => !done && skip()}
+        title={done ? "" : "Cliquer pour tout afficher"}>
+        <div>
+          <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 2, color: "#ffd166", marginBottom: 6 }}>
+            {persoName.toUpperCase()}
+          </div>
+          <p style={{ fontSize: 15, lineHeight: 1.6, color: "#e8eef5", margin: 0 }}>
+            « {shown}{!done && <span style={{ opacity: 0.7 }}>▮</span>} »
+          </p>
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+          <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, color: "#8fa3bd" }}>{idx + 1} / {total}</div>
+          {!isLast ? (
+            <button onClick={(e) => { e.stopPropagation(); if (done) onNext(); }}
+              disabled={!done}
+              style={{ background: done ? "#141b26" : "#0e1420", color: done ? "#ffd166" : "#3a3020", border: `1px solid ${done ? "#5a4a20" : "#26324a"}`, borderRadius: 10, padding: "9px 18px", fontWeight: 700, cursor: done ? "pointer" : "default", fontSize: 14, fontFamily: "ui-monospace,monospace", letterSpacing: 1, transition: "all .2s" }}>
+              Suite ▸
+            </button>
+          ) : (
+            <button onClick={(e) => { e.stopPropagation(); if (done) onClose(); }}
+              disabled={!done}
+              style={{ background: done ? "#141b26" : "#0e1420", color: done ? "#5eff9e" : "#2a3020", border: `1px solid ${done ? "#2a4028" : "#26324a"}`, borderRadius: 10, padding: "9px 18px", fontWeight: 700, cursor: done ? "pointer" : "default", fontSize: 14, fontFamily: "ui-monospace,monospace", letterSpacing: 1, transition: "all .2s" }}>
+              Fermer ✕
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function StationChronautes({ prenom, onContinue }) {
   /* perso courant dont on lit les dialogues (null = personne, on voit
      juste le décor et les ? cliquables). Idx = index dans la séquence
@@ -550,35 +614,17 @@ export default function StationChronautes({ prenom, onContinue }) {
       {/* Portrait + dialogue collés en bas — s'affichent SEULEMENT quand
           on a cliqué sur un perso. Sinon on voit juste le décor. */}
       {perso && step && (
-        <div style={{ position: "relative", zIndex: 2, padding: "12px 20px 20px", background: "linear-gradient(180deg,#0c122000 0%,#0c1220ee 40%,#080d16 100%)", display: "flex", gap: 16, alignItems: "flex-end", animation: "fadein 0.3s ease-out" }}>
-          <div style={{ width: 160, height: 190, flex: "0 0 auto", borderRadius: 12, overflow: "hidden", border: "2px solid #ffd166", boxShadow: "0 8px 32px rgba(0,0,0,0.65)" }}>
-            <Portrait mood={step.mood} />
-          </div>
-          <div style={{ flex: 1, background: "#0e1420ee", border: "1px solid #2a3648", borderRadius: 12, padding: "12px 16px", minHeight: 140, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-            <div>
-              <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 2, color: "#ffd166", marginBottom: 6 }}>
-                {persoName.toUpperCase()}
-              </div>
-              <p style={{ fontSize: 15, lineHeight: 1.6, color: "#e8eef5", margin: 0 }}>
-                « {step.text.replace("{prenom}", prenom || "chronaute")} »
-              </p>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
-              <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, color: "#8fa3bd" }}>{idx + 1} / {dialoguesActifs.length}</div>
-              {!isLast ? (
-                <button onClick={() => setIdx(idx + 1)}
-                  style={{ background: "#141b26", color: "#ffd166", border: "1px solid #5a4a20", borderRadius: 10, padding: "9px 18px", fontWeight: 700, cursor: "pointer", fontSize: 14, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
-                  Suite ▸
-                </button>
-              ) : (
-                <button onClick={closeDialogue}
-                  style={{ background: "#141b26", color: "#5eff9e", border: "1px solid #2a4028", borderRadius: 10, padding: "9px 18px", fontWeight: 700, cursor: "pointer", fontSize: 14, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
-                  Fermer ✕
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+        <ChronauteDialogueBox
+          step={step}
+          persoName={persoName}
+          prenom={prenom}
+          idx={idx}
+          total={dialoguesActifs.length}
+          isLast={isLast}
+          onNext={() => setIdx(idx + 1)}
+          onClose={closeDialogue}
+          Portrait={Portrait}
+        />
       )}
 
       {/* Bouton CONTINUER — n'apparaît qu'une fois la question finale entendue */}
