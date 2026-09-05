@@ -9,7 +9,7 @@ import { CHAPTERS } from "../index.js";
    Salle TEMPORELLE : ni station des chronautes ni décor du jeu 1.
    Une nébuleuse profonde, des courants du temps qui coulent, MARTINE
    RÉPARÉE (droite, fière) et Elias qui remet officiellement la
-   MISSION à l'élève, avec la FRISE CHRONOLOGIQUE en cadeau — la
+   MISSION à l'élève, avec la TEMPOSCOPE en cadeau — la
    pièce apparaît en cadeau à la 5e réplique, matérialisée devant lui.
 
    Effet TYPEWRITER sur chaque réplique. Le joueur clique le bouton
@@ -41,7 +41,7 @@ function useTypewriter(text, speed = 32) {
 function FrisePreview() {
   return (
     <div style={{ position: "relative", padding: "10px 14px 6px", background: "linear-gradient(180deg, rgba(14,28,42,0.85), rgba(14,28,42,0.35))", borderRadius: 12, border: "1px solid #3a80c8", boxShadow: "0 0 20px rgba(127,216,255,0.35)", animation: "friseAppear 0.9s ease-out" }}>
-      <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, letterSpacing: 2, color: "#7fd8ff", textAlign: "center", marginBottom: 6 }}>🌀 TA FRISE CHRONOLOGIQUE</div>
+      <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, letterSpacing: 2, color: "#7fd8ff", textAlign: "center", marginBottom: 6 }}>🔭 TON TEMPOSCOPE</div>
       <div style={{ position: "absolute", left: 26, right: 26, top: "58%", height: 2, background: "linear-gradient(90deg, #26324a 0%, #7fd8ff 50%, #26324a 100%)", opacity: 0.6, borderRadius: 2 }} />
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 4, position: "relative" }}>
         {CHAPTERS.map((c) => (
@@ -60,7 +60,7 @@ const DIALOGUES = [
   { speaker: "martine", mood: "content", text: "Mes circuits… ils vibrent, ils chantent. Merci, chronaute. Je ne suis plus une noix cassée : je suis MARTINE, entière, prête à tout." },
   { speaker: "elias", text: "Écoute. Il nous reste UNE mission. Il y a bien des années, l'une des nôtres est partie chercher un remède contre l'oubli qui nous ronge. Elle n'est jamais rentrée." },
   { speaker: "elias", text: "Son nom de code : Al3x1A. La pionnière. Elle a pris la MARTINE-jumelle et disparu quelque part dans les époques. Nous ignorons où. Elle attend, quelque part, quelqu'un pour la ramener." },
-  { speaker: "martine", mood: "content", text: "Je viens de reconstituer la carte de toutes les époques que nous avons traversées. Voici ton nouvel outil : la FRISE CHRONOLOGIQUE. Elle te permettra de voyager d'une époque à l'autre en un clic.", showFrise: true },
+  { speaker: "martine", mood: "content", text: "Je viens d'assembler un instrument à partir des époques que nous avons traversées. Voici ton nouvel outil : le TEMPOSCOPE. Il te permettra de voyager d'une époque à l'autre d'un simple regard.", showFrise: true },
   { speaker: "martine", mood: "neutre", text: "Al3x1A a laissé des NOTES sur les supports caractéristiques de chaque époque — paroi, tablette, papyrus, télégramme… Trouve-les. Recoupe les indices. Retrouve-la." },
   { speaker: "elias", text: "C'est une mission longue et difficile. Mais si quelqu'un peut le faire, c'est toi. Es-tu prêt·e à repartir dans les fils du temps, {prenom} ?" },
 ];

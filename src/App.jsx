@@ -1531,7 +1531,7 @@ export default function App() {
                   Retrouver Al3x1A
                 </div>
                 <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#c8d4e2", margin: "10px auto 14px", maxWidth: 460, fontStyle: "italic" }}>
-                  La pionnière est bloquée quelque part dans les époques que tu viens de traverser. Grâce à la frise chronologique que MARTINE t'a remise, tu peux voyager librement et recouper les indices pour la retrouver.
+                  La pionnière est bloquée quelque part dans les époques que tu viens de traverser. Grâce au TEMPOSCOPE que MARTINE t'a remis, tu peux voyager librement et recouper les indices pour la retrouver.
                 </p>
                 <button onClick={newGameJeu2}
                   style={{ background: "#7fd8ff", color: "#06110b", border: "none", borderRadius: 12, padding: "12px 26px", fontSize: 15, fontWeight: 900, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 2, boxShadow: "0 0 22px rgba(127,216,255,0.55)" }}>
