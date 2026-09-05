@@ -200,7 +200,7 @@ function Bubble({ x, y, w = 260, text, from = 'left', color = 'default' }) {
   useEffect(() => {
     setNShown(0);
     if (!fullText) return;
-    const step = 28;
+    const step = 55;
     let i = 0;
     const id = setInterval(() => {
       i += 1;

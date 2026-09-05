@@ -561,7 +561,10 @@ export default function App() {
        de l'étape en cours, il dit SA réplique d'étape (pas sa réplique
        par défaut). Une étape sans tâche (`attend`) passe aussitôt à la
        suivante : le « ? » doré se déplace. */
-    const step = chapter.quete?.[quete];
+    /* La QUÊTE (portrait grand plan + repliques d'étape + avancée) n'est
+       PAS jouée en jeu 2 : elle raconte la progression du jeu 1 et
+       n'aurait aucun sens quand on enquête sur Al3x1A. */
+    const step = mode === "jeu2" ? null : chapter.quete?.[quete];
     /* étape en GROS PLAN : cliquer le personnage ouvre son portrait
        (le texte, l'avancée et le `say` passent par le bouton Continuer) */
     if (step && step.perso === name && step.portrait) {
@@ -570,16 +573,6 @@ export default function App() {
       return;
     }
     let bubbleText = act.bubble, sayText = act.say, mood = act.mood;
-    /* MODE JEU 2 : si le personnage a une variante `jeu2` dans ses actions,
-       elle prend le pas sur ses paroles de jeu 1 (le joueur est un
-       chronaute qui repasse — pas un nouveau venu). Le clan et les
-       inventeurs le RECONNAISSENT, ou évoquent une drôle de voyageuse
-       passée par là il y a longtemps. */
-    if (mode === "jeu2" && act.jeu2) {
-      bubbleText = act.jeu2.bubble ?? bubbleText;
-      sayText = act.jeu2.say ?? sayText;
-      mood = act.jeu2.mood ?? mood;
-    }
     if (step && step.perso === name) {
       bubbleText = step.bubble ?? act.bubble;
       sayText = step.say ?? act.say;
@@ -591,6 +584,15 @@ export default function App() {
         if (step.grant) grantFlag(step.grant);
         if (step.suite) setTimeout(() => say(`➜ ${step.suite}`), 1400);
       }
+    }
+    /* MODE JEU 2 : la variante `jeu2` du personnage prime en toute fin
+       (le joueur est un chronaute qui repasse — les PNJ le reconnaissent
+       ou évoquent une drôle de voyageuse). Placée APRÈS le bloc quête
+       pour être sûre d'avoir le dernier mot. */
+    if (mode === "jeu2" && act.jeu2) {
+      bubbleText = act.jeu2.bubble ?? bubbleText;
+      sayText = act.jeu2.say ?? sayText;
+      mood = act.jeu2.mood ?? mood;
     }
     /* un personnage qui a des paroles propres (`bubble`) les affiche en
        phylactère à côté de lui (ancré à la dernière position cliquée) ;
