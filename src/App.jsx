@@ -1648,6 +1648,72 @@ export default function App() {
         </div>
       </div>
 
+      {/* JEU 2 : FRISE CHRONOLOGIQUE — remplacée à la colonne de droite
+          et à la barre du bas. Une seule bande horizontale, tout en haut
+          juste sous le titre, qui EST le fil du temps : les 10 époques
+          alignées de gauche à droite, reliées par une ligne de fond,
+          chacune cliquable pour voyager. La courante est mise en avant,
+          les notes trouvées ont un ✓. Compact (~66 px de hauteur). */}
+      {mode === "jeu2" && (
+        <div style={{ position: "relative", padding: "4px 12px 8px", background: "linear-gradient(180deg, rgba(14,28,42,0.55), transparent)", flex: "0 0 auto" }}>
+          {/* Le "fil du temps" : dégradé horizontal derrière les pastilles */}
+          <div style={{ position: "absolute", left: 30, right: 30, top: "50%", height: 2, marginTop: -1, background: "linear-gradient(90deg, #26324a 0%, #7fd8ff 50%, #26324a 100%)", opacity: 0.55, borderRadius: 2 }} />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 4, position: "relative", maxWidth: 1080, margin: "0 auto" }}>
+            {CHAPTERS.map((c, i) => {
+              const has = jeu2Notes.includes(i);
+              const isHere = i === chapterIndex;
+              return (
+                <button key={c.id} onClick={() => travelJeu2(i)}
+                  title={`${c.epoque || 'Chapitre ' + (i + 1)} · ${c.date || ''} — ${has ? 'note trouvée ✓' : 'à explorer'}`}
+                  style={{
+                    position: "relative",
+                    display: "flex", flexDirection: "column", alignItems: "center", gap: 1,
+                    background: "transparent", border: "none", padding: "2px 4px",
+                    cursor: isHere ? "default" : "pointer",
+                    color: "#e8eef5",
+                    opacity: isHere || has ? 1 : 0.7,
+                    transition: "opacity .15s, transform .15s",
+                    flex: "0 1 auto",
+                  }}
+                  onMouseEnter={(e) => { if (!isHere) e.currentTarget.style.transform = "translateY(-2px) scale(1.06)"; }}
+                  onMouseLeave={(e) => { if (!isHere) e.currentTarget.style.transform = "none"; }}>
+                  {/* La pastille elle-même */}
+                  <span style={{
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    width: isHere ? 40 : 34, height: isHere ? 40 : 34,
+                    fontSize: isHere ? 22 : 18,
+                    borderRadius: "50%",
+                    background: isHere
+                      ? "radial-gradient(circle at 50% 40%, #ffd166 0%, #e8934a 60%, #a05828 100%)"
+                      : has
+                        ? "radial-gradient(circle at 50% 40%, #a8dcff 0%, #4a80b8 100%)"
+                        : "linear-gradient(180deg, #1a2a3e, #0a1420)",
+                    border: `2px solid ${isHere ? "#ffe1a0" : has ? "#7fd8ff" : "#26324a"}`,
+                    boxShadow: isHere
+                      ? "0 0 16px rgba(255,209,102,0.75), inset 0 -2px 4px rgba(0,0,0,0.35)"
+                      : has
+                        ? "0 0 8px rgba(127,216,255,0.4)"
+                        : "inset 0 -1px 2px rgba(0,0,0,0.4)",
+                    transition: "all .2s",
+                    animation: isHere ? "pulse 2.4s ease-in-out infinite" : "none",
+                  }}>
+                    {c.emoji || "•"}
+                  </span>
+                  {/* Badge ✓ pour note trouvée */}
+                  {has && !isHere && (
+                    <span style={{ position: "absolute", top: -1, right: 0, fontSize: 9, background: "#5eff9e", color: "#062516", borderRadius: "50%", width: 14, height: 14, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, boxShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>✓</span>
+                  )}
+                  {/* Date en petit, alignée sous la pastille */}
+                  <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 8.5, letterSpacing: 0.5, color: isHere ? "#ffd166" : has ? "#7fd8ff" : "#6a7a8e", whiteSpace: "nowrap" }}>
+                    {c.date || `ch.${i + 1}`}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Le décor occupe toute la place restante. Sur écran large, il partage
           cette rangée avec la besace, en colonne à gauche (voir `large`). */}
       <div style={{ flex: 1, minHeight: 0, padding: "0 12px", display: "flex", justifyContent: "center", gap: 8 }}>
@@ -1710,92 +1776,8 @@ export default function App() {
           <JaugeTemporelle transmis={flux} requis={fluxRequis} total={ALL_MSGS.length}
             destination={chapter.destination} canJump={canJump} onJump={jump} isLast={isLastChapter} bloque={jumpBloque} />
         )}
-        {/* JEU 2 : petite colonne d'aide qui remplace la jauge — liste des
-            notes trouvées + rappel de la mission. */}
-        {large && mode === "jeu2" && (
-          <div style={{ width: 132, flex: "0 0 auto", display: "flex", flexDirection: "column", background: "linear-gradient(180deg,#0e1c2a,#0a1420)", border: "1px solid #26324a", borderRadius: 12, padding: "9px 8px", gap: 6, overflowY: "auto" }}>
-            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 9, letterSpacing: 1.5, color: "#7fd8ff", textAlign: "center", lineHeight: 1.35 }}>🔎 NOTES<br />D'AL3X1A</div>
-            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 22, fontWeight: 800, color: "#7fd8ff", textAlign: "center" }}>{jeu2Notes.length}/{JEU2.length}</div>
-            <div style={{ height: 1, background: "#26324a", margin: "4px 0" }} />
-            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 8, letterSpacing: 1.5, color: "#7fd8ff", textAlign: "center", opacity: 0.8 }}>🌀 VOYAGER</div>
-            {/* Sélecteur d'époques : grille 2 colonnes de pastilles-emoji.
-                Le chapitre courant a un halo doré + pulse, les notes trouvées
-                un ✓ vert en coin, les autres restent lisibles mais discrets. */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 5 }}>
-              {CHAPTERS.map((c, i) => {
-                const has = jeu2Notes.includes(i);
-                const isHere = i === chapterIndex;
-                return (
-                  <button key={c.id} onClick={() => travelJeu2(i)}
-                    title={`${c.epoque || 'Chapitre ' + (i + 1)} — ${has ? 'note trouvée' : 'à explorer'}`}
-                    style={{
-                      position: "relative",
-                      aspectRatio: "1 / 1",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 22,
-                      color: "#e8eef5",
-                      background: isHere
-                        ? "radial-gradient(circle at 50% 40%, rgba(255,209,102,0.35), rgba(232,150,74,0.12) 65%, transparent)"
-                        : has
-                          ? "radial-gradient(circle at 50% 40%, rgba(127,216,255,0.22), transparent 70%)"
-                          : "rgba(255,255,255,0.03)",
-                      border: `1.5px solid ${isHere ? "#ffd166" : (has ? "#5aa8d8" : "#2a3a52")}`,
-                      borderRadius: 10,
-                      cursor: isHere ? "default" : "pointer",
-                      opacity: isHere || has ? 1 : 0.72,
-                      transition: "opacity .15s, transform .15s, box-shadow .15s",
-                      boxShadow: isHere ? "0 0 12px rgba(255,209,102,0.55), inset 0 0 12px rgba(255,209,102,0.15)" : "none",
-                      animation: isHere ? "pulse 2.2s ease-in-out infinite" : "none",
-                    }}
-                    onMouseEnter={(e) => { if (!isHere) e.currentTarget.style.transform = "scale(1.08)"; }}
-                    onMouseLeave={(e) => { if (!isHere) e.currentTarget.style.transform = "scale(1)"; }}>
-                    {c.emoji || "•"}
-                    {has && (
-                      <span style={{ position: "absolute", top: -2, right: -2, fontSize: 9, background: "#5eff9e", color: "#062516", borderRadius: "50%", width: 14, height: 14, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, boxShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>✓</span>
-                    )}
-                    <span style={{ position: "absolute", bottom: 1, fontSize: 7, opacity: 0.55, fontFamily: "ui-monospace,monospace", letterSpacing: 0.5, color: isHere ? "#ffd166" : "#8a9cb0" }}>{i + 1}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-        {/* JEU 2, petit écran : le sélecteur d'époques passe en barre horizontale
-            juste au-dessus de la console MARTINE (pas de colonne dispo à droite). */}
-        {!large && mode === "jeu2" && (
-          <div style={{ position: "absolute", left: 8, right: 8, bottom: 138, display: "flex", gap: 5, overflowX: "auto", padding: "6px 8px", background: "rgba(14,28,42,0.92)", border: "1px solid #26324a", borderRadius: 10, zIndex: 40 }}>
-            <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, alignSelf: "center", opacity: 0.85, flex: "0 0 auto" }}>🌀</span>
-            {CHAPTERS.map((c, i) => {
-              const has = jeu2Notes.includes(i);
-              const isHere = i === chapterIndex;
-              return (
-                <button key={c.id} onClick={() => travelJeu2(i)}
-                  title={`${c.epoque || 'Chapitre ' + (i + 1)} — ${has ? 'note trouvée' : 'à explorer'}`}
-                  style={{
-                    position: "relative",
-                    width: 42, height: 42, flex: "0 0 auto",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 22, color: "#e8eef5",
-                    background: isHere
-                      ? "radial-gradient(circle at 50% 40%, rgba(255,209,102,0.35), rgba(232,150,74,0.12) 65%, transparent)"
-                      : has
-                        ? "radial-gradient(circle at 50% 40%, rgba(127,216,255,0.22), transparent 70%)"
-                        : "rgba(255,255,255,0.04)",
-                    border: `1.5px solid ${isHere ? "#ffd166" : (has ? "#5aa8d8" : "#2a3a52")}`,
-                    borderRadius: 10,
-                    cursor: isHere ? "default" : "pointer",
-                    boxShadow: isHere ? "0 0 10px rgba(255,209,102,0.55)" : "none",
-                    animation: isHere ? "pulse 2.2s ease-in-out infinite" : "none",
-                  }}>
-                  {c.emoji || "•"}
-                  {has && (
-                    <span style={{ position: "absolute", top: -2, right: -2, fontSize: 8, background: "#5eff9e", color: "#062516", borderRadius: "50%", width: 12, height: 12, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900 }}>✓</span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        )}
+        {/* NB : en jeu 2, le sélecteur d'époques est la frise chronologique
+            horizontale placée en HAUT du jeu (voir plus haut), pas ici. */}
       </div>
 
       {/* console MARTINE + le SIGNAL D'AVANCÉE (mode linéaire) : en l'absence
