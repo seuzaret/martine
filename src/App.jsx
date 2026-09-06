@@ -714,11 +714,16 @@ export default function App() {
         bubbleText = variant.bubble ?? bubbleText;
         sayText = variant.say ?? sayText;
         mood = variant.mood ?? mood;
-      } else {
+      } else if (act.bubble) {
         /* PNJ sans variante jeu 2 : au lieu de lui laisser dire son texte
            du jeu 1 (« Chut ! le gibier a l'oreille fine »...) qui n'a
            aucun rapport avec l'enquete Al3x1A, on donne une reponse
-           generique poliment evasive, qui reoriente vers l'enquete. */
+           generique poliment evasive, qui reoriente vers l'enquete.
+           NB : appliquer SEULEMENT si l'action a une `bubble` (c'est un
+           personnage qui parle). Pour un decor cliquable qui n'a que
+           `say` (commentaire documentaire de MARTINE — ex. temple,
+           graffitis, stele), on laisse la say d'origine : c'est du
+           contenu culturel valable dans les deux modes. */
         const generiques = [
           { bubble: "Je vaque à mes affaires, chronaute. Je n'ai rien vu d'étrange.",
             say: "Il ne sait rien d'Al3x1A. Va voir un autre personnage." },
@@ -732,6 +737,9 @@ export default function App() {
         sayText = g.say;
         mood = "neutre";
       }
+      /* else : pas de variante jeu 2 et pas de bubble → decor cliquable
+         (statue, mur, temple, stèle...) : on garde le say d'origine
+         (MARTINE commente le patrimoine — pédagogiquement valable). */
     }
     /* un personnage qui a des paroles propres (`bubble`) les affiche en
        phylactère à côté de lui (ancré à la dernière position cliquée) ;

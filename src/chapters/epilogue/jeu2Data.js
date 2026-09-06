@@ -75,9 +75,9 @@ export const JEU2 = [
   {
     support: "rouleau de papyrus",
     noteSpots: [
-      { tab: 3, cx: 500, cy: 380, r: 34, hint: "à l'entrée de la villa, sur le mur peint" },
-      { tab: 2, cx: 500, cy: 350, r: 34, hint: "au forum, contre une colonne" },
-      { tab: 4, cx: 500, cy: 380, r: 34, hint: "à la bibliothèque, entre les rouleaux" },
+      { tab: 4, cx: 175, cy: 220, r: 40, hint: "à la bibliothèque, sur le mur enduit frais (à gauche)" },
+      { tab: 2, cx: 440, cy: 410, r: 34, hint: "au forum, sur la stèle SPQR au centre" },
+      { tab: 4, cx: 450, cy: 200, r: 34, hint: "à la bibliothèque, en haut du meuble à rouleaux" },
     ],
     al3x1aSpots: [
       { tab: 5, cx: 500, cy: 400, r: 60, hint: "dans le jardin de la villa, à l'ombre" },
