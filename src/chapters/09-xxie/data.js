@@ -133,15 +133,15 @@ const ACTIONS = {
     bubble: "Regarde ce bazar : un téléphone, un appareil photo, un baladeur, une console, une télé, un réveil, un plan de la ville, une pile de courrier… Ça fait BEAUCOUP d'objets à trimballer ! Et si tout ça tenait dans un seul truc, dans ma poche ?",
     say: "Le smartphone : TOUS les médias de ton voyage dans un seul objet. Fait pour capter ton attention, aussi — à qui profite ton temps d'écran ?",
     jeu2: {
-      bubble: "Genre, une autre voyageuse du temps est venue dans ma chambre ? Ouais, elle m'a laissé une note dans l'appli Mémo de mon smartphone. Trop bizarre.",
-      say: "Al3x1A a écrit dans le téléphone. Un support pratique — mais qui dépend d'un compte, d'une batterie, d'un service…" } },
+      bubble: "Une autre voyageuse du temps est venue dans MA CHAMBRE. Ouais, ICI. Elle a laissé une note sur mon smartphone, posé sur le lit. Cherche par là.",
+      say: "L'ado pointe sa chambre : smartphone sur le lit, avec la note d'Al3x1A." } },
 
   technicien: { mood: "neutre",
     bubble: "Tes photos, ta musique, tes devoirs… tu crois qu'ils sont dans ton téléphone ? Regarde autour de toi : ils sont ICI, dans ces serveurs. Chez quelqu'un d'autre. Et tant que tu paies, tout va bien.",
     say: "Le cloud : « plus de support » ? Faux — il est chez quelqu'un d'autre. Posséder ou accéder ? Et si le service ferme ?",
     jeu2: {
-      bubble: "Toi ? Une autre est venue avant. Une femme aux cheveux courts. Elle a demandé à voir les serveurs — puis elle s'est cachée entre les racks. Bizarre, non ?",
-      say: "Le technicien a vu Al3x1A entrer — et jamais ressortir. C'est peut-être ici." } },
+      bubble: "Une chronaute avant toi n'a pas laissé de note ici, non. Elle a laissé quelque chose DANS LA CHAMBRE D'ADO à côté, sur le smartphone posé sur le lit. Va voir plutôt là-bas.",
+      say: "Le technicien renvoie à la chambre : c'est là qu'est la note d'Al3x1A." } },
 };
 
 /* ------------------------------------------------------------

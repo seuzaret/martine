@@ -153,20 +153,20 @@ const ACTIONS = {
     bubble: "Jules, reporter ! Il se passe toujours quelque chose, et moi je le raconte avant tout le monde.",
     say: "Le journaliste : témoin d'un événement, il le met en mots pour ceux qui n'y étaient pas.",
     jeu2: {
-      bubble: "Un chronaute ! Enfin une vraie information ! Vous êtes plusieurs à passer par mon époque — une dame en tunique argentée est venue lire les gazettes il y a longtemps.",
-      say: "Jules l'a vue lire — mais un journaliste ne perce pas le mystère d'une chronaute." } },
+      bubble: "Un scoop ! Une chronaute avant toi a laissé une gazette EN PROVINCE, juste sous la montgolfière. J'ai vu où elle l'a cachée. Cherche là, en dessous du ballon.",
+      say: "Jules pointe la SCÈNE EN PROVINCE, sous la montgolfière : la gazette est là." } },
   sigismond: { mood: "neutre",
     bubble: "Sigismond, rédacteur en chef. Apporte-moi du solide, du vrai, du vérifié — et j'en tire mille exemplaires avant ce soir.",
     say: "Le rédacteur en chef : c'est lui qui décide ce qu'on imprime… et ce qu'on tait.",
     jeu2: {
-      bubble: "Une drôle de femme est venue publier un ENTREFILET dans une de mes gazettes, autrefois. Trois lignes bizarres, une signature étrange : Al3x1A. Va voir dans les archives.",
-      say: "Al3x1A a fait imprimer sa note dans une gazette — geste malin : les gazettes s'archivent." } },
+      bubble: "Une chronaute a publié un entrefilet dans MA gazette. Signature étrange : Al3x1A. La gazette est partie EN PROVINCE avec le ballon, sous la montgolfière. Cherche là.",
+      say: "Sigismond confirme : le journal d'Al3x1A a été distribué sous la montgolfière, en province." } },
   volta: { mood: "neutre",
     bubble: "Alessandro Volta, pour vous servir. Ce télégraphe me fascine — mais il lui manque quelque chose : une source d'énergie CONSTANTE. J'y travaille…",
     say: "Le savant : il ne fait pas de médias, mais son invention va TOUT permettre au siècle suivant.",
     jeu2: {
-      bubble: "Chronaute ! Encore un ? Vous m'êtes tous familiers — vous parlez tous d'électricité alors que je viens à peine de l'apprivoiser.",
-      say: "Volta connaît le futur mieux qu'il ne le croit. Il commence à s'y faire." } },
+      bubble: "Chronaute ! Encore un ? Une jeune femme comme toi est venue déjà. Elle m'a parlé du futur, puis elle est repartie EN PROVINCE, admirer le vol de la montgolfière. Ta gazette y traîne peut-être encore.",
+      say: "Volta l'a vue partir vers le vol du ballon. Reste à trouver son journal." } },
 
   /* l'opérateur de la tour (badaud + technicien) et l'espion */
   operateur: { mood: "neutre",

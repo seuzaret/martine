@@ -250,29 +250,29 @@ const ACTIONS = {
     bubble: "Alors, comment trouves-tu le clan ? Prends ton temps, regarde tout… Et si tu es perdu, cherche le « ? » doré : il montre qui a besoin de toi.",
     say: "Ana. C'est elle qui t'a ouvert les portes du clan — reste poli, on est invités.",
     jeu2: {
-      bubble: "Toi encore ! Le clan se souvient de toi, voyageur des étoiles. Cherches-tu quelqu'un ?",
-      say: "Ana te reconnaît — évidemment, tu es passé·e mille fois par le Paléo." } },
+      bubble: "Toi ? Encore ? Une autre comme toi est venue autrefois. Elle voulait entrer dans la grotte, tout au fond. Elle est ressortie les mains couvertes d'ocre.",
+      say: "Ana se souvient d'Al3x1A. Direction le FOND DE LA GROTTE — l'ocre pointe la Grande Paroi." } },
 
   raya: { mood: "neutre",
     bubble: "Un chef veille sur tout : le feu, les bêtes, les histoires. Fais ta part, voyageur, et le clan fera la sienne.",
     say: "Raya, le chef. Peu de mots, beaucoup d'autorité. Je l'aime bien.",
     jeu2: {
-      bubble: "Une autre comme toi est venue il y a longtemps. Cheveux courts, tunique grise. Elle a peint sur la paroi, puis elle est repartie vers le soleil couchant.",
-      say: "Le chef a vu passer Al3x1A. Il ne l'oublie pas — un chef n'oublie rien de qui traverse sa terre." } },
+      bubble: "Une drôle de voyageuse aux cheveux courts est venue avant toi. Elle a peint une marque étrange au fond de la grotte, sur la Grande Paroi. Va voir toi-même.",
+      say: "Le chef a vu passer Al3x1A. Fond de la grotte, sur la paroi peinte." } },
 
   doru: { mood: "neutre",
     bubble: "Chut ! Le gibier a l'oreille fine. Parle bas, marche léger.",
     say: "Doru, le chasseur du clan. Lui, c'est la rivière et le silence.",
     jeu2: {
-      bubble: "Tu chasses aussi quelque chose ? Marche léger, alors. Je n'ai rien vu de nouveau depuis des lunes.",
-      say: "Doru chasse le silence. Il ne s'occupe pas des voyageurs — sauf si ce sont des proies." } },
+      bubble: "Une chasseuse d'un autre temps a bu à cette rivière avant toi. Elle n'a pas tué. Elle regardait beaucoup, elle écrivait sur la paroi.",
+      say: "Doru l'a vue passer. Al3x1A ne chassait pas — elle laissait des traces." } },
 
   kyan: { mood: "neutre",
     bubble: "Je suis la mémoire du clan. Tout ce qui s'oublie meurt une seconde fois — c'est pour ça que je me souviens.",
     say: "Kyan, la mémoire du clan. Ce qu'elle sait tient dans une seule tête… fragile, non ?",
     jeu2: {
-      bubble: "Une drôle de voyageuse est passée par ici il y a beaucoup, beaucoup de lunes. Elle a laissé une marque sur la Grande Paroi. Va voir toi-même.",
-      say: "Kyan garde tout. Al3x1A n'a pas échappé à sa mémoire — un indice précieux pour toi." } },
+      bubble: "Je me souviens d'elle comme si c'était hier. Al3x1A. Je l'ai vue peindre juste là, sur la Grande Paroi. Approche-toi de la peinture, tu verras sa marque.",
+      say: "Kyan garde tout — même la trace d'Al3x1A sur la paroi. Cherche là où c'est peint." } },
 
   /* ─── Nouveaux personnages / actions des tableaux ajoutés (atelier, gué, crête) ─── */
   ough: { mood: "neutre",
