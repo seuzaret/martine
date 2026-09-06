@@ -587,6 +587,10 @@ export default function App() {
      décor et on leur APPORTE un objet (glisser un outil dessus, ou le
      sélectionner puis toucher le support). Seuls les OUTILS vont au sac. */
   const collect = (id) => {
+    /* JEU 2 : aucun ramassage. Le joueur n'a que la mission d'enquete
+       (trouver les notes d'Al3x1A). Les objets du decor et les dechets
+       anachroniques ne servent pas ici — on ignore silencieusement. */
+    if (mode === "jeu2") return;
     const it = chapter.items[id];
     if (it.support) {
       say(`${it.emoji} ${it.name} — ${it.desc} Ça ne se range pas dans le sac : apporte-lui un objet (glisse quelque chose dessus).`);
@@ -1852,8 +1856,9 @@ export default function App() {
       {/* Le décor occupe toute la place restante. Sur écran large, il partage
           cette rangée avec la besace, en colonne à gauche (voir `large`). */}
       <div style={{ flex: 1, minHeight: 0, padding: "0 12px", display: "flex", justifyContent: "center", gap: 8 }}>
-        {/* écran large : la besace en colonne à gauche du décor */}
-        {large && (
+        {/* écran large : la besace en colonne à gauche du décor — cachee
+            en jeu 2 (elle ne sert a rien pour l'enquete Al3x1A). */}
+        {large && mode !== "jeu2" && (
           <div style={{ width: 104, flex: "0 0 auto", display: "flex", flexDirection: "column", minHeight: 0 }}>
             <InventoryBar items={chapter.items} inv={inv} shake={shake} vertical mode={mode} />
             {/* mini-carte dockée sous la besace (si le chapitre a une carte) */}
@@ -1901,22 +1906,10 @@ export default function App() {
                     style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
                     <g style={{ pointerEvents: "auto" }}>
                       {noteHere && (
-                        <g key={`note-${chapterIndex}-${tab}`}
-                          transform={`translate(${noteSpot.cx},${noteSpot.cy})`}>
-                          {/* Ping radar : 2 ondes doreesqui s'expansent
-                              a l'arrivee sur le tableau, puis se stabilisent.
-                              Confirme visuellement l'indice donne par les PNJ,
-                              sans crier l'endroit. */}
-                          <circle r="8" fill="none" stroke="#ffd166" strokeWidth="2"
-                            style={{ transformOrigin: "center", transformBox: "fill-box", animation: "notePing 1.8s ease-out 0.3s 2 both", opacity: 0 }} />
-                          <circle r="8" fill="none" stroke="#ffd166" strokeWidth="1.5"
-                            style={{ transformOrigin: "0 0", animation: "notePing 1.8s ease-out 0.9s 2 both", opacity: 0 }} />
-                          {/* Petit ring tres discret qui pulse en continu :
-                              apres les pings, permet de retrouver l'endroit
-                              si l'eleve a rate le premier passage. */}
-                          <circle r="12" fill="none" stroke="#ffd166" strokeWidth="1"
-                            style={{ animation: "noteBreath 2.6s ease-in-out infinite" }} />
-                          {/* Le vrai hitbox : cercle transparent cliquable */}
+                        <g transform={`translate(${noteSpot.cx},${noteSpot.cy})`}>
+                          {/* Le hitbox invisible cliquable. L'eleve trouve
+                              l'endroit grace aux indications des PNJ + au
+                              landmark evident sur lequel on l'a positionne. */}
                           <circle onClick={() => setOpenNote({ chapitre: chapterIndex })}
                             r={(noteSpot.r || 34) * 1.8}
                             fill="rgba(0,0,0,0.001)"
@@ -1973,7 +1966,7 @@ export default function App() {
       </div>
 
       {/* besace : en bas, seulement sur écran étroit / tablette */}
-      {!large && <InventoryBar items={chapter.items} inv={inv} shake={shake} mode={mode} />}
+      {!large && mode !== "jeu2" && <InventoryBar items={chapter.items} inv={inv} shake={shake} mode={mode} />}
 
       {/* particules de réussite (au point de la combinaison) */}
       {fx && <Particles key={fx.key} x={fx.x} y={fx.y} big={fx.big} />}
