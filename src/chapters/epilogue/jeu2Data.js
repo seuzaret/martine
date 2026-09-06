@@ -58,9 +58,9 @@ export const JEU2 = [
   {
     support: "tablette d'argile cunéiforme",
     noteSpots: [
-      { tab: 0, cx: 500, cy: 320, r: 34, hint: "à la cité d'Ur, contre le mur du grenier" },
-      { tab: 2, cx: 550, cy: 300, r: 34, hint: "sur le pylône du Nil, en haut" },
-      { tab: 4, cx: 450, cy: 380, r: 34, hint: "sur la côte phénicienne, sur un rocher" },
+      { tab: 0, cx: 560, cy: 420, r: 34, hint: "à la cité d'Ur, sur la porte sombre du grenier" },
+      { tab: 2, cx: 520, cy: 320, r: 34, hint: "sur le mât de la felouque, au bord du Nil" },
+      { tab: 4, cx: 308, cy: 265, r: 34, hint: "sur la grande tour au fond, sur la côte phénicienne" },
     ],
     al3x1aSpots: [
       { tab: 4, cx: 500, cy: 400, r: 60, hint: "à l'ombre des cèdres, côte phénicienne" },

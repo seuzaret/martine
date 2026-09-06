@@ -9,7 +9,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    À trouver : les 22 signes (au comptoir), les navires marchands.
    ============================================================ */
 
-export default function ScenePhenicie({ collect, action, reveal, made = [] }) {
+export default function ScenePhenicie({ collect, action, reveal, made = [], mode = "jeu1" }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -144,8 +144,9 @@ export default function ScenePhenicie({ collect, action, reveal, made = [] }) {
       <rect width="1000" height="560" fill="#231a10" opacity="0.06" style={{ pointerEvents: "none" }} />
 
       {/* zones cliquables */}
-      {/* le « ? » d'Assurbanipal : un code simple, apprenable en quelques jours */}
-      {!made.includes("msg_alphabet") && (
+      {/* le « ? » d'Assurbanipal : un code simple, apprenable en quelques jours.
+          Cache en jeu 2 (l'enquete Al3x1A n'a rien a voir avec l'alphabet). */}
+      {!made.includes("msg_alphabet") && mode !== "jeu2" && (
         <>
           <g transform="translate(552,414)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
