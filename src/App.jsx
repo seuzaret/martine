@@ -538,6 +538,13 @@ export default function App() {
     setTimeout(() => {
       setChapterIndex(i);
       setTab(landingTab);
+      /* Anti-crash : les objets du sac appartiennent aux data.js de
+         l'epoque OU on les a ramasses. En jeu 2, quand on saute d'epoque,
+         les ids ne matchent plus les items du nouveau chapitre — l'inv
+         essaye d'afficher un item inconnu et crashe (items[id].desc).
+         Le sac est de toute facon inutile en jeu 2, on le vide. */
+      setInv([]);
+      setMade([]);
       say(`🌀 Cap sur ${nom}. Explore les tableaux — les notes ne se laissent pas trouver toutes seules.`, "neutre");
     }, 1400);
     setTimeout(() => {

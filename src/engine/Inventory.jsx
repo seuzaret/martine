@@ -20,6 +20,11 @@ import { useDrag } from "./DragDrop.jsx";
 
 export function InventoryBar({ items, inv, shake, vertical = false, mode = "jeu1" }) {
   const { dragId, hover, selected, dragProps } = useDrag();
+  /* SECURITE : on ne peint que les objets qui existent VRAIMENT dans les
+     items du chapitre courant. Sinon quand le sac contient un id d'un
+     autre chapitre (bug de synchro, save legere...), items[id].desc plante
+     et l'app entiere se recharge. Ce filtre est un filet de secours. */
+  inv = (Array.isArray(inv) ? inv : []).filter((id) => items?.[id]);
 
   /* le panneau « cuir » de la besace (texture discrète + reliure) et les
      cases en creux, pour un vrai air d'inventaire sans singer Minecraft. */
