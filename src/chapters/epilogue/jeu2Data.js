@@ -25,8 +25,8 @@ export const JEU2 = [
     support: "peinture rupestre",
     noteSpots: [
       { tab: 0, cx: 550, cy: 280, r: 34, hint: "au fond de la grotte, sur la Grande Paroi" },
-      { tab: 3, cx: 400, cy: 440, r: 34, hint: "au campement, près du feu" },
-      { tab: 5, cx: 240, cy: 470, r: 34, hint: "sur la berge de la rivière, près du grand tronc" },
+      { tab: 3, cx: 460, cy: 470, r: 34, hint: "au campement, sur les pierres du foyer, près du feu" },
+      { tab: 6, cx: 260, cy: 340, r: 40, hint: "au gué, sur une des grandes pierres près du pêcheur" },
     ],
     al3x1aSpots: [
       { tab: 4, cx: 700, cy: 380, r: 60, hint: "sur le point de vue" },
