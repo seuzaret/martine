@@ -202,8 +202,8 @@ const ACTIONS = {
     bubble: "Nos poteries sont les plus belles du pays. Chaque motif dit : « ça vient de chez nous ».",
     say: "Jala, la potière. Ses motifs sont la « marque » de la cité — l'ancêtre du logo.",
     jeu2Variants: [
-      { bubble: "Une chronaute avant toi m'a acheté un petit pot… et elle l'a laissé à la porte de la cité, sur le rebord de la muraille. Regarde bien là-haut.",
-        say: "Jala : la marque est À LA PORTE DE LA CITÉ, en haut de la muraille." },
+      { bubble: "Une chronaute a filé à la porte de la cité, tout en haut. Elle a laissé un signe sur la petite fenêtre noire de la tour de guet.",
+        say: "Jala : signe À LA PORTE, sur la fenêtre noire de la tour de guet." },
       { bubble: "Une drôle de voyageuse m'a acheté un pot, puis elle est partie graver une pierre dans la plaine des mégalithes. Au pied du plus grand, m'a-t-on dit.",
         say: "Jala renvoie DANS LA PLAINE, au pied du grand mégalithe." },
       { bubble: "Une chronaute a passé du temps chez nous les artisans. Elle a laissé un signe près du four à poteries — je le vois encore de temps en temps.",
@@ -216,8 +216,8 @@ const ACTIONS = {
     bubble: "Nous dressons des pierres pour honorer le roi et les dieux. Elles nous survivront de mille ans.",
     say: "Imir, le prêtre. Le mégalithe : un message monumental, pour l'éternité.",
     jeu2Variants: [
-      { bubble: "Une voyageuse aux mains blanches est venue. Elle a gravé un signe étrange à l'entrée de la cité, en haut de la muraille. Va voir.",
-        say: "Imir : trace SUR LA MURAILLE de la cité." },
+      { bubble: "Une voyageuse aux mains blanches est montée jusqu'à la tour de guet, à la porte de la cité. Elle a marqué la petite fenêtre noire, tout en haut.",
+        say: "Imir : trace SUR LA FENÊTRE NOIRE de la tour de guet." },
       { bubble: "Une chronaute est venue prier au pied de nos mégalithes. Elle a gravé un petit signe sur la base du plus grand menhir, dans la plaine.",
         say: "Imir renvoie DANS LA PLAINE, au pied du grand mégalithe." },
       { bubble: "Elle est passée chez les artisans, cette voyageuse. Elle a laissé une marque près du four — sûrement pour qu'elle dure à la chaleur.",
@@ -230,8 +230,8 @@ const ACTIONS = {
     bubble: "Cette mine me ronge les os. Le froid, l'humidité… j'ai mal partout.",
     say: "L'homme des glaces — notre Ötzi. Il cherche des tatouages de soin qui ne s'effacent jamais.",
     jeu2Variants: [
-      { bubble: "Al3x1A ? Elle voulait un tatouage — une petite étoile. Puis elle a filé vers la porte de la cité, elle voulait laisser un signe en haut de la muraille.",
-        say: "Ötzi renvoie À LA PORTE DE LA CITÉ, sur la muraille." },
+      { bubble: "Al3x1A ? Elle voulait un tatouage — une petite étoile. Puis elle a filé vers la porte, tout en haut. Elle a marqué la petite fenêtre noire de la tour.",
+        say: "Ötzi : marque SUR LA FENÊTRE NOIRE de la tour de guet." },
       { bubble: "Al3x1A m'a laissé la marque de son doigt sur la peau. Elle est repartie graver un signe dans la plaine, au pied d'un mégalithe.",
         say: "Ötzi : la marque est DANS LA PLAINE, au pied d'un mégalithe." },
       { bubble: "Al3x1A m'a demandé une étoile sur la main. Puis elle a suivi la fumée, chez les artisans, et a laissé un signe près de leur four.",

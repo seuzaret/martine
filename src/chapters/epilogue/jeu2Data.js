@@ -41,9 +41,9 @@ export const JEU2 = [
   {
     support: "gravure sur mégalithe",
     noteSpots: [
-      { tab: 0, cx: 500, cy: 280, r: 34, hint: "à la porte de la cité, en haut de la muraille" },
+      { tab: 0, cx: 649, cy: 187, r: 30, hint: "à la porte de la cité, sur la fenêtre noire de la tour de guet" },
       { tab: 3, cx: 140, cy: 270, r: 34, hint: "dans la plaine, sur le menhir déjà dressé à gauche" },
-      { tab: 2, cx: 400, cy: 400, r: 34, hint: "chez les artisans, près du four" },
+      { tab: 2, cx: 150, cy: 440, r: 40, hint: "chez les artisans, sur le four à poterie de la potière" },
     ],
     al3x1aSpots: [
       { tab: 3, cx: 620, cy: 400, r: 60, hint: "à l'ombre d'un menhir dans la plaine" },
