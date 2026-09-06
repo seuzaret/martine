@@ -1759,8 +1759,13 @@ export default function App() {
           {/* taille exacte calculée (le plus grand cadre 1000/560 qui tient
               dans la cellule) → jamais rogné, jamais de débordement. */}
           <div style={{ width: decorBox ? decorBox.w : "100%", height: decorBox ? decorBox.h : "100%", position: "relative" }}>
-            <Scene scenes={chapter.scenes} tab={tab} onTab={setTab} sceneProps={sceneProps} sparkle={sparkle} linear={chapter.linear}
-              canAdvance={!!(chapter.linear && !chapter.scenes[tab].free && chapter.scenes[tab + 1] && (chapter.scenes[tab].nextWhen || []).every((id) => made.includes(id)))} />
+            {/* JEU 2 : on FORCE la navigation libre (chapter.linear ignore),
+                sinon les chapitres 5-9 (Moyen Age → Médias) bloquent l'élève
+                sur leur premier tableau — les `nextWhen` de jeu 1 exigent
+                des messages fabriques qu'on ne cree jamais en jeu 2. */}
+            <Scene scenes={chapter.scenes} tab={tab} onTab={setTab} sceneProps={sceneProps} sparkle={sparkle}
+              linear={mode === "jeu2" ? false : chapter.linear}
+              canAdvance={!!(chapter.linear && mode !== "jeu2" && !chapter.scenes[tab].free && chapter.scenes[tab + 1] && (chapter.scenes[tab].nextWhen || []).every((id) => made.includes(id)))} />
             {/* ═══ JEU 2 : overlay des hotspots note + Al3x1A ═══
                 On dessine par-dessus la scène (viewBox aligné 1000×560,
                 position absolute, pointerEvents:none pour laisser passer
