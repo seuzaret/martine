@@ -20,6 +20,23 @@ const navBtn = (side) => ({
 export default function Scene({ scenes, tab, onTab, sceneProps, sparkle, linear = false, canAdvance = false }) {
   const Current = scenes[tab].Component;
 
+  /* JEU 2 : certaines scenes sont marquees `jeu2Hide: true` (ex. le
+     "retour au chateau" en MA qui reutilise le decor du chateau — vu
+     deux fois en navigation libre c'est confus). On fait comme si elles
+     n'existaient pas : les fleches ‹ › et la mini-carte les sautent.
+     Les indices utilises par le rendu (tab courant) restent valides,
+     seuls les voisins sont ajustes. */
+  const isJeu2 = sceneProps?.mode === "jeu2";
+  const nextVisibleTab = (from, dir) => {
+    let t = from + dir;
+    while (t >= 0 && t < scenes.length && isJeu2 && scenes[t]?.jeu2Hide) t += dir;
+    return t >= 0 && t < scenes.length ? t : -1;
+  };
+  const prevTab = nextVisibleTab(tab, -1);
+  const nextTab = nextVisibleTab(tab, +1);
+  const hasPrev = prevTab >= 0;
+  const hasNext = nextTab >= 0;
+
   /* sens du travelling : on arrive par la droite si on avance,
      par la gauche si on recule */
   const prev = useRef(tab);
@@ -35,12 +52,13 @@ export default function Scene({ scenes, tab, onTab, sceneProps, sparkle, linear 
         <Current {...sceneProps} />
       </div>
 
-      {/* MODE NON-LINÉAIRE : navigation libre ‹ › */}
-      {!linear && tab > 0 && (
-        <button onClick={() => onTab(tab - 1)} style={navBtn("left")} title={scenes[tab - 1].name}>‹</button>
+      {/* MODE NON-LINÉAIRE : navigation libre ‹ › (saute les scenes
+          jeu2Hide via nextVisibleTab/prevTab/nextTab). */}
+      {!linear && hasPrev && (
+        <button onClick={() => onTab(prevTab)} style={navBtn("left")} title={scenes[prevTab].name}>‹</button>
       )}
-      {!linear && tab < scenes.length - 1 && (
-        <button onClick={() => onTab(tab + 1)} style={navBtn("right")} title={scenes[tab + 1].name}>›</button>
+      {!linear && hasNext && (
+        <button onClick={() => onTab(nextTab)} style={navBtn("right")} title={scenes[nextTab].name}>›</button>
       )}
       {/* MODE LINÉAIRE, scènes voisines LIBRES (`free`) : on va et vient
           librement par des flèches simples ‹ › (ni titre vert, ni condition) —
@@ -66,9 +84,11 @@ export default function Scene({ scenes, tab, onTab, sceneProps, sparkle, linear 
         );
       })()}
 
-      {/* mini-carte : un point par lieu (cliquable en libre, simple repère en linéaire) */}
+      {/* mini-carte : un point par lieu (cliquable en libre, simple repère en linéaire).
+          Les scenes jeu2Hide sont masquees en mode jeu 2. */}
       <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 6, background: "rgba(0,0,0,0.4)", padding: "5px 10px", borderRadius: 20 }}>
         {scenes.map((s, i) => (
+          (isJeu2 && s.jeu2Hide) ? null :
           linear
             ? <span key={s.id} title={s.name} style={{ width: 9, height: 9, borderRadius: "50%", background: i === tab ? "#ffd166" : "rgba(255,255,255,0.3)" }} />
             : <button key={s.id} onClick={() => onTab(i)} title={s.name}

@@ -72,7 +72,7 @@ const SCENES = [
      la flèche d'avancée pointe alors vers la GAUCHE. */
   { id: "monastere", name: "Le monastère du frère Jorge",      Component: SceneMonastere, nextWhen: ["paye"], retour: true },
   /* RETOUR au château (même décor) : rapporter le remède au prêtre. */
-  { id: "retour",    name: "Retour au château — le remède",   Component: SceneChateau,  nextWhen: ["remis"] },
+  { id: "retour",    name: "Retour au château — le remède",   Component: SceneChateau,  nextWhen: ["remis"], jeu2Hide: true },
   /* Fin du chapitre : l'atelier de Gutenberg ET le moulin à papier, juste
      à côté, se parcourent LIBREMENT par les flèches ‹ › (`free`). Gutenberg
      réclame du papier → on va le fabriquer au moulin (à droite) → on revient. */
