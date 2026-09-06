@@ -2099,14 +2099,24 @@ export default function App() {
         <div style={{ position: "fixed", inset: 0, zIndex: 90, background: "radial-gradient(circle at 50% 50%, rgba(127,216,255,0.32), rgba(4,10,20,0.94) 60%)", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto", animation: "fadein 0.18s ease-out" }}>
           {/* Le vortex : 3 anneaux qui tournent à des vitesses différentes,
               en dégradés bleus, avec un cœur lumineux. */}
-          <svg viewBox="-100 -100 200 200" style={{ width: "min(72vmin, 620px)", height: "min(72vmin, 620px)", filter: "drop-shadow(0 0 40px rgba(127,216,255,0.55))" }}>
+          {/* Firefox : on evite `filter: drop-shadow` sur le SVG (rendu
+              tres capricieux, parfois entierement noir sur le canvas GPU).
+              Le halo lumineux est reproduit par un radial-gradient dans
+              le parent + les cercles lumineux du cœur. */}
+          <svg viewBox="-100 -100 200 200" style={{ width: "min(72vmin, 620px)", height: "min(72vmin, 620px)" }}>
             <defs>
               <radialGradient id="warp-core" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
                 <stop offset="35%" stopColor="#7fd8ff" stopOpacity="0.9" />
                 <stop offset="100%" stopColor="#5aa8d8" stopOpacity="0" />
               </radialGradient>
+              <radialGradient id="warp-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#7fd8ff" stopOpacity="0.55" />
+                <stop offset="100%" stopColor="#7fd8ff" stopOpacity="0" />
+              </radialGradient>
             </defs>
+            {/* halo bleuté derrière — remplace le drop-shadow */}
+            <circle r="98" fill="url(#warp-glow)" />
             {[
               { r: 88, w: 3, dur: "2.4s", dir: 1, op: 0.75, dash: "8 6" },
               { r: 66, w: 2.4, dur: "1.6s", dir: -1, op: 0.85, dash: "12 4" },
@@ -2131,12 +2141,15 @@ export default function App() {
           on se matérialise dans la nouvelle époque, puis s'estompe pour
           révéler le décor. */}
       {jeu2Warp && jeu2Warp.phase === "flash" && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 90, pointerEvents: "auto", background: "white", animation: "warpFlash 1.1s ease-out forwards" }}>
+        /* Flash simplifie pour Firefox : opacite animee au lieu de la
+           background-color en keyframes (plus stable cross-browser). Pas
+           d'inset box-shadow (Firefox rendait parfois tout noir). */
+        <div style={{ position: "fixed", inset: 0, zIndex: 90, pointerEvents: "auto", background: "rgba(230,242,255,1)", animation: "warpFlash 1.1s ease-out forwards" }}>
           <style>{`@keyframes warpFlash {
-            0% { background: rgba(255,255,255,0.98); box-shadow: inset 0 0 200px 40px rgba(127,216,255,0.9); }
-            15% { background: rgba(220,240,255,0.95); }
-            45% { background: rgba(180,220,255,0.55); }
-            100% { background: rgba(180,220,255,0); }
+            0% { opacity: 1; }
+            15% { opacity: 0.95; }
+            45% { opacity: 0.55; }
+            100% { opacity: 0; }
           }`}</style>
         </div>
       )}
