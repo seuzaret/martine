@@ -446,7 +446,7 @@ export default function App() {
     playSfx("warp");
     setBubble(null);
     const nom = CHAPTERS[i].epoque || CHAPTERS[i].bandeau || `chapitre ${i + 1}`;
-    setJeu2Warp({ i, nom, phase: "vortex" });
+    setJeu2Warp({ i, nom, fading: false });
     /* Choix du tableau d'arrivée : startScene par défaut, MAIS si c'est
        le tableau de la note d'Al3x1A on décale de 1 (modulo nb de tableaux)
        — l'élève doit fouiller pour trouver la note. */
@@ -456,14 +456,16 @@ export default function App() {
     if (landingTab === noteTab && scenes.length > 1) {
       landingTab = (landingTab + 1) % scenes.length;
     }
-    /* Anim TARDIS de 3,2 s en 3 phases :
+    /* Anim TARDIS en 2 phases, avec UN SEUL overlay (plus fiable sur
+       Firefox que 2 divs qui se remplacent) :
        0.0 → 2.1 s : vortex qui tourne + son warp
-       2.1 → 2.4 s : FLASH blanc éclatant (matérialisation) + swap du décor
-       2.4 → 3.2 s : le flash s'estompe, le nouveau décor apparaît en fondu */
+       2.1 s      : swap du chapitre, l'overlay passe en fading (opacite
+                   qui glisse de 1 a 0 via une transition CSS simple)
+       2.1 → 3.2 s : fondu au clair, on decouvre le nouveau decor. */
     setTimeout(() => {
-      setJeu2Warp((w) => w && { ...w, phase: "flash" });
       setChapterIndex(i);
       setTab(landingTab);
+      setJeu2Warp((w) => w && { ...w, fading: true });
       say(`🌀 Cap sur ${nom}. Explore les tableaux — les notes ne se laissent pas trouver toutes seules.`, "neutre");
     }, 2100);
     setTimeout(() => setJeu2Warp(null), 3200);
@@ -2092,17 +2094,26 @@ export default function App() {
         </div>
       )}
 
-      {/* JEU 2 : anim TARDIS quand on change d'époque via la frise.
-          3 phases : vortex 2,1 s → FLASH éclatant 0,3 s (matérialisation
-          du nouveau décor) → estompement 0,8 s. Aucune interaction possible. */}
-      {jeu2Warp && jeu2Warp.phase === "vortex" && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 90, background: "radial-gradient(circle at 50% 50%, rgba(127,216,255,0.32), rgba(4,10,20,0.94) 60%)", display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "auto", animation: "fadein 0.18s ease-out" }}>
-          {/* Le vortex : 3 anneaux qui tournent à des vitesses différentes,
-              en dégradés bleus, avec un cœur lumineux. */}
-          {/* Firefox : on evite `filter: drop-shadow` sur le SVG (rendu
-              tres capricieux, parfois entierement noir sur le canvas GPU).
-              Le halo lumineux est reproduit par un radial-gradient dans
-              le parent + les cercles lumineux du cœur. */}
+      {/* JEU 2 : anim TARDIS quand on change d'epoque via la frise.
+          UN SEUL overlay pour tout le trajet (Firefox rendait des ecrans
+          noirs quand deux overlays se remplacaient au milieu). L'overlay
+          reste opaque pendant la phase vortex, puis son opacite glisse
+          de 1 a 0 des que `fading` passe a true (transition CSS simple,
+          bien plus fiable que keyframes cross-browser). Le decor est deja
+          en place derriere : le fondu le decouvre en douceur. */}
+      {jeu2Warp && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 90, pointerEvents: "auto",
+          background: "radial-gradient(circle at 50% 50%, rgba(127,216,255,0.32), rgba(4,10,20,0.96) 60%)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          opacity: jeu2Warp.fading ? 0 : 1,
+          transition: "opacity 1.05s ease-out",
+        }}>
+          {/* Le vortex : 3 anneaux qui tournent + un cœur lumineux. Halo
+              bleute cree par un radial-gradient SVG (evite `filter:
+              drop-shadow`, capricieux sur Firefox). Le vortex disparait
+              en fondu avec l'overlay -- on ne re-mount rien pendant la
+              transition, evitant les flashes noirs. */}
           <svg viewBox="-100 -100 200 200" style={{ width: "min(72vmin, 620px)", height: "min(72vmin, 620px)" }}>
             <defs>
               <radialGradient id="warp-core" cx="50%" cy="50%" r="50%">
@@ -2115,7 +2126,6 @@ export default function App() {
                 <stop offset="100%" stopColor="#7fd8ff" stopOpacity="0" />
               </radialGradient>
             </defs>
-            {/* halo bleuté derrière — remplace le drop-shadow */}
             <circle r="98" fill="url(#warp-glow)" />
             {[
               { r: 88, w: 3, dur: "2.4s", dir: 1, op: 0.75, dash: "8 6" },
@@ -2126,31 +2136,14 @@ export default function App() {
                 <circle r={a.r} fill="none" stroke="#7fd8ff" strokeWidth={a.w} strokeDasharray={a.dash} opacity={a.op} />
               </g>
             ))}
-            {/* Le cœur lumineux qui pulse plus lentement pour un effet plus grave */}
             <circle r="30" fill="url(#warp-core)" style={{ animation: "pulse 1.4s ease-in-out infinite" }} />
             <circle r="8" fill="#ffffff" style={{ animation: "pulse 0.9s ease-in-out infinite" }} />
           </svg>
-          {/* Nom de l'époque, superposé au vortex */}
+          {/* Nom de l'epoque, superpose au vortex */}
           <div style={{ position: "absolute", textAlign: "center", pointerEvents: "none" }}>
             <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, letterSpacing: 4, color: "#7fd8ff", opacity: 0.9, marginBottom: 6, textShadow: "0 0 10px rgba(127,216,255,0.8)" }}>SAUT TEMPOREL</div>
             <div style={{ fontFamily: TITRE_FONT, fontSize: "clamp(28px, 5vw, 44px)", fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: "#fff", textShadow: "0 0 22px rgba(127,216,255,0.9), 0 0 40px rgba(127,216,255,0.6)" }}>{jeu2Warp.nom}</div>
           </div>
-        </div>
-      )}
-      {/* FLASH final : éclair blanc éclatant qui remplace le vortex quand
-          on se matérialise dans la nouvelle époque, puis s'estompe pour
-          révéler le décor. */}
-      {jeu2Warp && jeu2Warp.phase === "flash" && (
-        /* Flash simplifie pour Firefox : opacite animee au lieu de la
-           background-color en keyframes (plus stable cross-browser). Pas
-           d'inset box-shadow (Firefox rendait parfois tout noir). */
-        <div style={{ position: "fixed", inset: 0, zIndex: 90, pointerEvents: "auto", background: "rgba(230,242,255,1)", animation: "warpFlash 1.1s ease-out forwards" }}>
-          <style>{`@keyframes warpFlash {
-            0% { opacity: 1; }
-            15% { opacity: 0.95; }
-            45% { opacity: 0.55; }
-            100% { opacity: 0; }
-          }`}</style>
         </div>
       )}
 
