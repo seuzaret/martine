@@ -46,6 +46,35 @@ import FinJeu2 from "./chapters/epilogue/FinJeu2.jsx";
    Aucun fichier chargé : tout reste hors-ligne. */
 const TITRE_FONT = "'Cinzel', 'Trajan Pro', 'Copperplate Gothic Bold', 'Perpetua Titling MT', 'Constantia', 'Palatino Linotype', Georgia, serif";
 
+/* Petite silhouette d'Al3x1A dessinee dans le decor du jeu 2 quand on la
+   trouve : tunique grise, cheveux mi-longs, halo bleute discret. Se rend
+   au sein d'un <svg viewBox="0 0 1000 560"> (le viewBox partage du decor).
+   Coordonnees relatives au groupe parent (translate deja applique). Taille
+   totale : ~80 px de haut. */
+function PortraitAl3x1AInScene() {
+  return (
+    <g>
+      {/* halo bleute derriere la silhouette pour la reperer sans marqueur */}
+      <ellipse cx="0" cy="0" rx="42" ry="52" fill="rgba(127,216,255,0.22)" />
+      <ellipse cx="0" cy="0" rx="28" ry="38" fill="rgba(127,216,255,0.32)" />
+      {/* Corps : tunique de voyage grise */}
+      <path d="M-14 40 L-14 -6 Q-14 -14 -6 -14 L6 -14 Q14 -14 14 -6 L14 40 Z" fill="#606878" stroke="#3a4048" strokeWidth="1" />
+      {/* insigne chronaute doree */}
+      <circle cx="-8" cy="0" r="2.4" fill="#c8a848" stroke="#5a4020" strokeWidth="0.4" />
+      {/* cou + tete */}
+      <ellipse cx="0" cy="-18" rx="4" ry="3" fill="#d0a888" />
+      <ellipse cx="0" cy="-26" rx="9" ry="10" fill="#d0a888" stroke="#5a3818" strokeWidth="0.6" />
+      {/* cheveux mi-longs androgynes */}
+      <path d="M-9 -30 Q-9 -38 0 -38 Q9 -38 9 -30 L9 -22 Q6 -20 0 -22 Q-6 -20 -9 -22 Z" fill="#4a3828" />
+      {/* yeux (petits points visibles pour rendre le regard reperable) */}
+      <circle cx="-3" cy="-26" r="0.9" fill="#3a2818" />
+      <circle cx="3" cy="-26" r="0.9" fill="#3a2818" />
+      {/* petit sourire */}
+      <path d="M-2 -22 Q0 -21 2 -22" stroke="#5a2818" strokeWidth="0.6" fill="none" strokeLinecap="round" />
+    </g>
+  );
+}
+
 /* ============================================================
    MARTINE — Application principale
    Trois écrans : titre → jeu → fin.
@@ -540,6 +569,12 @@ export default function App() {
   const action = (name, point) => {
     const act = chapter.actions[name];
     if (!act) return;
+    /* JEU 2 : on desactive tous les mini-jeux (alphabet, tablette,
+       cartouche, phonographe, cinema, TSF...). Ils appartiennent au
+       parcours du jeu 1 (fabriquer les messages) et n'ont pas de sens
+       dans l'enquete sur Al3x1A. Cliquer un objet-declencheur en jeu 2
+       ne fait rien de particulier. */
+    if (mode === "jeu2" && act.modal) return;
     /* certaines « actions » ouvrent un mini-jeu (ex. l'alphabet). Elles
        peuvent exiger un drapeau préalable — sinon MARTINE explique ce qui
        manque via `needMsg`, et la modale reste fermée. */
@@ -1579,7 +1614,10 @@ export default function App() {
      besoin les ignore simplement (rétro-compatible). */
   /* `queteQui` : le personnage de l'étape en cours — les décors y posent
      le « ? » doré (null quand la quête est finie ou absente). */
-  const sceneProps = { collect, action, reveal, flags, made, inv, queteQui: chapter.quete?.[quete]?.perso ?? null };
+  /* JEU 2 : `queteQui` (le « ? » dore qui pointe le PNJ de l'etape en
+     cours) est desactive — la quete de jeu 1 ne joue plus, et les
+     personnages parlent librement d'Al3x1A. */
+  const sceneProps = { collect, action, reveal, flags, made, inv, queteQui: mode === "jeu2" ? null : (chapter.quete?.[quete]?.perso ?? null) };
 
   /* ---- le carnet imprimable : découvertes regroupées par époque ----
      Les jauges sont dessinées en ■/□ : ça reste lisible en noir et blanc,
@@ -1783,22 +1821,30 @@ export default function App() {
                   <svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice"
                     style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
                     <g style={{ pointerEvents: "auto" }}>
+                      {/* NOTE invisible : plus de pastille jaune, juste un
+                          cercle transparent cliquable a l'endroit voulu.
+                          Le joueur doit fouiller (ou ecouter les personnages
+                          qui evoquent l'endroit dans leurs dialogues jeu 2).
+                          On agrandit le rayon (r*1.8) pour compenser
+                          l'invisibilite : hit-box plus large. */}
                       {noteHere && (
-                        <g onClick={() => setOpenNote({ chapitre: chapterIndex })}
-                          transform={`translate(${cfg.noteHotspot.cx},${cfg.noteHotspot.cy})`}
-                          style={{ cursor: "pointer", animation: "float 2s ease-in-out infinite" }}>
-                          <circle r={cfg.noteHotspot.r} fill="rgba(255,209,102,0.15)" stroke="#ffd166" strokeWidth="2" strokeDasharray="4 4" />
-                          <circle r="18" fill="#ffd166" />
-                          <text y="7" textAnchor="middle" fontSize="24" fontWeight="800" fill="#3a2410">✎</text>
-                        </g>
+                        <circle onClick={() => setOpenNote({ chapitre: chapterIndex })}
+                          cx={cfg.noteHotspot.cx} cy={cfg.noteHotspot.cy}
+                          r={(cfg.noteHotspot.r || 34) * 1.8}
+                          fill="rgba(0,0,0,0.001)"
+                          style={{ cursor: "pointer" }}>
+                          <title>quelque chose de bizarre ici…</title>
+                        </circle>
                       )}
+                      {/* Al3x1A : quand on la trouve, on la VOIT (petit
+                          portrait droit debout) au lieu d'un ? bleu abstrait.
+                          Legere animation flottante pour attirer l'oeil. */}
                       {al3x1aHere && (
                         <g onClick={() => { setJeu2Found(true); setOpenRetrouvailles(true); }}
                           transform={`translate(${cfg.al3x1aHotspot.cx},${cfg.al3x1aHotspot.cy})`}
-                          style={{ cursor: "pointer", animation: "float 2s ease-in-out infinite" }}>
-                          <circle r={cfg.al3x1aHotspot.r} fill="rgba(127,216,255,0.15)" stroke="#7fd8ff" strokeWidth="2" strokeDasharray="4 4" />
-                          <circle r="22" fill="#7fd8ff" />
-                          <text y="8" textAnchor="middle" fontSize="26" fontWeight="800" fill="#0a1830">?</text>
+                          style={{ cursor: "pointer", animation: "float 2.4s ease-in-out infinite" }}>
+                          <PortraitAl3x1AInScene />
+                          <title>quelqu'un se cache ici…</title>
                         </g>
                       )}
                     </g>
