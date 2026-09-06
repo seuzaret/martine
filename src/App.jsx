@@ -242,6 +242,7 @@ export default function App() {
   const [dust, setDust] = useState(null);        // effet poussière d'un message perdu {x, y, emoji, key}
   const [muted, setMutedState] = useState(isMuted()); // bouton 🔇 (mémorisé)
   const [cheat, setCheat] = useState(false);     // mode triche (dev) — tape « triche » pour l'ouvrir
+  const [debugNotes, setDebugNotes] = useState(false); // mode calage : voir les 3 emplacements de note du chapitre — tape « notes »
   const [epiChoice, setEpiChoice] = useState(null); // épilogue : le support choisi par le joueur
   const [prenom, setPrenom] = useState("");      // carnet imprimable : le prénom de l'élève
   const [mediadex, setMediadex] = useState([]);  // msg_ids des cartes-inventions découvertes
@@ -327,6 +328,13 @@ export default function App() {
     try { localStorage.setItem("martine.a11y", JSON.stringify(a11y)); } catch { /* stockage indisponible */ }
   }, [a11y]);
 
+  /* Pose data-mode="jeu1"/"jeu2" sur <body> : le CSS global s'en sert pour
+     cacher les elements pertinents seulement dans un mode (ex. pastilles
+     jaunes « ? » sur les PNJ, cachees en jeu 2). */
+  useEffect(() => {
+    try { document.body.dataset.mode = mode; } catch { /* rien */ }
+  }, [mode]);
+
   /* la bulle d'un personnage disparaît quand on change de tableau */
   useEffect(() => { setBubble(null); }, [tab]);
 
@@ -398,6 +406,7 @@ export default function App() {
       if (e.key && e.key.length === 1) {
         buf = (buf + e.key.toLowerCase()).slice(-6);
         if (buf === "triche") setCheat((c) => !c);
+        if (buf.endsWith("notes")) setDebugNotes((c) => !c);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -705,6 +714,23 @@ export default function App() {
         bubbleText = variant.bubble ?? bubbleText;
         sayText = variant.say ?? sayText;
         mood = variant.mood ?? mood;
+      } else {
+        /* PNJ sans variante jeu 2 : au lieu de lui laisser dire son texte
+           du jeu 1 (« Chut ! le gibier a l'oreille fine »...) qui n'a
+           aucun rapport avec l'enquete Al3x1A, on donne une reponse
+           generique poliment evasive, qui reoriente vers l'enquete. */
+        const generiques = [
+          { bubble: "Je vaque à mes affaires, chronaute. Je n'ai rien vu d'étrange.",
+            say: "Il ne sait rien d'Al3x1A. Va voir un autre personnage." },
+          { bubble: "Passe ton chemin, voyageur — je suis occupé·e.",
+            say: "Peu bavard. Cherche ailleurs des indices sur Al3x1A." },
+          { bubble: "Al3x1A ? Ça ne me dit rien. Demande plutôt aux plus âgés du coin.",
+            say: "Cherche un personnage plus âgé, il aura peut-être vu passer Al3x1A." },
+        ];
+        const g = generiques[pickIdx % generiques.length];
+        bubbleText = g.bubble;
+        sayText = g.say;
+        mood = "neutre";
       }
     }
     /* un personnage qui a des paroles propres (`bubble`) les affiche en
@@ -1918,6 +1944,28 @@ export default function App() {
                           </circle>
                         </g>
                       )}
+                      {/* DEBUG NOTES : mode calage — tape « notes » au clavier.
+                          Affiche les 3 emplacements candidats du chapitre courant
+                          avec leur numero et un cercle colore, uniquement sur le
+                          tableau qui les contient. Pour ajuster les coords sans
+                          coder : tu vois direct si chaque spot tombe sur le bon
+                          landmark. */}
+                      {debugNotes && spots.map((s, i) => s.tab === tab && (
+                        <g key={`dbg-${i}`} transform={`translate(${s.cx},${s.cy})`}>
+                          <circle r={s.r || 34}
+                            fill={i === 0 ? "rgba(255,100,100,0.28)" : i === 1 ? "rgba(100,255,100,0.28)" : "rgba(100,180,255,0.28)"}
+                            stroke={i === 0 ? "#ff6060" : i === 1 ? "#60ff60" : "#60b0ff"}
+                            strokeWidth="3" strokeDasharray="6 4" />
+                          <text y="6" textAnchor="middle" fontSize="26" fontWeight="900"
+                            fill="#fff" stroke="#000" strokeWidth="0.8" style={{ paintOrder: "stroke" }}>
+                            {i + 1}
+                          </text>
+                          <text y="-14" textAnchor="middle" fontSize="10"
+                            fill="#fff" stroke="#000" strokeWidth="0.6" style={{ paintOrder: "stroke", fontFamily: "ui-monospace,monospace" }}>
+                            ({s.cx},{s.cy})
+                          </text>
+                        </g>
+                      ))}
                       {al3x1aHere && (
                         <g onClick={() => { setJeu2Found(true); setOpenRetrouvailles(true); }}
                           transform={`translate(${al3x1aSpot.cx},${al3x1aSpot.cy})`}

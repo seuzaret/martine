@@ -87,6 +87,14 @@ html.a11y-calme *::after {
 @keyframes notePing { 0%{opacity:0.85; transform:scale(1)} 100%{opacity:0; transform:scale(8)} }
 /* JEU 2 : petite respiration continue tres discrete sur le point de note */
 @keyframes noteBreath { 0%,100%{opacity:0.14} 50%{opacity:0.36} }
+
+/* JEU 2 : cache les pastilles jaunes « ? » qui pointent les PNJ en jeu 1.
+   Elles sont hardcodees dans ~18 decors avec fill=#ffd166 + stroke=#8a5a20
+   (motif unique). En jeu 2 aucun PNJ n'a de « chose a faire » — leur dialogue
+   sert l'enquete Al3x1A, pas un objectif. On cache le cercle ET le texte
+   « ? » qui le suit. body[data-mode="jeu2"] est pose depuis App.jsx. */
+body[data-mode="jeu2"] circle[fill="#ffd166"][stroke="#8a5a20"] { display: none; }
+body[data-mode="jeu2"] circle[fill="#ffd166"][stroke="#8a5a20"] + text { display: none; }
 /* bouche qui « parle » dans les gros plans (ouverture verticale saccadée) */
 @keyframes talk { 0%{transform:scaleY(.28)} 22%{transform:scaleY(.85)} 44%{transform:scaleY(.4)} 68%{transform:scaleY(1)} 86%{transform:scaleY(.5)} 100%{transform:scaleY(.28)} }
 /* ondes de voix qui apparaissent au moment de l'annonce, puis s'estompent (une fois) */

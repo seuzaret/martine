@@ -26,7 +26,7 @@ export const JEU2 = [
     noteSpots: [
       { tab: 0, cx: 550, cy: 280, r: 34, hint: "au fond de la grotte, sur la Grande Paroi" },
       { tab: 3, cx: 400, cy: 440, r: 34, hint: "au campement, près du feu" },
-      { tab: 5, cx: 600, cy: 460, r: 34, hint: "sur la berge de la rivière" },
+      { tab: 5, cx: 240, cy: 470, r: 34, hint: "sur la berge de la rivière, près du grand tronc" },
     ],
     al3x1aSpots: [
       { tab: 4, cx: 700, cy: 380, r: 60, hint: "sur le point de vue" },
@@ -42,7 +42,7 @@ export const JEU2 = [
     support: "gravure sur mégalithe",
     noteSpots: [
       { tab: 0, cx: 500, cy: 280, r: 34, hint: "à la porte de la cité, en haut de la muraille" },
-      { tab: 3, cx: 500, cy: 350, r: 34, hint: "dans la plaine, au pied du grand mégalithe" },
+      { tab: 3, cx: 140, cy: 270, r: 34, hint: "dans la plaine, sur le menhir déjà dressé à gauche" },
       { tab: 2, cx: 400, cy: 400, r: 34, hint: "chez les artisans, près du four" },
     ],
     al3x1aSpots: [
