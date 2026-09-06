@@ -201,27 +201,42 @@ const ACTIONS = {
   jala: { mood: "content",
     bubble: "Nos poteries sont les plus belles du pays. Chaque motif dit : « ça vient de chez nous ».",
     say: "Jala, la potière. Ses motifs sont la « marque » de la cité — l'ancêtre du logo.",
-    jeu2: {
-      bubble: "Une chronaute avant toi m'a acheté un petit pot… et elle l'a laissé à la porte de la cité, sur le rebord de la muraille. Regarde bien là-haut.",
-      say: "Jala a vu Al3x1A. La note serait à la PORTE DE LA CITÉ, sur la muraille." } },
+    jeu2Variants: [
+      { bubble: "Une chronaute avant toi m'a acheté un petit pot… et elle l'a laissé à la porte de la cité, sur le rebord de la muraille. Regarde bien là-haut.",
+        say: "Jala : la marque est À LA PORTE DE LA CITÉ, en haut de la muraille." },
+      { bubble: "Une drôle de voyageuse m'a acheté un pot, puis elle est partie graver une pierre dans la plaine des mégalithes. Au pied du plus grand, m'a-t-on dit.",
+        say: "Jala renvoie DANS LA PLAINE, au pied du grand mégalithe." },
+      { bubble: "Une chronaute a passé du temps chez nous les artisans. Elle a laissé un signe près du four à poteries — je le vois encore de temps en temps.",
+        say: "Jala : la trace est ICI, chez les ARTISANS, près du four." },
+    ] },
   ahmid: { mood: "vexe",
     bubble: "Compter des bêtes de tête, c'est se faire voler à coup sûr. Il me faut mieux.",
     say: "Ahmid, le marchand. Son problème de comptes va faire naître… l'écriture. Rien que ça." },
   imir: { mood: "neutre",
     bubble: "Nous dressons des pierres pour honorer le roi et les dieux. Elles nous survivront de mille ans.",
     say: "Imir, le prêtre. Le mégalithe : un message monumental, pour l'éternité.",
-    jeu2: {
-      bubble: "Une voyageuse aux mains blanches est venue avant toi. Nous les gardiens de la mémoire, on se rappelle : elle a gravé un signe étrange à l'entrée de la cité, en haut de la muraille.",
-      say: "Imir se souvient. La note d'Al3x1A serait sur la MURAILLE de la cité." } },
+    jeu2Variants: [
+      { bubble: "Une voyageuse aux mains blanches est venue. Elle a gravé un signe étrange à l'entrée de la cité, en haut de la muraille. Va voir.",
+        say: "Imir : trace SUR LA MURAILLE de la cité." },
+      { bubble: "Une chronaute est venue prier au pied de nos mégalithes. Elle a gravé un petit signe sur la base du plus grand menhir, dans la plaine.",
+        say: "Imir renvoie DANS LA PLAINE, au pied du grand mégalithe." },
+      { bubble: "Elle est passée chez les artisans, cette voyageuse. Elle a laissé une marque près du four — sûrement pour qu'elle dure à la chaleur.",
+        say: "Imir : la marque est CHEZ LES ARTISANS, près du four." },
+    ] },
   doka: { mood: "neutre",
     bubble: "Le silex, ça casse. Depuis qu'on connaît le métal, plus rien ne m'arrête… si j'en ai.",
     say: "Doka, le tailleur de pierre. Il lui faut des outils de cuivre, solides." },
   otzi: { mood: "vexe",
     bubble: "Cette mine me ronge les os. Le froid, l'humidité… j'ai mal partout.",
     say: "L'homme des glaces — notre Ötzi. Il cherche des tatouages de soin qui ne s'effacent jamais.",
-    jeu2: {
-      bubble: "Al3x1A ? Ah oui. Elle voulait un tatouage — juste une petite étoile, ici, sur la main. Elle disait que c'était pour ne jamais oublier. Elle est repartie vers le fleuve, plus tard.",
-      say: "Ötzi a marqué la peau d'Al3x1A. Un support pour l'éternité — presque." } },
+    jeu2Variants: [
+      { bubble: "Al3x1A ? Elle voulait un tatouage — une petite étoile. Puis elle a filé vers la porte de la cité, elle voulait laisser un signe en haut de la muraille.",
+        say: "Ötzi renvoie À LA PORTE DE LA CITÉ, sur la muraille." },
+      { bubble: "Al3x1A m'a laissé la marque de son doigt sur la peau. Elle est repartie graver un signe dans la plaine, au pied d'un mégalithe.",
+        say: "Ötzi : la marque est DANS LA PLAINE, au pied d'un mégalithe." },
+      { bubble: "Al3x1A m'a demandé une étoile sur la main. Puis elle a suivi la fumée, chez les artisans, et a laissé un signe près de leur four.",
+        say: "Ötzi : la marque est CHEZ LES ARTISANS, près du four." },
+    ] },
 };
 
 /* ------------------------------------------------------------

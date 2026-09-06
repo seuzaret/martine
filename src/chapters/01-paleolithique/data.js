@@ -249,30 +249,50 @@ const ACTIONS = {
   ana: { mood: "content",
     bubble: "Alors, comment trouves-tu le clan ? Prends ton temps, regarde tout… Et si tu es perdu, cherche le « ? » doré : il montre qui a besoin de toi.",
     say: "Ana. C'est elle qui t'a ouvert les portes du clan — reste poli, on est invités.",
-    jeu2: {
-      bubble: "Toi ? Encore ? Une autre comme toi est venue autrefois. Elle voulait entrer dans la grotte, tout au fond. Elle est ressortie les mains couvertes d'ocre.",
-      say: "Ana se souvient d'Al3x1A. Direction le FOND DE LA GROTTE — l'ocre pointe la Grande Paroi." } },
+    jeu2Variants: [
+      { bubble: "Toi ? Encore ? Une autre comme toi est venue autrefois. Elle voulait entrer dans la grotte, tout au fond. Elle est ressortie les mains couvertes d'ocre.",
+        say: "Ana se souvient d'Al3x1A : elle est entrée AU FOND DE LA GROTTE, sur la Grande Paroi." },
+      { bubble: "Une chronaute est venue avant toi, oui. Elle s'est assise au campement, près du feu, et a laissé une marque étrange sur les pierres du foyer.",
+        say: "Ana pointe LE CAMPEMENT, près du feu. Cherche par là." },
+      { bubble: "Une autre étrangère est venue. Elle est descendue à la rivière, elle y a passé longtemps. Elle a laissé quelque chose sur la berge, je crois.",
+        say: "Ana l'a vue descendre À LA RIVIÈRE. La trace serait sur la berge." },
+    ] },
 
   raya: { mood: "neutre",
     bubble: "Un chef veille sur tout : le feu, les bêtes, les histoires. Fais ta part, voyageur, et le clan fera la sienne.",
     say: "Raya, le chef. Peu de mots, beaucoup d'autorité. Je l'aime bien.",
-    jeu2: {
-      bubble: "Une drôle de voyageuse aux cheveux courts est venue avant toi. Elle a peint une marque étrange au fond de la grotte, sur la Grande Paroi. Va voir toi-même.",
-      say: "Le chef a vu passer Al3x1A. Fond de la grotte, sur la paroi peinte." } },
+    jeu2Variants: [
+      { bubble: "Une drôle de voyageuse aux cheveux courts est venue avant toi. Elle a peint une marque étrange au fond de la grotte, sur la Grande Paroi.",
+        say: "Le chef confirme : fond de la grotte, sur la paroi peinte." },
+      { bubble: "Une drôle de voyageuse s'est réchauffée à notre feu. Puis elle a gravé un signe sur une pierre du foyer, avant de repartir.",
+        say: "Raya : la marque est au CAMPEMENT, sur une pierre près du feu." },
+      { bubble: "Une voyageuse aux cheveux courts a longé la rivière. Elle a laissé une trace, quelque part sur la berge — mes pêcheurs l'ont vue faire.",
+        say: "Raya : la trace est à LA RIVIÈRE, sur la berge." },
+    ] },
 
   doru: { mood: "neutre",
     bubble: "Chut ! Le gibier a l'oreille fine. Parle bas, marche léger.",
     say: "Doru, le chasseur du clan. Lui, c'est la rivière et le silence.",
-    jeu2: {
-      bubble: "Une chasseuse d'un autre temps a bu à cette rivière avant toi. Elle n'a pas tué. Elle regardait beaucoup, elle écrivait sur la paroi.",
-      say: "Doru l'a vue passer. Al3x1A ne chassait pas — elle laissait des traces." } },
+    jeu2Variants: [
+      { bubble: "Une chasseuse d'un autre temps a bu à cette rivière avant toi. Elle n'a pas tué. Elle a filé au fond de la grotte pour peindre.",
+        say: "Doru l'a vue partir vers LA GROTTE. Elle y a laissé une peinture." },
+      { bubble: "Elle est passée près de moi, cette étrangère. Elle est remontée au campement, s'est assise près du feu. C'est là qu'elle a laissé quelque chose.",
+        say: "Doru la renvoie AU CAMPEMENT, près du feu." },
+      { bubble: "Une étrange chasseuse est restée sur cette berge, longtemps. Elle a gravé une pierre au bord de l'eau, puis elle est partie.",
+        say: "Doru : elle a laissé sa trace ICI, sur la berge de la rivière." },
+    ] },
 
   kyan: { mood: "neutre",
     bubble: "Je suis la mémoire du clan. Tout ce qui s'oublie meurt une seconde fois — c'est pour ça que je me souviens.",
     say: "Kyan, la mémoire du clan. Ce qu'elle sait tient dans une seule tête… fragile, non ?",
-    jeu2: {
-      bubble: "Je me souviens d'elle comme si c'était hier. Al3x1A. Je l'ai vue peindre juste là, sur la Grande Paroi. Approche-toi de la peinture, tu verras sa marque.",
-      say: "Kyan garde tout — même la trace d'Al3x1A sur la paroi. Cherche là où c'est peint." } },
+    jeu2Variants: [
+      { bubble: "Je me souviens d'elle comme si c'était hier. Al3x1A. Je l'ai vue peindre juste là, sur la Grande Paroi, au fond de la grotte.",
+        say: "Kyan garde tout : la trace d'Al3x1A est AU FOND DE LA GROTTE." },
+      { bubble: "Al3x1A. Je me rappelle : elle s'est arrêtée au campement, près de notre feu. Elle a gravé une pierre du foyer, un signe étrange.",
+        say: "Kyan renvoie AU CAMPEMENT, près du feu. Cherche sur les pierres." },
+      { bubble: "Al3x1A a passé beaucoup de temps à la rivière. Elle a laissé une trace sur la berge, une marque que personne n'a osé effacer.",
+        say: "Kyan : la marque d'Al3x1A est À LA RIVIÈRE, sur la berge." },
+    ] },
 
   /* ─── Nouveaux personnages / actions des tableaux ajoutés (atelier, gué, crête) ─── */
   ough: { mood: "neutre",

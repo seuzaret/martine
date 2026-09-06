@@ -227,21 +227,36 @@ const ACTIONS = {
   charles: { mood: "neutre",
     bubble: "Je suis Charles Bannister, seigneur de ce château. Sers-moi bien, l'étranger, et tu seras logé et nourri.",
     say: "Un seigneur médiéval : il tient la terre, la justice, et veut qu'on chante sa gloire.",
-    jeu2: {
-      bubble: "Une dame étrange est venue avant toi. Elle a laissé une enluminure dans un manuscrit, ICI, dans la grande salle de MON CHÂTEAU. Regarde derrière la tenture au-dessus de mon trône.",
-      say: "Charles pointe SON CHÂTEAU. La note serait derrière la tenture au-dessus du trône." } },
+    jeu2Variants: [
+      { bubble: "Une dame étrange a laissé une enluminure ICI, dans MON CHÂTEAU. Regarde derrière la tenture au-dessus de mon trône.",
+        say: "Charles : ICI au CHÂTEAU, derrière la tenture au-dessus du trône." },
+      { bubble: "La chronaute est allée s'enfermer au monastère du frère Jorge, entre les manuscrits. Elle disait vouloir laisser une trace dans les marges.",
+        say: "Charles renvoie AU MONASTÈRE, dans les marges d'un manuscrit." },
+      { bubble: "Elle est descendue sur la place du bourg. Elle voulait accrocher son enluminure à une banderole, pour que tous la voient.",
+        say: "Charles renvoie SUR LA PLACE DU BOURG, sur une banderole." },
+    ] },
   jorge: { mood: "neutre",
     bubble: "Bienvenue au monastère, voyageur. Ici, nous gardons et recopions le savoir du monde, une page à la fois.",
     say: "Le moine copiste : la mémoire du monde tient sur ses épaules… et sur une seule bougie.",
-    jeu2: {
-      bubble: "Ah, un autre ami du temps. Une voyageuse aux vêtements gris est venue autrefois — mais elle n'a pas laissé sa note ici. Elle est repartie au CHÂTEAU DE CHARLES. Va voir là-bas.",
-      say: "Jorge l'oriente vers le château. Al3x1A y a laissé sa marque." } },
+    jeu2Variants: [
+      { bubble: "La voyageuse a laissé sa note au château de Charles, derrière la tenture au-dessus du trône. Va voir là-bas.",
+        say: "Jorge renvoie AU CHÂTEAU, derrière la tenture du trône." },
+      { bubble: "Elle a laissé son enluminure ICI, dans les marges d'un de nos manuscrits. Cherche entre les rayonnages.",
+        say: "Jorge : ICI au MONASTÈRE, dans un manuscrit." },
+      { bubble: "Elle est descendue sur la place du bourg, la voyageuse. Elle voulait épingler son enluminure à une banderole, pour que le peuple la voie.",
+        say: "Jorge renvoie SUR LA PLACE DU BOURG, sur une banderole." },
+    ] },
   gutenberg: { mood: "neutre",
     bubble: "Un moine met un an à copier un livre, et y glisse des fautes. Moi, j'en veux MILLE, tous pareils ! Il me faut des lettres SÉPARÉES, qu'on range et qu'on réutilise.",
     say: "Ça, c'est LA grande idée : les caractères mobiles. Fonds-lui des lettres de plomb, et donne-lui une presse.",
-    jeu2: {
-      bubble: "Une chronaute est passée. Elle voulait multiplier son message — trois exemplaires. Elle en a mis un chez le seigneur Charles, dans son château. Malin, non ?",
-      say: "Gutenberg confirme : l'un des exemplaires est au château de Charles." } },
+    jeu2Variants: [
+      { bubble: "La chronaute a mis un exemplaire chez le seigneur Charles, dans son château, derrière la tenture du trône. Malin.",
+        say: "Gutenberg renvoie AU CHÂTEAU, derrière la tenture du trône." },
+      { bubble: "Elle a préféré cacher son exemplaire au monastère, dans les marges d'un manuscrit. Le frère Jorge ne l'a pas remarqué.",
+        say: "Gutenberg renvoie AU MONASTÈRE, dans un manuscrit." },
+      { bubble: "Elle a fait imprimer sa note, puis l'a épinglée sur une banderole de la place du bourg. Un vrai coup médiatique !",
+        say: "Gutenberg renvoie SUR LA PLACE DU BOURG, sur une banderole." },
+    ] },
 
   /* Le moulin à papier : le papetier (guide) et le chiffonnier (ramasseur). */
   papetier: { mood: "neutre",

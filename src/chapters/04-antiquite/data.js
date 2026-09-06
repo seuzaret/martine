@@ -181,23 +181,38 @@ const ACTIONS = {
   caius: { mood: "neutre",
     bubble: "Ma villa doit être la plus belle de Pompéi pour ma fête ! Aide mes artisans, l'étranger.",
     say: "Un riche marchand qui veut éblouir ses invités. À Pompéi, comme partout : montrer qu'on a réussi.",
-    jeu2: {
-      bubble: "Encore un chronaute chez moi ! Ta cousine à la tunique grise m'a laissé un rouleau à l'ENTRÉE DE MA VILLA, sur le rebord du mur peint. Fouille par là — elle disait que c'était urgent.",
-      say: "Caius pointe l'ENTRÉE DE LA VILLA. Le rouleau serait sur le rebord du mur peint." } },
+    jeu2Variants: [
+      { bubble: "Ta cousine à la tunique grise m'a laissé un rouleau à l'ENTRÉE DE MA VILLA, sur le rebord du mur peint. Elle disait que c'était urgent.",
+        say: "Caius : rouleau À L'ENTRÉE DE LA VILLA, sur le mur peint." },
+      { bubble: "Al3x1A est allée au forum, pour cacher son rouleau contre une colonne. Beaucoup de monde passe là-bas, quelqu'un l'aura sans doute déplacé — mais peut-être pas.",
+        say: "Caius renvoie AU FORUM, contre une colonne." },
+      { bubble: "La chronaute a préféré la bibliothèque : elle a glissé son rouleau entre les autres. Mon bibliothécaire n'a rien vu.",
+        say: "Caius renvoie À LA BIBLIOTHÈQUE, entre les rouleaux." },
+    ] },
 
   /* ── LE FORUM DE POMPÉI ── */
   praeco: { mood: "content",
     bubble: "Citoyens ! Marcvs Holconivs Rufus vous invite aux JEUX du forum, sous la protection d'Isis ! Trois jours de combats, entrée libre !",
     say: "Le PRAECO, crieur public : la radio de l'Antiquité. Une voix forte, une place bondée, et hop, tout Pompéi est au courant.",
-    jeu2: {
-      bubble: "J'ai vu passer bien des étrangers ! Une femme aux vêtements gris a dicté un rouleau à mon scribe, puis elle est repartie vers l'ENTRÉE DE LA VILLA de Caius. Va chercher son rouleau là-bas.",
-      say: "Le praeco a vu Al3x1A partir vers la villa de Caius." } },
+    jeu2Variants: [
+      { bubble: "La chronaute est repartie vers l'ENTRÉE DE LA VILLA de Caius. Elle a laissé son rouleau sur le mur peint là-bas.",
+        say: "Le praeco renvoie À L'ENTRÉE DE LA VILLA, sur le mur peint." },
+      { bubble: "Elle a caché son rouleau ICI, au forum, contre une colonne. Beaucoup de gens passent par là, mais peu regardent en bas.",
+        say: "Le praeco : ICI, au forum, contre une colonne." },
+      { bubble: "La voyageuse a filé à la bibliothèque. Elle a glissé son rouleau entre deux autres — malin, personne ne remarque.",
+        say: "Le praeco renvoie À LA BIBLIOTHÈQUE, entre les rouleaux." },
+    ] },
   lapidicida: { mood: "neutre",
     bubble: "Trois lettres par heure, pas une de plus. Grave la loi, grave la dédicace : moi, je fais l'éternité au marteau et au burin.",
     say: "Le lapidicida, tailleur de pierre. Métier lent, métier de patience — mais son travail va durer 2000 ans.",
-    jeu2: {
-      bubble: "Une drôle de voyageuse m'a demandé de graver son nom sur un rouleau au lieu de la pierre. J'ai refusé — la pierre seule dure. Elle est allée écrire son rouleau à la villa de Caius, tant pis pour elle.",
-      say: "Le lapidicida a vu Al3x1A choisir le papyrus. Fragile choix : va vite au village de Caius." } },
+    jeu2Variants: [
+      { bubble: "La voyageuse a filé écrire à la villa de Caius, sur le mur peint de l'entrée. Un papyrus, pas de la pierre. Fragile.",
+        say: "Le lapidicida renvoie À L'ENTRÉE DE LA VILLA, sur le mur peint." },
+      { bubble: "Elle a écrit son rouleau ICI même, au forum, contre l'une des colonnes. J'aurais préféré qu'elle le grave dans la pierre.",
+        say: "Le lapidicida : ICI au forum, contre une colonne." },
+      { bubble: "Elle est allée à la bibliothèque. Un rouleau parmi mille rouleaux — elle croyait bien le cacher. Papyrus, encore ! Rien ne durera.",
+        say: "Le lapidicida renvoie À LA BIBLIOTHÈQUE, entre les rouleaux." },
+    ] },
   stele_edile: { mood: "neutre",
     bubble: "Cette stèle honore l'édile qui a payé la restauration du forum. Elle sera lue par des générations d'habitants.",
     say: "Publier officiellement dans l'Antiquité, c'est GRAVER dans la pierre. La forme physique du droit et de la mémoire de la cité." },

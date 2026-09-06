@@ -132,16 +132,26 @@ const ACTIONS = {
   ado: { mood: "neutre",
     bubble: "Regarde ce bazar : un téléphone, un appareil photo, un baladeur, une console, une télé, un réveil, un plan de la ville, une pile de courrier… Ça fait BEAUCOUP d'objets à trimballer ! Et si tout ça tenait dans un seul truc, dans ma poche ?",
     say: "Le smartphone : TOUS les médias de ton voyage dans un seul objet. Fait pour capter ton attention, aussi — à qui profite ton temps d'écran ?",
-    jeu2: {
-      bubble: "Une autre voyageuse du temps est venue dans MA CHAMBRE. Ouais, ICI. Elle a laissé une note sur mon smartphone, posé sur le lit. Cherche par là.",
-      say: "L'ado pointe sa chambre : smartphone sur le lit, avec la note d'Al3x1A." } },
+    jeu2Variants: [
+      { bubble: "Une chronaute est venue dans MA CHAMBRE. Elle a laissé une note sur mon smartphone, posé sur le LIT. Cherche par là.",
+        say: "L'ado : ICI DANS LA CHAMBRE, sur le smartphone posé sur le lit." },
+      { bubble: "Ouais, elle est passée ICI. Elle a laissé une note sur ma tablette, POSÉE SUR LE BUREAU. Genre malin, on va rien remarquer.",
+        say: "L'ado : ICI DANS LA CHAMBRE, sur la tablette posée sur le bureau." },
+      { bubble: "Elle est partie au datacenter voisin, la chronaute. Elle a stocké un fichier ENTRE LES RACKS, plus safe qu'un téléphone.",
+        say: "L'ado renvoie AU DATACENTER, entre les racks." },
+    ] },
 
   technicien: { mood: "neutre",
     bubble: "Tes photos, ta musique, tes devoirs… tu crois qu'ils sont dans ton téléphone ? Regarde autour de toi : ils sont ICI, dans ces serveurs. Chez quelqu'un d'autre. Et tant que tu paies, tout va bien.",
     say: "Le cloud : « plus de support » ? Faux — il est chez quelqu'un d'autre. Posséder ou accéder ? Et si le service ferme ?",
-    jeu2: {
-      bubble: "Une chronaute avant toi n'a pas laissé de note ici, non. Elle a laissé quelque chose DANS LA CHAMBRE D'ADO à côté, sur le smartphone posé sur le lit. Va voir plutôt là-bas.",
-      say: "Le technicien renvoie à la chambre : c'est là qu'est la note d'Al3x1A." } },
+    jeu2Variants: [
+      { bubble: "La chronaute a laissé quelque chose DANS LA CHAMBRE D'ADO, sur le smartphone posé sur le lit. Va voir plutôt là-bas.",
+        say: "Le technicien renvoie DANS LA CHAMBRE, sur le smartphone du lit." },
+      { bubble: "Elle a laissé son mémo sur la tablette de l'ado, POSÉE SUR LE BUREAU. La chambre à côté.",
+        say: "Le technicien renvoie DANS LA CHAMBRE, sur la tablette du bureau." },
+      { bubble: "Elle a stocké un fichier ICI même, ENTRE DEUX DE MES RACKS. Malin — beaucoup plus stable qu'un smartphone.",
+        say: "Le technicien : ICI DANS LE DATACENTER, entre les racks." },
+    ] },
 };
 
 /* ------------------------------------------------------------

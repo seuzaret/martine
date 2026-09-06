@@ -204,9 +204,14 @@ const ACTIONS = {
   mesannepada: { mood: "neutre",
     bubble: "Je suis Mesannepada, roi d'Ur. Rends-toi utile, étranger, et tu seras traité en ami.",
     say: "Un vrai roi, dans une vraie cité. On est loin de la grotte du chapitre 1 !",
-    jeu2: {
-      bubble: "Vous êtes nombreux à traverser mon royaume. La dernière, avant toi, a gravé quelque chose sur les murs de la CITÉ D'UR. Mes gardes n'ont rien osé effacer.",
-      say: "Le roi confirme : la note est dans la cité, gravée sur un mur." } },
+    jeu2Variants: [
+      { bubble: "Vous êtes nombreux à traverser mon royaume. La dernière a gravé quelque chose sur les murs de MA cité, contre le grand mur du grenier.",
+        say: "Le roi : la marque est DANS LA CITÉ D'UR, contre le mur du grenier." },
+      { bubble: "La chronaute qui t'a précédé est partie vers le Nil. Elle voulait graver quelque chose sur le grand pylône. Snefrou a accepté.",
+        say: "Le roi renvoie AU NIL, sur le grand pylône." },
+      { bubble: "Elle a filé chez les Phéniciens, la voyageuse. Mes marchands l'ont vue graver un rocher sur leur côte, entre les cèdres.",
+        say: "Le roi renvoie SUR LA CÔTE PHÉNICIENNE, sur un rocher." },
+    ] },
   naram: { mood: "vexe",
     bubble: "Le berger jure vingt bêtes, le prêtre en note dix-huit… et moi, je perds la tête ! Il me faut une trace SÛRE.",
     say: "Et c'est comme ça, pour compter, que va naître l'écriture. Fabrique-lui de quoi noter." },
@@ -224,15 +229,25 @@ const ACTIONS = {
   scribe: { mood: "neutre",
     bubble: "L'argile, c'est solide : ça durera mille ans. Mais le pharaon veut que son ordre parte à l'autre bout du royaume, et ce pauvre âne n'en porte que vingt tablettes ! Il me faudrait un support LÉGER. Quelque chose qui pousse ici, au bord de l'eau…",
     say: "Léger et transportable : le papyrus. Plus pratique que l'argile… mais bien plus fragile. On n'a rien sans rien.",
-    jeu2: {
-      bubble: "Une voyageuse en tunique grise m'a demandé du papyrus, autrefois. Elle m'a laissé une tablette en échange. Va la chercher dans la CITÉ D'UR, au pied de la ziggourat.",
-      say: "Le scribe pointe la CITÉ D'UR. La tablette d'Al3x1A y serait toujours." } },
+    jeu2Variants: [
+      { bubble: "Une voyageuse m'a laissé une tablette en échange de papyrus. Va la chercher dans la CITÉ D'UR, contre le mur du grenier — c'est là qu'on entrepose les archives.",
+        say: "Le scribe : tablette DANS LA CITÉ D'UR, contre le mur du grenier." },
+      { bubble: "La voyageuse aux vêtements gris a gravé son message ici même, en haut du grand pylône du Nil. C'est bien visible pour qui regarde vers le ciel.",
+        say: "Le scribe : la marque est ICI, sur le pylône du Nil." },
+      { bubble: "Al3x1A est repartie vers la Phénicie, mes cargaisons l'ont vue là-bas. Elle a laissé un signe sur les rochers de la côte, entre les cèdres.",
+        say: "Le scribe renvoie SUR LA CÔTE PHÉNICIENNE, sur un rocher." },
+    ] },
   assurbanipal: { mood: "neutre",
     bubble: "Je suis Assurbanipal, roi et grand amasseur de tablettes : j'ai réuni tout le savoir du monde en cunéiforme… sept cents signes ! Mais regarde ces marchands : avec seulement 22 signes, un par son, leurs mousses apprennent à écrire en quelques jours. Apprends ce code simple, toi aussi.",
     say: "Un code SIMPLE se répand plus vite qu'un code savant : tout le secret de l'alphabet. Grave-le sur la tablette pour l'apprendre — puis confie-le aux navires marchands.",
-    jeu2: {
-      bubble: "Ma bibliothèque contient TOUT — même la tablette d'une drôle de voyageuse en tunique grise. Elle est ici, dans la CITÉ D'UR, posée près du grand mur du grenier. Va voir.",
-      say: "Assurbanipal a rangé la tablette d'Al3x1A à Ur, contre le mur du grenier." } },
+    jeu2Variants: [
+      { bubble: "Ma bibliothèque garde tout — même la tablette d'une drôle de voyageuse. Elle est ICI, dans la cité d'Ur, contre le grand mur du grenier.",
+        say: "Assurbanipal : tablette DANS LA CITÉ D'UR, contre le mur du grenier." },
+      { bubble: "Al3x1A n'a rien laissé chez moi. Elle est descendue vers le Nil, elle voulait graver un signe sur le grand pylône. Le pharaon l'a laissée faire.",
+        say: "Assurbanipal renvoie AU NIL, sur le grand pylône." },
+      { bubble: "La voyageuse est passée puis a filé vers la mer, chez les Phéniciens. Elle a marqué un rocher sur leur côte, disait-on.",
+        say: "Assurbanipal renvoie SUR LA CÔTE PHÉNICIENNE, sur un rocher." },
+    ] },
   alphabet: { modal: "alphabet" },
 
   /* ── École du scribe (adjacent à Ur) ── */

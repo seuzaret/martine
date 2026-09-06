@@ -143,9 +143,14 @@ const ACTIONS = {
   marchand: { mood: "neutre",
     bubble: "Une grosse couverture, madame ? J'en ai une chaude — mais pas de ticket, hein ? On se comprend. Et cette nuit, écoutez Londres, ça vaut le coup.",
     say: "Le marchand clandestin : marché noir sous une arcade. Il vend ce qui manque, il informe qui écoute.",
-    jeu2: {
-      bubble: "Une dame en tunique grise m'a acheté une TSF ici, sous mon arcade, DANS LES RUES DE PARIS OCCUPÉ. Elle a laissé une cassette sous ma table, je l'ai gardée. Regarde par ici.",
-      say: "Le marchand pointe sa propre scène (Paris occupé) : cassette sous la table." } },
+    jeu2Variants: [
+      { bubble: "La chronaute a laissé une cassette ICI, sous ma table, dans les rues de Paris occupé. Je l'ai gardée pour toi.",
+        say: "Le marchand : ICI DANS PARIS OCCUPÉ, sous l'arcade du marché noir." },
+      { bubble: "Elle est partie chez Marthe Dupont, au salon. Elle a caché sa cassette sous le buffet, apparemment.",
+        say: "Le marchand renvoie AU SALON DUPONT, sous le buffet." },
+      { bubble: "Elle a filé bien après la guerre, à l'ENIAC en Amérique. Sa cassette est entre deux cartes perforées, m'a-t-on dit.",
+        say: "Le marchand renvoie À L'ENIAC, entre deux cartes perforées." },
+    ] },
 
   patrouille: { mood: "vexe",
     bubble: "Halt ! Papiere !",
@@ -162,9 +167,14 @@ const ACTIONS = {
   marthe: { mood: "neutre",
     bubble: "Chut ! Marthe Dupont. Cette nuit on écoute Londres — c'est interdit, on s'en fiche. Sors la TSF du buffet, tends l'antenne, jette la couverture pour étouffer le son.",
     say: "Marthe Dupont : elle va écouter Radio Londres, comme des millions de Français en cachette.",
-    jeu2: {
-      bubble: "Une chronaute est venue, mais elle n'a rien laissé chez moi. Elle a caché sa cassette au marché noir, DANS LES RUES DE PARIS OCCUPÉ. Va voir le marchand sous l'arcade.",
-      say: "Marthe renvoie au marché noir sous l'arcade — Paris occupé." } },
+    jeu2Variants: [
+      { bubble: "La chronaute a caché sa cassette au marché noir, dans les rues de Paris occupé. Va voir le marchand sous l'arcade.",
+        say: "Marthe renvoie AU MARCHÉ NOIR DE PARIS, sous l'arcade." },
+      { bubble: "Elle a écouté Londres avec moi cette nuit-là, puis elle a laissé sa cassette ICI, sous mon buffet. Sers-toi.",
+        say: "Marthe : ICI AU SALON, sous le buffet." },
+      { bubble: "Elle a passé la guerre puis a filé aux États-Unis, à l'ENIAC. Sa cassette est là-bas, coincée entre deux cartes perforées.",
+        say: "Marthe renvoie À L'ENIAC, entre deux cartes perforées." },
+    ] },
 
   /* action ouvrant le mini-jeu de réglage de fréquence sur la TSF prête */
   tsf_bouton: { modal: "tsf_reglage", needsFlag: "tsf_prete",
@@ -173,9 +183,14 @@ const ACTIONS = {
   kay: { mood: "neutre",
     bubble: "Kay McNulty. Née en Irlande, émigrée à Philadelphie. Je suis mathématicienne — on nous a recrutées à six pour calculer les trajectoires d'obus à la main. Depuis qu'ils ont construit l'ENIAC, on le PROGRAMME — mais l'armée nous appelle des « opératrices ». Aide-moi : charge les fiches, branche les câbles, allume la bête.",
     say: "Kay McNulty : l'une des six programmeuses de l'ENIAC. Effacées de l'Histoire pendant 50 ans, alors qu'elles ont inventé la programmation moderne.",
-    jeu2: {
-      bubble: "Une chronaute a stocké un fichier sur nos cartes perforées, oui. Mais elle a aussi laissé une CASSETTE audio, avant la guerre, DANS LES RUES DE PARIS OCCUPÉ. Va voir le marchand du marché noir.",
-      say: "Kay renvoie au Paris occupé de 1944 : la cassette y est cachée." } },
+    jeu2Variants: [
+      { bubble: "Elle a laissé une CASSETTE avant la guerre, dans les rues de Paris occupé. Va voir le marchand du marché noir sous l'arcade.",
+        say: "Kay renvoie AU PARIS OCCUPÉ, sous l'arcade du marché noir." },
+      { bubble: "Elle a écouté Londres chez Marthe Dupont, puis a caché sa cassette sous son buffet. Va voir Marthe.",
+        say: "Kay renvoie AU SALON DUPONT, sous le buffet." },
+      { bubble: "Elle a caché sa cassette ICI, dans notre ENIAC. Coincée entre deux cartes perforées — parfait pour dérouter un espion.",
+        say: "Kay : ICI À L'ENIAC, entre deux cartes perforées." },
+    ] },
 
   eniac_debug: { modal: "eniac_debug", needsFlag: "cables_branches",
     needMsg: "Il faut d'abord charger les fiches ET brancher les câbles. Puis on pourra débugger." },

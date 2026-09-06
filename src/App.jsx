@@ -190,6 +190,12 @@ export default function App() {
   const [jeu2Target, setJeu2Target] = useState(-1); // index du chapitre où Al3x1A est bloqué·e
   const [jeu2Notes, setJeu2Notes] = useState([]);  // chapitres où la note a été lue (indices)
   const [jeu2Found, setJeu2Found] = useState(false); // Al3x1A a été trouvé·e ?
+  /* Tirages au sort de l'ENQUETE : quel emplacement pour chaque note
+     (10 indices 0-2), et quelle cachette pour Al3x1A (un index 0-2 dans
+     son chapitre cible). Perse dans la save : deux parties differentes
+     = deux enquetes differentes, meme si le chapitre cible est le meme. */
+  const [jeu2NotePicks, setJeu2NotePicks] = useState(() => Array(10).fill(0));
+  const [jeu2AlxPick, setJeu2AlxPick] = useState(0);
   const [openNote, setOpenNote] = useState(null);  // { chapitre } → affiche la modale de note
   const [openRetrouvailles, setOpenRetrouvailles] = useState(false);
   const [tab, setTab] = useState(CHAPTERS[0].startScene); // tableau courant
@@ -281,9 +287,9 @@ export default function App() {
      partie existante avec un état vide). */
   useEffect(() => {
     if (screen === "play" || screen === "end") {
-      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, mode, jeu2Target, jeu2Notes, jeu2Found }, mode);
+      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, mode, jeu2Target, jeu2Notes, jeu2Found, jeu2NotePicks, jeu2AlxPick }, mode);
     }
-  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, mode, jeu2Target, jeu2Notes, jeu2Found]);
+  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, mode, jeu2Target, jeu2Notes, jeu2Found, jeu2NotePicks, jeu2AlxPick]);
 
   /* CONFORT DE LECTURE : applique les classes sur <html> (le CSS fait le
      reste, moteur compris) et mémorise le choix sur l'appareil. */
@@ -403,6 +409,12 @@ export default function App() {
     setJeu2Target(target);
     setJeu2Notes([]);
     setJeu2Found(false);
+    /* Tirages au sort de l'enquete : pour chaque chapitre, un emplacement
+       de note parmi les 3 candidats. Et pour Al3x1A, une cachette parmi
+       les 3 dans son chapitre cible. Assure la re-jouabilite : deux
+       parties donnent des enquetes vraiment differentes. */
+    setJeu2NotePicks(JEU2.map((c) => Math.floor(Math.random() * (c.noteSpots?.length || 1))));
+    setJeu2AlxPick(Math.floor(Math.random() * (JEU2[target].al3x1aSpots?.length || 1)));
     setChapterIndex(0); setMaxReached(CHAPTERS.length - 1);
     setInv([]); setMsgs([]); setMade([]); setFlags({}); setCollection([]); setQuete(0);
     setFlux(0); setFluxTotal(0); setBonusChapters([]);
@@ -480,7 +492,8 @@ export default function App() {
        le tableau de la note d'Al3x1A on décale de 1 (modulo nb de tableaux)
        — l'élève doit fouiller pour trouver la note. */
     const scenes = CHAPTERS[i].scenes || [];
-    const noteTab = JEU2[i]?.noteHotspot?.tab ?? -1;
+    const notePick = jeu2NotePicks[i] ?? 0;
+    const noteTab = JEU2[i]?.noteSpots?.[notePick]?.tab ?? -1;
     let landingTab = CHAPTERS[i].startScene ?? 0;
     if (landingTab === noteTab && scenes.length > 1) {
       landingTab = (landingTab + 1) % scenes.length;
@@ -518,6 +531,8 @@ export default function App() {
     if (s.prenom) setPrenom(s.prenom);
     /* état spécifique jeu 2 (silencieusement ignoré si absent) */
     setJeu2Target(s.jeu2Target ?? -1);
+    setJeu2NotePicks(Array.isArray(s.jeu2NotePicks) && s.jeu2NotePicks.length === 10 ? s.jeu2NotePicks : Array(10).fill(0));
+    setJeu2AlxPick(typeof s.jeu2AlxPick === "number" ? s.jeu2AlxPick : 0);
     setJeu2Notes(s.jeu2Notes || []);
     setJeu2Found(s.jeu2Found || false);
     setTab(s.tab ?? CHAPTERS[i].startScene);
@@ -629,14 +644,23 @@ export default function App() {
         if (step.suite) setTimeout(() => say(`➜ ${step.suite}`), 1400);
       }
     }
-    /* MODE JEU 2 : la variante `jeu2` du personnage prime en toute fin
-       (le joueur est un chronaute qui repasse — les PNJ le reconnaissent
-       ou évoquent une drôle de voyageuse). Placée APRÈS le bloc quête
-       pour être sûre d'avoir le dernier mot. */
-    if (mode === "jeu2" && act.jeu2) {
-      bubbleText = act.jeu2.bubble ?? bubbleText;
-      sayText = act.jeu2.say ?? sayText;
-      mood = act.jeu2.mood ?? mood;
+    /* MODE JEU 2 : la variante du personnage prime en toute fin. Deux
+       schemas supportes :
+       - `jeu2Variants` (nouveau) : tableau de 3 variantes, indexe sur
+          jeu2NotePicks[chapterIndex] pour rester COHERENT avec l'emplacement
+          tire au sort de la note du chapitre.
+       - `jeu2` (legacy) : une seule variante, utilisee tel quel.
+       Comme ca on peut migrer les PNJ progressivement. */
+    if (mode === "jeu2") {
+      const variants = act.jeu2Variants;
+      const variant = Array.isArray(variants) && variants.length > 0
+        ? variants[(jeu2NotePicks[chapterIndex] ?? 0) % variants.length]
+        : act.jeu2;
+      if (variant) {
+        bubbleText = variant.bubble ?? bubbleText;
+        sayText = variant.say ?? sayText;
+        mood = variant.mood ?? mood;
+      }
     }
     /* un personnage qui a des paroles propres (`bubble`) les affiche en
        phylactère à côté de lui (ancré à la dernière position cliquée) ;
@@ -1815,33 +1839,29 @@ export default function App() {
               (() => {
                 const cfg = JEU2[chapterIndex];
                 if (!cfg) return null;
-                const noteHere = cfg.noteHotspot?.tab === tab && !jeu2Notes.includes(chapterIndex);
-                const al3x1aHere = chapterIndex === jeu2Target && cfg.al3x1aHotspot?.tab === tab && !jeu2Found;
+                /* Emplacements TIRES AU SORT au demarrage de la partie
+                   (voir jeu2NotePicks/jeu2AlxPick). Chaque re-jeu = enquete
+                   differente ; les PNJ pointent vers CE spot precis. */
+                const noteSpot = cfg.noteSpots?.[jeu2NotePicks[chapterIndex] ?? 0] || cfg.noteSpots?.[0];
+                const al3x1aSpot = cfg.al3x1aSpots?.[jeu2AlxPick] || cfg.al3x1aSpots?.[0];
+                const noteHere = noteSpot?.tab === tab && !jeu2Notes.includes(chapterIndex);
+                const al3x1aHere = chapterIndex === jeu2Target && al3x1aSpot?.tab === tab && !jeu2Found;
                 return (
                   <svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice"
                     style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
                     <g style={{ pointerEvents: "auto" }}>
-                      {/* NOTE invisible : plus de pastille jaune, juste un
-                          cercle transparent cliquable a l'endroit voulu.
-                          Le joueur doit fouiller (ou ecouter les personnages
-                          qui evoquent l'endroit dans leurs dialogues jeu 2).
-                          On agrandit le rayon (r*1.8) pour compenser
-                          l'invisibilite : hit-box plus large. */}
                       {noteHere && (
                         <circle onClick={() => setOpenNote({ chapitre: chapterIndex })}
-                          cx={cfg.noteHotspot.cx} cy={cfg.noteHotspot.cy}
-                          r={(cfg.noteHotspot.r || 34) * 1.8}
+                          cx={noteSpot.cx} cy={noteSpot.cy}
+                          r={(noteSpot.r || 34) * 1.8}
                           fill="rgba(0,0,0,0.001)"
                           style={{ cursor: "pointer" }}>
                           <title>quelque chose de bizarre ici…</title>
                         </circle>
                       )}
-                      {/* Al3x1A : quand on la trouve, on la VOIT (petit
-                          portrait droit debout) au lieu d'un ? bleu abstrait.
-                          Legere animation flottante pour attirer l'oeil. */}
                       {al3x1aHere && (
                         <g onClick={() => { setJeu2Found(true); setOpenRetrouvailles(true); }}
-                          transform={`translate(${cfg.al3x1aHotspot.cx},${cfg.al3x1aHotspot.cy})`}
+                          transform={`translate(${al3x1aSpot.cx},${al3x1aSpot.cy})`}
                           style={{ cursor: "pointer", animation: "float 2.4s ease-in-out infinite" }}>
                           <PortraitAl3x1AInScene />
                           <title>quelqu'un se cache ici…</title>
