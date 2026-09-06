@@ -93,8 +93,8 @@ export const JEU2 = [
     support: "enluminure marginale",
     noteSpots: [
       { tab: 0, cx: 500, cy: 300, r: 34, hint: "au château, derrière la tenture au-dessus du trône" },
-      { tab: 1, cx: 400, cy: 400, r: 34, hint: "au monastère, dans les marges d'un manuscrit" },
-      { tab: 4, cx: 500, cy: 400, r: 34, hint: "sur la place du bourg, sur une banderole" },
+      { tab: 1, cx: 120, cy: 240, r: 40, hint: "au monastère, sur les manuscrits des rayonnages à gauche" },
+      { tab: 4, cx: 500, cy: 460, r: 40, hint: "sur la place du bourg, sur le puits au centre" },
     ],
     al3x1aSpots: [
       { tab: 1, cx: 480, cy: 400, r: 60, hint: "entre les rayonnages du scriptorium" },
@@ -109,8 +109,8 @@ export const JEU2 = [
   {
     support: "gazette imprimée",
     noteSpots: [
-      { tab: 0, cx: 500, cy: 340, r: 34, hint: "en province, sous la montgolfière" },
-      { tab: 1, cx: 500, cy: 380, r: 34, hint: "à l'imprimerie, sur la presse" },
+      { tab: 0, cx: 580, cy: 240, r: 40, hint: "en province, sur la nacelle de la montgolfière" },
+      { tab: 1, cx: 300, cy: 320, r: 45, hint: "à l'imprimerie, sur la presse (à gauche)" },
       { tab: 2, cx: 500, cy: 300, r: 34, hint: "après la Révolution, sur le mur de la tour Chappe" },
     ],
     al3x1aSpots: [
@@ -126,9 +126,9 @@ export const JEU2 = [
   {
     support: "télégramme Morse",
     noteSpots: [
-      { tab: 0, cx: 500, cy: 320, r: 34, hint: "au bureau du télégraphe, sur le mur derrière le manipulateur" },
-      { tab: 1, cx: 500, cy: 350, r: 34, hint: "au studio du daguerréotype, sur le mur du fond" },
-      { tab: 4, cx: 550, cy: 380, r: 34, hint: "à la station Marconi, près du poste" },
+      { tab: 0, cx: 250, cy: 150, r: 34, hint: "au bureau du télégraphe, sur l'affiche WANTED (mur de gauche)" },
+      { tab: 1, cx: 80, cy: 140, r: 34, hint: "au studio du daguerréotype, sur l'horloge murale à gauche" },
+      { tab: 4, cx: 800, cy: 368, r: 50, hint: "à la station Marconi, sur le paquebot Titanic (au large)" },
     ],
     al3x1aSpots: [
       { tab: 1, cx: 500, cy: 400, r: 60, hint: "au studio du photographe, dans un coin" },
@@ -143,9 +143,9 @@ export const JEU2 = [
   {
     support: "cassette audio",
     noteSpots: [
-      { tab: 0, cx: 500, cy: 340, r: 34, hint: "à Paris occupé, sous l'arcade du marché noir" },
-      { tab: 2, cx: 500, cy: 400, r: 34, hint: "au salon Dupont, sous le buffet" },
-      { tab: 3, cx: 500, cy: 380, r: 34, hint: "à l'ENIAC, entre deux cartes perforées" },
+      { tab: 0, cx: 55, cy: 345, r: 34, hint: "à Paris occupé, sur l'affiche VERBOTEN (mur de gauche)" },
+      { tab: 2, cx: 130, cy: 445, r: 40, hint: "au salon Dupont, sous les tiroirs du buffet à gauche" },
+      { tab: 3, cx: 500, cy: 72, r: 30, hint: "à l'ENIAC, sur l'horloge murale en haut" },
     ],
     al3x1aSpots: [
       { tab: 2, cx: 500, cy: 400, r: 60, hint: "au salon Dupont, entre le fauteuil et la télé" },
@@ -160,9 +160,9 @@ export const JEU2 = [
   {
     support: "CD gravé",
     noteSpots: [
-      { tab: 0, cx: 500, cy: 340, r: 34, hint: "au salon 1969, sur le meuble télé" },
-      { tab: 1, cx: 500, cy: 380, r: 34, hint: "dans la chambre 1985, dans la pile de cassettes" },
-      { tab: 2, cx: 500, cy: 360, r: 34, hint: "au bureau 1990, à côté du PC" },
+      { tab: 0, cx: 500, cy: 390, r: 34, hint: "au salon 1969, sur le téléviseur" },
+      { tab: 1, cx: 570, cy: 356, r: 34, hint: "dans la chambre 1985, sur la radio-cassette" },
+      { tab: 2, cx: 310, cy: 340, r: 34, hint: "au bureau 1990, sur l'imprimante matricielle à gauche" },
     ],
     al3x1aSpots: [
       { tab: 1, cx: 500, cy: 400, r: 60, hint: "dans la chambre 1985, sous le poster de l'affiche" },
@@ -177,9 +177,9 @@ export const JEU2 = [
   {
     support: "smartphone",
     noteSpots: [
-      { tab: 0, cx: 500, cy: 340, r: 34, hint: "dans ta chambre, sur le lit" },
-      { tab: 0, cx: 620, cy: 380, r: 34, hint: "dans ta chambre, sur le bureau" },
-      { tab: 1, cx: 400, cy: 380, r: 34, hint: "au datacenter, entre les racks de serveurs" },
+      { tab: 0, cx: 150, cy: 480, r: 40, hint: "dans ta chambre, tout à gauche sur le lit" },
+      { tab: 0, cx: 200, cy: 150, r: 40, hint: "dans ta chambre, sur le poster MUSIQUE" },
+      { tab: 1, cx: 250, cy: 260, r: 40, hint: "au datacenter, en haut à gauche sur les serveurs" },
     ],
     al3x1aSpots: [
       { tab: 1, cx: 500, cy: 400, r: 60, hint: "au datacenter, entre les racks de serveurs" },

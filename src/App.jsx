@@ -715,15 +715,7 @@ export default function App() {
         sayText = variant.say ?? sayText;
         mood = variant.mood ?? mood;
       } else if (act.bubble) {
-        /* PNJ sans variante jeu 2 : au lieu de lui laisser dire son texte
-           du jeu 1 (« Chut ! le gibier a l'oreille fine »...) qui n'a
-           aucun rapport avec l'enquete Al3x1A, on donne une reponse
-           generique poliment evasive, qui reoriente vers l'enquete.
-           NB : appliquer SEULEMENT si l'action a une `bubble` (c'est un
-           personnage qui parle). Pour un decor cliquable qui n'a que
-           `say` (commentaire documentaire de MARTINE — ex. temple,
-           graffitis, stele), on laisse la say d'origine : c'est du
-           contenu culturel valable dans les deux modes. */
+        /* PNJ sans variante jeu 2 : reponse generique evasive. */
         const generiques = [
           { bubble: "Je vaque à mes affaires, chronaute. Je n'ai rien vu d'étrange.",
             say: "Il ne sait rien d'Al3x1A. Va voir un autre personnage." },
@@ -736,10 +728,14 @@ export default function App() {
         bubbleText = g.bubble;
         sayText = g.say;
         mood = "neutre";
+      } else {
+        /* Decor cliquable sans bubble (statue, mur, temple, stele) :
+           en jeu 2 on ne dit RIEN (silence). Le decor reste cliquable
+           mais MARTINE ne parle pas — pas de commentaire hors-sujet
+           quand on enquête sur Al3x1A. */
+        bubbleText = null;
+        sayText = null;
       }
-      /* else : pas de variante jeu 2 et pas de bubble → decor cliquable
-         (statue, mur, temple, stèle...) : on garde le say d'origine
-         (MARTINE commente le patrimoine — pédagogiquement valable). */
     }
     /* un personnage qui a des paroles propres (`bubble`) les affiche en
        phylactère à côté de lui (ancré à la dernière position cliquée) ;
@@ -1718,9 +1714,16 @@ export default function App() {
   /* `queteQui` : le personnage de l'étape en cours — les décors y posent
      le « ? » doré (null quand la quête est finie ou absente). */
   /* JEU 2 : `queteQui` (le « ? » dore qui pointe le PNJ de l'etape en
-     cours) est desactive — la quete de jeu 1 ne joue plus, et les
-     personnages parlent librement d'Al3x1A. */
-  const sceneProps = { collect, action, reveal, flags, made, inv, mode, queteQui: mode === "jeu2" ? null : (chapter.quete?.[quete]?.perso ?? null) };
+     cours) est desactive — la quete de jeu 1 ne joue plus.
+     Aussi : on injecte tous les items ANACHRONIQUES du chapitre dans
+     l'inv factice passe aux scenes. Comme les decors verifient
+     `!inv.includes(id)` avant de dessiner un item, ces anachronismes
+     n'apparaissent JAMAIS dans le decor jeu 2 (pas de dechet temporel
+     a ramasser, pas de pollution de l'enquete). */
+  const effectiveInv = mode === "jeu2"
+    ? Object.keys(chapter.items || {}).filter((id) => chapter.items[id]?.anachronic)
+    : inv;
+  const sceneProps = { collect, action, reveal, flags, made, inv: effectiveInv, mode, queteQui: mode === "jeu2" ? null : (chapter.quete?.[quete]?.perso ?? null) };
 
   /* ---- le carnet imprimable : découvertes regroupées par époque ----
      Les jauges sont dessinées en ■/□ : ça reste lisible en noir et blanc,
