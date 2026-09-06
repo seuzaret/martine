@@ -498,19 +498,25 @@ export default function App() {
     if (landingTab === noteTab && scenes.length > 1) {
       landingTab = (landingTab + 1) % scenes.length;
     }
-    /* Anim TARDIS en 2 phases, avec UN SEUL overlay (plus fiable sur
-       Firefox que 2 divs qui se remplacent) :
-       0.0 → 2.1 s : vortex qui tourne + son warp
-       2.1 s      : swap du chapitre, l'overlay passe en fading (opacite
-                   qui glisse de 1 a 0 via une transition CSS simple)
-       2.1 → 3.2 s : fondu au clair, on decouvre le nouveau decor. */
+    /* Anim TARDIS avec UN SEUL overlay + 2 timers separes pour laisser
+       LE TEMPS au decor de s'installer sous l'overlay opaque avant le fondu.
+       Anti-ecran-noir Firefox : les gros SVG des decors (feTurbulence...)
+       demandent un peu de temps pour se peindre ; sinon le fondu revele
+       un fond noir.
+       0.0 → 1.4 s : vortex qui tourne + son warp
+       1.4 s       : swap du chapitre (le decor commence a se monter,
+                    cache derriere l'overlay quasi-opaque)
+       2.4 s       : `fading` a true, l'overlay glisse de 1 a 0
+       3.6 s       : overlay retire, le decor est visible et bien peint */
     setTimeout(() => {
       setChapterIndex(i);
       setTab(landingTab);
-      setJeu2Warp((w) => w && { ...w, fading: true });
       say(`🌀 Cap sur ${nom}. Explore les tableaux — les notes ne se laissent pas trouver toutes seules.`, "neutre");
-    }, 2100);
-    setTimeout(() => setJeu2Warp(null), 3200);
+    }, 1400);
+    setTimeout(() => {
+      setJeu2Warp((w) => w && { ...w, fading: true });
+    }, 2400);
+    setTimeout(() => setJeu2Warp(null), 3600);
   };
 
   /* Reprend la partie sauvegardée (bouton « Reprendre »). Le SLOT à
@@ -1851,13 +1857,29 @@ export default function App() {
                     style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
                     <g style={{ pointerEvents: "auto" }}>
                       {noteHere && (
-                        <circle onClick={() => setOpenNote({ chapitre: chapterIndex })}
-                          cx={noteSpot.cx} cy={noteSpot.cy}
-                          r={(noteSpot.r || 34) * 1.8}
-                          fill="rgba(0,0,0,0.001)"
-                          style={{ cursor: "pointer" }}>
-                          <title>quelque chose de bizarre ici…</title>
-                        </circle>
+                        <g key={`note-${chapterIndex}-${tab}`}
+                          transform={`translate(${noteSpot.cx},${noteSpot.cy})`}>
+                          {/* Ping radar : 2 ondes doreesqui s'expansent
+                              a l'arrivee sur le tableau, puis se stabilisent.
+                              Confirme visuellement l'indice donne par les PNJ,
+                              sans crier l'endroit. */}
+                          <circle r="8" fill="none" stroke="#ffd166" strokeWidth="2"
+                            style={{ transformOrigin: "0 0", animation: "notePing 1.8s ease-out 0.3s 2 both", opacity: 0 }} />
+                          <circle r="8" fill="none" stroke="#ffd166" strokeWidth="1.5"
+                            style={{ transformOrigin: "0 0", animation: "notePing 1.8s ease-out 0.9s 2 both", opacity: 0 }} />
+                          {/* Petit ring tres discret qui pulse en continu :
+                              apres les pings, permet de retrouver l'endroit
+                              si l'eleve a rate le premier passage. */}
+                          <circle r="12" fill="none" stroke="#ffd166" strokeWidth="1"
+                            style={{ animation: "noteBreath 2.6s ease-in-out infinite" }} />
+                          {/* Le vrai hitbox : cercle transparent cliquable */}
+                          <circle onClick={() => setOpenNote({ chapitre: chapterIndex })}
+                            r={(noteSpot.r || 34) * 1.8}
+                            fill="rgba(0,0,0,0.001)"
+                            style={{ cursor: "pointer" }}>
+                            <title>quelque chose de bizarre ici…</title>
+                          </circle>
+                        </g>
                       )}
                       {al3x1aHere && (
                         <g onClick={() => { setJeu2Found(true); setOpenRetrouvailles(true); }}

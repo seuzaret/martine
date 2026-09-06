@@ -82,6 +82,11 @@ html.a11y-calme *::after {
 @keyframes fluxRise { 0%{opacity:0; transform:translate(-50%,4px) scale(0.8)} 15%{opacity:1; transform:translate(-50%,-2px) scale(1.1)} 100%{opacity:0; transform:translate(-50%,-22px) scale(1)} }
 @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
 @keyframes popIn { from{transform:scale(.92);opacity:0} to{transform:scale(1);opacity:1} }
+/* JEU 2 : ping radar sur les notes cachees (2 s a l'arrivee sur le tableau).
+   Utilise scale au lieu de r (mieux supporte cross-browser, notamment FF). */
+@keyframes notePing { 0%{opacity:0.85; transform:scale(1)} 100%{opacity:0; transform:scale(8)} }
+/* JEU 2 : petite respiration continue tres discrete sur le point de note */
+@keyframes noteBreath { 0%,100%{opacity:0.14} 50%{opacity:0.36} }
 /* bouche qui « parle » dans les gros plans (ouverture verticale saccadée) */
 @keyframes talk { 0%{transform:scaleY(.28)} 22%{transform:scaleY(.85)} 44%{transform:scaleY(.4)} 68%{transform:scaleY(1)} 86%{transform:scaleY(.5)} 100%{transform:scaleY(.28)} }
 /* ondes de voix qui apparaissent au moment de l'annonce, puis s'estompent (une fois) */
