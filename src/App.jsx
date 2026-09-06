@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Component } from "react";
 import Martine, { Avatar } from "./engine/Martine.jsx";
 import Scene from "./engine/Scene.jsx";
 import { InventoryBar } from "./engine/Inventory.jsx";
@@ -45,6 +45,32 @@ import FinJeu2 from "./chapters/epilogue/FinJeu2.jsx";
    (souvent présentes sur les PC scolaires via Office), avec repli élégant.
    Aucun fichier chargé : tout reste hors-ligne. */
 const TITRE_FONT = "'Cinzel', 'Trajan Pro', 'Copperplate Gothic Bold', 'Perpetua Titling MT', 'Constantia', 'Palatino Linotype', Georgia, serif";
+
+/* Petit filet de securite : quand un decor crashe (ex. path SVG invalide
+   sur un navigateur pointilleux, prop manquante), on affiche une carte
+   d'erreur discrete et le reste du jeu continue. Sans ca, l'app entiere
+   se de-monte et l'eleve retourne au titre — perte de partie perçue. */
+class DecorErrorBoundary extends Component {
+  constructor(props) { super(props); this.state = { err: null }; }
+  static getDerivedStateFromError(err) { return { err }; }
+  componentDidCatch(err) { try { console.error("[decor crash]", err); } catch { /* rien */ } }
+  render() {
+    if (!this.state.err) return this.props.children;
+    return (
+      <div style={{ padding: "18px 22px", background: "#0e1420", border: "1px solid #5a3020", borderRadius: 12, textAlign: "center", color: "#e8c090", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", gap: 6 }}>
+        <div style={{ fontSize: 34 }}>⚠️</div>
+        <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, letterSpacing: 1.5, color: "#e0a848" }}>DÉCOR TEMPORAIREMENT INSTABLE</div>
+        <div style={{ fontSize: 13, color: "#c8b8a0", maxWidth: 400, margin: "6px auto 0", lineHeight: 1.55 }}>
+          MARTINE a des interférences sur ce tableau. Utilise le TEMPOSCOPE en haut pour aller ailleurs, ta partie est sauvegardée.
+        </div>
+        <button onClick={() => this.setState({ err: null })}
+          style={{ marginTop: 12, background: "#141b26", color: "#e0a848", border: "1px solid #5a4028", borderRadius: 10, padding: "8px 18px", fontSize: 12, fontFamily: "ui-monospace,monospace", letterSpacing: 1, cursor: "pointer" }}>
+          Réessayer
+        </button>
+      </div>
+    );
+  }
+}
 
 /* Petite silhouette d'Al3x1A dessinee dans le decor du jeu 2 quand on la
    trouve : tunique grise, cheveux mi-longs, halo bleute discret. Se rend
@@ -491,10 +517,11 @@ export default function App() {
     /* Choix du tableau d'arrivée : startScene par défaut, MAIS si c'est
        le tableau de la note d'Al3x1A on décale de 1 (modulo nb de tableaux)
        — l'élève doit fouiller pour trouver la note. */
-    const scenes = CHAPTERS[i].scenes || [];
-    const notePick = jeu2NotePicks[i] ?? 0;
-    const noteTab = JEU2[i]?.noteSpots?.[notePick]?.tab ?? -1;
-    let landingTab = CHAPTERS[i].startScene ?? 0;
+    const scenes = CHAPTERS[i]?.scenes || [];
+    const notePick = Number.isInteger(jeu2NotePicks?.[i]) ? jeu2NotePicks[i] : 0;
+    const spotsI = JEU2[i]?.noteSpots;
+    const noteTab = (Array.isArray(spotsI) && spotsI[notePick]?.tab) ?? -1;
+    let landingTab = CHAPTERS[i]?.startScene ?? 0;
     if (landingTab === noteTab && scenes.length > 1) {
       landingTab = (landingTab + 1) % scenes.length;
     }
@@ -659,8 +686,9 @@ export default function App() {
        Comme ca on peut migrer les PNJ progressivement. */
     if (mode === "jeu2") {
       const variants = act.jeu2Variants;
+      const pickIdx = Number.isInteger(jeu2NotePicks?.[chapterIndex]) ? jeu2NotePicks[chapterIndex] : 0;
       const variant = Array.isArray(variants) && variants.length > 0
-        ? variants[(jeu2NotePicks[chapterIndex] ?? 0) % variants.length]
+        ? variants[pickIdx % variants.length]
         : act.jeu2;
       if (variant) {
         bubbleText = variant.bubble ?? bubbleText;
@@ -1829,6 +1857,10 @@ export default function App() {
           {/* taille exacte calculée (le plus grand cadre 1000/560 qui tient
               dans la cellule) → jamais rogné, jamais de débordement. */}
           <div style={{ width: decorBox ? decorBox.w : "100%", height: decorBox ? decorBox.h : "100%", position: "relative" }}>
+            {/* Boundary de secours : si le decor crashe (Firefox + SVG lourds,
+                path invalide...), on garde le reste de l'interface intacte
+                (frise, sac, MARTINE) au lieu de retourner au titre. */}
+            <DecorErrorBoundary>
             {/* JEU 2 : on FORCE la navigation libre (chapter.linear ignore),
                 sinon les chapitres 5-9 (Moyen Age → Médias) bloquent l'élève
                 sur leur premier tableau — les `nextWhen` de jeu 1 exigent
@@ -1845,13 +1877,18 @@ export default function App() {
               (() => {
                 const cfg = JEU2[chapterIndex];
                 if (!cfg) return null;
-                /* Emplacements TIRES AU SORT au demarrage de la partie
-                   (voir jeu2NotePicks/jeu2AlxPick). Chaque re-jeu = enquete
-                   differente ; les PNJ pointent vers CE spot precis. */
-                const noteSpot = cfg.noteSpots?.[jeu2NotePicks[chapterIndex] ?? 0] || cfg.noteSpots?.[0];
-                const al3x1aSpot = cfg.al3x1aSpots?.[jeu2AlxPick] || cfg.al3x1aSpots?.[0];
-                const noteHere = noteSpot?.tab === tab && !jeu2Notes.includes(chapterIndex);
-                const al3x1aHere = chapterIndex === jeu2Target && al3x1aSpot?.tab === tab && !jeu2Found;
+                /* Emplacements TIRES AU SORT au demarrage. Acces defensif :
+                   toute valeur manquante (save corrompue, index hors bornes)
+                   tombe sur 0. Si le spot lui-meme n'existe pas, on ne rend
+                   rien plutot que crasher. */
+                const spots = Array.isArray(cfg.noteSpots) ? cfg.noteSpots : [];
+                const alxSpots = Array.isArray(cfg.al3x1aSpots) ? cfg.al3x1aSpots : [];
+                const notePickIdx = Number.isInteger(jeu2NotePicks?.[chapterIndex]) ? jeu2NotePicks[chapterIndex] : 0;
+                const alxPickIdx = Number.isInteger(jeu2AlxPick) ? jeu2AlxPick : 0;
+                const noteSpot = spots[notePickIdx] || spots[0];
+                const al3x1aSpot = alxSpots[alxPickIdx] || alxSpots[0];
+                const noteHere = noteSpot && noteSpot.tab === tab && !jeu2Notes.includes(chapterIndex);
+                const al3x1aHere = chapterIndex === jeu2Target && al3x1aSpot && al3x1aSpot.tab === tab && !jeu2Found;
                 return (
                   <svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice"
                     style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
@@ -1894,6 +1931,7 @@ export default function App() {
                 );
               })()
             )}
+            </DecorErrorBoundary>
           </div>
         </div>
         {/* écran large : la jauge temporelle à droite */}
