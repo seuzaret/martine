@@ -1901,7 +1901,7 @@ export default function App() {
                               Confirme visuellement l'indice donne par les PNJ,
                               sans crier l'endroit. */}
                           <circle r="8" fill="none" stroke="#ffd166" strokeWidth="2"
-                            style={{ transformOrigin: "0 0", animation: "notePing 1.8s ease-out 0.3s 2 both", opacity: 0 }} />
+                            style={{ transformOrigin: "center", transformBox: "fill-box", animation: "notePing 1.8s ease-out 0.3s 2 both", opacity: 0 }} />
                           <circle r="8" fill="none" stroke="#ffd166" strokeWidth="1.5"
                             style={{ transformOrigin: "0 0", animation: "notePing 1.8s ease-out 0.9s 2 both", opacity: 0 }} />
                           {/* Petit ring tres discret qui pulse en continu :
