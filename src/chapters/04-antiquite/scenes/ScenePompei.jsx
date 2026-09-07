@@ -10,7 +10,7 @@ import { PompeiDefs, PompeiFond } from "./fond.jsx";
    foule, et le Vésuve au fond. Caius accueille ; Argos attend.
    ============================================================ */
 
-export default function SceneEntree({ collect, action, reveal, made = [], queteQui }) {
+export default function SceneEntree({ collect, action, reveal, made = [], queteQui, mode }) {
   const grave = made.includes("msg_inscription");
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
@@ -173,7 +173,7 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
         </g>
 
         {/* ANACHRONISME : Ray-Ban Aviator sur une dalle de la place */}
-        {!made.includes("lunettes_soleil") && (
+        {!made.includes("lunettes_soleil") && mode !== "jeu2" && (
           <g transform="translate(180,510) rotate(-6)">
             <ellipse cx={-14} cy={0} rx={13} ry={9} fill="#1a1a1a" stroke="#3a3a3a" strokeWidth="1.5" />
             <ellipse cx={14} cy={0} rx={13} ry={9} fill="#1a1a1a" stroke="#3a3a3a" strokeWidth="1.5" />
@@ -193,7 +193,9 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
       <Hotspot cx={786} cy={484} r={54} label="la dalle à graver" item="pierre" reveal={reveal} onClick={() => collect("pierre")} />
       <Hotspot cx={70} cy={502} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
 
-      <Hotspot cx={180} cy={510} r={26} label="… quelque chose ne va pas ici" item="lunettes_soleil" reveal={reveal} onClick={() => collect("lunettes_soleil")} />
+      {mode !== "jeu2" && (
+        <Hotspot cx={180} cy={510} r={26} label="… quelque chose ne va pas ici" item="lunettes_soleil" reveal={reveal} onClick={() => collect("lunettes_soleil")} />
+      )}
     </svg>
   );
 }

@@ -1714,12 +1714,14 @@ export default function App() {
   /* `queteQui` : le personnage de l'étape en cours — les décors y posent
      le « ? » doré (null quand la quête est finie ou absente). */
   /* JEU 2 : `queteQui` (le « ? » dore qui pointe le PNJ de l'etape en
-     cours) est desactive — la quete de jeu 1 ne joue plus.
-     Aussi : on injecte tous les items ANACHRONIQUES du chapitre dans
-     l'inv factice passe aux scenes. Comme les decors verifient
-     `!inv.includes(id)` avant de dessiner un item, ces anachronismes
-     n'apparaissent JAMAIS dans le decor jeu 2 (pas de dechet temporel
-     a ramasser, pas de pollution de l'enquete). */
+     cours) est desactive — la quete de jeu 1 ne joue plus, et les
+     personnages parlent librement d'Al3x1A.
+     Les decors regardent `mode` pour masquer les dechets temporels
+     (allumettes, canette, stylo Bic…) : visuel + hotspot cachés. On
+     ajoute aussi une garde ceinture-et-bretelles au niveau de `inv`
+     (les items anachroniques y apparaissent comme deja possedes) : si
+     un decor teste `inv.includes(id)` au lieu de `mode`, l'objet reste
+     invisible. */
   const effectiveInv = mode === "jeu2"
     ? Object.keys(chapter.items || {}).filter((id) => chapter.items[id]?.anachronic)
     : inv;

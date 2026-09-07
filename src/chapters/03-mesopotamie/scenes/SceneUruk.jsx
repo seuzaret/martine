@@ -10,7 +10,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    À trouver : roseaux, couteau, argile, sceau, four, eau.
    ============================================================ */
 
-export default function SceneUruk({ collect, action, reveal, made = [], queteQui }) {
+export default function SceneUruk({ collect, action, reveal, made = [], queteQui, mode }) {
   const grave = made.includes("msg_cuneiforme");
   const aTablette = made.includes("tablette_vierge");
   return (
@@ -266,7 +266,7 @@ export default function SceneUruk({ collect, action, reveal, made = [], queteQui
         )}
 
         {/* ANACHRONISME : stylo Bic bleu posé sur la marche du grenier */}
-        {!made.includes("stylo_bic") && (
+        {!made.includes("stylo_bic") && mode !== "jeu2" && (
           <g transform="translate(820,470) rotate(35)">
             <rect x={-3} y={-24} width={6} height={44} fill="#0a2058" stroke="#050820" strokeWidth="0.6" />
             <path d="M-3 20 L0 32 L3 20 Z" fill="#0a0e14" />
@@ -297,7 +297,9 @@ export default function SceneUruk({ collect, action, reveal, made = [], queteQui
       <Hotspot cx={90} cy={528} r={44} label="eau" item="eau" reveal={reveal} onClick={() => collect("eau")} />
       <Hotspot cx={940} cy={498} r={34} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
 
-      <Hotspot cx={820} cy={480} r={22} label="… quelque chose ne va pas ici" item="stylo_bic" reveal={reveal} onClick={() => collect("stylo_bic")} />
+      {mode !== "jeu2" && (
+        <Hotspot cx={820} cy={480} r={22} label="… quelque chose ne va pas ici" item="stylo_bic" reveal={reveal} onClick={() => collect("stylo_bic")} />
+      )}
     </svg>
   );
 }

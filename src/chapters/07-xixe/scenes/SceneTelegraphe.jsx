@@ -13,7 +13,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    le télégraphe → mini-jeu Morse (taper « OR »).
    ============================================================ */
 
-export default function SceneTelegraphe({ collect, action, reveal, made = [], queteQui }) {
+export default function SceneTelegraphe({ collect, action, reveal, made = [], queteQui, mode }) {
   const tg = made.includes("msg_telegraphe");
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
@@ -225,7 +225,7 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [], qu
         </g>
 
         {/* ANACHRONISME : smartphone posé au sol dans un coin, écran allumé */}
-        {!made.includes("smartphone") && (
+        {!made.includes("smartphone") && mode !== "jeu2" && (
           <g transform="translate(140,510) rotate(15)">
             <rect x={-10} y={-18} width={20} height={36} rx={3} fill="#1a1a1a" stroke="#5a5a5a" strokeWidth="1" />
             <rect x={-9} y={-16} width={18} height={32} rx={1.5} fill="#0a1428" />
@@ -251,7 +251,9 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [], qu
         <Hotspot cx={306} cy={476} r={40} label="le manipulateur Morse" item="code_morse" reveal={reveal} onClick={() => collect("code_morse")} />
       )}
       <Hotspot cx={856} cy={502} r={34} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
-      <Hotspot cx={140} cy={510} r={22} label="… quelque chose ne va pas ici" item="smartphone" reveal={reveal} onClick={() => collect("smartphone")} />
+      {mode !== "jeu2" && (
+        <Hotspot cx={140} cy={510} r={22} label="… quelque chose ne va pas ici" item="smartphone" reveal={reveal} onClick={() => collect("smartphone")} />
+      )}
     </svg>
   );
 }

@@ -10,7 +10,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    aussi la disquette (héritage pour ch.10).
    ============================================================ */
 
-export default function SceneChambre1985({ collect, action, reveal, made = [], flags = [] }) {
+export default function SceneChambre1985({ collect, action, reveal, made = [], flags = [], mode }) {
   const cassetteChargee = !!flags.cassette_chargee;
   const cassetteFaite = made.includes("msg_cassette");
   const disquettePrise = made.includes("disquette");
@@ -203,7 +203,7 @@ export default function SceneChambre1985({ collect, action, reveal, made = [], f
         )}
 
         {/* ANACHRONISME : boîtier AirPods sur le parquet au premier plan */}
-        {!made.includes("airpods") && (
+        {!made.includes("airpods") && mode !== "jeu2" && (
           <g transform="translate(240,520) rotate(-8)">
             {/* boîtier blanc, forme galet horizontal */}
             <rect x={-14} y={-6} width={28} height={12} rx={5} fill="#f0e8e0" stroke="#8a8078" strokeWidth="1" />
@@ -240,7 +240,9 @@ export default function SceneChambre1985({ collect, action, reveal, made = [], f
       {!disquettePrise && (
         <Hotspot cx={830} cy={306} r={24} label="disquette 3½ » (héritage pour + tard)" item="disquette" reveal={reveal} onClick={() => collect("disquette")} />
       )}
-      <Hotspot cx={240} cy={520} r={22} label="… quelque chose ne va pas ici" item="airpods" reveal={reveal} onClick={() => collect("airpods")} />
+      {mode !== "jeu2" && (
+        <Hotspot cx={240} cy={520} r={22} label="… quelque chose ne va pas ici" item="airpods" reveal={reveal} onClick={() => collect("airpods")} />
+      )}
     </svg>
   );
 }
