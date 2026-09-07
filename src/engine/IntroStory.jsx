@@ -256,7 +256,7 @@ export default function IntroStory({ onDone }) {
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#050810', zIndex: 100, display: 'flex', flexDirection: 'column', color: '#efe6d2', fontFamily: 'Palatino, Georgia, serif', overflow: 'hidden' }}>
       <button onClick={onDone}
-        style={{ position: 'absolute', top: 12, right: 16, zIndex: 10, background: 'transparent', border: '1px solid #5a4028', color: '#7a6a4a', padding: '6px 14px', borderRadius: 6, fontSize: 11, cursor: 'pointer', fontFamily: 'ui-monospace,monospace' }}>
+        style={{ position: 'absolute', top: 12, right: 16, zIndex: 10, background: '#ffd166', border: '2px solid #5a4028', color: '#3a2410', padding: '10px 18px', borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'ui-monospace,monospace', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
         Passer l'intro ›
       </button>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, minHeight: 0 }}>
