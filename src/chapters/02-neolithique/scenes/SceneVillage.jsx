@@ -10,7 +10,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    les pigments, le troupeau, la mémoire (le berger).
    ============================================================ */
 
-export default function SceneVillage({ collect, action, reveal, made = [] }) {
+export default function SceneVillage({ collect, action, reveal, made = [], mode }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -255,7 +255,7 @@ export default function SceneVillage({ collect, action, reveal, made = [] }) {
         </g>
 
         {/* ANACHRONISME : canette de soda écrasée bien visible sur la terre */}
-        {!made.includes("canette") && (
+        {!made.includes("canette") && mode !== "jeu2" && (
           <g transform="translate(390,530) rotate(-18)">
             {/* corps de canette (aluminium argent) */}
             <rect x={-9} y={-22} width={18} height={36} rx={2} fill="#c8c8c8" stroke="#5a5a5a" strokeWidth="0.8" />
@@ -308,7 +308,9 @@ export default function SceneVillage({ collect, action, reveal, made = [] }) {
       <Hotspot cx={70} cy={490} r={40} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
 
       {/* ANACHRONISME : hotspot de la canette (visuel dans le PLayer premier plan) */}
-      <Hotspot cx={390} cy={520} r={22} label="… quelque chose ne va pas ici" item="canette" reveal={reveal} onClick={() => collect("canette")} />
+      {mode !== "jeu2" && (
+        <Hotspot cx={390} cy={520} r={22} label="… quelque chose ne va pas ici" item="canette" reveal={reveal} onClick={() => collect("canette")} />
+      )}
     </svg>
   );
 }

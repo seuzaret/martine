@@ -10,7 +10,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    il faut lui trouver une grosse couverture pour cette nuit.
    ============================================================ */
 
-export default function SceneParis({ collect, action, reveal, made = [] }) {
+export default function SceneParis({ collect, action, reveal, made = [], mode }) {
   const acheteFait = made.includes("couverture");
 
   return (
@@ -225,7 +225,7 @@ export default function SceneParis({ collect, action, reveal, made = [] }) {
         </g>
 
         {/* ANACHRONISME : télécommande TV moderne dans le caniveau, entre les pavés */}
-        {!made.includes("telecommande") && (
+        {!made.includes("telecommande") && mode !== "jeu2" && (
           <g transform="translate(750,520) rotate(20)">
             <rect x={-9} y={-24} width={18} height={48} rx={3} fill="#1a1a1a" stroke="#3a3a3a" strokeWidth="1" />
             {/* écran LCD en haut */}
@@ -251,7 +251,9 @@ export default function SceneParis({ collect, action, reveal, made = [] }) {
       <Hotspot cx={600} cy={438} r={44} label="patrouille allemande" reveal={reveal} onClick={() => action("patrouille")} />
       <Hotspot cx={55} cy={345} r={30} label="affiche VERBOTEN" reveal={reveal} onClick={() => action("affiche")} />
       <Hotspot cx={950} cy={358} r={26} label="affiche de Vichy" reveal={reveal} onClick={() => action("affiche")} />
-      <Hotspot cx={750} cy={520} r={24} label="… quelque chose ne va pas ici" item="telecommande" reveal={reveal} onClick={() => collect("telecommande")} />
+      {mode !== "jeu2" && (
+        <Hotspot cx={750} cy={520} r={24} label="… quelque chose ne va pas ici" item="telecommande" reveal={reveal} onClick={() => collect("telecommande")} />
+      )}
     </svg>
   );
 }

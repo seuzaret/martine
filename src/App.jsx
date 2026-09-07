@@ -1686,7 +1686,7 @@ export default function App() {
   /* JEU 2 : `queteQui` (le « ? » dore qui pointe le PNJ de l'etape en
      cours) est desactive — la quete de jeu 1 ne joue plus, et les
      personnages parlent librement d'Al3x1A. */
-  const sceneProps = { collect, action, reveal, flags, made, inv, queteQui: mode === "jeu2" ? null : (chapter.quete?.[quete]?.perso ?? null) };
+  const sceneProps = { collect, action, reveal, flags, made, inv, mode, queteQui: mode === "jeu2" ? null : (chapter.quete?.[quete]?.perso ?? null) };
 
   /* ---- le carnet imprimable : découvertes regroupées par époque ----
      Les jauges sont dessinées en ■/□ : ça reste lisible en noir et blanc,

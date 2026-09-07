@@ -11,7 +11,7 @@ import { GrassTuft } from "./decor.jsx";
    À trouver ici : le feu, ta voix (le conteur), les branches.
    ============================================================ */
 
-export default function SceneCampement({ collect, action, reveal, made = [], queteQui }) {
+export default function SceneCampement({ collect, action, reveal, made = [], queteQui, mode }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -269,7 +269,7 @@ export default function SceneCampement({ collect, action, reveal, made = [], que
 
       {/* ANACHRONISME : boîte d'allumettes bien à droite au sol, loin du feu.
           Dans le PLayer premier plan pour bouger avec la parallaxe. */}
-      {!made.includes("allumettes") && (
+      {!made.includes("allumettes") && mode !== "jeu2" && (
         <g transform="translate(840,510) rotate(-8)">
           <rect x={-14} y={-8} width={28} height={16} rx={1.5} fill="#c8382e" stroke="#5a1810" strokeWidth="1" />
           <rect x={-11} y={-5} width={22} height={7} fill="#f0e4c8" />
@@ -292,7 +292,9 @@ export default function SceneCampement({ collect, action, reveal, made = [], que
       <Hotspot cx={300} cy={446} r={44} label="Raya, le chef" reveal={reveal} onClick={(p) => action("raya", p)} />
 
       {/* ANACHRONISME : la boîte d'allumettes traîne au sol, loin du feu à droite */}
-      <Hotspot cx={840} cy={510} r={20} label="… quelque chose ne va pas ici" item="allumettes" reveal={reveal} onClick={() => collect("allumettes")} />
+      {mode !== "jeu2" && (
+        <Hotspot cx={840} cy={510} r={20} label="… quelque chose ne va pas ici" item="allumettes" reveal={reveal} onClick={() => collect("allumettes")} />
+      )}
     </svg>
   );
 }

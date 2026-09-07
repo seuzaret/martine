@@ -14,7 +14,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    Ce décor réagit à l'état du jeu via la prop `made`.
    ============================================================ */
 
-export default function SceneChambre({ collect, action, reveal, made = [] }) {
+export default function SceneChambre({ collect, action, reveal, made = [], mode }) {
   const usb = made.includes("msg_usb");           // la clé USB existe
   const phone = made.includes("msg_smartphone");  // le smartphone existe
   const dead = made.includes("msg_disquette");    // la disquette a rendu l'âme
@@ -245,7 +245,7 @@ export default function SceneChambre({ collect, action, reveal, made = [] }) {
 
         {/* ANACHRONISME DU FUTUR : NEURO-LIEN™ (2141) posé sur le bureau.
             Un disque bio-imprimé qui projette un hologramme neuronal. */}
-        {!made.includes("neurolien") && (
+        {!made.includes("neurolien") && mode !== "jeu2" && (
           <g transform="translate(140,506)">
             {/* halo violet-cyan pulsé */}
             <circle r={38} fill="#a840c0" opacity="0.25" style={{ animation: "pulse 2s infinite" }} />
@@ -293,7 +293,9 @@ export default function SceneChambre({ collect, action, reveal, made = [] }) {
         <Hotspot cx={496} cy={438} r={32} label="photos d'enfance" item="photos_enfance" reveal={reveal} onClick={() => collect("photos_enfance")} />
       )}
       <Hotspot cx={830} cy={512} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
-      <Hotspot cx={140} cy={506} r={44} label="… quelque chose de très bizarre" item="neurolien" reveal={reveal} onClick={() => collect("neurolien")} />
+      {mode !== "jeu2" && (
+        <Hotspot cx={140} cy={506} r={44} label="… quelque chose de très bizarre" item="neurolien" reveal={reveal} onClick={() => collect("neurolien")} />
+      )}
     </svg>
   );
 }

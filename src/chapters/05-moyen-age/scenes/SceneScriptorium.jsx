@@ -11,7 +11,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    flamme (→ œuvre perdue). Puis Jorge présente sa NOTE DE FRAIS.
    ============================================================ */
 
-export default function SceneMonastere({ collect, action, reveal, made = [], flags = {}, queteQui }) {
+export default function SceneMonastere({ collect, action, reveal, made = [], flags = {}, queteQui, mode }) {
   const manuscrit = made.includes("msg_manuscrit");
   const factureDue = manuscrit && !flags.paye;
   return (
@@ -220,7 +220,7 @@ export default function SceneMonastere({ collect, action, reveal, made = [], fla
         )}
 
         {/* ANACHRONISME : clé USB bleu vif posée sur le sol dallé du scriptorium */}
-        {!made.includes("cle_usb") && (
+        {!made.includes("cle_usb") && mode !== "jeu2" && (
           <g transform="translate(140,520) rotate(22)">
             <rect x={-18} y={-6} width={22} height={12} rx={1.5} fill="#2a68b0" stroke="#0a2038" strokeWidth="1" />
             <rect x={-18} y={-6} width={22} height={4} fill="#3a80c8" />
@@ -269,7 +269,9 @@ export default function SceneMonastere({ collect, action, reveal, made = [], fla
       )}
       <Hotspot cx={900} cy={502} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
 
-      <Hotspot cx={140} cy={520} r={24} label="… quelque chose ne va pas ici" item="cle_usb" reveal={reveal} onClick={() => collect("cle_usb")} />
+      {mode !== "jeu2" && (
+        <Hotspot cx={140} cy={520} r={24} label="… quelque chose ne va pas ici" item="cle_usb" reveal={reveal} onClick={() => collect("cle_usb")} />
+      )}
     </svg>
   );
 }

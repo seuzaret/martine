@@ -9,7 +9,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    On lui APPORTE l'article de Jules → il en fait une gazette.
    ============================================================ */
 
-export default function SceneImprimerie({ collect, action, reveal, made = [], queteQui }) {
+export default function SceneImprimerie({ collect, action, reveal, made = [], queteQui, mode }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -206,7 +206,7 @@ export default function SceneImprimerie({ collect, action, reveal, made = [], qu
         )}
 
         {/* ANACHRONISME : écouteurs sans fil dans leur boîtier, posés sur une casse à caractères */}
-        {!made.includes("ecouteurs") && (
+        {!made.includes("ecouteurs") && mode !== "jeu2" && (
           <g transform="translate(880,510)">
             {/* boîtier de charge blanc, forme galet */}
             <rect x={-18} y={-8} width={36} height={16} rx={6} fill="#f0e4d0" stroke="#5a4028" strokeWidth="1" />
@@ -244,7 +244,9 @@ export default function SceneImprimerie({ collect, action, reveal, made = [], qu
       <Hotspot cx={762} cy={452} r={44} label="donner l'article à Sigismond" item="sigismond" reveal={reveal} onClick={() => action("sigismond")} />
       <Hotspot cx={910} cy={502} r={34} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
 
-      <Hotspot cx={880} cy={510} r={24} label="… quelque chose ne va pas ici" item="ecouteurs" reveal={reveal} onClick={() => collect("ecouteurs")} />
+      {mode !== "jeu2" && (
+        <Hotspot cx={880} cy={510} r={24} label="… quelque chose ne va pas ici" item="ecouteurs" reveal={reveal} onClick={() => collect("ecouteurs")} />
+      )}
     </svg>
   );
 }
