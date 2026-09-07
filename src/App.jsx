@@ -2319,8 +2319,15 @@ export default function App() {
               { r: 66, w: 2.4, dur: "1.6s", dir: -1, op: 0.85, dash: "12 4" },
               { r: 46, w: 2, dur: "1s", dir: 1, op: 0.9, dash: "6 3" },
             ].map((a, i) => (
-              <g key={i} style={{ animation: `spin ${a.dur} linear infinite`, transformOrigin: "center", transformBox: "fill-box", transform: a.dir === -1 ? "scale(-1,1)" : undefined }}>
-                <circle r={a.r} fill="none" stroke="#7fd8ff" strokeWidth={a.w} strokeDasharray={a.dash} opacity={a.op} />
+              /* SVG animateTransform natif : marche partout (Firefox/Edge/Chrome/Safari)
+                 sans dependre d'un keyframe CSS et sans se battre avec transform-origin. */
+              <g key={i}>
+                <circle r={a.r} fill="none" stroke="#7fd8ff" strokeWidth={a.w} strokeDasharray={a.dash} opacity={a.op}>
+                  <animateTransform attributeName="transform" type="rotate"
+                    from={a.dir === 1 ? "0 0 0" : "360 0 0"}
+                    to={a.dir === 1 ? "360 0 0" : "0 0 0"}
+                    dur={a.dur} repeatCount="indefinite" />
+                </circle>
               </g>
             ))}
             <circle r="30" fill="url(#warp-core)" style={{ animation: "pulse 1.4s ease-in-out infinite" }} />
