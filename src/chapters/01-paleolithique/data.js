@@ -254,8 +254,8 @@ const ACTIONS = {
         say: "Ana se souvient d'Al3x1A : elle est entrée AU FOND DE LA GROTTE, sur la Grande Paroi." },
       { bubble: "Une chronaute est venue avant toi, oui. Elle s'est assise au campement, près du feu, et a laissé une marque étrange sur les pierres du foyer.",
         say: "Ana pointe LE CAMPEMENT, près du feu. Cherche par là." },
-      { bubble: "Une autre étrangère est venue. Elle est descendue à la rivière, elle y a passé longtemps. Elle a laissé quelque chose sur la berge, je crois.",
-        say: "Ana l'a vue descendre À LA RIVIÈRE. La trace serait sur la berge." },
+      { bubble: "Une autre étrangère est descendue au gué. Elle a laissé quelque chose sur une des grandes pierres, près du pêcheur.",
+        say: "Ana l'oriente AU GUÉ, sur une des grandes pierres près du pêcheur." },
     ] },
 
   raya: { mood: "neutre",
@@ -266,8 +266,8 @@ const ACTIONS = {
         say: "Le chef confirme : fond de la grotte, sur la paroi peinte." },
       { bubble: "Une drôle de voyageuse s'est réchauffée à notre feu. Puis elle a gravé un signe sur une pierre du foyer, avant de repartir.",
         say: "Raya : la marque est au CAMPEMENT, sur une pierre près du feu." },
-      { bubble: "Une voyageuse aux cheveux courts a longé la rivière. Elle a laissé une trace, quelque part sur la berge — mes pêcheurs l'ont vue faire.",
-        say: "Raya : la trace est à LA RIVIÈRE, sur la berge." },
+      { bubble: "Une voyageuse aux cheveux courts est passée au gué, là où pêche le vieux. Elle a laissé une trace sur une des grandes pierres.",
+        say: "Raya : la trace est AU GUÉ, sur une grande pierre près du pêcheur." },
     ] },
 
   doru: { mood: "neutre",
@@ -278,8 +278,8 @@ const ACTIONS = {
         say: "Doru l'a vue partir vers LA GROTTE. Elle y a laissé une peinture." },
       { bubble: "Elle est passée près de moi, cette étrangère. Elle est remontée au campement, s'est assise près du feu. C'est là qu'elle a laissé quelque chose.",
         say: "Doru la renvoie AU CAMPEMENT, près du feu." },
-      { bubble: "Une étrange chasseuse est restée sur cette berge, longtemps. Elle a gravé une pierre au bord de l'eau, puis elle est partie.",
-        say: "Doru : elle a laissé sa trace ICI, sur la berge de la rivière." },
+      { bubble: "Une étrange chasseuse est restée longtemps au gué du pêcheur. Elle a gravé une des grandes pierres, puis elle est partie.",
+        say: "Doru : elle a grave AU GUÉ, sur une grande pierre du pêcheur." },
     ] },
 
   kyan: { mood: "neutre",
@@ -290,8 +290,8 @@ const ACTIONS = {
         say: "Kyan garde tout : la trace d'Al3x1A est AU FOND DE LA GROTTE." },
       { bubble: "Al3x1A. Je me rappelle : elle s'est arrêtée au campement, près de notre feu. Elle a gravé une pierre du foyer, un signe étrange.",
         say: "Kyan renvoie AU CAMPEMENT, près du feu. Cherche sur les pierres." },
-      { bubble: "Al3x1A a passé beaucoup de temps à la rivière. Elle a laissé une trace sur la berge, une marque que personne n'a osé effacer.",
-        say: "Kyan : la marque d'Al3x1A est À LA RIVIÈRE, sur la berge." },
+      { bubble: "Al3x1A a passé beaucoup de temps au gué du pêcheur. Elle a marqué une des grandes pierres, personne n'a osé l'effacer.",
+        say: "Kyan : marque d'Al3x1A AU GUÉ, sur une grande pierre." },
     ] },
 
   /* ─── Nouveaux personnages / actions des tableaux ajoutés (atelier, gué, crête) ─── */

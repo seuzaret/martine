@@ -13,7 +13,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    Ce décor réagit à l'état du jeu via la prop `made`.
    ============================================================ */
 
-export default function SceneDatacenter({ collect, action, reveal, made = [] }) {
+export default function SceneDatacenter({ collect, action, reveal, made = [], mode = "jeu1" }) {
   const stream = made.includes("msg_streaming"); // le flux tourne
   const compte = made.includes("msg_compte");    // le service a fermé
 
@@ -134,8 +134,8 @@ export default function SceneDatacenter({ collect, action, reveal, made = [] }) 
         <path d="M420 400 L120 560 M580 400 L880 560 M420 400 L580 400" stroke="#2a3244" strokeWidth="2" opacity="0.7" fill="none" />
         {[440, 480, 530].map((y, i) => <path key={i} d={`M${330 - i * 90} ${y} H${670 + i * 90}`} stroke="#2a3244" strokeWidth="1.6" opacity="0.5" />)}
 
-        {/* « ? » tant que le flux n'est pas trouvé */}
-        {!stream && (
+        {/* « ? » tant que le flux n'est pas trouvé — cache en jeu 2 */}
+        {!stream && mode !== "jeu2" && (
           <g transform="translate(432,344)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -24 24 -24 q24 0 24 20 q0 17 -20 22 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
             <circle cx="24" cy="37" r="3" fill="#ffd166" />

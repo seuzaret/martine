@@ -13,7 +13,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    (la recette venue de Chine, bien moins cher que le parchemin).
    ============================================================ */
 
-export default function SceneMoulin({ collect, action, reveal, made = [] }) {
+export default function SceneMoulin({ collect, action, reveal, made = [], mode = "jeu1" }) {
   const papier = made.includes("papier");
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
@@ -223,8 +223,8 @@ export default function SceneMoulin({ collect, action, reveal, made = [] }) {
       <rect width="1000" height="560" fill="#221a0c" opacity="0.05" style={{ pointerEvents: "none" }} />
 
       {/* ═══ zones cliquables ═══ */}
-      {/* le « ? » du papetier tant qu'on n'a pas fabriqué le papier */}
-      {!papier && (
+      {/* le « ? » du papetier : cache en jeu 2 */}
+      {!papier && mode !== "jeu2" && (
         <>
           <g transform="translate(526,352)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />

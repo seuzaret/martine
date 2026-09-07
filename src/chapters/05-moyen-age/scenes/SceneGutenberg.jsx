@@ -9,7 +9,7 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    fondu, moule à lettres, presse à vis.
    ============================================================ */
 
-export default function SceneGutenberg({ collect, action, reveal, made = [] }) {
+export default function SceneGutenberg({ collect, action, reveal, made = [], mode = "jeu1" }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -188,8 +188,8 @@ export default function SceneGutenberg({ collect, action, reveal, made = [] }) {
       <rect width="1000" height="560" fill="#180f08" opacity="0.08" style={{ pointerEvents: "none" }} />
 
       {/* zones cliquables */}
-      {/* le « ? » de Gutenberg : des lettres SÉPARÉES, réutilisables */}
-      {!made.includes("msg_imprimerie") && (
+      {/* le « ? » de Gutenberg : cache en jeu 2 (pas de quete d'imprimerie) */}
+      {!made.includes("msg_imprimerie") && mode !== "jeu2" && (
         <>
           <g transform="translate(478,376)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
