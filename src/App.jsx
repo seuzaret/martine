@@ -2330,8 +2330,12 @@ export default function App() {
                 </circle>
               </g>
             ))}
-            <circle r="30" fill="url(#warp-core)" style={{ animation: "pulse 1.4s ease-in-out infinite" }} />
-            <circle r="8" fill="#ffffff" style={{ animation: "pulse 0.9s ease-in-out infinite" }} />
+            <circle r="30" fill="url(#warp-core)">
+              <animate attributeName="opacity" values="1;0.35;1" dur="1.4s" repeatCount="indefinite" />
+            </circle>
+            <circle r="8" fill="#ffffff">
+              <animate attributeName="opacity" values="1;0.35;1" dur="0.9s" repeatCount="indefinite" />
+            </circle>
           </svg>
           {/* Nom de l'epoque, superpose au vortex */}
           <div style={{ position: "absolute", textAlign: "center", pointerEvents: "none" }}>
