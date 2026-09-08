@@ -187,6 +187,23 @@ export default function SceneCampement({ collect, action, reveal, made = [], que
         <circle cx="10" cy="-56" r="1.5" fill="#ff9540" style={{ animation: "spark 2.3s linear infinite" }} />
         {/* colonne de fumée du matin, bien visible dans l'air frais */}
         <path d="M2 -40 q-10 -26 6 -44 q-12 10 -4 -26 q10 -18 2 -34" stroke="#b8c0d0" strokeWidth="5" fill="none" opacity="0.3" style={{ animation: "drift 5s ease-in-out infinite" }} filter="url(#c1blur)" />
+        {/* LUCIOLE qui danse autour du feu — point jaune-vert qui pulse
+            et suit un chemin sinueux en boucle. Coordonnees relatives au
+            centre du feu (0,0 = 500,452 en absolu). */}
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="-50,-20; -20,-45; 20,-30; 40,-10; 20,10; -20,0; -45,-20; -50,-20"
+            dur="12s" repeatCount="indefinite" />
+          {/* halo doux jaune-vert */}
+          <circle r="4" fill="#eeff88" opacity="0.35">
+            <animate attributeName="opacity" values="0.15;0.55;0.15" dur="1.2s" repeatCount="indefinite" />
+            <animate attributeName="r" values="3;6;3" dur="1.2s" repeatCount="indefinite" />
+          </circle>
+          {/* point lumineux central */}
+          <circle r="1.4" fill="#fffca8">
+            <animate attributeName="opacity" values="0.7;1;0.7" dur="1.2s" repeatCount="indefinite" />
+          </circle>
+        </g>
       </g>
       {/* LE CONTEUR (toi), enveloppé dans sa fourrure */}
       <g transform="translate(408,442)">

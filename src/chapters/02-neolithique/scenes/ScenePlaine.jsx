@@ -98,7 +98,7 @@ export default function ScenePlaine({ collect, action, reveal, made = [], queteQ
         {/* PETITS CRABES qui trottinent en travers sur la berge du fleuve
             — mouvement lateral typique du crabe, timings decales. Rouge
             brique, pinces devant, huit pattes. */}
-        {[[840, 545, 4, 0], [880, 552, 5, 1.5], [810, 548, 4.5, 3]].map(([bx, by, dur, off], i) => (
+        {[[840, 545, 4, 0], [880, 552, 5, 1.5]].map(([bx, by, dur, off], i) => (
           <g key={i}>
             <animateTransform attributeName="transform" type="translate"
               values={`${bx - 8},${by}; ${bx + 8},${by}; ${bx - 8},${by}`}
