@@ -137,11 +137,19 @@ export default function SceneStudio({ collect, action, reveal, made = [] }) {
             <circle cx="26" cy="40" r="3" fill="#ffd166" />
           </g>
         )}
-        {/* le speaker, assis, ses feuilles à la main — corps allonge qui
-            se prolonge derriere le pupitre. */}
+        {/* le speaker, assis, ses feuilles à la main — corps ELARGI dans
+            un costume bleu franc qui reste bien visible au-dessus (et
+            derriere) le pupitre. */}
         <g transform="translate(340,372)">
-          <path d="M-30 150 Q-36 22 -6 8 Q10 2 26 8 Q40 22 36 150 Z" fill="#2e3440" />
-          <path d="M-30 150 Q-36 22 -6 8 Q10 2 26 8 Q40 22 36 150 Z" fill="#101418" opacity="0.24" filter="url(#st-grain)" />
+          {/* costume large, bleu marine */}
+          <path d="M-46 150 Q-50 26 -10 8 Q10 2 30 8 Q50 26 46 150 Z" fill="#2a4870" />
+          {/* revers de veste plus clair */}
+          <path d="M-14 12 L-4 30 L-2 50 L-22 50 L-30 30 Z" fill="#3a5a88" />
+          <path d="M14 12 L4 30 L2 50 L22 50 L30 30 Z" fill="#3a5a88" />
+          {/* rangee de boutons */}
+          {[40, 70, 100, 130].map((y, i) => <circle key={i} cx="0" cy={y} r="1.6" fill="#e8dfc8" />)}
+          {/* legere texture grain */}
+          <path d="M-46 150 Q-50 26 -10 8 Q10 2 30 8 Q50 26 46 150 Z" fill="#101418" opacity="0.18" filter="url(#st-grain)" />
           <circle cx="2" cy="-10" r="15" fill="#d8a884" />
           <path d="M-13 -14 q-2 -18 16 -17 q17 1 12 16 q-5 -7 -14 -7 q-11 0 -14 8 Z" fill="#3a3028" />
           <path d="M-5 -4 q7 3 14 0" stroke="#3a3028" strokeWidth="2.5" fill="none" />
