@@ -104,20 +104,30 @@ export default function SceneGue({ collect, action, reveal, made = [], inv = [] 
           </g>
         ))}
 
-        {/* Poissons dans l'eau — corps mieux dessiné, écailles */}
-        {[[180, 400], [360, 420], [500, 400], [660, 420], [820, 400]].map(([x, y], i) => (
-          <g key={i} transform={`translate(${x},${y})`} style={{ animation: `float ${2 + (i % 3) * 0.4}s ease-in-out infinite` }}>
-            {/* corps */}
-            <path d="M0 0 Q-10 -4 -16 0 Q-10 4 0 0 L10 -3 L14 -7 L10 -3 L14 3 L10 3 L0 0 Z" fill="#5a8098" stroke="#1a2838" strokeWidth="0.7" />
-            {/* ventre clair */}
-            <path d="M-14 1 Q-10 3 0 0" stroke="#c0e0f0" strokeWidth="1" fill="none" opacity="0.7" />
-            {/* écailles */}
-            <path d="M-10 -1 q2 -1 4 0 M-6 0 q2 -1 4 0 M-2 -1 q2 -1 4 0" stroke="#3a5060" strokeWidth="0.4" fill="none" opacity="0.7" />
-            {/* œil vif */}
-            <circle cx="-10" cy="-1" r="1.4" fill="#0a0806" />
-            <circle cx="-10.4" cy="-1.4" r="0.5" fill="#f8f8e8" />
-            {/* nageoire dorsale */}
-            <path d="M-6 -3 q3 -3 6 0" stroke="#3a5060" strokeWidth="0.6" fill="#4a6878" />
+        {/* Poissons dans l'eau — ils nagent horizontalement autour de
+            leur position moyenne, avec un peu de derive verticale. Sens
+            alterne pour la variete (certains vers la droite, d'autres
+            vers la gauche via scale X). */}
+        {[[180, 400, 1], [360, 420, -1], [500, 400, 1], [660, 420, -1], [820, 400, 1]].map(([x, y, dir], i) => (
+          <g key={i}>
+            <animateTransform attributeName="transform" type="translate"
+              values={dir === 1
+                ? `${x - 40},${y}; ${x + 40},${y + 2}; ${x - 40},${y}`
+                : `${x + 40},${y}; ${x - 40},${y - 2}; ${x + 40},${y}`}
+              dur={`${8 + (i % 3) * 2}s`} repeatCount="indefinite" />
+            <g transform={dir === -1 ? "scale(-1,1)" : undefined}>
+              {/* corps */}
+              <path d="M0 0 Q-10 -4 -16 0 Q-10 4 0 0 L10 -3 L14 -7 L10 -3 L14 3 L10 3 L0 0 Z" fill="#5a8098" stroke="#1a2838" strokeWidth="0.7" />
+              {/* ventre clair */}
+              <path d="M-14 1 Q-10 3 0 0" stroke="#c0e0f0" strokeWidth="1" fill="none" opacity="0.7" />
+              {/* écailles */}
+              <path d="M-10 -1 q2 -1 4 0 M-6 0 q2 -1 4 0 M-2 -1 q2 -1 4 0" stroke="#3a5060" strokeWidth="0.4" fill="none" opacity="0.7" />
+              {/* œil vif */}
+              <circle cx="-10" cy="-1" r="1.4" fill="#0a0806" />
+              <circle cx="-10.4" cy="-1.4" r="0.5" fill="#f8f8e8" />
+              {/* nageoire dorsale */}
+              <path d="M-6 -3 q3 -3 6 0" stroke="#3a5060" strokeWidth="0.6" fill="#4a6878" />
+            </g>
           </g>
         ))}
 

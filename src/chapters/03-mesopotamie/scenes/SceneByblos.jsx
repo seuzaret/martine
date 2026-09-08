@@ -220,6 +220,14 @@ export default function SceneByblos({ collect, action, reveal, inv = [] }) {
       <Hotspot cx={720} cy={330} r={40} label="navire phénicien au large" reveal={reveal} onClick={() => action("navire_large")} />
       <Hotspot cx={180} cy={538} r={16} label="coquillage murex" item="coquillage_murex" reveal={reveal} onClick={() => collect("coquillage_murex")} />
       <Hotspot cx={920} cy={540} r={16} label="algue sèche" item="algue_seche" reveal={reveal} onClick={() => collect("algue_seche")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }

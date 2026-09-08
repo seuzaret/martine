@@ -206,6 +206,14 @@ export default function SceneProvince({ collect, action, reveal, made = [], quet
       <Hotspot cx={772} cy={452} r={60} label="relais de chevaux" item="chevaux" reveal={reveal} onClick={() => collect("chevaux")} />
       {/* l'épave de MARTINE */}
       <Hotspot cx={930} cy={506} r={28} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }

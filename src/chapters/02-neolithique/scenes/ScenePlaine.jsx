@@ -187,6 +187,14 @@ export default function ScenePlaine({ collect, action, reveal, made = [], queteQ
       {!dresse && <Hotspot cx={670} cy={462} r={60} label="les hommes" item="hommes" reveal={reveal} onClick={() => collect("hommes")} />}
       <Hotspot cx={884} cy={500} r={34} label="argile" item="argile" reveal={reveal} onClick={() => collect("argile")} />
       <Hotspot cx={816} cy={516} r={30} label="cailloux noirs" item="cailloux" reveal={reveal} onClick={() => collect("cailloux")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }

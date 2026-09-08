@@ -254,30 +254,35 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
       {[430, 540, 660, 950].map((x, i) => <GrassTuft key={i} x={x} y={470 + (i % 2) * 40} c={i % 2 ? "#5d6b2e" : "#4e5c28"} />)}
       <GrassTuft x={200} y={540} c="#6b5a2e" />
 
-      {/* MAMMOUTH sur le sol, cote droit — beau, plus grand, se balade
-          juste sur une courte distance. Ses pattes touchent bien la terre. */}
-      <g>
-        <animateTransform attributeName="transform" type="translate"
-          values="0,0; 120,0; 0,0" dur="60s" repeatCount="indefinite" />
-        <g transform="translate(720,478) scale(0.85)" fill="#2a1a34">
-          {/* pattes robustes */}
-          <rect x="-27" y="-4" width="8" height="28" rx="3" />
-          <rect x="-13" y="-2" width="8" height="26" rx="3" />
-          <rect x="5" y="-4" width="8" height="28" rx="3" />
-          <rect x="17" y="-2" width="8" height="26" rx="3" />
-          {/* corps */}
-          <path d="M-36 0 Q-40 -14 -30 -22 Q-20 -32 -6 -32 Q2 -40 12 -38 Q24 -36 28 -26 Q32 -18 28 -10 Q24 -2 16 0 Q-6 4 -24 3 Q-33 3 -36 0 Z" />
-          {/* trompe enroulee */}
-          <path d="M27 -22 q11 8 9 20 q-2 11 -11 13 q6 -9 4 -16 q-2 -9 -8 -13 Z" />
-          {/* poils qui pendent */}
-          <path d="M-26 3 l-2 8 M-12 4 l-2 9 M2 4 l-1 8 M12 2 l-2 8" stroke="#2a1a34" strokeWidth="2.4" />
-          {/* defenses claires courbees */}
-          <path d="M24 -6 q15 6 22 -3" stroke="#e0d0b8" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-          <path d="M22 -3 q11 6 17 1" stroke="#c8b8a0" strokeWidth="2.8" fill="none" strokeLinecap="round" />
-          {/* petit oeil */}
-          <circle cx="8" cy="-24" r="1" fill="#ffd166" opacity="0.6" />
+      {/* PETIT FEU DE FORET au loin cote droit, entre les silhouettes
+          d'arbres — halo orange qui bat, flammes qui s'agitent, colonne
+          de fumee qui monte. Petit et discret, pas d'incendie. */}
+      <g transform="translate(860,460)">
+        {/* halo pulse */}
+        <ellipse cx="0" cy="8" rx="24" ry="10" fill="#ff9540" opacity="0.28">
+          <animate attributeName="opacity" values="0.2;0.42;0.2" dur="1.4s" repeatCount="indefinite" />
+        </ellipse>
+        {/* flammes qui dansent (3 langues) */}
+        <g style={{ transformOrigin: "0px 12px", animation: "flick 0.65s ease-in-out infinite" }}>
+          <path d="M0 12 Q-8 -2 -2 -14 Q1 -6 3 -10 Q10 0 4 12 Z" fill="#ff7f24" />
+          <path d="M0 12 Q-4 2 -1 -6 Q1 -1 2 -4 Q6 2 3 11 Z" fill="#ffb347" />
+          <path d="M0 11 Q-2 4 0 -2 Q1 1 2 -1 Q4 3 2 10 Z" fill="#fff2c4" />
         </g>
+        {/* etincelles qui montent */}
+        <circle cx="-2" cy="-6" r="0.9" fill="#ffd166">
+          <animate attributeName="cy" values="-6;-30;-6" dur="1.8s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="1;0;1" dur="1.8s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="3" cy="-2" r="0.7" fill="#ffb347">
+          <animate attributeName="cy" values="-2;-24;-2" dur="2.3s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="1;0;1" dur="2.3s" repeatCount="indefinite" />
+        </circle>
+        {/* colonne de fumee grise qui monte */}
+        <path d="M0 -14 q-6 -14 4 -28 q-8 6 -2 -18 q6 -10 -2 -22" stroke="#8a9084" strokeWidth="6" fill="none" opacity="0.5" filter="url(#x2blur)" />
+        {/* buches noircies au sol */}
+        <path d="M-8 12 l16 0 M-6 15 l14 0" stroke="#2a1408" strokeWidth="2.5" strokeLinecap="round" />
       </g>
+
       </PLayer>
 
       {/* ═══ premier plan (bouge le plus) ═══ */}
