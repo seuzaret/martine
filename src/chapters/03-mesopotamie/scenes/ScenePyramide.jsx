@@ -219,26 +219,41 @@ export default function ScenePyramide({ collect, action, reveal, inv = [] }) {
       <Hotspot cx={700} cy={540} r={14} label="éclat de calcaire" item="eclat_calcaire" reveal={reveal} onClick={() => collect("eclat_calcaire")} />
       <Hotspot cx={820} cy={538} r={14} label="scarabée" item="scarabee" reveal={reveal} onClick={() => collect("scarabee")} />
       {/* CARAVANE DE CHAMEAUX en ombre au loin, sur l'horizon du desert.
-          Silhouettes noires simples qui traversent lentement le fond. */}
-      <g opacity="0.65">
+          Ils marchent DE DROITE A GAUCHE, donc dessines la tete a GAUCHE
+          (les paths ont ete redessines pour eviter l'effet 'coupe en 2').
+          Silhouette dromadaire classique : longues pattes, cou long, bosse
+          unique en dos rond. */}
+      <g opacity="0.75">
         <animateTransform attributeName="transform" type="translate"
-          values="1050,0; -240,0" dur="120s" repeatCount="indefinite" />
+          values="1080,0; -260,0" dur="140s" repeatCount="indefinite" />
         <g fill="#1a1408">
-          {/* 4 chameaux qui se suivent */}
-          {[0, 40, 78, 118].map((dx, i) => (
-            <g key={i} transform={`translate(${dx},370) scale(${0.75 + (i % 2) * 0.08})`}>
-              {/* pattes */}
-              <rect x="-8" y="0" width="1.6" height="12" />
-              <rect x="-3" y="0" width="1.6" height="12" />
-              <rect x="4" y="0" width="1.6" height="12" />
-              <rect x="9" y="0" width="1.6" height="12" />
-              {/* corps allonge avec bosse */}
-              <path d="M-10 -2 Q-8 -8 -4 -6 Q-2 -14 2 -12 Q6 -10 8 -6 Q12 -4 14 0 L14 2 L-10 2 Z" />
-              {/* cou et tete */}
-              <path d="M14 -2 q6 -6 8 -14 q3 -1 3 3 q-3 6 -4 12 z" />
-              {/* petit oeil (invisible en silhouette, on skip) */}
-              {/* petit chamelier sur le dernier ? */}
-              {i === 3 && <ellipse cx="0" cy="-14" rx="2" ry="4" />}
+          {[0, 44, 84, 124].map((dx, i) => (
+            <g key={i} transform={`translate(${dx},370) scale(${0.8 + (i % 2) * 0.08})`}>
+              {/* corps entier en une seule silhouette compacte :
+                  croupe a droite, bosse au centre, cou monte vers la
+                  gauche, tete en haut a gauche, museau qui pointe vers
+                  la gauche */}
+              <path d="M14 -2
+                       Q16 -8 12 -10
+                       Q10 -14 4 -10
+                       Q0 -14 -6 -10
+                       Q-10 -8 -14 -6
+                       Q-18 -8 -20 -14
+                       Q-21 -18 -18 -18
+                       Q-15 -18 -14 -12
+                       Q-14 -10 -12 -10
+                       L14 -3 Z" />
+              {/* les 4 pattes longues et fines qui descendent bien
+                  jusqu'au sol */}
+              <rect x="-10" y="-3" width="1.6" height="14" />
+              <rect x="-5" y="-3" width="1.6" height="14" />
+              <rect x="6" y="-2" width="1.6" height="14" />
+              <rect x="11" y="-2" width="1.6" height="14" />
+              {/* queue */}
+              <path d="M14 -2 q3 3 4 6" stroke="#1a1408" strokeWidth="1" fill="none" strokeLinecap="round" />
+              {/* petit chamelier (silhouette) sur le premier chameau
+                  visible (celui qui ouvre la marche vers la gauche) */}
+              {i === 3 && <ellipse cx="-3" cy="-16" rx="2" ry="4" />}
             </g>
           ))}
         </g>
