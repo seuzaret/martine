@@ -217,15 +217,24 @@ export default function SceneBourg({ collect, action, reveal, inv = [] }) {
           <text x="20" y="-20" fontSize="6" fontFamily="Georgia, serif" fill="#5a3818" opacity="0.55">z</text>
         </g>
 
-        {/* poules qui picorent */}
-        {[[600, 520, 1], [640, 528, -1], [420, 530, 1]].map(([x, y, dir], i) => (
+        {/* poules qui picorent ACTIVEMENT — la tete descend puis remonte
+            en boucle, timings decales. On garde 3 poules mais elles
+            bougent maintenant. */}
+        {[[600, 520, 1, 0], [640, 528, -1, 1.2], [420, 530, 1, 2.4]].map(([x, y, dir, off], i) => (
           <g key={i} transform={`translate(${x},${y}) scale(${dir},1)`}>
             <ellipse cx="0" cy="0" rx="8" ry="6" fill="#f0e0c0" stroke="#5a3818" strokeWidth="0.5" />
             <path d="M-8 -2 q-4 -2 -4 2" stroke="#5a3818" strokeWidth="0.5" fill="none" />
-            <circle cx="-10" cy="-3" r="3" fill="#f0e0c0" stroke="#5a3818" strokeWidth="0.4" />
-            <path d="M-13 -4 l-1 -2 M-13 -4 l1 -2" stroke="#8a2818" strokeWidth="0.4" />
-            <path d="M-13 -2 l-2 0" stroke="#e08040" strokeWidth="0.8" strokeLinecap="round" />
-            <circle cx="-11" cy="-3" r="0.4" fill="#0a0806" />
+            {/* tete qui pique en cadence (rotation autour de la base du cou) */}
+            <g style={{ transformOrigin: "-8px -1px" }}>
+              <animateTransform attributeName="transform" type="rotate"
+                values="0; 45; 0; 45; 0"
+                keyTimes="0;0.15;0.3;0.45;1"
+                dur="3s" begin={`${off}s`} repeatCount="indefinite" />
+              <circle cx="-10" cy="-3" r="3" fill="#f0e0c0" stroke="#5a3818" strokeWidth="0.4" />
+              <path d="M-13 -4 l-1 -2 M-13 -4 l1 -2" stroke="#8a2818" strokeWidth="0.4" />
+              <path d="M-13 -2 l-2 0" stroke="#e08040" strokeWidth="0.8" strokeLinecap="round" />
+              <circle cx="-11" cy="-3" r="0.4" fill="#0a0806" />
+            </g>
             <path d="M-2 5 l-1 4 M2 5 l1 4" stroke="#5a3818" strokeWidth="0.5" />
           </g>
         ))}
@@ -312,14 +321,8 @@ export default function SceneBourg({ collect, action, reveal, inv = [] }) {
       <Hotspot cx={700} cy={260} r={50} label="le clocher de l'église" reveal={reveal} onClick={() => action("clocher")} />
       <Hotspot cx={140} cy={540} r={14} label="plume d'oie" item="plume_oie" reveal={reveal} onClick={() => collect("plume_oie")} />
       <Hotspot cx={920} cy={540} r={14} label="bout de bougie" item="bout_bougie" reveal={reveal} onClick={() => collect("bout_bougie")} />
-          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
-      <g opacity="0.75">
-        <animateTransform attributeName="transform" type="translate"
-          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
-        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-      </g>
+      {/* (oiseaux du ciel retires ici : ce sont les 3 poules qui
+          picorent au sol qui portent la vie du bourg maintenant) */}
 </svg>
   );
 }

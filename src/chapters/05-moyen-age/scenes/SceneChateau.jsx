@@ -309,13 +309,39 @@ export default function SceneChateau({ collect, action, reveal, made = [], flags
       )}
       {/* l'épave de MARTINE */}
       <Hotspot cx={918} cy={510} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
-          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
-      <g opacity="0.75">
-        <animateTransform attributeName="transform" type="translate"
-          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
-        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      {/* CHAT du chateau, assis a cote des pelotes de laine, bouge
+          doucement la queue et cligne des yeux. Bien de sa personne. */}
+      <g transform="translate(220,510)">
+        {/* corps assis */}
+        <ellipse cx="0" cy="0" rx="10" ry="7" fill="#5a3820" stroke="#2a1408" strokeWidth="0.6" />
+        {/* tete */}
+        <circle cx="9" cy="-4" r="5.5" fill="#5a3820" stroke="#2a1408" strokeWidth="0.5" />
+        {/* oreilles pointues */}
+        <path d="M5 -8 l1 -5 l3 3 Z" fill="#5a3820" stroke="#2a1408" strokeWidth="0.4" />
+        <path d="M13 -8 l-1 -5 l-3 3 Z" fill="#5a3820" stroke="#2a1408" strokeWidth="0.4" />
+        <path d="M6 -7 l1 -3 l1.5 2 Z" fill="#c88060" opacity="0.7" />
+        <path d="M12 -7 l-1 -3 l-1.5 2 Z" fill="#c88060" opacity="0.7" />
+        {/* yeux qui clignent */}
+        <ellipse cx="7" cy="-4" rx="1" ry="1.5" fill="#c8e070">
+          <animate attributeName="ry" values="1.5;0.2;1.5;1.5;1.5" keyTimes="0;0.02;0.04;0.9;1" dur="6s" repeatCount="indefinite" />
+        </ellipse>
+        <ellipse cx="11" cy="-4" rx="1" ry="1.5" fill="#c8e070">
+          <animate attributeName="ry" values="1.5;0.2;1.5;1.5;1.5" keyTimes="0;0.02;0.04;0.9;1" dur="6s" repeatCount="indefinite" />
+        </ellipse>
+        <ellipse cx="7" cy="-4" rx="0.35" ry="1.2" fill="#0a0604" />
+        <ellipse cx="11" cy="-4" rx="0.35" ry="1.2" fill="#0a0604" />
+        {/* nez rose + moustaches */}
+        <path d="M10 -1 l-1 1 l2 0 Z" fill="#e0a0a0" />
+        <path d="M4 -1 l-4 -0.5 M4 0 l-4 0 M14 -1 l4 -0.5 M14 0 l4 0" stroke="#e8dcc0" strokeWidth="0.4" strokeLinecap="round" />
+        {/* pattes avant */}
+        <ellipse cx="6" cy="6" rx="2.4" ry="1.4" fill="#5a3820" />
+        <ellipse cx="12" cy="6" rx="2.4" ry="1.4" fill="#5a3820" />
+        {/* queue qui bouge doucement */}
+        <g style={{ transformOrigin: "-10px 0px" }}>
+          <animateTransform attributeName="transform" type="rotate"
+            values="-8; 12; -8" dur="3.5s" repeatCount="indefinite" />
+          <path d="M-9 0 q-14 -4 -20 -12 q4 -2 12 2 q6 4 8 10 z" fill="#5a3820" stroke="#2a1408" strokeWidth="0.5" />
+        </g>
       </g>
 </svg>
   );
