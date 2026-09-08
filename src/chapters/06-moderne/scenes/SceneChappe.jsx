@@ -245,13 +245,20 @@ export default function SceneChappe({ collect, action, reveal, made = [], queteQ
       <Hotspot cx={644} cy={496} r={30} label="zinc & cuivre" item="zinc_cuivre" reveal={reveal} onClick={() => collect("zinc_cuivre")} />
       <Hotspot cx={700} cy={500} r={26} label="saumure" item="saumure" reveal={reveal} onClick={() => collect("saumure")} />
       <Hotspot cx={880} cy={486} r={44} label="l'espion" item="espion" reveal={reveal} onClick={() => collect("espion")} />
-          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
-      <g opacity="0.75">
+      {/* AMBIANCE : deux nuages qui derivent tres lentement dans le ciel
+          (a la place des oiseaux). Vitesse ralentie pour ne pas distraire. */}
+      <g opacity="0.7">
         <animateTransform attributeName="transform" type="translate"
-          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
-        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+          values="-160,0; 1160,20" dur="140s" repeatCount="indefinite" />
+        <ellipse cx="0" cy="90" rx="70" ry="12" fill="#f0e8d0" />
+        <ellipse cx="30" cy="82" rx="46" ry="10" fill="#f0e8d0" />
+        <ellipse cx="-24" cy="86" rx="40" ry="8" fill="#e8dcc0" />
+      </g>
+      <g opacity="0.6">
+        <animateTransform attributeName="transform" type="translate"
+          values="-200,0; 1200,-10" dur="180s" begin="30s" repeatCount="indefinite" />
+        <ellipse cx="0" cy="150" rx="60" ry="10" fill="#e8dcc0" />
+        <ellipse cx="26" cy="144" rx="38" ry="8" fill="#f0e8d0" />
       </g>
 </svg>
   );

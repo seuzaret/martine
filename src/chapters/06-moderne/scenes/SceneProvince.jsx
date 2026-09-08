@@ -38,9 +38,11 @@ export default function SceneProvince({ collect, action, reveal, made = [], quet
       <circle cx="140" cy="96" r="30" fill="#fff4d0" opacity="0.85" />
       {[[260, 96, 120], [820, 76, 140]].map(([x, y, w], i) => <ellipse key={i} cx={x} cy={y} rx={w} ry={12} fill="#f2f2e8" opacity="0.5" />)}
 
-      {/* ═══ LA MONTGOLFIÈRE qui s'élève (flotte doucement) ═══ */}
-      <g transform="translate(560,168)">
-        <g style={{ transformOrigin: "560px 168px", transformBox: "view-box", animation: "floaty 5s ease-in-out infinite" }}>
+      {/* ═══ LA MONTGOLFIÈRE qui s'élève et redescend doucement (SMIL) ═══ */}
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="560,168; 560,138; 560,168" dur="9s" repeatCount="indefinite" />
+        <g>
           {/* enveloppe décorée façon Montgolfier */}
           <path d="M0 -104 C64 -104 84 -52 78 -14 C74 12 48 34 0 40 C-48 34 -74 12 -78 -14 C-84 -52 -64 -104 0 -104 Z" fill="url(#pv-balloon)" />
           {/* fuseaux + guirlandes dorées */}
@@ -123,17 +125,68 @@ export default function SceneProvince({ collect, action, reveal, made = [], quet
           </g>
         </g>
 
-        {/* LA PLUME & L'ENCRIER, sur une petite caisse près de Jules */}
+        {/* LA TABLE de Jules avec son encrier et sa plume dessus */}
         <g transform="translate(120,504)">
-          <path d="M-22 8 L22 8 L18 -6 L-18 -6 Z" fill="#7a5636" />
-          <path d="M-18 -6 L18 -6" stroke="#4a3218" strokeWidth="1.2" opacity="0.6" />
+          {/* ombre au sol */}
+          <ellipse cx="0" cy="34" rx="46" ry="6" fill="#1a1006" opacity="0.4" />
+          {/* plateau de la table */}
+          <path d="M-40 8 L40 8 L44 -6 L-44 -6 Z" fill="#8a5a2e" stroke="#3a1810" strokeWidth="0.8" />
+          <path d="M-44 -6 L44 -6" stroke="#5a3818" strokeWidth="1.2" />
+          {/* 4 pieds de la table */}
+          <rect x="-40" y="8" width="3" height="26" fill="#5a3818" />
+          <rect x="-20" y="8" width="3" height="26" fill="#5a3818" />
+          <rect x="17" y="8" width="3" height="26" fill="#5a3818" />
+          <rect x="37" y="8" width="3" height="26" fill="#5a3818" />
+          {/* traverse basse pour rigidité */}
+          <rect x="-40" y="28" width="80" height="2" fill="#5a3818" opacity="0.7" />
           {/* encrier */}
-          <path d="M-12 2 Q-13 -6 -4 -8 L4 -8 Q13 -6 12 2 Z" fill="#2a2620" />
-          <ellipse cx="0" cy="-8" rx="8" ry="3" fill="#0c0a08" />
+          <path d="M-12 -8 Q-13 -16 -4 -18 L4 -18 Q13 -16 12 -8 Z" fill="#2a2620" />
+          <ellipse cx="0" cy="-18" rx="8" ry="3" fill="#0c0a08" />
           {/* la plume plantée dedans */}
-          <g transform="translate(2,-8) rotate(20)">
+          <g transform="translate(2,-18) rotate(20)">
             <path d="M0 0 Q6 -26 2 -46 Q-3 -26 0 0 Z" fill="#f4efe2" stroke="#c9be9a" strokeWidth="1" />
             <path d="M1 -4 V-40" stroke="#c9be9a" strokeWidth="1" />
+          </g>
+          {/* une petite feuille froissee sur la table */}
+          <path d="M18 -6 l12 -1 l-2 -6 l-10 1 z" fill="#f0e6c8" stroke="#7a5636" strokeWidth="0.3" />
+        </g>
+
+        {/* CABANE en bois a gauche : petit abri du guetteur / relais */}
+        <g transform="translate(60,430)">
+          {/* ombre au sol */}
+          <ellipse cx="0" cy="94" rx="60" ry="8" fill="#1a1006" opacity="0.5" />
+          {/* mur de planches verticales */}
+          <rect x="-46" y="0" width="92" height="90" fill="#6a4626" stroke="#2a1408" strokeWidth="0.8" />
+          <path d="M-38 0 v90 M-30 0 v90 M-22 0 v90 M-14 0 v90 M-6 0 v90 M2 0 v90 M10 0 v90 M18 0 v90 M26 0 v90 M34 0 v90" stroke="#3a2010" strokeWidth="0.5" opacity="0.55" />
+          {/* toit pentu en tuiles */}
+          <path d="M-58 0 L0 -38 L58 0 Z" fill="#8a3018" stroke="#3a0808" strokeWidth="0.8" />
+          <path d="M-58 0 L58 0" stroke="#3a0808" strokeWidth="1.2" />
+          {/* joint tuiles */}
+          {[-12, -4, 4, 12].map((dy, i) => (
+            <path key={i} d={`M${-56 + i * 8} ${-4 + i * -4} L${58 - i * 8} ${-4 + i * -4}`} stroke="#5a1808" strokeWidth="0.4" opacity="0.5" />
+          ))}
+          {/* petite lucarne dans le toit */}
+          <rect x="-6" y="-16" width="12" height="10" fill="#2a1408" />
+          {/* porte en planches */}
+          <rect x="-12" y="46" width="24" height="44" fill="#3a2010" stroke="#1a0e04" strokeWidth="0.6" />
+          <path d="M-10 50 v40 M-6 50 v40 M-2 50 v40 M2 50 v40 M6 50 v40 M10 50 v40" stroke="#1a0e04" strokeWidth="0.4" />
+          <circle cx="8" cy="68" r="1" fill="#c8a848" />
+          {/* petite fenetre a droite */}
+          <rect x="18" y="18" width="18" height="20" fill="#3a2818" />
+          <path d="M27 18 v20 M18 28 h18" stroke="#5a3818" strokeWidth="1" />
+          {/* rideau leger derriere la fenetre */}
+          <path d="M20 20 q3 6 0 16 M32 20 q-3 6 0 16" stroke="#e0c090" strokeWidth="1.4" fill="none" opacity="0.7" />
+          {/* cheminee qui fume */}
+          <rect x="-30" y="-30" width="8" height="24" fill="#3a2010" />
+          <rect x="-32" y="-32" width="12" height="4" fill="#5a3818" />
+          <path d="M-26 -34 q-6 -12 4 -22 q-8 4 -2 -12" stroke="#c8c0b0" strokeWidth="4" fill="none" opacity="0.5">
+            <animate attributeName="opacity" values="0.3;0.6;0.3" dur="5s" repeatCount="indefinite" />
+          </path>
+          {/* baril devant la porte */}
+          <g transform="translate(24,80)">
+            <ellipse cx="0" cy="10" rx="9" ry="2" fill="#0a0604" opacity="0.4" />
+            <path d="M-7 6 Q-9 -6 0 -8 Q9 -6 7 6 Z" fill="#7a4a24" stroke="#2a1408" strokeWidth="0.6" />
+            <path d="M-8 -2 h16 M-8 2 h16" stroke="#2a1408" strokeWidth="0.6" opacity="0.7" />
           </g>
         </g>
 
