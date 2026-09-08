@@ -81,14 +81,12 @@ export default function SceneEntree({ collect, action, reveal, made = [], queteQ
             </g>
           );
         })}
-        {/* PIGEONS de Pompéi qui traversent la place — vol lent, un
-            solitaire puis un couple derrière. */}
-        <g opacity="0.7">
+        {/* Un seul oiseau BLANC qui traverse le ciel du Vesuve
+            de DROITE a GAUCHE — plus lisible qu'un vol de pigeons. */}
+        <g opacity="0.95">
           <animateTransform attributeName="transform" type="translate"
-            values="-30,0; 1050,20" dur="24s" repeatCount="indefinite" />
-          <path d="M0 200 q3 -3 6 0 q3 -3 6 0" stroke="#2a2418" strokeWidth="1.4" fill="none" strokeLinecap="round" />
-          <path d="M20 210 q3 -3 6 0 q3 -3 6 0" stroke="#2a2418" strokeWidth="1.2" fill="none" strokeLinecap="round" />
-          <path d="M32 205 q3 -3 6 0 q3 -3 6 0" stroke="#2a2418" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+            values="1080,140; -40,180; 1080,140" dur="26s" repeatCount="indefinite" />
+          <path d="M0 0 q7 -9 14 0 q7 -9 14 0" stroke="#ffffff" strokeWidth="3" fill="none" strokeLinecap="round" />
         </g>
       </PLayer>
 
