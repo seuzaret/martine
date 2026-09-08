@@ -117,27 +117,32 @@ export default function SceneEniac({ collect, action, reveal, made = [], flags =
           </g>
         )}
 
-        {/* CAFARDS (le vrai bug de l'ENIAC !) qui trottent : sur le mur
-            en haut et derriere les baies. Deux passages, cycles longs. */}
-        <g opacity="0.7">
-          <animateTransform attributeName="transform" type="translate"
-            values="1020,110; -30,120; 1020,110" dur="42s" repeatCount="indefinite" />
-          <g>
-            <ellipse cx="0" cy="0" rx="4" ry="2.4" fill="#1a1006" />
-            <circle cx="4" cy="0" r="1.6" fill="#1a1006" />
-            <path d="M-3 -2 l-3 -1 M-3 0 l-3 0 M-3 2 l-3 1 M3 -2 l3 -1 M3 2 l3 1" stroke="#1a1006" strokeWidth="0.5" />
-            <path d="M5 -1 l3 -2 M5 1 l3 2" stroke="#1a1006" strokeWidth="0.5" />
+        {/* CAFARDS (le vrai bug de l'ENIAC !) : plusieurs qui trottent,
+            certains lentement, d'autres plus vite, dans les deux sens et
+            a des hauteurs differentes (mur, sol, mi-hauteur derriere les
+            baies). */}
+        {[
+          { from: "1020,110", to: "-30,120",   dur: 42, op: 0.7,  flip: false },
+          { from: "-30,400",  to: "1020,395",  dur: 55, op: 0.6,  flip: true  },
+          { from: "-30,230",  to: "1020,220",  dur: 34, op: 0.65, flip: true  },
+          { from: "1020,510", to: "-30,505",   dur: 28, op: 0.7,  flip: false },
+          { from: "1020,310", to: "-30,320",   dur: 48, op: 0.55, flip: false },
+          { from: "-30,60",   to: "1020,68",   dur: 60, op: 0.5,  flip: true  },
+          { from: "500,540",  to: "50,470",    dur: 22, op: 0.6,  flip: false },
+          { from: "700,450",  to: "980,540",   dur: 26, op: 0.55, flip: true  },
+        ].map((c, i) => (
+          <g key={i} opacity={c.op}>
+            <animateTransform attributeName="transform" type="translate"
+              values={`${c.from}; ${c.to}; ${c.from}`}
+              dur={`${c.dur}s`} repeatCount="indefinite" />
+            <g transform={c.flip ? "scale(-1,1)" : undefined}>
+              <ellipse cx="0" cy="0" rx="4" ry="2.4" fill="#1a1006" />
+              <circle cx="4" cy="0" r="1.6" fill="#1a1006" />
+              <path d="M-3 -2 l-3 -1 M-3 0 l-3 0 M-3 2 l-3 1 M3 -2 l3 -1 M3 2 l3 1" stroke="#1a1006" strokeWidth="0.5" />
+              <path d="M5 -1 l3 -2 M5 1 l3 2" stroke="#1a1006" strokeWidth="0.5" />
+            </g>
           </g>
-        </g>
-        <g opacity="0.6">
-          <animateTransform attributeName="transform" type="translate"
-            values="-30,400; 1020,395; -30,400" dur="55s" repeatCount="indefinite" />
-          <g transform="scale(-1,1)">
-            <ellipse cx="0" cy="0" rx="4" ry="2.4" fill="#1a1006" />
-            <circle cx="4" cy="0" r="1.6" fill="#1a1006" />
-            <path d="M-3 -2 l-3 -1 M-3 0 l-3 0 M-3 2 l-3 1 M3 -2 l3 -1 M3 2 l3 1" stroke="#1a1006" strokeWidth="0.5" />
-          </g>
-        </g>
+        ))}
       </PLayer>
 
       {/* ═══ sol + tables + plugboard ═══ */}
@@ -246,7 +251,7 @@ export default function SceneEniac({ collect, action, reveal, made = [], flags =
           une fois les câbles branchés, clique dessus ouvre le mini-jeu
           de débuggage (bugs + tubes grillés) avant d'accepter msg_eniac. */}
       {!cablees && (
-        <Hotspot cx={220} cy={270} r={100} label={chargees ? "l'ENIAC — branche les câbles pour lancer le calcul" : "l'ENIAC — insère les fiches de calcul"} item="eniac_machine" reveal={reveal} />
+        <Hotspot cx={100} cy={300} r={38} label={chargees ? "la fente est deja pleine" : "la fente à cartes — glisse les fiches ici"} item="eniac_machine" reveal={reveal} />
       )}
       {cablees && !allume && (
         <Hotspot cx={220} cy={270} r={100} label="l'ENIAC — débuguer avant de lancer !" reveal={reveal} onClick={() => action("eniac_debug")} />

@@ -164,10 +164,18 @@ export default function SceneStudio({ collect, action, reveal, made = [] }) {
         <ellipse cx="480" cy="484" rx="440" ry="46" fill="#141018" opacity="0.3" />
         <ellipse cx="420" cy="450" rx="200" ry="90" fill="url(#st-lamp)" style={{ animation: "glow 3s ease-in-out infinite" }} />
 
-        {/* la table du studio */}
+        {/* la table du studio : plateau + facade opaque qui cache le
+            bas du presentateur */}
         <g transform="translate(400,492)">
+          {/* plateau */}
           <rect x="-190" y="0" width="380" height="14" rx="3" fill="url(#st-desk)" />
-          <rect x="-178" y="14" width="14" height="46" fill="#33210f" /><rect x="164" y="14" width="14" height="46" fill="#33210f" />
+          {/* facade avant du pupitre (grande, cache les jambes du speaker) */}
+          <rect x="-190" y="14" width="380" height="54" fill="url(#st-desk)" stroke="#1a1006" strokeWidth="1.5" />
+          <rect x="-190" y="14" width="380" height="54" fill="#1a1006" opacity="0.25" filter="url(#st-grain)" />
+          {/* deux moulures horizontales */}
+          <path d="M-186 26 h372 M-186 56 h372" stroke="#1a1006" strokeWidth="1" opacity="0.5" />
+          {/* pieds */}
+          <rect x="-178" y="68" width="14" height="20" fill="#33210f" /><rect x="164" y="68" width="14" height="20" fill="#33210f" />
         </g>
 
         {/* LE MICRO sur pied (mobilier du studio : il reste dessiné) */}

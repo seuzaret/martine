@@ -42,30 +42,6 @@ export default function SceneSalon({ collect, action, reveal, made = [], flags =
       {/* ═══ FENÊTRE aux rideaux tirés (black-out) ═══ */}
       <PLayer depth={3}>
         <rect x="380" y="60" width="220" height="180" fill="#0a0604" stroke="#3a2418" strokeWidth="4" />
-        {/* CONES de projecteurs DCA qu'on aperçoit par la fente des rideaux :
-            longs faisceaux fins qui balaient le ciel de guerre. */}
-        <g clipPath="url(#sd-slitclip)">
-          {/* faisceau 1 */}
-          <g style={{ transformOrigin: "490px 240px" }}>
-            <animateTransform attributeName="transform" type="rotate"
-              values="-30 490 240; 20 490 240; -30 490 240" dur="9s" repeatCount="indefinite" />
-            <path d="M486 240 L470 70 L510 70 L494 240 Z" fill="#ffe08a" opacity="0.28" />
-          </g>
-          {/* faisceau 2, decale et plus lent */}
-          <g>
-            <animateTransform attributeName="transform" type="rotate"
-              values="18 490 240; -22 490 240; 18 490 240" dur="12s" repeatCount="indefinite" />
-            <path d="M488 240 L474 70 L502 70 L492 240 Z" fill="#ffe08a" opacity="0.22" />
-          </g>
-          {/* petits eclairs de DCA loin */}
-          <circle cx="440" cy="120" r="2" fill="#ff9a4a">
-            <animate attributeName="opacity" values="0;0.9;0;0;0" dur="6s" repeatCount="indefinite" />
-          </circle>
-          <circle cx="560" cy="90" r="2" fill="#ff9a4a">
-            <animate attributeName="opacity" values="0;0;0;0.9;0" dur="7s" repeatCount="indefinite" />
-          </circle>
-        </g>
-        <defs><clipPath id="sd-slitclip"><rect x="430" y="60" width="140" height="180" /></clipPath></defs>
         <path d="M370 60 L400 60 L410 240 L370 240 Z" fill="url(#sd-curtain)" />
         <path d="M600 60 L630 60 L630 240 L590 240 Z" fill="url(#sd-curtain)" />
         <path d="M400 60 Q450 30 500 60" stroke="#5a3818" strokeWidth="3" fill="none" />

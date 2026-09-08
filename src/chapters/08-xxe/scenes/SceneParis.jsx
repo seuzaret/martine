@@ -197,14 +197,9 @@ export default function SceneParis({ collect, action, reveal, made = [], mode })
             <path d="M-40 -14 h10 M-35 -19 v10" stroke="#efe6d2" strokeWidth="1.4" />
             {/* chenille superieure */}
             <rect x="-76" y="0" width="152" height="6" fill="#2a2418" />
-            {/* roues qui tournent (chenille se deroule) */}
+            {/* roues (statiques) */}
             {[-60, -40, -20, 0, 20, 40, 60].map((x, i) => (
-              <g key={i} transform={`translate(${x},10)`}>
-                <animateTransform attributeName="transform" type="rotate"
-                  values={`0 ${x} 10; -360 ${x} 10`} dur="0.9s" repeatCount="indefinite" />
-                <circle r="7" fill="#3a3428" stroke="#1a1408" strokeWidth="1" />
-                <path d="M-6 0 h12 M0 -6 v12" stroke="#1a1408" strokeWidth="0.8" />
-              </g>
+              <circle key={i} cx={x} cy="10" r="7" fill="#3a3428" stroke="#1a1408" strokeWidth="1" />
             ))}
             {/* patin de chenille */}
             <rect x="-76" y="14" width="152" height="6" fill="#2a2418" />
