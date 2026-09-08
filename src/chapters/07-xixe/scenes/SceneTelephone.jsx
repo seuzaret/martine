@@ -50,47 +50,53 @@ export default function SceneTelephone({ collect, action, reveal, made = [], que
             <rect x="-90" y="30" width="180" height="42" fill="#5a94a4" opacity="0.85" />
             <path d="M-90 32 h180" stroke="#cfe0dc" strokeWidth="1" opacity="0.4" />
 
-            {/* GODZILLA-DINOSAURE derriere la baie : silhouette tres sombre
-                qui emerge de la mer, s'approche de la Statue puis repart.
-                Apparait 10 secondes apres le chargement (begin="10s"). */}
+            {/* GODZILLA a hauteur de la Statue de la Liberte : silhouette
+                sombre qui traverse la baie de GAUCHE a DROITE, 15 s apres
+                le chargement (clin d'oeil, humour reference). */}
             <g opacity="0.92">
               <animateTransform attributeName="transform" type="translate"
-                values="120,0; 120,0; -20,0; -20,0; -20,0; 120,0; 120,0"
-                keyTimes="0; 0.15; 0.42; 0.55; 0.68; 0.92; 1"
-                dur="50s" begin="10s" repeatCount="indefinite" />
-              <g>
+                values="-90,0; -90,0; 100,0; 100,0"
+                keyTimes="0; 0.08; 0.92; 1"
+                dur="60s" begin="15s" repeatCount="indefinite" />
+              {/* echelle ~0.5 pour tenir dans la meme hauteur que la Statue,
+                  et miroir horizontal (scaleX -0.5) pour qu'il regarde a droite */}
+              <g transform="scale(-0.5, 0.5) translate(0,84)">
                 {/* petit bercement de marche */}
                 <animateTransform attributeName="transform" type="translate"
-                  values="0,0; 0,-0.6; 0,0; 0,-0.6; 0,0" dur="1.8s" repeatCount="indefinite" />
+                  additive="sum"
+                  values="0,0; 0,-1.5; 0,0; 0,-1.5; 0,0" dur="2s" repeatCount="indefinite" />
                 {/* remous autour des jambes (au niveau de la mer) */}
-                <ellipse cx="0" cy="42" rx="22" ry="3" fill="#cfe0dc" opacity="0.55">
-                  <animate attributeName="opacity" values="0.35;0.7;0.35" dur="1.8s" repeatCount="indefinite" />
+                <ellipse cx="0" cy="0" rx="26" ry="4" fill="#cfe0dc" opacity="0.55">
+                  <animate attributeName="opacity" values="0.35;0.7;0.35" dur="2s" repeatCount="indefinite" />
                 </ellipse>
                 {/* queue massive qui balance derriere */}
-                <path d="M10 30 Q34 20 46 26 Q52 30 46 32 Q40 30 28 32 Q18 32 10 34 Z" fill="#0e2418" />
-                {/* corps enorme, immerge en partie */}
-                <path d="M-14 40 Q-20 12 -8 -2 Q10 -10 16 8 Q20 24 14 40 Z" fill="#12301c" />
+                <path d="M12 -12 Q40 -22 54 -14 Q60 -8 54 -10 Q46 -12 32 -12 Q22 -12 12 -10 Z" fill="#0e2418" />
+                {/* corps enorme */}
+                <path d="M-14 0 Q-22 -30 -8 -46 Q10 -54 18 -34 Q22 -14 14 0 Z" fill="#12301c" />
+                {/* pattes arrieres puissantes */}
+                <path d="M-8 -4 Q-12 -18 -4 -22 Q4 -22 4 -8 L8 -4 L2 -2 L-6 -2 Z" fill="#0e2418" />
+                <path d="M4 -4 Q0 -20 8 -24 Q16 -24 16 -10 L18 -4 L12 -2 L4 -2 Z" fill="#0e2418" />
                 {/* pointes/ecailles dorsales */}
-                {[[-4,-6],[0,-10],[4,-8],[8,-2],[12,6]].map(([x,y],i) => (
-                  <path key={i} d={`M${x} ${y} l2.4 -5 l2.4 5 Z`} fill="#1e4a2c" />
+                {[[-8,-40],[-2,-48],[4,-50],[10,-46],[16,-38],[20,-28]].map(([x,y],i) => (
+                  <path key={i} d={`M${x} ${y} l3 -6 l3 6 Z`} fill="#1e4a2c" />
                 ))}
                 {/* cou epais qui monte */}
-                <path d="M-6 -2 Q-10 -18 -2 -26 Q6 -30 10 -18 Q8 -8 4 -4 Z" fill="#12301c" />
+                <path d="M-4 -46 Q-10 -60 -2 -72 Q10 -76 14 -62 Q10 -50 6 -48 Z" fill="#12301c" />
                 {/* tete de T-rex avec museau allonge */}
-                <g transform="translate(0,-30)">
-                  <path d="M-6 4 Q-12 -2 -6 -8 Q0 -10 14 -6 Q18 -2 14 4 Q6 6 -6 4 Z" fill="#12301c" />
-                  {/* machoire inferieure */}
-                  <path d="M-2 2 Q6 6 14 4 L14 6 Q6 8 -2 5 Z" fill="#0a1c12" />
+                <g transform="translate(4,-74)">
+                  <path d="M-8 4 Q-14 -2 -6 -10 Q4 -12 20 -8 Q26 -2 20 6 Q10 8 -8 4 Z" fill="#12301c" />
+                  {/* machoire inferieure ouverte */}
+                  <path d="M-2 4 Q10 10 20 8 L22 10 Q10 12 -2 8 Z" fill="#0a1c12" />
                   {/* dents visibles */}
-                  <path d="M2 2 l0.6 2 l0.6 -2 M6 2 l0.6 2.4 l0.6 -2.4 M10 2 l0.6 2 l0.6 -2" fill="#efe6d2" stroke="#efe6d2" strokeWidth="0.3" />
+                  <path d="M4 4 l0.8 3 l0.8 -3 M9 4 l0.8 3.2 l0.8 -3.2 M14 4 l0.8 3 l0.8 -3" fill="#efe6d2" stroke="#efe6d2" strokeWidth="0.3" />
                   {/* oeil rouge lueur */}
-                  <circle cx="4" cy="-3" r="1.2" fill="#ff6b3a">
+                  <circle cx="8" cy="-3" r="1.4" fill="#ff6b3a">
                     <animate attributeName="opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite" />
                   </circle>
                 </g>
                 {/* petites pattes avant caracteristiques */}
-                <path d="M-4 6 q-6 4 -3 10" stroke="#0e2418" strokeWidth="2" fill="none" strokeLinecap="round" />
-                <path d="M6 8 q-4 5 -1 11" stroke="#0e2418" strokeWidth="2" fill="none" strokeLinecap="round" />
+                <path d="M-2 -34 q-8 4 -4 12" stroke="#0e2418" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                <path d="M8 -34 q-6 5 -2 12" stroke="#0e2418" strokeWidth="2.5" fill="none" strokeLinecap="round" />
               </g>
             </g>
 
@@ -151,12 +157,6 @@ export default function SceneTelephone({ collect, action, reveal, made = [], que
       {/* ═══ couche intermédiaire : lampe à abat-jour + Sean au bureau ═══ */}
       <PLayer depth={2}>
         {/* « ? » de Sean tant qu'il guide */}
-        {queteQui === "sean" && !dit && (
-          <g transform="translate(560,280)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
-            <path d="M0 0 q0 -24 24 -24 q24 0 24 20 q0 17 -20 22 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
-            <circle cx="24" cy="37" r="3" fill="#ffd166" />
-          </g>
-        )}
 
         {/* SEAN O'SULLIVAN debout, en costume, main sur le combiné */}
         <g transform="translate(560,376)">

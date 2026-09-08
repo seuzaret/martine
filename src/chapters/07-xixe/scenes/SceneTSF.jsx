@@ -103,31 +103,15 @@ export default function SceneTSF({ collect, action, reveal, made = [], queteQui 
         </g>
       </PLayer>
 
-      {/* ═══ couche intermédiaire : le mât + les ondes ═══ */}
+      {/* ═══ couche intermédiaire : le mât (une fois branche) + les ondes ═══ */}
       <PLayer depth={2}>
-        {/* le grand mât (l'antenne) — toujours là ; une fois la TSF montée, il ÉMET */}
-        <g transform="translate(430,400)">
-          <path d="M-4 0 L-10 -230 L10 -230 L4 0 Z" fill="#2a3038" />
-          {[...Array(8)].map((_, i) => <path key={i} d={`M${-9 + i * 0.6} ${-30 - i * 25} h${18 - i * 1.2}`} stroke="#3a424c" strokeWidth="2" />)}
-          <path d="M0 -230 L-90 0 M0 -230 L90 0" stroke="#2a3038" strokeWidth="1.4" opacity="0.7" />
-          <path d="M0 -228 q120 6 260 -10" stroke="#3a424c" strokeWidth="1.4" fill="none" opacity="0.7" />
-        </g>
-
-        {/* AVANT : des ondes qui SORTENT de l'antenne — cercles concentriques
-            qui grandissent et s'estompent (SMIL, marche partout). Plus visible
-            qu'avant. */}
-        {!sos && (
-          <g transform="translate(430,178)" fill="none" stroke="#7fd8ff" strokeWidth="2">
-            {[0, 1.2, 2.4].map((delay, i) => (
-              <circle key={i} cx="0" cy="0" r="10" opacity="0.7">
-                <animate attributeName="r" values="10;90;10" dur="3.6s" begin={`${delay}s`} repeatCount="indefinite" />
-                <animate attributeName="opacity" values="0.9;0;0.9" dur="3.6s" begin={`${delay}s`} repeatCount="indefinite" />
-              </circle>
-            ))}
-            {/* petit point lumineux au sommet de l'antenne */}
-            <circle cx="0" cy="0" r="3" fill="#eaf8ff" stroke="none">
-              <animate attributeName="opacity" values="0.6;1;0.6" dur="1.2s" repeatCount="indefinite" />
-            </circle>
+        {/* le grand mât (l'antenne) — APPARAIT une fois qu'on l'a branche */}
+        {sos && (
+          <g transform="translate(430,400)">
+            <path d="M-4 0 L-10 -230 L10 -230 L4 0 Z" fill="#2a3038" />
+            {[...Array(8)].map((_, i) => <path key={i} d={`M${-9 + i * 0.6} ${-30 - i * 25} h${18 - i * 1.2}`} stroke="#3a424c" strokeWidth="2" />)}
+            <path d="M0 -230 L-90 0 M0 -230 L90 0" stroke="#2a3038" strokeWidth="1.4" opacity="0.7" />
+            <path d="M0 -228 q120 6 260 -10" stroke="#3a424c" strokeWidth="1.4" fill="none" opacity="0.7" />
           </g>
         )}
 
@@ -168,15 +152,9 @@ export default function SceneTSF({ collect, action, reveal, made = [], queteQui 
           <path d="M-16 -16 a5 5 0 0 1 10 0" stroke="#2a2018" strokeWidth="2" fill="none" />
           <rect x="18" y="-18" width="16" height="38" fill="#12161c" />
         </g>
-        <path d="M424 440 l6 -40 l6 40 Z" fill="#2a3038" />
+        {sos && <path d="M424 440 l6 -40 l6 40 Z" fill="#2a3038" />}
 
         {/* « ? » de Marconi (tant qu'il guide) */}
-        {queteQui === "marconi" && (
-          <g transform="translate(214,378)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
-            <path d="M0 0 q0 -24 24 -24 q24 0 24 20 q0 17 -20 22 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
-            <circle cx="24" cy="37" r="3" fill="#ffd166" />
-          </g>
-        )}
 
         {/* MARCONI : il scrute la nuit vers le navire */}
         <g transform="translate(238,494)">
@@ -198,11 +176,13 @@ export default function SceneTSF({ collect, action, reveal, made = [], queteQui 
 
       {/* ═══ zones cliquables ═══ */}
       <Hotspot cx={238} cy={468} r={50} label="Marconi" reveal={reveal} onClick={() => action("marconi")} />
-      {/* L'ÉTABLI D'OUTILS de Marconi (au premier plan, sous la station) :
-          cliquer ouvre le mini-jeu — quel outil peut porter secours au
-          Titanic dans la nuit, sans aucun fil ? */}
+      {/* la porte de la cabine : ouvre l'etabli d'outils */}
+      {!made.includes("antenne") && !sos && (
+        <Hotspot cx={419} cy={456} r={22} label="la porte de la cabine" reveal={reveal} onClick={() => action("outils")} />
+      )}
+      {/* la cabine elle-meme : cible pour brancher l'antenne */}
       {!sos && (
-        <Hotspot cx={500} cy={490} r={70} label="choisir l'outil pour appeler à l'aide" reveal={reveal} onClick={() => action("outils")} />
+        <Hotspot cx={430} cy={442} r={60} label="la cabine de Marconi" item="station_marconi" reveal={reveal} onClick={() => collect("station_marconi")} />
       )}
     </svg>
   );

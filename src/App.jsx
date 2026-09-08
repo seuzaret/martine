@@ -2161,7 +2161,7 @@ export default function App() {
       )}
 
       {modal?.type === "tsf" && (
-        <TsfGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_sos")} />
+        <TsfGame onClose={() => setModal(null)} onWin={() => grantItem("antenne")} />
       )}
 
       {modal?.type === "photo" && (

@@ -221,12 +221,6 @@ export default function ScenePhoto({ collect, action, reveal, made = [], flags =
         )}
 
         {/* « ? » du photographe (tant qu'il guide) */}
-        {queteQui === "photographe" && !done && (
-          <g transform="translate(280,240)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
-            <path d="M0 0 q0 -24 24 -24 q24 0 24 20 q0 17 -20 22 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
-            <circle cx="24" cy="37" r="3" fill="#ffd166" />
-          </g>
-        )}
       </PLayer>
 
       <rect width="1000" height="560" fill="#141810" opacity="0.05" style={{ pointerEvents: "none" }} />
