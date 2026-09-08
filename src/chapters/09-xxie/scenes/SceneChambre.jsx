@@ -95,6 +95,23 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
           <path d="M-30 40 q30 -44 60 0 Z" fill="#3a6ac8" opacity="0.7" />
           <text x="0" y="48" textAnchor="middle" fontSize="9" fill="#8fa3bd" fontFamily="ui-monospace,monospace">MUSIQUE</text>
         </g>
+        {/* DRONE de livraison qui traverse le ciel — signature XXIe siecle,
+            avec petit clignotant rouge. */}
+        <g opacity="0.8">
+          <animateTransform attributeName="transform" type="translate"
+            values="-40,0; 1050,20" dur="20s" repeatCount="indefinite" />
+          <g transform="translate(0,80)">
+            {/* corps */}
+            <rect x="-4" y="-1.5" width="8" height="3" rx="0.6" fill="#3a3a3a" />
+            {/* helices */}
+            <path d="M-6 -1 h4 M2 -1 h4" stroke="#6a6a6a" strokeWidth="0.6" />
+            <path d="M-6 1 h4 M2 1 h4" stroke="#6a6a6a" strokeWidth="0.6" />
+            {/* clignotant */}
+            <circle cx="0" cy="0" r="0.8" fill="#e83820">
+              <animate attributeName="opacity" values="0.3;1;0.3" dur="0.9s" repeatCount="indefinite" />
+            </circle>
+          </g>
+        </g>
       </PLayer>
 
       {/* ═══ couche intermédiaire : l'étagère ═══ */}
