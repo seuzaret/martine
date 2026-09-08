@@ -24,20 +24,47 @@ export default function SceneCathedrale({ collect, action, reveal, inv = [] }) {
       </defs>
 
       <PLayer depth={5}>
-        {/* Mur du fond */}
+        {/* Mur du fond avec grain de pierre */}
         <rect width="1000" height="440" fill="url(#ca-mur)" />
-        {/* voûte d'ogives : arceaux qui montent */}
-        <path d="M0 60 Q250 -40 500 60 M500 60 Q750 -40 1000 60" stroke="#5a4838" strokeWidth="3" fill="none" />
-        <path d="M100 100 Q250 20 400 100 M600 100 Q750 20 900 100" stroke="#5a4838" strokeWidth="2" fill="none" opacity="0.7" />
-        {/* clé de voûte centrale */}
-        <circle cx="500" cy="60" r="12" fill="#8a7860" stroke="#3a2818" strokeWidth="1" />
-        <path d="M494 60 h12 M500 54 v12" stroke="#5a4838" strokeWidth="0.8" />
-        {/* colonnes latérales élancées */}
+        {/* joints de pierre horizontaux subtils (assises regulieres) */}
+        {[80, 140, 200, 260, 320, 380].map((y, i) => (
+          <path key={`h${i}`} d={`M0 ${y} h1000`} stroke="#5a4838" strokeWidth="0.6" opacity="0.3" />
+        ))}
+        {/* joints verticaux decales par assise (appareil regulier) */}
+        {[80, 140, 200, 260, 320, 380].map((y, r) => (
+          <g key={`v${r}`}>
+            {[100, 250, 400, 600, 750, 900].map((x, i) => (
+              <path key={i} d={`M${x + (r % 2 === 0 ? 0 : 75)} ${y} v60`} stroke="#5a4838" strokeWidth="0.5" opacity="0.28" />
+            ))}
+          </g>
+        ))}
+        {/* voûte d'ogives : arceaux qui montent, plus visibles */}
+        <path d="M0 60 Q250 -40 500 60 M500 60 Q750 -40 1000 60" stroke="#5a4838" strokeWidth="4" fill="none" />
+        <path d="M100 100 Q250 20 400 100 M600 100 Q750 20 900 100" stroke="#5a4838" strokeWidth="2.4" fill="none" opacity="0.7" />
+        {/* nervures secondaires */}
+        <path d="M0 80 Q250 -10 500 80 M500 80 Q750 -10 1000 80" stroke="#7a6848" strokeWidth="1.2" fill="none" opacity="0.5" />
+        {/* clé de voûte centrale, ornee */}
+        <circle cx="500" cy="60" r="14" fill="#8a7860" stroke="#3a2818" strokeWidth="1.2" />
+        <circle cx="500" cy="60" r="8" fill="#a89680" stroke="#3a2818" strokeWidth="0.5" />
+        <path d="M494 60 h12 M500 54 v12" stroke="#3a2818" strokeWidth="1" />
+        {/* colonnes latérales élancées + cannelures */}
         <rect x="60" y="100" width="20" height="340" fill="url(#ca-mur)" stroke="#5a4838" strokeWidth="0.8" />
+        <path d="M66 108 v320 M74 108 v320" stroke="#5a4838" strokeWidth="0.6" opacity="0.55" />
         <rect x="920" y="100" width="20" height="340" fill="url(#ca-mur)" stroke="#5a4838" strokeWidth="0.8" />
-        {/* chapiteau sommaire */}
+        <path d="M926 108 v320 M934 108 v320" stroke="#5a4838" strokeWidth="0.6" opacity="0.55" />
+        {/* chapiteaux ornés (bases + haut) */}
         <rect x="56" y="94" width="28" height="10" fill="#8a7860" stroke="#3a2818" strokeWidth="0.6" />
+        <rect x="52" y="102" width="36" height="4" fill="#a89680" />
         <rect x="916" y="94" width="28" height="10" fill="#8a7860" stroke="#3a2818" strokeWidth="0.6" />
+        <rect x="912" y="102" width="36" height="4" fill="#a89680" />
+        {/* bases des colonnes au sol */}
+        <rect x="50" y="440" width="40" height="12" fill="#a89680" stroke="#3a2818" strokeWidth="0.6" />
+        <rect x="910" y="440" width="40" height="12" fill="#a89680" stroke="#3a2818" strokeWidth="0.6" />
+        {/* deux colonnes SECONDAIRES a mi-distance pour donner du rythme */}
+        <rect x="270" y="120" width="14" height="320" fill="url(#ca-mur)" stroke="#5a4838" strokeWidth="0.6" opacity="0.9" />
+        <rect x="716" y="120" width="14" height="320" fill="url(#ca-mur)" stroke="#5a4838" strokeWidth="0.6" opacity="0.9" />
+        <rect x="266" y="114" width="22" height="8" fill="#8a7860" stroke="#3a2818" strokeWidth="0.5" />
+        <rect x="712" y="114" width="22" height="8" fill="#8a7860" stroke="#3a2818" strokeWidth="0.5" />
         {/* halo lumineux qui vient de la grande rose */}
         <circle cx="500" cy="260" r="180" fill="url(#ca-halo)" />
         {/* rayons colorés obliques (soleil qui traverse le vitrail) */}
@@ -138,18 +165,44 @@ export default function SceneCathedrale({ collect, action, reveal, inv = [] }) {
       </PLayer>
 
       <PLayer depth={2}>
-        {/* sol dalles noires et blanches */}
+        {/* sol dalles noires et blanches — plus riche : damier en
+            perspective (tuiles qui retrecissent vers le fond), tache de
+            lumiere coloree qui tombe de la rose, tapis central rouge. */}
         <rect y="440" width="1000" height="120" fill="url(#ca-sol)" />
-        {/* damier */}
-        {Array.from({ length: 12 }).map((_, c) => (
-          <g key={c}>
-            {Array.from({ length: 3 }).map((_, r) => (
-              (c + r) % 2 === 0
-                ? <rect key={r} x={c * 84} y={440 + r * 40} width="84" height="40" fill="#3a2818" opacity="0.55" />
-                : null
-            ))}
+        {/* damier en perspective (rangees vues du dessus, plus etroites
+            au fond) : chaque rangee change de hauteur. */}
+        {[
+          { y: 440, h: 22, tiles: 14, off: 0 },
+          { y: 462, h: 30, tiles: 12, off: 1 },
+          { y: 492, h: 34, tiles: 11, off: 0 },
+          { y: 526, h: 34, tiles: 10, off: 1 },
+        ].map((row, ri) => (
+          <g key={ri}>
+            {Array.from({ length: row.tiles }).map((_, c) => {
+              const w = 1000 / row.tiles;
+              return (c + ri + row.off) % 2 === 0 ? (
+                <rect key={c} x={c * w} y={row.y} width={w} height={row.h}
+                  fill="#3a2818" opacity={0.65 - ri * 0.05} />
+              ) : null;
+            })}
+            {/* joint entre rangees */}
+            <path d={`M0 ${row.y} h1000`} stroke="#241408" strokeWidth="0.6" opacity="0.4" />
           </g>
         ))}
+        {/* TAPIS ROUGE central (chemin de l'autel) — trapeze en
+            perspective, plus etroit au fond. */}
+        <path d="M480 440 L520 440 L560 560 L440 560 Z" fill="#7a2044" opacity="0.85" />
+        <path d="M480 440 L520 440 L560 560 L440 560 Z" fill="#3a0a20" opacity="0.25" filter="url(#ca-vit-r)" />
+        {/* franges du tapis */}
+        <path d="M440 560 L560 560" stroke="#c8a848" strokeWidth="2" />
+        {/* motifs geometriques dores discrets sur le tapis */}
+        <path d="M488 470 h24 M486 490 h28 M482 512 h36 M478 536 h44" stroke="#c8a848" strokeWidth="0.8" opacity="0.7" />
+        {/* GRANDE TACHE DE LUMIERE COLOREE au sol (soleil qui traverse la
+            rose) — halo circulaire teinte de rouge et bleu. */}
+        <ellipse cx="500" cy="490" rx="220" ry="30" fill="#f8e0a0" opacity="0.28" />
+        <ellipse cx="500" cy="486" rx="60" ry="14" fill="#e84028" opacity="0.18" />
+        <ellipse cx="430" cy="500" rx="40" ry="10" fill="#3a80c8" opacity="0.15" />
+        <ellipse cx="580" cy="502" rx="40" ry="10" fill="#f8d848" opacity="0.15" />
         {/* GARGOUILLE de pierre penchée depuis le haut à gauche */}
         <g transform="translate(90,340)">
           <path d="M0 0 Q-8 -12 -16 -6 L-14 6 L-4 8 Z" fill="#8a7860" stroke="#3a2818" strokeWidth="0.6" />
@@ -234,19 +287,7 @@ export default function SceneCathedrale({ collect, action, reveal, inv = [] }) {
       <Hotspot cx={200} cy={320} r={60} label="vitrail latéral" reveal={reveal} onClick={() => action("vitrail")} />
       <Hotspot cx={800} cy={320} r={60} label="vitrail latéral" reveal={reveal} onClick={() => action("vitrail")} />
       <Hotspot cx={500} cy={370} r={50} label="tympan sculpté" reveal={reveal} onClick={() => action("tympan")} />
-      {/* OMBRE DE CORBEAU qui passe derriere la grande rose — silhouette
-          noire au ralenti, avec ailes qui battent. Effet dramatique. */}
-      <g opacity="0.55">
-        <animateTransform attributeName="transform" type="translate"
-          values="-40,220; 1040,260; -40,220" dur="22s" repeatCount="indefinite" />
-        <g>
-          <animateTransform attributeName="transform" type="scale"
-            values="1,1; 0.6,1; 1,1" dur="0.6s" repeatCount="indefinite" />
-          <path d="M0 0 q-14 -6 -22 4 q10 2 14 6 M0 0 q14 -6 22 4 q-10 2 -14 6" stroke="#0a0604" strokeWidth="3" fill="none" strokeLinecap="round" />
-          <ellipse cx="0" cy="2" rx="2.5" ry="4" fill="#0a0604" />
-          <path d="M4 0 l3 -2" stroke="#0a0604" strokeWidth="1.4" />
-        </g>
-      </g>
+      {/* (corbeau de la rose retire — ne rendait pas comme attendu) */}
       <Hotspot cx={120} cy={300} r={60} label="échafaudage en bois" reveal={reveal} onClick={() => action("echafaudage")} />
       <Hotspot cx={160} cy={542} r={14} label="morceau de verre" item="verre_colore" reveal={reveal} onClick={() => collect("verre_colore")} />
       <Hotspot cx={920} cy={542} r={14} label="copeau de pierre" item="copeau_pierre" reveal={reveal} onClick={() => collect("copeau_pierre")} />

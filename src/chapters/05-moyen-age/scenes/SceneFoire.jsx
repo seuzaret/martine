@@ -29,15 +29,101 @@ export default function SceneFoire({ collect, action, reveal, inv = [] }) {
         {/* nuages */}
         <ellipse cx="200" cy="70" rx="100" ry="7" fill="#f0e0c0" opacity="0.55" />
         <ellipse cx="560" cy="90" rx="120" ry="8" fill="#f0e0c0" opacity="0.5" />
+        <ellipse cx="820" cy="60" rx="80" ry="6" fill="#f0e0c0" opacity="0.5" />
         {/* collines lointaines vertes */}
         <path d="M0 360 L0 260 Q200 240 400 250 Q600 260 800 245 L1000 250 L1000 360 Z" fill="#5a6a48" opacity="0.6" />
-        {/* MOULIN à vent silhouette */}
-        <g transform="translate(820,320)">
-          <rect x="-14" y="0" width="28" height="60" fill="#8a6a48" stroke="#3a2818" strokeWidth="0.6" />
+
+        {/* SKYLINE MEDIEVALE : silhouette continue de toits, murailles et
+            un clocher — remplit l'horizon a la place du vide. */}
+        <g opacity="0.85">
+          {/* muraille de la ville avec creneaux */}
+          <path d="M0 300 L1000 300 L1000 360 L0 360 Z" fill="#7a6248" />
+          {/* creneaux de la muraille */}
+          {Array.from({ length: 25 }).map((_, i) => (
+            <rect key={i} x={i * 40} y="292" width="24" height="10" fill="#7a6248" />
+          ))}
+          <path d="M0 300 h1000" stroke="#3a2814" strokeWidth="1.5" />
+          {/* meurtrieres */}
+          {Array.from({ length: 12 }).map((_, i) => (
+            <rect key={i} x={i * 84 + 20} y="326" width="4" height="12" fill="#1a1408" />
+          ))}
+        </g>
+
+        {/* MAISONS DE LA VILLE derriere la muraille — toits pentus, colombages */}
+        {[
+          { x: 60, y: 270, w: 68, h: 34, wall: "#e0d0a8", roof: "#8a4028" },
+          { x: 130, y: 258, w: 52, h: 46, wall: "#c8b494", roof: "#7a3018" },
+          { x: 190, y: 264, w: 60, h: 40, wall: "#d8c8a4", roof: "#8a4028" },
+          { x: 250, y: 250, w: 46, h: 54, wall: "#e0d0a8", roof: "#6a2818" },
+          { x: 300, y: 270, w: 72, h: 34, wall: "#c8b494", roof: "#7a3018" },
+          { x: 380, y: 262, w: 54, h: 42, wall: "#d8c8a4", roof: "#8a4028" },
+          { x: 440, y: 256, w: 58, h: 48, wall: "#e0d0a8", roof: "#6a2818" },
+          { x: 510, y: 268, w: 68, h: 36, wall: "#c8b494", roof: "#8a4028" },
+          { x: 585, y: 264, w: 50, h: 40, wall: "#e0d0a8", roof: "#7a3018" },
+          { x: 645, y: 258, w: 62, h: 46, wall: "#d8c8a4", roof: "#8a4028" },
+          { x: 715, y: 268, w: 58, h: 36, wall: "#c8b494", roof: "#6a2818" },
+          { x: 900, y: 262, w: 66, h: 42, wall: "#e0d0a8", roof: "#8a4028" },
+        ].map((h, i) => (
+          <g key={i}>
+            {/* mur */}
+            <rect x={h.x} y={h.y} width={h.w} height={h.h} fill={h.wall} />
+            <rect x={h.x} y={h.y} width={h.w} height={h.h} fill="#5a3818" opacity="0.12" />
+            {/* colombages en croix de saint-Andre */}
+            <path d={`M${h.x} ${h.y} L${h.x + h.w} ${h.y + h.h} M${h.x + h.w} ${h.y} L${h.x} ${h.y + h.h}`} stroke="#3a2410" strokeWidth="0.6" opacity="0.6" />
+            <path d={`M${h.x} ${h.y + h.h * 0.5} h${h.w}`} stroke="#3a2410" strokeWidth="0.6" opacity="0.6" />
+            {/* toit pentu (2 pans) */}
+            <path d={`M${h.x - 4} ${h.y} L${h.x + h.w / 2} ${h.y - h.h * 0.55} L${h.x + h.w + 4} ${h.y} Z`} fill={h.roof} />
+            <path d={`M${h.x - 4} ${h.y} L${h.x + h.w / 2} ${h.y - h.h * 0.55}`} stroke="#241010" strokeWidth="0.4" />
+            {/* petite fenetre carree */}
+            <rect x={h.x + h.w * 0.35} y={h.y + h.h * 0.3} width="6" height="7" fill="#3a2818" />
+            {/* cheminee qui fume sur certains toits */}
+            {i % 3 === 0 && (
+              <g>
+                <rect x={h.x + h.w * 0.75} y={h.y - h.h * 0.35} width="4" height={h.h * 0.35} fill="#5a3818" />
+                <path d={`M${h.x + h.w * 0.75 + 2} ${h.y - h.h * 0.35} q-4 -8 2 -14 q-6 4 0 -12`} stroke="#c8c0b0" strokeWidth="3" fill="none" opacity="0.5">
+                  <animate attributeName="opacity" values="0.3;0.6;0.3" dur={`${4 + (i % 3)}s`} repeatCount="indefinite" />
+                </path>
+              </g>
+            )}
+          </g>
+        ))}
+
+        {/* GRANDE EGLISE au centre — deux tours, une fleche pointue */}
+        <g transform="translate(780,240)">
+          {/* nef */}
+          <rect x="-40" y="0" width="80" height="64" fill="#d8c8a4" />
+          <rect x="-40" y="0" width="80" height="64" fill="#5a3818" opacity="0.12" />
+          <path d="M-40 0 L0 -22 L40 0 Z" fill="#7a3018" />
+          {/* tour de gauche */}
+          <rect x="-50" y="-32" width="24" height="96" fill="#d8c8a4" />
+          <rect x="-50" y="-32" width="24" height="96" fill="#5a3818" opacity="0.15" />
+          <path d="M-50 -32 L-38 -60 L-26 -32 Z" fill="#5a2818" />
+          {/* tour de droite avec fleche */}
+          <rect x="26" y="-40" width="24" height="104" fill="#d8c8a4" />
+          <rect x="26" y="-40" width="24" height="104" fill="#5a3818" opacity="0.15" />
+          <path d="M26 -40 L38 -90 L50 -40 Z" fill="#5a2818" />
+          <path d="M38 -90 L38 -104" stroke="#3a1810" strokeWidth="1.5" />
+          <circle cx="38" cy="-105" r="1.6" fill="#c8a848" />
+          {/* petite rose */}
+          <circle cx="0" cy="24" r="8" fill="#3a2818" />
+          <circle cx="0" cy="24" r="6" fill="#8a4028" opacity="0.6" />
+          {/* portail ogival */}
+          <path d="M-10 64 L-10 40 Q0 30 10 40 L10 64 Z" fill="#241408" />
+          {/* fenetres latérales */}
+          <rect x="-42" y="10" width="6" height="18" fill="#3a2818" />
+          <rect x="-42" y="34" width="6" height="18" fill="#3a2818" />
+          <rect x="36" y="2" width="6" height="18" fill="#3a2818" />
+          <rect x="36" y="26" width="6" height="18" fill="#3a2818" />
+        </g>
+
+        {/* MOULIN à vent silhouette (garde, deplace un peu vers la droite) */}
+        <g transform="translate(920,320)">
+          <rect x="-14" y="0" width="28" height="40" fill="#8a6a48" stroke="#3a2818" strokeWidth="0.6" />
           <path d="M-16 0 L16 0 L14 -14 L-14 -14 Z" fill="#3a2818" />
           <circle cx="0" cy="-14" r="5" fill="#5a3818" stroke="#2a1408" strokeWidth="0.6" />
-          {/* ailes */}
-          <g style={{ animation: "float 4s ease-in-out infinite" }}>
+          <g style={{ transformOrigin: "0px -14px" }}>
+            <animateTransform attributeName="transform" type="rotate"
+              values="0; 360" dur="14s" repeatCount="indefinite" />
             <path d="M0 -14 L-40 -50 L-46 -44 L-6 -8 Z" fill="#e0c088" stroke="#5a3818" strokeWidth="0.6" />
             <path d="M0 -14 L40 -50 L46 -44 L6 -8 Z" fill="#e0c088" stroke="#5a3818" strokeWidth="0.6" />
             <path d="M0 -14 L-40 22 L-34 26 L4 -10 Z" fill="#e0c088" stroke="#5a3818" strokeWidth="0.6" />
