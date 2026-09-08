@@ -53,8 +53,8 @@ const ITEMS = {
   ocean: { name: "L'océan", emoji: "🌊", support: true, desc: "Entre l'Europe et l'Amérique, des semaines de bateau… ou quelques minutes, si on ose poser un câble au fond." },
 
   /* T5 — la station Marconi (nuit du Titanic, 1912). */
-  antenne: { name: "Antenne", emoji: "📡", desc: "Un mât hérissé de fils : gagné à l'établi de Marconi. Il faut le brancher sur la cabine pour lancer les ondes." },
-  station_marconi: { name: "Cabine de Marconi", emoji: "🛖", support: true, desc: "La cabine de la station côtière : c'est là qu'on branche l'antenne pour transmettre." },
+  antenne: { name: "Antenne", emoji: "📡", desc: "Un mât hérissé de fils, ramassé sur l'établi. Où le poser ?" },
+  station_marconi: { name: "Cabine de Marconi", emoji: "🛖", support: true, desc: "La cabine de la station côtière, toit vide en attente." },
 
   /* T7 — le téléphone (New York, 1915) : combiner l'écouteur et le
      microphone du téléphone à colonne Bell pour joindre San Francisco. */
@@ -266,7 +266,7 @@ const QUETE = [
 
   { perso: "marconi", portrait: "marconi", auto: true,
     bubble: "Une génération après James, sa famille a enfin décidé d'émigrer : ils ont embarqué sur le paquebot le plus grand du monde. Cette nuit, ma station capte ses bips de detresse — il coule dans l'Atlantique. Il faut agir MAINTENANT.",
-    say: "Marconi a un etabli plein d'outils. Un seul peut porter secours au large. A toi de le trouver — et de le brancher sur la cabine.",
+    say: "Marconi a un etabli plein d'outils. Un seul peut porter secours au large — a toi de le trouver.",
     attend: "msg_sos",
     suite: "Les rescapés sont recueillis par le Carpathia. Mais des cousins irlandais des O'Sullivan sont morts dans le naufrage. Sean, 15 ans, en deuil, entre au Nickelodeon voir un film sur le drame…" },
 
