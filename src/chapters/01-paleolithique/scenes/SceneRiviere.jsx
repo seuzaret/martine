@@ -118,6 +118,27 @@ export default function SceneRiviere({ collect, action, reveal, flags, queteQui 
       <ellipse cx="480" cy="418" rx="330" ry="14" fill="#f0e4c8" opacity="0.28" filter="url(#r1blur)" />
       <ellipse cx="780" cy="432" rx="220" ry="10" fill="#e8dcc0" opacity="0.22" filter="url(#r1blur)" />
       <ellipse cx="180" cy="440" rx="180" ry="9" fill="#f4e8cc" opacity="0.2" filter="url(#r1blur)" />
+      {/* DEUX POISSONS argentés qui traversent l'eau — reflets discrets à
+          la surface. Petits dos qui affleurent, animation de translation
+          lente pour rester crédible (poisson qui glisse, pas qui court). */}
+      <g opacity="0.65">
+        <animateTransform attributeName="transform" type="translate"
+          values="-30,0; 1050,10; -30,0" dur="22s" repeatCount="indefinite" />
+        {/* dos du poisson (ellipse plate) */}
+        <ellipse cx="0" cy="466" rx="7" ry="1.6" fill="#8aa0a8" />
+        {/* nageoire dorsale qui affleure */}
+        <path d="M-2 464 l1 -2 l3 0 l1 2" stroke="#5a6a72" strokeWidth="0.8" fill="none" />
+        {/* petites rides autour */}
+        <path d="M-10 468 q7 -2 14 0" stroke="#d8c8a0" strokeWidth="0.6" fill="none" opacity="0.6" />
+      </g>
+      <g opacity="0.55">
+        <animateTransform attributeName="transform" type="translate"
+          values="1050,0; -30,-8; 1050,0" dur="28s" repeatCount="indefinite" />
+        <ellipse cx="0" cy="482" rx="5" ry="1.3" fill="#9aacb4" />
+        <path d="M-1 481 l1 -1.5 l2 0 l1 1.5" stroke="#5a6a72" strokeWidth="0.6" fill="none" />
+        <path d="M-8 484 q6 -1.5 12 0" stroke="#d8c8a0" strokeWidth="0.5" fill="none" opacity="0.5" />
+      </g>
+
       {/* le héron, immobile dans la brume */}
       <g transform="translate(520,398)">
         <path d="M0 0 q2 -18 10 -22 q6 -2 8 2 l6 -2 l-5 5 q-2 8 -10 9 L8 22 M14 22 l-3 -14" stroke="#2c2438" strokeWidth="2.5" fill="none" />

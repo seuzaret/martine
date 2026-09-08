@@ -85,6 +85,17 @@ export default function SceneCampement({ collect, action, reveal, made = [], que
       <ellipse cx="300" cy="352" rx="320" ry="22" fill="#e8dcc4" opacity="0.2" filter="url(#c1blur)" />
       <ellipse cx="740" cy="368" rx="300" ry="18" fill="#f4e4c0" opacity="0.24" filter="url(#c1blur)" />
       <ellipse cx="520" cy="336" rx="240" ry="14" fill="#d8ccb8" opacity="0.16" filter="url(#c1blur)" />
+
+      {/* OISEAUX qui traversent le ciel au loin — trois silhouettes en V,
+          traversée lente pour rester discret. Recycle l'idée du petit oiseau
+          de l'atelier mais en escadre. */}
+      <g opacity="0.7">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-30" dur="26s" repeatCount="indefinite" />
+        <path d="M0 100 q3 -4 6 0 q3 -4 6 0" stroke="#1c1810" strokeWidth="1.4" fill="none" strokeLinecap="round" />
+        <path d="M18 108 q3 -4 6 0 q3 -4 6 0" stroke="#1c1810" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+        <path d="M32 96 q3 -4 6 0 q3 -4 6 0" stroke="#1c1810" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+      </g>
       </PLayer>
 
       {/* ═══ couche intermédiaire : les grands arbres de la clairière ═══ */}
