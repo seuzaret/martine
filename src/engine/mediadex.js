@@ -92,7 +92,7 @@ export function playCardSound(muted = false) {
   try {
     sfxCard = sfxCard || new Audio('assets/sounds/card-wow.mp3');
     sfxCard.currentTime = 0;
-    sfxCard.volume = 0.35;
+    sfxCard.volume = 0.15;
     sfxCard.play().catch(() => {});
   } catch { /* audio indisponible */ }
 }
