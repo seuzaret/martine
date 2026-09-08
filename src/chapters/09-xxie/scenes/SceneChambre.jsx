@@ -69,6 +69,20 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
                 ))}
               </g>
             </g>
+            {/* DRONE de livraison qui traverse la ville, vu a travers la
+                fenetre — clippe par le cadre. Petit clignotant rouge. */}
+            <g>
+              <animateTransform attributeName="transform" type="translate"
+                values="-60,0; 60,-6; -60,0" dur="18s" repeatCount="indefinite" />
+              <g transform="translate(0,-10)">
+                <rect x="-6" y="-2" width="12" height="4" rx="0.8" fill="#0a0e18" stroke="#5a6a80" strokeWidth="0.5" />
+                <path d="M-8 -1 h4 M4 -1 h4" stroke="#8a94a8" strokeWidth="0.8" />
+                <path d="M-8 1 h4 M4 1 h4" stroke="#8a94a8" strokeWidth="0.8" />
+                <circle cx="0" cy="0" r="1.4" fill="#e83820">
+                  <animate attributeName="opacity" values="0.2;1;0.2" dur="0.9s" repeatCount="indefinite" />
+                </circle>
+              </g>
+            </g>
           </g>
           <rect x="-58" y="-58" width="116" height="116" fill="none" stroke="#2a3040" strokeWidth="7" />
           <path d="M0 -58 v116 M-58 0 h116" stroke="#2a3040" strokeWidth="3.5" />
@@ -80,23 +94,6 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
           <circle cx="0" cy="-18" r="20" fill="#c8483a" opacity="0.8" />
           <path d="M-30 40 q30 -44 60 0 Z" fill="#3a6ac8" opacity="0.7" />
           <text x="0" y="48" textAnchor="middle" fontSize="9" fill="#8fa3bd" fontFamily="ui-monospace,monospace">MUSIQUE</text>
-        </g>
-        {/* DRONE de livraison qui traverse le ciel — signature XXIe siecle,
-            avec petit clignotant rouge. */}
-        <g opacity="0.8">
-          <animateTransform attributeName="transform" type="translate"
-            values="-40,0; 1050,20" dur="20s" repeatCount="indefinite" />
-          <g transform="translate(0,80)">
-            {/* corps */}
-            <rect x="-4" y="-1.5" width="8" height="3" rx="0.6" fill="#3a3a3a" />
-            {/* helices */}
-            <path d="M-6 -1 h4 M2 -1 h4" stroke="#6a6a6a" strokeWidth="0.6" />
-            <path d="M-6 1 h4 M2 1 h4" stroke="#6a6a6a" strokeWidth="0.6" />
-            {/* clignotant */}
-            <circle cx="0" cy="0" r="0.8" fill="#e83820">
-              <animate attributeName="opacity" values="0.3;1;0.3" dur="0.9s" repeatCount="indefinite" />
-            </circle>
-          </g>
         </g>
       </PLayer>
 

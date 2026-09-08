@@ -253,6 +253,20 @@ export default function SceneInterieur({ collect, action, reveal, made = [], que
       {/* blocs sombres qui cadrent les coins du bas */}
       <path d="M0 560 L0 508 Q40 502 74 522 Q96 538 88 560 Z" fill="#120b06" />
       <path d="M1000 560 L1000 500 Q952 496 924 520 Q904 540 916 560 Z" fill="#100a05" />
+      {/* PETITE SOURIS qui detale au fond de la grotte, silhouette
+          discrete a la lueur du feu — tete a gauche donc marche
+          de droite a gauche. */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="1050,0; -40,-3; 1050,0" dur="34s" repeatCount="indefinite" />
+        <g transform="translate(0,548)">
+          <ellipse cx="0" cy="0" rx="4.5" ry="2.2" fill="#2a1e10" />
+          <circle cx="-3.5" cy="-1" r="1.8" fill="#2a1e10" />
+          <circle cx="-5" cy="-2.5" r="1" fill="#2a1e10" />
+          <circle cx="-2.2" cy="-2.5" r="1" fill="#2a1e10" />
+          <path d="M4.5 0 q5 4 7 -1.5" stroke="#2a1e10" strokeWidth="0.7" fill="none" strokeLinecap="round" />
+        </g>
+      </g>
       </PLayer>
 
       {/* léger voile de grain sur toute l'image */}

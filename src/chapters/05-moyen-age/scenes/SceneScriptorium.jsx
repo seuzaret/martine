@@ -234,13 +234,13 @@ export default function SceneMonastere({ collect, action, reveal, made = [], fla
             <circle cx={-6} cy={0} r={1.2} fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
           </g>
         )}
-        {/* CHAT du scriptorium qui traverse lentement le fond, entre les
-            rayonnages et le pupitre — sans doute a un manuscrit a garder
-            des souris. Silhouette simple, sombre sur fond dallé. */}
+        {/* CHAT du scriptorium qui traverse lentement le premier plan, au
+            ras du sol dalle — au-dessus du niveau des pieds des personnages
+            pour ne pas passer dessus. */}
         <g opacity="0.85">
           <animateTransform attributeName="transform" type="translate"
             values="1050,0; -60,-4; 1050,0" dur="42s" repeatCount="indefinite" />
-          <g transform="translate(0,480)">
+          <g transform="translate(0,548)">
             {/* corps */}
             <ellipse cx="0" cy="0" rx="14" ry="5" fill="#2a1e14" />
             {/* tete */}
