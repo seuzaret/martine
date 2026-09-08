@@ -73,11 +73,71 @@ export default function SceneEniac({ collect, action, reveal, made = [], flags =
             {/* petite étiquette panneau */}
             <rect x={x + 20} y="380" width="80" height="14" fill="#0a0806" />
             <text x={x + 60} y="390" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="8" fill="#ffcf78">PANEL {String.fromCharCode(65 + i)}</text>
+            {/* lampes-temoins qui clignotent quand la machine tourne */}
+            {allume && [0, 1, 2].map((k) => (
+              <circle key={`led-${k}`} cx={x + 26 + k * 22} cy={410} r="3.2"
+                fill={["#ff6a4a", "#5eff9e", "#7fd8ff"][(i + k) % 3]}>
+                <animate attributeName="opacity"
+                  values="0.15;1;0.25;0.9;0.15"
+                  dur={`${1.2 + ((i + k) % 3) * 0.4}s`}
+                  begin={`${(i * 0.13 + k * 0.31) % 1}s`}
+                  repeatCount="indefinite" />
+              </circle>
+            ))}
           </g>
         ))}
-        {/* câbles serpentant au sol entre les baies */}
-        <path d="M160 400 Q300 420 460 400 Q620 380 760 400" stroke="#1a1608" strokeWidth="4" fill="none" opacity="0.8" />
-        <path d="M180 402 Q320 424 480 402 Q640 380 780 402" stroke="#3a2818" strokeWidth="2" fill="none" opacity="0.6" />
+
+        {/* FENTE-lecteur de fiches sur la baie de gauche (PANEL A) : quand
+            les fiches sont chargees, une pile de cartes perforees depasse. */}
+        <g transform="translate(100,300)">
+          <rect x="-16" y="-6" width="32" height="14" rx="1.5" fill="#0a0806" stroke="#c8963e" strokeWidth="1" />
+          <text x="0" y="4" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="6" fill="#c8963e" letterSpacing="0.5">CARDS ▸</text>
+          {chargees && (
+            <g transform="translate(0,-10)">
+              {[0, 2, 4].map((dy, i) => (
+                <g key={i} transform={`translate(${-i * 0.6},${-dy})`}>
+                  <rect x="-14" y="-4" width="28" height="10" fill="#f0e8d0" stroke="#5a4028" strokeWidth="0.5" />
+                  {/* perforations */}
+                  {[-10, -6, -2, 2, 6, 10].map((px, j) => (
+                    <rect key={j} x={px - 0.5} y={-1 + (j % 2) * 3} width="1" height="1.6" fill="#3a2818" />
+                  ))}
+                </g>
+              ))}
+            </g>
+          )}
+        </g>
+
+        {/* câbles serpentant au sol entre les baies — APPARAISSENT seulement
+            une fois les cables branches par le joueur */}
+        {cablees && (
+          <g>
+            <path d="M160 400 Q300 420 460 400 Q620 380 760 400" stroke="#c83020" strokeWidth="3.5" fill="none" opacity="0.9" />
+            <path d="M180 402 Q320 424 480 402 Q640 380 780 402" stroke="#3a80c8" strokeWidth="2.4" fill="none" opacity="0.8" />
+            <path d="M200 406 Q340 428 500 406 Q660 384 800 406" stroke="#c8c830" strokeWidth="2" fill="none" opacity="0.7" />
+          </g>
+        )}
+
+        {/* CAFARDS (le vrai bug de l'ENIAC !) qui trottent : sur le mur
+            en haut et derriere les baies. Deux passages, cycles longs. */}
+        <g opacity="0.7">
+          <animateTransform attributeName="transform" type="translate"
+            values="1020,110; -30,120; 1020,110" dur="42s" repeatCount="indefinite" />
+          <g>
+            <ellipse cx="0" cy="0" rx="4" ry="2.4" fill="#1a1006" />
+            <circle cx="4" cy="0" r="1.6" fill="#1a1006" />
+            <path d="M-3 -2 l-3 -1 M-3 0 l-3 0 M-3 2 l-3 1 M3 -2 l3 -1 M3 2 l3 1" stroke="#1a1006" strokeWidth="0.5" />
+            <path d="M5 -1 l3 -2 M5 1 l3 2" stroke="#1a1006" strokeWidth="0.5" />
+          </g>
+        </g>
+        <g opacity="0.6">
+          <animateTransform attributeName="transform" type="translate"
+            values="-30,400; 1020,395; -30,400" dur="55s" repeatCount="indefinite" />
+          <g transform="scale(-1,1)">
+            <ellipse cx="0" cy="0" rx="4" ry="2.4" fill="#1a1006" />
+            <circle cx="4" cy="0" r="1.6" fill="#1a1006" />
+            <path d="M-3 -2 l-3 -1 M-3 0 l-3 0 M-3 2 l-3 1 M3 -2 l3 -1 M3 2 l3 1" stroke="#1a1006" strokeWidth="0.5" />
+          </g>
+        </g>
       </PLayer>
 
       {/* ═══ sol + tables + plugboard ═══ */}
@@ -91,8 +151,9 @@ export default function SceneEniac({ collect, action, reveal, made = [], flags =
           {[...Array(10)].map((_, r) => [...Array(8)].map((_, c) => (
             <circle key={`p-${r}-${c}`} cx={-42 + c * 12} cy={16 + r * 12} r="2.2" fill="#0a0806" stroke="#8a5820" strokeWidth="0.4" />
           )))}
-          {/* câbles branchés (quand fiches chargées) */}
-          {chargees && [
+          {/* câbles branchés — n'apparaissent qu'une fois qu'on les a
+              vraiment brancher sur le plugboard */}
+          {cablees && [
             "M-30 22 Q-10 60 20 40",
             "M-6 34 Q10 80 30 60",
             "M18 22 Q-4 70 -20 90",
@@ -185,24 +246,24 @@ export default function SceneEniac({ collect, action, reveal, made = [], flags =
           une fois les câbles branchés, clique dessus ouvre le mini-jeu
           de débuggage (bugs + tubes grillés) avant d'accepter msg_eniac. */}
       {!cablees && (
-        <Hotspot cx={220} cy={270} r={100} label={chargees ? "l'ENIAC — branche les câbles pour lancer le calcul" : "l'ENIAC — insère les fiches de calcul"} item="eniac_machine" reveal={reveal} onClick={() => action("kay")} />
+        <Hotspot cx={220} cy={270} r={100} label={chargees ? "l'ENIAC — branche les câbles pour lancer le calcul" : "l'ENIAC — insère les fiches de calcul"} item="eniac_machine" reveal={reveal} />
       )}
       {cablees && !allume && (
         <Hotspot cx={220} cy={270} r={100} label="l'ENIAC — débuguer avant de lancer !" reveal={reveal} onClick={() => action("eniac_debug")} />
       )}
       {allume && (
-        <Hotspot cx={220} cy={270} r={100} label="l'ENIAC (opérationnel)" reveal={reveal} onClick={() => action("kay")} />
+        <Hotspot cx={220} cy={270} r={100} label="l'ENIAC (opérationnel)" reveal={reveal} />
       )}
       {/* plugboard : reste cible de dépôt tant qu'on n'a pas branché,
           puis devient bouton du mini-jeu de débuggage comme les baies */}
       {!cablees && (
-        <Hotspot cx={490} cy={370} r={60} label={chargees ? "le plugboard — glisse-y les câbles" : "le plugboard — vide pour l'instant"} item="eniac_machine" reveal={reveal} onClick={() => action("kay")} />
+        <Hotspot cx={490} cy={370} r={60} label={chargees ? "le plugboard — glisse-y les câbles" : "le plugboard — vide pour l'instant"} item="eniac_machine" reveal={reveal} />
       )}
       {cablees && !allume && (
         <Hotspot cx={490} cy={370} r={60} label="le plugboard — lance le débuggage" reveal={reveal} onClick={() => action("eniac_debug")} />
       )}
       {allume && (
-        <Hotspot cx={490} cy={370} r={60} label="le plugboard (programme lancé)" reveal={reveal} onClick={() => action("kay")} />
+        <Hotspot cx={490} cy={370} r={60} label="le plugboard (programme lancé)" reveal={reveal} />
       )}
     </svg>
   );

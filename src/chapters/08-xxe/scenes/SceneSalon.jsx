@@ -42,6 +42,30 @@ export default function SceneSalon({ collect, action, reveal, made = [], flags =
       {/* ═══ FENÊTRE aux rideaux tirés (black-out) ═══ */}
       <PLayer depth={3}>
         <rect x="380" y="60" width="220" height="180" fill="#0a0604" stroke="#3a2418" strokeWidth="4" />
+        {/* CONES de projecteurs DCA qu'on aperçoit par la fente des rideaux :
+            longs faisceaux fins qui balaient le ciel de guerre. */}
+        <g clipPath="url(#sd-slitclip)">
+          {/* faisceau 1 */}
+          <g style={{ transformOrigin: "490px 240px" }}>
+            <animateTransform attributeName="transform" type="rotate"
+              values="-30 490 240; 20 490 240; -30 490 240" dur="9s" repeatCount="indefinite" />
+            <path d="M486 240 L470 70 L510 70 L494 240 Z" fill="#ffe08a" opacity="0.28" />
+          </g>
+          {/* faisceau 2, decale et plus lent */}
+          <g>
+            <animateTransform attributeName="transform" type="rotate"
+              values="18 490 240; -22 490 240; 18 490 240" dur="12s" repeatCount="indefinite" />
+            <path d="M488 240 L474 70 L502 70 L492 240 Z" fill="#ffe08a" opacity="0.22" />
+          </g>
+          {/* petits eclairs de DCA loin */}
+          <circle cx="440" cy="120" r="2" fill="#ff9a4a">
+            <animate attributeName="opacity" values="0;0.9;0;0;0" dur="6s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="560" cy="90" r="2" fill="#ff9a4a">
+            <animate attributeName="opacity" values="0;0;0;0.9;0" dur="7s" repeatCount="indefinite" />
+          </circle>
+        </g>
+        <defs><clipPath id="sd-slitclip"><rect x="430" y="60" width="140" height="180" /></clipPath></defs>
         <path d="M370 60 L400 60 L410 240 L370 240 Z" fill="url(#sd-curtain)" />
         <path d="M600 60 L630 60 L630 240 L590 240 Z" fill="url(#sd-curtain)" />
         <path d="M400 60 Q450 30 500 60" stroke="#5a3818" strokeWidth="3" fill="none" />
@@ -72,6 +96,36 @@ export default function SceneSalon({ collect, action, reveal, made = [], flags =
         <rect y="440" width="1000" height="120" fill="url(#sd-floor)" />
         <rect x="150" y="450" width="600" height="60" rx="6" fill="#6a2820" opacity="0.7" />
         <rect x="170" y="460" width="560" height="40" rx="4" fill="none" stroke="#c88060" strokeWidth="1" opacity="0.6" />
+
+        {/* PETITE SOURIS grise qui trotte : sort de derriere le buffet,
+            traverse en un eclair, disparait derriere le fauteuil. Dessinee
+            AVANT les meubles pour passer bien derriere eux. */}
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="240,538; 240,538; 810,538; 810,538; 240,538"
+            keyTimes="0; 0.55; 0.7; 0.85; 1"
+            dur="22s" repeatCount="indefinite" />
+          <g>
+            {/* corps gris */}
+            <ellipse cx="0" cy="0" rx="7" ry="3.5" fill="#7a7268" stroke="#3a342e" strokeWidth="0.4" />
+            {/* tete */}
+            <ellipse cx="7" cy="-1" rx="4" ry="3" fill="#7a7268" />
+            {/* oreille */}
+            <circle cx="6" cy="-3.5" r="1.6" fill="#5a5450" />
+            {/* museau */}
+            <circle cx="11" cy="-1" r="0.7" fill="#3a342e" />
+            {/* oeil */}
+            <circle cx="9" cy="-2" r="0.5" fill="#0a0806" />
+            {/* pattes qui trottent (petit bobbing) */}
+            <g>
+              <animateTransform attributeName="transform" type="translate"
+                values="0,0; 0,-0.5; 0,0" dur="0.15s" repeatCount="indefinite" />
+              <path d="M-4 3 v2 M-1 3 v2 M2 3 v2 M5 3 v2" stroke="#3a342e" strokeWidth="0.6" strokeLinecap="round" />
+            </g>
+            {/* longue queue */}
+            <path d="M-6 -1 q-8 -3 -12 3" stroke="#7a7268" strokeWidth="1" fill="none" strokeLinecap="round" />
+          </g>
+        </g>
 
         {/* BUFFET (TSF cachée + antenne dans tiroir droit) */}
         <g>

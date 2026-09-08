@@ -73,6 +73,45 @@ export default function SceneStudio({ collect, action, reveal, made = [] }) {
           <path d="M0 -64 v128 M-90 0 h180" stroke="#1c1a20" strokeWidth="4" />
         </g>
 
+        {/* seconde FENETRE : vue sur LONDRES (Big Ben) — le studio est
+            allie, on emet vers l'occupation. */}
+        <g transform="translate(920,180)">
+          <rect x="-80" y="-70" width="160" height="140" fill="url(#st-win)" />
+          <g clipPath="url(#st-win2clip)">
+            {/* silhouette de la Tamise + toits sombres */}
+            <path d="M-80 40 L-40 20 L-10 32 L26 12 L60 30 L80 22 L80 70 L-80 70 Z" fill="#0e1218" />
+            {/* Big Ben tour + horloge */}
+            <g transform="translate(-30,-2)">
+              <rect x="-9" y="-40" width="18" height="70" fill="#2a2c34" />
+              <path d="M-11 -40 h22 v6 h-22 z" fill="#3a3c46" />
+              <rect x="-7" y="-52" width="14" height="14" fill="#2a2c34" />
+              <circle cx="0" cy="-45" r="4.5" fill="#efe6d2" stroke="#2a2c34" strokeWidth="0.6" />
+              <path d="M0 -45 v-3 M0 -45 l2.5 1" stroke="#1a1408" strokeWidth="0.6" />
+              <path d="M-7 -60 L0 -70 L7 -60 Z" fill="#2a2c34" />
+              <path d="M0 -70 v-6" stroke="#2a2c34" strokeWidth="1" />
+            </g>
+            {/* petites lucarnes eclairees */}
+            {[[26,20],[46,26],[62,18],[-56,26]].map(([x,y],i) => (
+              <rect key={i} x={x} y={y} width="3" height="4" fill="#ffe08a" opacity="0.7">
+                <animate attributeName="opacity" values="0.4;0.85;0.4" dur={`${2 + (i % 3)}s`} repeatCount="indefinite" />
+              </rect>
+            ))}
+            {/* projecteur DCA qui balaie doucement le ciel */}
+            <path d="M50 60 L-10 -60 L18 -66 L58 60 Z" fill="#ffe08a" opacity="0.15">
+              <animateTransform attributeName="transform" type="rotate"
+                values="-10 50 60; 12 50 60; -10 50 60" dur="14s" repeatCount="indefinite" />
+            </path>
+          </g>
+          {/* clip de la fenetre Londres */}
+          <defs><clipPath id="st-win2clip"><rect x="-80" y="-70" width="160" height="140" /></clipPath></defs>
+          {/* cadre + croisillons */}
+          <rect x="-80" y="-70" width="160" height="140" fill="none" stroke="#1c1a20" strokeWidth="7" />
+          <path d="M0 -70 v140 M-80 0 h160" stroke="#1c1a20" strokeWidth="3.5" />
+          {/* etiquette LONDON */}
+          <rect x="-30" y="72" width="60" height="12" rx="2" fill="#2a2c34" stroke="#4a5460" strokeWidth="0.6" />
+          <text x="0" y="81" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7.5" letterSpacing="2" fill="#7fd8ff">LONDON</text>
+        </g>
+
         {/* horloge de studio */}
         <g transform="translate(180,140)">
           <circle cx="0" cy="0" r="34" fill="#e8e4da" stroke="#2a282e" strokeWidth="6" />
@@ -98,10 +137,11 @@ export default function SceneStudio({ collect, action, reveal, made = [] }) {
             <circle cx="26" cy="40" r="3" fill="#ffd166" />
           </g>
         )}
-        {/* le speaker, assis, ses feuilles à la main */}
+        {/* le speaker, assis, ses feuilles à la main — corps allonge qui
+            se prolonge derriere le pupitre. */}
         <g transform="translate(340,372)">
-          <path d="M-28 96 Q-36 22 -6 8 Q10 2 26 8 Q40 22 34 96 Z" fill="#2e3440" />
-          <path d="M-28 96 Q-36 22 -6 8 Q10 2 26 8 Q40 22 34 96 Z" fill="#101418" opacity="0.24" filter="url(#st-grain)" />
+          <path d="M-30 150 Q-36 22 -6 8 Q10 2 26 8 Q40 22 36 150 Z" fill="#2e3440" />
+          <path d="M-30 150 Q-36 22 -6 8 Q10 2 26 8 Q40 22 36 150 Z" fill="#101418" opacity="0.24" filter="url(#st-grain)" />
           <circle cx="2" cy="-10" r="15" fill="#d8a884" />
           <path d="M-13 -14 q-2 -18 16 -17 q17 1 12 16 q-5 -7 -14 -7 q-11 0 -14 8 Z" fill="#3a3028" />
           <path d="M-5 -4 q7 3 14 0" stroke="#3a3028" strokeWidth="2.5" fill="none" />

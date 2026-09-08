@@ -179,6 +179,53 @@ export default function SceneParis({ collect, action, reveal, made = [], mode })
 
       {/* ═══ PATROUILLE allemande — 2 silhouettes ═══ */}
       <PLayer depth={1}>
+        {/* TANK Panzer qui remonte lentement l'avenue DERRIERE la patrouille. */}
+        <g opacity="0.92">
+          <animateTransform attributeName="transform" type="translate"
+            values="1100,0; -240,0" dur="55s" repeatCount="indefinite" />
+          <g transform="translate(0,458)">
+            {/* corps (caisse) */}
+            <path d="M-72 0 L72 0 L60 -22 L-56 -22 Z" fill="#5a5040" stroke="#2a2418" strokeWidth="1.2" />
+            {/* tourelle */}
+            <path d="M-24 -22 L26 -22 L22 -38 L-20 -38 Z" fill="#4a4030" stroke="#2a2418" strokeWidth="1" />
+            {/* trappe */}
+            <rect x="-4" y="-40" width="8" height="4" fill="#2a2418" />
+            {/* canon long, incline legerement */}
+            <path d="M22 -34 L92 -30 L92 -26 L22 -30 Z" fill="#3a3428" stroke="#1a1408" strokeWidth="0.8" />
+            <circle cx="92" cy="-28" r="2" fill="#1a1408" />
+            {/* croix de fer sur le flanc */}
+            <path d="M-40 -14 h10 M-35 -19 v10" stroke="#efe6d2" strokeWidth="1.4" />
+            {/* chenille superieure */}
+            <rect x="-76" y="0" width="152" height="6" fill="#2a2418" />
+            {/* roues qui tournent (chenille se deroule) */}
+            {[-60, -40, -20, 0, 20, 40, 60].map((x, i) => (
+              <g key={i} transform={`translate(${x},10)`}>
+                <animateTransform attributeName="transform" type="rotate"
+                  values={`0 ${x} 10; -360 ${x} 10`} dur="0.9s" repeatCount="indefinite" />
+                <circle r="7" fill="#3a3428" stroke="#1a1408" strokeWidth="1" />
+                <path d="M-6 0 h12 M0 -6 v12" stroke="#1a1408" strokeWidth="0.8" />
+              </g>
+            ))}
+            {/* patin de chenille */}
+            <rect x="-76" y="14" width="152" height="6" fill="#2a2418" />
+            {/* poussiere sous les chenilles */}
+            <g opacity="0.55">
+              {[-70, -50, -30].map((x, i) => (
+                <circle key={i} cx={x} cy="22" r="5" fill="#9a8878">
+                  <animate attributeName="opacity" values="0.5;0.15;0.5" dur={`${1 + i * 0.3}s`} repeatCount="indefinite" />
+                </circle>
+              ))}
+            </g>
+            {/* fumee du pot */}
+            <g opacity="0.6">
+              <animateTransform attributeName="transform" type="translate"
+                values="0,0; -6,-4; 0,0" dur="3s" repeatCount="indefinite" />
+              <circle cx="-70" cy="-16" r="6" fill="#7a7060" opacity="0.5" />
+              <circle cx="-78" cy="-24" r="8" fill="#6a6050" opacity="0.4" />
+            </g>
+          </g>
+        </g>
+
         <g transform="translate(560,410)">
           {/* soldat 1 (casque, uniforme feldgrau) */}
           <g transform="translate(0,0)">
