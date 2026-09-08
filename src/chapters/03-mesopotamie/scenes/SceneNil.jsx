@@ -255,31 +255,8 @@ export default function SceneNil({ collect, action, reveal, made = [], queteQui 
       <Hotspot cx={430} cy={514} r={28} label="couteau" item="couteau" reveal={reveal} onClick={() => collect("couteau")} />
       <Hotspot cx={496} cy={516} r={26} label="bol de terre" item="bol" reveal={reveal} onClick={() => collect("bol")} />
       <Hotspot cx={575} cy={500} r={38} label="le feu" item="feu" reveal={reveal} onClick={() => collect("feu")} />
-        {/* Deux ibis egyptiens qui remontent le Nil (droite vers gauche),
-          silhouettes distinctes du vol en V des autres tableaux : cou long,
-          bec courbe, deux oiseaux plus grands. */}
-      <g opacity="0.85">
-        <animateTransform attributeName="transform" type="translate"
-          values="1080,90; -80,60; 1080,90" dur="32s" repeatCount="indefinite" />
-        {/* ibis 1 (silhouette avec long bec courbe et pattes tendues) */}
-        <g>
-          <ellipse cx="0" cy="0" rx="7" ry="2.4" fill="#3a2418" />
-          <ellipse cx="-6" cy="-1" rx="2.4" ry="1.6" fill="#3a2418" />
-          <path d="M-7 -1 q-5 1 -8 -1" stroke="#3a2418" strokeWidth="1.2" fill="none" />
-          <path d="M-9 -1.5 q-3 -3 -4 -6" stroke="#e0a028" strokeWidth="1" fill="none" />
-          <path d="M4 2 v6 M6 2 v6" stroke="#3a2418" strokeWidth="0.8" />
-          <path d="M-3 -3 q4 -6 8 -2 M2 -3 q4 -3 6 1" stroke="#3a2418" strokeWidth="1" fill="none" />
-        </g>
-        {/* ibis 2 en retrait */}
-        <g transform="translate(35,14)">
-          <ellipse cx="0" cy="0" rx="6" ry="2.2" fill="#3a2418" />
-          <ellipse cx="-5" cy="-1" rx="2.2" ry="1.4" fill="#3a2418" />
-          <path d="M-6 -1 q-4 1 -7 -1" stroke="#3a2418" strokeWidth="1.1" fill="none" />
-          <path d="M-8 -1.5 q-3 -3 -4 -5" stroke="#e0a028" strokeWidth="0.9" fill="none" />
-          <path d="M3 2 v5 M5 2 v5" stroke="#3a2418" strokeWidth="0.7" />
-          <path d="M-2 -3 q3 -5 7 -2 M2 -3 q3 -3 5 1" stroke="#3a2418" strokeWidth="0.9" fill="none" />
-        </g>
-      </g>
+        {/* (oiseaux du Nil retires : la vie du tableau tient au crocodile,
+          a la felouque, aux libellules et a la luciole au feu) */}
       {/* LUCIOLE qui danse autour du feu — point jaune-vert qui pulse */}
       <g>
         <animateTransform attributeName="transform" type="translate"

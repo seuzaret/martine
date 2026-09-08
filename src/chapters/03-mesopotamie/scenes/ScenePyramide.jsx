@@ -140,6 +140,33 @@ export default function ScenePyramide({ collect, action, reveal, inv = [] }) {
           <rect x="24" y="4" width="24" height="20" fill="#e0c088" stroke="#5a3820" strokeWidth="0.8" />
           <rect x="-24" y="-24" width="28" height="20" fill="#d0b078" stroke="#5a3820" strokeWidth="0.8" />
         </g>
+
+        {/* COBRA qui apparait derriere les blocs cote droit — capuchon
+            dresse, tete qui oscille de gauche a droite, langue qui darde
+            de temps en temps. Motif ocre-noir typique du naja egyptien. */}
+        <g transform="translate(290,478)">
+          {/* corps enroule qui depasse derriere le bloc */}
+          <path d="M-2 20 q4 -6 0 -12 q-4 -6 4 -10" stroke="#d8a848" strokeWidth="4" fill="none" strokeLinecap="round" />
+          {/* tete dressee — pivote de gauche a droite */}
+          <g style={{ transformOrigin: "0px 0px" }}>
+            <animateTransform attributeName="transform" type="rotate"
+              values="-18; 18; -18" dur="4.5s" repeatCount="indefinite" />
+            {/* capuchon evase */}
+            <path d="M-8 4 Q-9 -8 0 -14 Q9 -8 8 4 Z" fill="#c88028" stroke="#5a2810" strokeWidth="0.6" />
+            {/* motifs noirs (yeux du cobra sur le capuchon) */}
+            <circle cx="-3" cy="-2" r="1" fill="#1a0e04" />
+            <circle cx="3" cy="-2" r="1" fill="#1a0e04" />
+            {/* tete */}
+            <ellipse cx="0" cy="-10" rx="4" ry="3" fill="#d8a848" stroke="#5a2810" strokeWidth="0.5" />
+            <circle cx="-1.5" cy="-11" r="0.5" fill="#0a0604" />
+            <circle cx="1.5" cy="-11" r="0.5" fill="#0a0604" />
+            {/* langue fourchue qui darde de temps en temps */}
+            <g>
+              <animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.75;0.8;0.85;1" dur="4.5s" repeatCount="indefinite" />
+              <path d="M0 -12 l0 -4 M-1 -14 l1 -2 l1 2" stroke="#8a1810" strokeWidth="0.6" fill="none" />
+            </g>
+          </g>
+        </g>
       </PLayer>
 
       <PLayer depth={1}>

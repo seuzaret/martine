@@ -87,11 +87,18 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
                 <ellipse cx="0" cy="6" rx="16" ry="4" fill="#a87a1a" opacity="0.5" />
                 <path d="M-4 6 q4 4 8 0" stroke="#3a2a10" strokeWidth="2" fill="none" />
               </g>
-              {/* les ABEILLES qui tournent autour de la ruche */}
-              {[[-42, 2], [-70, -8], [-58, -20], [-48, -14]].map(([x, y], i) => (
-                <g key={i} style={{ animation: `drift ${2 + i * 0.6}s ease-in-out infinite`, transformOrigin: `${140 + x}px ${356 + y}px`, transformBox: "view-box" }}>
-                  <ellipse cx={x} cy={y} rx="2.4" ry="1.6" fill="#e0b23a" />
-                  <path d={`M${x - 2} ${y} h4`} stroke="#2a1c10" strokeWidth="1.4" />
+              {/* les ABEILLES qui tournent autour de la ruche — chacune
+                  fait un petit orbit de quelques pixels autour de sa
+                  position (SMIL pour marcher partout). */}
+              {[[-42, 2, 2.4, 0], [-70, -8, 3.1, 0.5], [-58, -20, 2.7, 1.1], [-48, -14, 3.4, 1.7]].map(([x, y, dur, off], i) => (
+                <g key={i}>
+                  <animateTransform attributeName="transform" type="translate"
+                    values={`${x - 3},${y}; ${x + 3},${y - 2}; ${x + 2},${y + 2}; ${x - 3},${y}`}
+                    dur={`${dur}s`} begin={`${off}s`} repeatCount="indefinite" />
+                  <ellipse cx="0" cy="0" rx="2.4" ry="1.6" fill="#e0b23a" stroke="#3a2010" strokeWidth="0.3" />
+                  <path d="M-2 0 h4" stroke="#2a1c10" strokeWidth="1.4" />
+                  {/* petites ailes translucides */}
+                  <ellipse cx="0" cy="-1.5" rx="2" ry="1" fill="#e8eef2" opacity="0.5" />
                 </g>
               ))}
             </g>
@@ -167,16 +174,21 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
           <g transform="translate(44,-12)"><path d="M-9 4 L9 0 L9 4 L-9 8 Z" fill="#c8c0b4" stroke="#8a8478" strokeWidth="0.8" /><rect x="-14" y="4" width="11" height="5" rx="2" fill="#6e4c2e" /><ellipse cx="20" cy="4" rx="8" ry="5" fill="#b8b0a0" /></g>
         </g>
 
-        {/* LA VACHE (droite, support) — disparaît une fois abattue (le pauvre) */}
+        {/* LA VACHE (droite, support) — avance un peu de gauche a droite
+            puis revient (petit va-et-vient de brouteuse) */}
         {!abattu && (
-          <g transform="translate(870,470)">
-            <ellipse cx="0" cy="30" rx="40" ry="8" fill="#241608" opacity="0.35" />
-            <path d="M-34 22 Q-40 -14 -14 -18 L20 -18 Q40 -14 36 18 L36 30 L26 30 L26 24 L-24 24 L-24 30 L-34 30 Z" fill="#d8cdbc" />
-            <path d="M-34 22 Q-40 -14 -14 -18 L20 -18 Q40 -14 36 18" fill="#8a7a68" opacity="0.2" filter="url(#pf-grain)" />
-            <ellipse cx="-8" cy="2" rx="12" ry="9" fill="#5a4636" opacity="0.6" /><ellipse cx="18" cy="8" rx="8" ry="6" fill="#5a4636" opacity="0.6" />
-            <path d="M-34 -8 Q-52 -10 -50 6 Q-48 16 -36 14 Z" fill="#d8cdbc" />
-            <path d="M-50 -6 q-6 -6 -3 -12 M-44 -10 q-2 -8 3 -12" stroke="#c8b8a0" strokeWidth="3" fill="none" strokeLinecap="round" />
-            <circle cx="-46" cy="2" r="2" fill="#2a1c10" />
+          <g>
+            <animateTransform attributeName="transform" type="translate"
+              values="0,0; 30,0; 30,0; 0,0; 0,0" keyTimes="0;0.35;0.5;0.85;1" dur="24s" repeatCount="indefinite" />
+            <g transform="translate(870,470)">
+              <ellipse cx="0" cy="30" rx="40" ry="8" fill="#241608" opacity="0.35" />
+              <path d="M-34 22 Q-40 -14 -14 -18 L20 -18 Q40 -14 36 18 L36 30 L26 30 L26 24 L-24 24 L-24 30 L-34 30 Z" fill="#d8cdbc" />
+              <path d="M-34 22 Q-40 -14 -14 -18 L20 -18 Q40 -14 36 18" fill="#8a7a68" opacity="0.2" filter="url(#pf-grain)" />
+              <ellipse cx="-8" cy="2" rx="12" ry="9" fill="#5a4636" opacity="0.6" /><ellipse cx="18" cy="8" rx="8" ry="6" fill="#5a4636" opacity="0.6" />
+              <path d="M-34 -8 Q-52 -10 -50 6 Q-48 16 -36 14 Z" fill="#d8cdbc" />
+              <path d="M-50 -6 q-6 -6 -3 -12 M-44 -10 q-2 -8 3 -12" stroke="#c8b8a0" strokeWidth="3" fill="none" strokeLinecap="round" />
+              <circle cx="-46" cy="2" r="2" fill="#2a1c10" />
+            </g>
           </g>
         )}
       </PLayer>
@@ -193,14 +205,22 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
       <Hotspot cx={280} cy={438} r={26} label="le burin (à la cabane)" item="burin" reveal={reveal} onClick={() => collect("burin")} />
       <Hotspot cx={662} cy={488} r={30} label="planche de bois" item="planche" reveal={reveal} onClick={() => collect("planche")} />
       <Hotspot cx={744} cy={488} r={28} label="grattoir & ponce" item="grattoir" reveal={reveal} onClick={() => collect("grattoir")} />
-          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
-      <g opacity="0.75">
-        <animateTransform attributeName="transform" type="translate"
-          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
-        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-      </g>
+      {/* SIX petits oiseaux qui virevoltent dans le jardin, en groupe
+          desordonne (chacun sur sa propre trajectoire courte). */}
+      {[
+        { path: "80,150; 220,120; 80,150", dur: 8, y: 0 },
+        { path: "180,180; 320,150; 180,180", dur: 10, y: 0 },
+        { path: "260,140; 380,170; 260,140", dur: 9, y: 0 },
+        { path: "520,160; 660,130; 520,160", dur: 11, y: 0 },
+        { path: "620,190; 760,160; 620,190", dur: 8.5, y: 0 },
+        { path: "740,140; 880,170; 740,140", dur: 9.5, y: 0 },
+      ].map((b, i) => (
+        <g key={i} opacity="0.85">
+          <animateTransform attributeName="transform" type="translate"
+            values={b.path} dur={`${b.dur}s`} begin={`${i * 0.4}s`} repeatCount="indefinite" />
+          <path d="M0 0 q4 -5 8 0 q4 -5 8 0" stroke="#2a1e10" strokeWidth="2" fill="none" strokeLinecap="round" />
+        </g>
+      ))}
 </svg>
   );
 }

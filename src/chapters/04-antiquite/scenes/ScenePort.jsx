@@ -236,13 +236,11 @@ export default function ScenePort({ collect, action, reveal, inv = [] }) {
       <Hotspot cx={670} cy={200} r={80} label="LE VÉSUVE qui fume drôlement" reveal={reveal} onClick={() => action("vesuve_port")} />
       <Hotspot cx={160} cy={538} r={14} label="oursin séché" item="oursin" reveal={reveal} onClick={() => collect("oursin")} />
       <Hotspot cx={860} cy={540} r={18} label="bout de cordage" item="cordage" reveal={reveal} onClick={() => collect("cordage")} />
-          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
-      <g opacity="0.75">
+      {/* Un seul oiseau blanc (mouette) qui traverse de DROITE a GAUCHE. */}
+      <g opacity="0.95">
         <animateTransform attributeName="transform" type="translate"
-          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
-        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+          values="1080,110; -40,130; 1080,110" dur="28s" repeatCount="indefinite" />
+        <path d="M0 0 q7 -9 14 0 q7 -9 14 0" stroke="#ffffff" strokeWidth="3" fill="none" strokeLinecap="round" />
       </g>
 </svg>
   );

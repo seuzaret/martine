@@ -46,9 +46,26 @@ export function PompeiFond() {
           <path d="M-150 0 L-42 -150 Q0 -172 42 -150 L150 0 Z" fill="#34342a" opacity="0.45" filter="url(#pf-mottle)" />
           <path d="M-150 0 L150 0 L122 -20 Q0 -38 -122 -20 Z" fill="#55663f" opacity="0.5" />
           <path d="M-42 -150 Q0 -172 42 -150 L24 -134 Q0 -148 -24 -134 Z" fill="#454534" />
-          <ellipse cx="0" cy="-150" rx="21" ry="6" fill="#e0762e" opacity="0.5" style={{ animation: "pulse 3.2s ease-in-out infinite" }} />
-          <path d="M0 -162 q-14 -36 11 -62 q-19 8 -8 -36 q12 -22 -3 -48" stroke="#c8bcae" strokeWidth="13" fill="none" opacity="0.42" style={{ animation: "drift 7s ease-in-out infinite" }} filter="url(#pf-blur)" />
-          <path d="M5 -150 q-9 -26 7 -46" stroke="#9a5238" strokeWidth="6" fill="none" opacity="0.3" filter="url(#pf-blur)" />
+          <ellipse cx="0" cy="-150" rx="24" ry="7" fill="#e0762e" opacity="0.6">
+            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="3s" repeatCount="indefinite" />
+          </ellipse>
+          {/* colonne de fumee principale, plus large et plus visible qu'avant */}
+          <path d="M0 -162 q-14 -36 11 -62 q-19 8 -8 -36 q12 -22 -3 -48" stroke="#c8bcae" strokeWidth="18" fill="none" opacity="0.55" filter="url(#pf-blur)">
+            <animate attributeName="opacity" values="0.4;0.7;0.4" dur="5s" repeatCount="indefinite" />
+          </path>
+          {/* deuxieme volute plus fine qui monte en decale */}
+          <path d="M-6 -155 q-18 -28 4 -56 q-14 4 -2 -34" stroke="#dad0c4" strokeWidth="12" fill="none" opacity="0.42" filter="url(#pf-blur)">
+            <animate attributeName="opacity" values="0.25;0.55;0.25" dur="6s" begin="1.5s" repeatCount="indefinite" />
+          </path>
+          {/* touches ocre-rouge (soufre / cendres chaudes) */}
+          <path d="M5 -150 q-9 -26 7 -46" stroke="#c8622a" strokeWidth="7" fill="none" opacity="0.4" filter="url(#pf-blur)" />
+          {/* petites cendres qui s'echappent en haut de la colonne */}
+          {[[-8, -220, 2.4, 0], [4, -230, 2.8, 1], [-2, -240, 3.2, 2]].map(([cx, cy, dur, delay], i) => (
+            <circle key={i} cx={cx} cy={cy} r="1.4" fill="#8a6248" opacity="0.6">
+              <animate attributeName="cy" values={`${cy};${cy - 40};${cy}`} dur={`${dur}s`} begin={`${delay}s`} repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.6;0;0.6" dur={`${dur}s`} begin={`${delay}s`} repeatCount="indefinite" />
+            </circle>
+          ))}
         </g>
 
         {/* LA VILLE DE POMPÉI : maisons blanches à toits rouges + un temple */}
