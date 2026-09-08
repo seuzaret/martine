@@ -193,11 +193,11 @@ export default function SceneMontagne({ collect, action, reveal, made = [], quet
           On assombrit un peu la zone autour pour renforcer l'effet
           "ombre de la grotte". */}
       <g>
-        {/* alternance visible/invisible : 2s de sortie sur 25s de cycle */}
-        <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.6;0.62;0.7;0.72;1" dur="25s" repeatCount="indefinite" />
-        {/* petit va-et-vient pendant que l'ours regarde */}
+        {/* alternance visible/invisible : sortie plus tot (a 15% du cycle
+            au lieu de 60%) pour ne pas la rater. */}
+        <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.12;0.14;0.28;0.3;1" dur="20s" repeatCount="indefinite" />
         <animateTransform attributeName="transform" type="translate"
-          values="0,0; 0,0; 0,0; 3,0; 0,0; 0,0" keyTimes="0;0.6;0.62;0.66;0.7;1" dur="25s" repeatCount="indefinite" />
+          values="0,0; 0,0; 0,0; 3,0; 0,0; 0,0" keyTimes="0;0.12;0.14;0.22;0.3;1" dur="20s" repeatCount="indefinite" />
         {/* ombre plus sombre qui remplit le bas de l'entree quand l'ours
             est la (grotte noircie autour de lui) */}
         <path d="M58 432 Q54 380 122 380 Q188 380 182 432 Z" fill="#000" opacity="0.55" />
