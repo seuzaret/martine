@@ -118,6 +118,13 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [], qu
             <path d="M-13 4 q13 6 26 0" stroke="#4a3218" strokeWidth="3" fill="none" />
           </g>
         </g>
+        {/* PIGEON qui traverse le ciel — banal et parfait pour une gare
+            du XIXe. Vol simple et lent. */}
+        <g opacity="0.7">
+          <animateTransform attributeName="transform" type="translate"
+            values="-30,0; 1050,10" dur="26s" repeatCount="indefinite" />
+          <path d="M0 90 q3 -3 6 0 q3 -3 6 0" stroke="#3a2418" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+        </g>
       </PLayer>
 
       {/* ═══ couche intermédiaire : le télégraphiste au bureau + le « ? » ═══ */}
