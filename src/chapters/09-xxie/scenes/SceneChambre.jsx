@@ -69,6 +69,20 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
                 ))}
               </g>
             </g>
+            {/* DRONE de livraison qui traverse la ville, vu a travers la
+                fenetre — clippe par le cadre. Petit clignotant rouge. */}
+            <g>
+              <animateTransform attributeName="transform" type="translate"
+                values="-60,0; 60,-6; -60,0" dur="18s" repeatCount="indefinite" />
+              <g transform="translate(0,-10)">
+                <rect x="-6" y="-2" width="12" height="4" rx="0.8" fill="#0a0e18" stroke="#5a6a80" strokeWidth="0.5" />
+                <path d="M-8 -1 h4 M4 -1 h4" stroke="#8a94a8" strokeWidth="0.8" />
+                <path d="M-8 1 h4 M4 1 h4" stroke="#8a94a8" strokeWidth="0.8" />
+                <circle cx="0" cy="0" r="1.4" fill="#e83820">
+                  <animate attributeName="opacity" values="0.2;1;0.2" dur="0.9s" repeatCount="indefinite" />
+                </circle>
+              </g>
+            </g>
           </g>
           <rect x="-58" y="-58" width="116" height="116" fill="none" stroke="#2a3040" strokeWidth="7" />
           <path d="M0 -58 v116 M-58 0 h116" stroke="#2a3040" strokeWidth="3.5" />

@@ -133,6 +133,34 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
           <path d="M27 -22 q11 8 9 20 q-2 11 -11 13 q6 -9 4 -16 q-2 -9 -8 -13 Z" />
         </g>
       </g>
+
+      {/* MAMMOUTH SUPPLEMENTAIRE qui traverse la crete lointaine, tres
+          lentement — on peut retirer les 2 statiques ci-dessus si celui-la
+          convient. Silhouette plus petite (perspective plus lointaine). */}
+      <g opacity="0.9">
+        <animateTransform attributeName="transform" type="translate"
+          values="-80,0; 1100,0" dur="90s" repeatCount="indefinite" />
+        <g transform="translate(0,340) scale(0.6)" fill="#1a1024">
+          <rect x="-27" y="-4" width="6" height="22" rx="3" />
+          <rect x="-13" y="-2" width="6" height="20" rx="3" />
+          <rect x="5" y="-4" width="6" height="22" rx="3" />
+          <rect x="17" y="-2" width="6" height="20" rx="3" />
+          <path d="M-36 0 Q-40 -14 -30 -22 Q-20 -32 -6 -32 Q2 -40 12 -38 Q24 -36 28 -26 Q32 -18 28 -10 Q24 -2 16 0 Q-6 4 -24 3 Q-33 3 -36 0 Z" />
+          <path d="M27 -22 q11 8 9 20 q-2 11 -11 13 q6 -9 4 -16 q-2 -9 -8 -13 Z" />
+          <path d="M24 -6 q13 6 20 -3" stroke="#c8b8a0" strokeWidth="3" fill="none" strokeLinecap="round" />
+        </g>
+      </g>
+
+      {/* VOL D'OISEAUX qui traverse le ciel matinal — quelques hirondelles
+          entre les cretes, silhouettes noires bien lisibles. */}
+      <g opacity="0.85">
+        <animateTransform attributeName="transform" type="translate"
+          values="-60,0; 1060,-20" dur="24s" repeatCount="indefinite" />
+        <path d="M0 180 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+        <path d="M30 194 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M58 176 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M86 190 q5 -6 10 0 q5 -6 10 0" stroke="#1a1408" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+      </g>
       </PLayer>
 
       {/* ═══ couche intermédiaire ═══ */}

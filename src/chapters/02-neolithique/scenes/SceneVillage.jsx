@@ -68,13 +68,13 @@ export default function SceneVillage({ collect, action, reveal, made = [], mode 
         {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
           <path key={i} d={`M${40 + i * 122} 350 Q${100 + i * 122} 346 ${162 + i * 122} 352`} stroke="#5c4222" strokeWidth="3" fill="none" opacity="0.55" />
         ))}
-        {/* OISEAUX qui traversent le ciel — vol en V, lent */}
-        <g opacity="0.65">
+        {/* OISEAUX qui traversent le ciel — vol en V, plus visibles */}
+        <g opacity="0.9">
           <animateTransform attributeName="transform" type="translate"
-            values="-40,0; 1050,-40" dur="30s" repeatCount="indefinite" />
-          <path d="M0 120 q3 -4 6 0 q3 -4 6 0" stroke="#1c1810" strokeWidth="1.4" fill="none" strokeLinecap="round" />
-          <path d="M16 128 q3 -4 6 0 q3 -4 6 0" stroke="#1c1810" strokeWidth="1.2" fill="none" strokeLinecap="round" />
-          <path d="M30 116 q3 -4 6 0 q3 -4 6 0" stroke="#1c1810" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+            values="-60,0; 1060,-30" dur="26s" repeatCount="indefinite" />
+          <path d="M0 220 q6 -8 12 0 q6 -8 12 0" stroke="#1c1810" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <path d="M32 232 q6 -8 12 0 q6 -8 12 0" stroke="#1c1810" strokeWidth="2.6" fill="none" strokeLinecap="round" />
+          <path d="M60 216 q6 -8 12 0 q6 -8 12 0" stroke="#1c1810" strokeWidth="2.6" fill="none" strokeLinecap="round" />
         </g>
       </PLayer>
 

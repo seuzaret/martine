@@ -224,11 +224,12 @@ export default function SceneImprimerie({ collect, action, reveal, made = [], qu
           </g>
         )}
         {/* SOURIS d'atelier qui traverse au sol — inevitable dans une
-            imprimerie du XVe. Petite silhouette rapide qui detale sous
-            la casse a caracteres. */}
+            imprimerie du XVe. Elle est dessinee tete a gauche, donc on
+            la fait avancer de droite a gauche pour que la marche ait
+            l'air normale. */}
         <g opacity="0.85">
           <animateTransform attributeName="transform" type="translate"
-            values="-40,0; 1050,-5; -40,0" dur="30s" repeatCount="indefinite" />
+            values="1050,0; -40,-5; 1050,0" dur="30s" repeatCount="indefinite" />
           <g transform="translate(0,545)">
             <ellipse cx="0" cy="0" rx="5" ry="2.4" fill="#3a2818" />
             <circle cx="-4" cy="-1" r="2" fill="#3a2818" />
