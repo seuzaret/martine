@@ -138,7 +138,7 @@ export default function SceneLumiere({ action, reveal, made = [], queteQui }) {
 
         {/* « ? » de l'ouvreuse (tant qu'elle guide) */}
         {queteQui === "ouvreuse" && !done && (
-          <g transform="translate(120,320)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+          <g transform="translate(130,340) scale(0.55)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -24 24 -24 q24 0 24 20 q0 17 -20 22 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
             <circle cx="24" cy="37" r="3" fill="#ffd166" />
           </g>
