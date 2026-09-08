@@ -245,6 +245,14 @@ export default function SceneChappe({ collect, action, reveal, made = [], queteQ
       <Hotspot cx={644} cy={496} r={30} label="zinc & cuivre" item="zinc_cuivre" reveal={reveal} onClick={() => collect("zinc_cuivre")} />
       <Hotspot cx={700} cy={500} r={26} label="saumure" item="saumure" reveal={reveal} onClick={() => collect("saumure")} />
       <Hotspot cx={880} cy={486} r={44} label="l'espion" item="espion" reveal={reveal} onClick={() => collect("espion")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }

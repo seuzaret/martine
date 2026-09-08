@@ -48,20 +48,26 @@ export default function SceneCrete({ collect, action, reveal, made = [], inv = [
             <path key={i} d={`M${x} ${y} q-3 -3 -6 0 M${x} ${y} q3 -3 6 0`} stroke="#2a1e10" strokeWidth="1.2" fill="none" strokeLinecap="round" />
           ))}
         </g>
-        {/* AIGLE qui plane — mieux dessiné */}
-        <g transform="translate(500,200)" style={{ animation: "float 4s ease-in-out infinite" }}>
-          {/* ombre légère sous les ailes */}
-          <path d="M0 4 Q-40 -4 -50 4 Q-40 8 -20 8 L20 8 Q40 8 50 4 Q40 -4 0 4 Z" fill="#0a0604" opacity="0.35" />
-          {/* ailes déployées avec forme + rémiges */}
-          <path d="M0 0 Q-40 -10 -54 0 Q-42 4 -20 4 L20 4 Q42 4 54 0 Q40 -10 0 0 Z" fill="#2a1e10" />
-          {/* plumes primaires en éventail */}
-          <path d="M-50 2 l-8 -2 M-46 4 l-6 -1 M-42 4 l-5 -1 M50 2 l8 -2 M46 4 l6 -1 M42 4 l5 -1" stroke="#1a1408" strokeWidth="1" strokeLinecap="round" />
-          {/* corps + tête */}
-          <ellipse cx="0" cy="1" rx="6" ry="3" fill="#1a1408" />
-          <circle cx="0" cy="-3" r="2" fill="#3a2818" />
-          <path d="M-1 -5 l-1 -1 M1 -5 l1 -1" stroke="#f0c848" strokeWidth="0.4" />
-          {/* queue en éventail */}
-          <path d="M-8 4 L-4 14 L0 4 L4 14 L8 4" fill="#2a1e10" />
+        {/* AIGLE qui PLANE — traverse le ciel horizontalement avec une
+            legere oscillation verticale (thermiques). Beaucoup plus vivant
+            que le simple float precedent. */}
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="200,190; 800,215; 200,190" dur="34s" repeatCount="indefinite" />
+          <g>
+            {/* ombre légère sous les ailes */}
+            <path d="M0 4 Q-40 -4 -50 4 Q-40 8 -20 8 L20 8 Q40 8 50 4 Q40 -4 0 4 Z" fill="#0a0604" opacity="0.35" />
+            {/* ailes déployées avec forme + rémiges */}
+            <path d="M0 0 Q-40 -10 -54 0 Q-42 4 -20 4 L20 4 Q42 4 54 0 Q40 -10 0 0 Z" fill="#2a1e10" />
+            {/* plumes primaires en éventail */}
+            <path d="M-50 2 l-8 -2 M-46 4 l-6 -1 M-42 4 l-5 -1 M50 2 l8 -2 M46 4 l6 -1 M42 4 l5 -1" stroke="#1a1408" strokeWidth="1" strokeLinecap="round" />
+            {/* corps + tête */}
+            <ellipse cx="0" cy="1" rx="6" ry="3" fill="#1a1408" />
+            <circle cx="0" cy="-3" r="2" fill="#3a2818" />
+            <path d="M-1 -5 l-1 -1 M1 -5 l1 -1" stroke="#f0c848" strokeWidth="0.4" />
+            {/* queue en éventail */}
+            <path d="M-8 4 L-4 14 L0 4 L4 14 L8 4" fill="#2a1e10" />
+          </g>
         </g>
       </PLayer>
 

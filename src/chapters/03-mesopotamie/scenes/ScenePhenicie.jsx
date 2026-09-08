@@ -159,6 +159,14 @@ export default function ScenePhenicie({ collect, action, reveal, made = [], mode
       {/* la tablette : APPRENDRE l'alphabet (mini-jeu) → on gagne les 22 signes */}
       <Hotspot cx={300} cy={494} r={46} label="apprendre l'alphabet" reveal={reveal} onClick={() => action("alphabet")} />
       <Hotspot cx={470} cy={356} r={70} label="navires marchands" item="navires" reveal={reveal} onClick={() => collect("navires")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }

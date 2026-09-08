@@ -178,6 +178,14 @@ export default function SceneBibliotheque({ collect, action, reveal, made = [] }
       <Hotspot cx={384} cy={462} r={28} label="encre" item="encre" reveal={reveal} onClick={() => collect("encre")} />
       <Hotspot cx={464} cy={464} r={30} label="umbilicus" item="ombilicus" reveal={reveal} onClick={() => collect("ombilicus")} />
       <Hotspot cx={430} cy={250} r={80} label="la bibliothèque" item="bibliotheque" reveal={reveal} onClick={() => collect("bibliotheque")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }

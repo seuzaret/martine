@@ -193,6 +193,14 @@ export default function SceneJardin({ collect, action, reveal, made = [] }) {
       <Hotspot cx={280} cy={438} r={26} label="le burin (à la cabane)" item="burin" reveal={reveal} onClick={() => collect("burin")} />
       <Hotspot cx={662} cy={488} r={30} label="planche de bois" item="planche" reveal={reveal} onClick={() => collect("planche")} />
       <Hotspot cx={744} cy={488} r={28} label="grattoir & ponce" item="grattoir" reveal={reveal} onClick={() => collect("grattoir")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }

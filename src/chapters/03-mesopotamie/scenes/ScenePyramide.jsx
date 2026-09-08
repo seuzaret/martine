@@ -218,6 +218,14 @@ export default function ScenePyramide({ collect, action, reveal, inv = [] }) {
       <Hotspot cx={240} cy={480} r={40} label="tas de blocs de calcaire" reveal={reveal} onClick={() => action("blocs")} />
       <Hotspot cx={700} cy={540} r={14} label="éclat de calcaire" item="eclat_calcaire" reveal={reveal} onClick={() => collect("eclat_calcaire")} />
       <Hotspot cx={820} cy={538} r={14} label="scarabée" item="scarabee" reveal={reveal} onClick={() => collect("scarabee")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }

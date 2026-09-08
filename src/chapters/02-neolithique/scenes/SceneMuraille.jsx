@@ -191,6 +191,14 @@ export default function SceneMuraille({ collect, action, reveal, queteQui }) {
       {/* zones cliquables */}
       <Hotspot cx={392} cy={414} r={42} label="Guna, le garde" reveal={reveal} onClick={(p) => action("guna", p)} />
       <Hotspot cx={140} cy={480} r={34} label="coquillage" item="coquillage" reveal={reveal} onClick={() => collect("coquillage")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }

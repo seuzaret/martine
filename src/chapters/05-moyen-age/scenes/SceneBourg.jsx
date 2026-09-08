@@ -312,6 +312,14 @@ export default function SceneBourg({ collect, action, reveal, inv = [] }) {
       <Hotspot cx={700} cy={260} r={50} label="le clocher de l'église" reveal={reveal} onClick={() => action("clocher")} />
       <Hotspot cx={140} cy={540} r={14} label="plume d'oie" item="plume_oie" reveal={reveal} onClick={() => collect("plume_oie")} />
       <Hotspot cx={920} cy={540} r={14} label="bout de bougie" item="bout_bougie" reveal={reveal} onClick={() => collect("bout_bougie")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }

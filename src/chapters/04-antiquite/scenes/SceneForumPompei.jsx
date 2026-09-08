@@ -244,6 +244,14 @@ export default function SceneForumPompei({ collect, action, reveal, inv = [] }) 
       <Hotspot cx={750} cy={220} r={40} label="le Vésuve, au loin…" reveal={reveal} onClick={() => action("vesuve_forum")} />
       <Hotspot cx={680} cy={534} r={14} label="denier romain" item="denier" reveal={reveal} onClick={() => collect("denier")} />
       <Hotspot cx={880} cy={542} r={16} label="tesson d'amphore" item="tesson" reveal={reveal} onClick={() => collect("tesson")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }

@@ -188,6 +188,14 @@ export default function SceneMontagne({ collect, action, reveal, made = [], quet
       <Hotspot cx={760} cy={484} r={50} label="le feu" item="feu" reveal={reveal} onClick={() => collect("feu")} />
       <Hotspot cx={588} cy={510} r={24} label="bol d'argile" item="bol" reveal={reveal} onClick={() => collect("bol")} />
       <Hotspot cx={814} cy={478} r={24} label="os (le gigot)" item="os" reveal={reveal} onClick={() => collect("os")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }

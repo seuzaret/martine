@@ -189,6 +189,14 @@ export default function SceneCol({ collect, action, reveal, made = [] }) {
       <Hotspot cx={476} cy={492} r={40} label="suie" item="suie" reveal={reveal} onClick={() => collect("suie")} />
       <Hotspot cx={620} cy={500} r={44} label="pierre" item="pierre" reveal={reveal} onClick={() => collect("pierre")} />
       <Hotspot cx={830} cy={508} r={44} label="minerai" item="minerai" reveal={reveal} onClick={() => collect("minerai")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }

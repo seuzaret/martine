@@ -240,6 +240,14 @@ export default function SceneMoulin({ collect, action, reveal, made = [], mode =
       <Hotspot cx={184} cy={466} r={22} label="vieux chiffons de lin" item="chiffons" reveal={reveal} onClick={() => collect("chiffons")} />
       {/* la cuve du papetier (support : on y broie les chiffons) */}
       <Hotspot cx={660} cy={468} r={44} label="la cuve du papetier" item="cuve" reveal={reveal} onClick={() => collect("cuve")} />
-    </svg>
+          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
+      <g opacity="0.75">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
+        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+      </g>
+</svg>
   );
 }
