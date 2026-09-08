@@ -205,6 +205,109 @@ export default function SceneFoire({ collect, action, reveal, inv = [] }) {
           <path d="M-3 -22 q3 3 6 0" stroke="#3a2418" strokeWidth="1.2" fill="none" />
         </g>
 
+        {/* ═══ AJOUTS DE DECOR : rendre la foire vraiment vivante ═══ */}
+
+        {/* SECOND ETAL a droite : un vendeur de rouleaux/parchemins avec
+            son etagere plus modeste. */}
+        <g transform="translate(830,440)">
+          {/* toile tendue simple, plus petite */}
+          <rect x="-56" y="-30" width="4" height="70" fill="#5a3818" />
+          <rect x="52" y="-30" width="4" height="70" fill="#5a3818" />
+          <path d="M-66 -30 L66 -30 L56 -56 L-56 -56 Z" fill="#8a6a3a" stroke="#3a1810" strokeWidth="0.6" />
+          {/* plateau avec pile de rouleaux et un ou deux livres */}
+          <rect x="-58" y="0" width="116" height="12" fill="#7a4a24" stroke="#2a1408" strokeWidth="0.6" />
+          {/* rouleaux de parchemin */}
+          {[[-40, -8], [-24, -8], [-8, -8], [8, -8], [26, -8], [42, -8]].map(([x, y], i) => (
+            <g key={i} transform={`translate(${x},${y})`}>
+              <ellipse cx="0" cy="0" rx="6" ry="2" fill="#f0e4c8" stroke="#5a3818" strokeWidth="0.4" />
+              <circle cx="-4" cy="0" r="1.2" fill="#5a3818" />
+              <circle cx="4" cy="0" r="1.2" fill="#5a3818" />
+            </g>
+          ))}
+          {/* petit vendeur derriere son etal */}
+          <g transform="translate(0,-16)">
+            <ellipse cx="0" cy="-24" rx="7" ry="8" fill="#c8946a" />
+            <path d="M-10 -12 Q-12 6 0 12 Q12 6 10 -12 Z" fill="#3a5878" stroke="#1a2848" strokeWidth="0.4" />
+            <circle cx="-2" cy="-24" r="0.8" fill="#0a0604" />
+            <circle cx="2" cy="-24" r="0.8" fill="#0a0604" />
+          </g>
+        </g>
+
+        {/* GROS TONNEAU DE VIN AU MILIEU avec deux gobelets renverses,
+            un pichet — ambiance festive. */}
+        <g transform="translate(510,510)">
+          <ellipse cx="0" cy="26" rx="30" ry="5" fill="#0a0604" opacity="0.5" />
+          <path d="M-24 22 Q-30 -18 0 -22 Q30 -18 24 22 Z" fill="#8a5a2e" stroke="#3a1810" strokeWidth="0.8" />
+          <path d="M-27 -6 h54 M-27 8 h54" stroke="#3a1810" strokeWidth="1.6" opacity="0.7" />
+          <path d="M-24 22 L-30 26 M24 22 L30 26" stroke="#3a1810" strokeWidth="1.2" />
+          {/* robinet */}
+          <rect x="-2" y="6" width="4" height="4" fill="#7a5a30" />
+          <path d="M0 10 v3" stroke="#5a3818" strokeWidth="1" />
+          {/* gobelet renverse a cote */}
+          <g transform="translate(24,22)">
+            <path d="M-3 0 l6 0 l-1 -6 l-4 0 Z" fill="#8a7038" stroke="#3a2010" strokeWidth="0.3" />
+          </g>
+        </g>
+
+        {/* CHIEN qui erre au sol devant l'etal — silhouette qui bouge
+            legerement. */}
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="380,530; 500,532; 380,530" dur="24s" repeatCount="indefinite" />
+          {/* corps */}
+          <ellipse cx="0" cy="0" rx="14" ry="6" fill="#8a5a2e" stroke="#3a1810" strokeWidth="0.5" />
+          {/* tete */}
+          <circle cx="-13" cy="-2" r="5" fill="#8a5a2e" stroke="#3a1810" strokeWidth="0.4" />
+          {/* oreilles pendantes */}
+          <path d="M-16 -4 q-3 -1 -3 4 q3 1 3 -2 Z" fill="#5a3a1e" />
+          <path d="M-10 -4 q3 -1 3 4 q-3 1 -3 -2 Z" fill="#5a3a1e" />
+          {/* pattes */}
+          <path d="M-8 5 v6 M-2 6 v6 M6 5 v6 M12 4 v6" stroke="#3a1810" strokeWidth="2" strokeLinecap="round" />
+          {/* queue qui frétille */}
+          <g style={{ transformOrigin: "14px 0px" }}>
+            <animateTransform attributeName="transform" type="rotate"
+              values="-15; 20; -15" dur="1.2s" repeatCount="indefinite" />
+            <path d="M14 -2 q6 -4 8 -8" stroke="#5a3a1e" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+          </g>
+          {/* oeil */}
+          <circle cx="-14" cy="-3" r="0.5" fill="#0a0604" />
+        </g>
+
+        {/* COUPLE de badauds au fond, silhouettes discretes qui parlent */}
+        <g transform="translate(760,470)" opacity="0.9">
+          <g transform="translate(-10,0)">
+            <ellipse cx="0" cy="-24" rx="6" ry="7" fill="#c8946a" />
+            <path d="M-9 -14 Q-11 8 0 12 Q11 8 9 -14 Z" fill="#5a3818" stroke="#1a0e04" strokeWidth="0.4" />
+          </g>
+          <g transform="translate(10,-2)">
+            <ellipse cx="0" cy="-24" rx="6" ry="7" fill="#c8946a" />
+            <path d="M-9 -14 Q-11 8 0 12 Q11 8 9 -14 Z" fill="#8a2828" stroke="#3a0a0a" strokeWidth="0.4" />
+            {/* coiffe blanche */}
+            <path d="M-6 -30 q0 -4 6 -5 q6 1 6 5" fill="#f0e8d0" stroke="#7a5a34" strokeWidth="0.4" />
+          </g>
+        </g>
+
+        {/* CAISSES EMPILEES au premier plan gauche */}
+        <g transform="translate(60,520)">
+          <rect x="-24" y="-20" width="48" height="20" fill="#7a4a24" stroke="#2a1408" strokeWidth="0.6" />
+          <rect x="-24" y="-40" width="48" height="20" fill="#8a5a2e" stroke="#2a1408" strokeWidth="0.6" />
+          <path d="M-24 -30 h48 M-20 -20 v20 M0 -40 v40 M20 -40 v40" stroke="#3a1810" strokeWidth="0.5" opacity="0.6" />
+        </g>
+
+        {/* FEUILLE DE PAPIER qui vole dans le vent (a la place des oiseaux) —
+            trajectoire en zigzag descendant. Rotation continue. */}
+        <g opacity="0.9">
+          <animateTransform attributeName="transform" type="translate"
+            values="-30,180; 220,140; 460,220; 700,150; 940,230; 1060,180"
+            dur="18s" repeatCount="indefinite" />
+          <g>
+            <animateTransform attributeName="transform" type="rotate"
+              values="0; 360; 720" dur="6s" repeatCount="indefinite" />
+            <rect x="-8" y="-10" width="16" height="20" fill="#f0e8d0" stroke="#5a3818" strokeWidth="0.4" />
+            <path d="M-6 -6 h12 M-6 -2 h12 M-6 2 h10 M-6 6 h8" stroke="#5a3818" strokeWidth="0.3" />
+          </g>
+        </g>
+
         {/* Ephemere : plume taillée + libelle jeté (disparaissent au ramassage) */}
         {!inv.includes("plume_taillee") && (
         <g transform="translate(160,542) rotate(-15)">
@@ -228,14 +331,8 @@ export default function SceneFoire({ collect, action, reveal, inv = [] }) {
       <Hotspot cx={820} cy={280} r={60} label="moulin à vent au loin" reveal={reveal} onClick={() => action("moulin_vent")} />
       <Hotspot cx={160} cy={542} r={14} label="plume d'oie taillée" item="plume_taillee" reveal={reveal} onClick={() => collect("plume_taillee")} />
       <Hotspot cx={920} cy={544} r={16} label="libelle abandonné" item="libelle" reveal={reveal} onClick={() => collect("libelle")} />
-          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
-      <g opacity="0.75">
-        <animateTransform attributeName="transform" type="translate"
-          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
-        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-      </g>
+      {/* (oiseaux retires : c'est la feuille de papier qui vole ajoutee
+          plus haut qui porte l'ambiance de vent maintenant) */}
 </svg>
   );
 }

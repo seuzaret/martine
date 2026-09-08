@@ -203,6 +203,19 @@ export default function SceneGutenberg({ collect, action, reveal, made = [], mod
       <Hotspot cx={360} cy={500} r={46} label="moule à lettres" item="moule" reveal={reveal} onClick={() => collect("moule")} />
       <Hotspot cx={560} cy={510} r={30} label="bouteille d'encre" item="encre" reveal={reveal} onClick={() => collect("encre")} />
       <Hotspot cx={678} cy={470} r={74} label="presse à vis" item="presse" reveal={reveal} onClick={() => collect("presse")} />
+      {/* PETITE SOURIS d'atelier qui detale sous la presse. Tete a
+          gauche, marche de droite a gauche. */}
+      <g opacity="0.85">
+        <animateTransform attributeName="transform" type="translate"
+          values="1050,0; -40,-3; 1050,0" dur="34s" repeatCount="indefinite" />
+        <g transform="translate(0,548)">
+          <ellipse cx="0" cy="0" rx="5" ry="2.4" fill="#3a2818" />
+          <circle cx="-4" cy="-1" r="2" fill="#3a2818" />
+          <circle cx="-5.5" cy="-3" r="1.2" fill="#3a2818" />
+          <circle cx="-2.5" cy="-3" r="1.2" fill="#3a2818" />
+          <path d="M5 0 q6 4 8 -2" stroke="#3a2818" strokeWidth="0.8" fill="none" strokeLinecap="round" />
+        </g>
+      </g>
     </svg>
   );
 }

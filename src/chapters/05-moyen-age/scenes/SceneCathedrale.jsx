@@ -233,7 +233,20 @@ export default function SceneCathedrale({ collect, action, reveal, inv = [] }) {
       <Hotspot cx={500} cy={240} r={90} label="la grande rose" reveal={reveal} onClick={() => action("rose")} />
       <Hotspot cx={200} cy={320} r={60} label="vitrail latéral" reveal={reveal} onClick={() => action("vitrail")} />
       <Hotspot cx={800} cy={320} r={60} label="vitrail latéral" reveal={reveal} onClick={() => action("vitrail")} />
-      <Hotspot cx={500} cy={370} r={50} label="tympan sculpté (le Christ en gloire)" reveal={reveal} onClick={() => action("tympan")} />
+      <Hotspot cx={500} cy={370} r={50} label="tympan sculpté" reveal={reveal} onClick={() => action("tympan")} />
+      {/* OMBRE DE CORBEAU qui passe derriere la grande rose — silhouette
+          noire au ralenti, avec ailes qui battent. Effet dramatique. */}
+      <g opacity="0.55">
+        <animateTransform attributeName="transform" type="translate"
+          values="-40,220; 1040,260; -40,220" dur="22s" repeatCount="indefinite" />
+        <g>
+          <animateTransform attributeName="transform" type="scale"
+            values="1,1; 0.6,1; 1,1" dur="0.6s" repeatCount="indefinite" />
+          <path d="M0 0 q-14 -6 -22 4 q10 2 14 6 M0 0 q14 -6 22 4 q-10 2 -14 6" stroke="#0a0604" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <ellipse cx="0" cy="2" rx="2.5" ry="4" fill="#0a0604" />
+          <path d="M4 0 l3 -2" stroke="#0a0604" strokeWidth="1.4" />
+        </g>
+      </g>
       <Hotspot cx={120} cy={300} r={60} label="échafaudage en bois" reveal={reveal} onClick={() => action("echafaudage")} />
       <Hotspot cx={160} cy={542} r={14} label="morceau de verre" item="verre_colore" reveal={reveal} onClick={() => collect("verre_colore")} />
       <Hotspot cx={920} cy={542} r={14} label="copeau de pierre" item="copeau_pierre" reveal={reveal} onClick={() => collect("copeau_pierre")} />
