@@ -218,13 +218,30 @@ export default function ScenePyramide({ collect, action, reveal, inv = [] }) {
       <Hotspot cx={240} cy={480} r={40} label="tas de blocs de calcaire" reveal={reveal} onClick={() => action("blocs")} />
       <Hotspot cx={700} cy={540} r={14} label="éclat de calcaire" item="eclat_calcaire" reveal={reveal} onClick={() => collect("eclat_calcaire")} />
       <Hotspot cx={820} cy={538} r={14} label="scarabée" item="scarabee" reveal={reveal} onClick={() => collect("scarabee")} />
-          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
-      <g opacity="0.75">
+      {/* CARAVANE DE CHAMEAUX en ombre au loin, sur l'horizon du desert.
+          Silhouettes noires simples qui traversent lentement le fond. */}
+      <g opacity="0.65">
         <animateTransform attributeName="transform" type="translate"
-          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
-        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+          values="1050,0; -240,0" dur="120s" repeatCount="indefinite" />
+        <g fill="#1a1408">
+          {/* 4 chameaux qui se suivent */}
+          {[0, 40, 78, 118].map((dx, i) => (
+            <g key={i} transform={`translate(${dx},370) scale(${0.75 + (i % 2) * 0.08})`}>
+              {/* pattes */}
+              <rect x="-8" y="0" width="1.6" height="12" />
+              <rect x="-3" y="0" width="1.6" height="12" />
+              <rect x="4" y="0" width="1.6" height="12" />
+              <rect x="9" y="0" width="1.6" height="12" />
+              {/* corps allonge avec bosse */}
+              <path d="M-10 -2 Q-8 -8 -4 -6 Q-2 -14 2 -12 Q6 -10 8 -6 Q12 -4 14 0 L14 2 L-10 2 Z" />
+              {/* cou et tete */}
+              <path d="M14 -2 q6 -6 8 -14 q3 -1 3 3 q-3 6 -4 12 z" />
+              {/* petit oeil (invisible en silhouette, on skip) */}
+              {/* petit chamelier sur le dernier ? */}
+              {i === 3 && <ellipse cx="0" cy="-14" rx="2" ry="4" />}
+            </g>
+          ))}
+        </g>
       </g>
 </svg>
   );

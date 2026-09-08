@@ -72,6 +72,27 @@ export default function SceneNil({ collect, action, reveal, made = [], queteQui 
           <path d="M0 -54 L44 26" stroke="#c9b890" strokeWidth="1.5" />
           <path d="M0 -30 L-30 26 L0 26 Z" fill="#e6dcc6" opacity="0.9" />
         </g>
+
+        {/* CROCODILE qui flotte lentement sur le Nil — juste les yeux et
+            le haut du dos qui affleurent, sillage discret derriere lui. */}
+        <g opacity="0.85">
+          <animateTransform attributeName="transform" type="translate"
+            values="1050,0; -80,4; 1050,0" dur="40s" repeatCount="indefinite" />
+          {/* sillage en V */}
+          <path d="M40 396 q-20 -2 -30 -6 M40 396 q-20 -2 -30 6" stroke="#cfe0da" strokeWidth="1" fill="none" opacity="0.55" />
+          {/* corps qui affleure */}
+          <ellipse cx="0" cy="395" rx="30" ry="3" fill="#4a5a2a" />
+          <ellipse cx="0" cy="394" rx="30" ry="2" fill="#5a6a30" />
+          {/* dos ecailleux (petits triangles) */}
+          <path d="M-22 393 l2 -3 l2 3 M-14 392 l2 -3 l2 3 M-6 392 l2 -3 l2 3 M2 392 l2 -3 l2 3 M10 393 l2 -3 l2 3" stroke="#3a4a20" strokeWidth="0.6" fill="#3a4a20" />
+          {/* museau qui depasse */}
+          <ellipse cx="24" cy="394" rx="6" ry="1.5" fill="#4a5a2a" />
+          {/* yeux vigilants au ras de l'eau */}
+          <circle cx="20" cy="392.5" r="0.9" fill="#0a0604" />
+          <circle cx="18" cy="392.5" r="0.9" fill="#0a0604" />
+          <circle cx="20" cy="392.2" r="0.35" fill="#ffd166" opacity="0.7" />
+          <circle cx="18" cy="392.2" r="0.35" fill="#ffd166" opacity="0.7" />
+        </g>
       </PLayer>
 
       {/* ═══ premier plan : berge, acacia, atelier, Snéfrou ═══ */}
