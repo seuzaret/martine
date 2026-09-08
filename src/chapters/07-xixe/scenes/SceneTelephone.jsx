@@ -72,6 +72,41 @@ export default function SceneTelephone({ collect, action, reveal, made = [], que
                 )))}
               </g>
             ))}
+
+            {/* GODZILLA emerge de la baie, s'approche de la Statue puis repart */}
+            <g>
+              <animateTransform attributeName="transform" type="translate"
+                values="90,30; 90,30; -30,30; -30,30; -30,30; 90,30; 90,30"
+                keyTimes="0; 0.15; 0.45; 0.55; 0.65; 0.9; 1"
+                dur="42s" repeatCount="indefinite" />
+              <g>
+                {/* petit bercement de marche */}
+                <animateTransform attributeName="transform" type="translate"
+                  values="0,0; 0,-1; 0,0; 0,-1; 0,0" dur="1.4s" repeatCount="indefinite" />
+                {/* remous autour des jambes */}
+                <ellipse cx="0" cy="14" rx="16" ry="2.5" fill="#cfe0dc" opacity="0.55">
+                  <animate attributeName="opacity" values="0.35;0.7;0.35" dur="1.4s" repeatCount="indefinite" />
+                </ellipse>
+                {/* queue */}
+                <path d="M8 8 Q22 6 32 12 Q26 14 20 12 Q14 12 8 12 Z" fill="#1e3a24" />
+                {/* corps massif */}
+                <path d="M-8 12 Q-14 -4 -6 -14 Q6 -18 12 -6 Q14 6 10 14 Z" fill="#26502e" />
+                {/* dos avec ecailles/pointes */}
+                {[[-6,-14],[-2,-16],[2,-15],[6,-12]].map(([x,y],i) => (
+                  <path key={i} d={`M${x} ${y} l1.6 -3 l1.6 3 Z`} fill="#3a7a44" />
+                ))}
+                {/* tete */}
+                <path d="M-4 -14 Q-10 -22 -4 -26 Q4 -28 8 -22 Q6 -16 -2 -14 Z" fill="#26502e" />
+                {/* oeil rouge lueur */}
+                <circle cx="2" cy="-22" r="0.9" fill="#ff6b3a">
+                  <animate attributeName="opacity" values="0.5;1;0.5" dur="1.8s" repeatCount="indefinite" />
+                </circle>
+                {/* dent visible */}
+                <path d="M-2 -18 l0 2 l1.4 0 Z" fill="#efe6d2" />
+                {/* petites pattes avant */}
+                <path d="M-4 -6 q-3 4 -2 8" stroke="#1e3a24" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+              </g>
+            </g>
           </g>
           {/* cadre + croisillons */}
           <rect x="-92" y="-84" width="184" height="156" fill="none" stroke="#3a2a18" strokeWidth="8" />
@@ -156,8 +191,12 @@ export default function SceneTelephone({ collect, action, reveal, made = [], que
           </g>
         </g>
 
-        {/* LE TÉLÉPHONE À COLONNE Bell (candlestick) */}
-        <g transform="translate(560,468)">
+        {/* LE TÉLÉPHONE À COLONNE Bell (candlestick) — vibre légèrement (voix qui arrive) */}
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="560,468; 560,468; 561,468; 559,468; 561,469; 560,468; 560,468; 560,468"
+            keyTimes="0; 0.55; 0.6; 0.65; 0.7; 0.75; 0.8; 1"
+            dur="6s" repeatCount="indefinite" />
           {/* base ronde */}
           <ellipse cx="0" cy="14" rx="26" ry="6" fill="#160f08" opacity="0.5" />
           <ellipse cx="0" cy="12" rx="22" ry="4" fill="#2c2418" />
@@ -174,13 +213,28 @@ export default function SceneTelephone({ collect, action, reveal, made = [], que
           <path d="M14 -30 Q30 -34 34 -68" stroke="#2a2418" strokeWidth="2.5" fill="none" />
         </g>
 
-        {/* petite lampe à abat-jour verte (banquier) */}
+        {/* petites ondes sonores qui sortent de l'ecouteur (la voix qui arrive) */}
+        <g transform="translate(594,438)" opacity="0.75">
+          {[0, 1, 2].map((i) => (
+            <path key={i} d="M0 0 q6 -6 12 0" stroke="#ffe08a" strokeWidth="1.6" fill="none" strokeLinecap="round">
+              <animate attributeName="opacity" values="0;0;0.9;0" dur="6s" begin={`${3 + i * 0.4}s`} repeatCount="indefinite" />
+              <animateTransform attributeName="transform" type="translate"
+                values="0,0; 6,-4; 12,-8" dur="6s" begin={`${3 + i * 0.4}s`} repeatCount="indefinite" />
+            </path>
+          ))}
+        </g>
+
+        {/* petite lampe à abat-jour verte (banquier) qui clignote */}
         <g transform="translate(300,462)">
           <rect x="-4" y="0" width="8" height="30" fill="#c8a860" />
           <rect x="-14" y="0" width="28" height="6" rx="2" fill="#a88b30" />
           <path d="M-24 -20 L24 -20 L20 0 L-20 0 Z" fill="#2a6a3a" />
-          <ellipse cx="0" cy="-20" rx="24" ry="6" fill="#3a8a4a" />
-          <ellipse cx="0" cy="4" rx="26" ry="6" fill="url(#tp-lamp)" />
+          <ellipse cx="0" cy="-20" rx="24" ry="6" fill="#3a8a4a">
+            <animate attributeName="fill" values="#3a8a4a;#7ae090;#3a8a4a;#3a8a4a;#3a8a4a" dur="2.6s" repeatCount="indefinite" />
+          </ellipse>
+          <ellipse cx="0" cy="4" rx="26" ry="6" fill="url(#tp-lamp)">
+            <animate attributeName="opacity" values="0.45;1;0.45;0.45;0.45" dur="2.6s" repeatCount="indefinite" />
+          </ellipse>
         </g>
 
         {/* résultat : SIGNAL vocal qui file dans la ligne (petits ronds
