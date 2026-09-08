@@ -176,13 +176,17 @@ export default function SceneTSF({ collect, action, reveal, made = [], queteQui 
 
       {/* ═══ zones cliquables ═══ */}
       <Hotspot cx={238} cy={468} r={50} label="Marconi" reveal={reveal} onClick={() => action("marconi")} />
-      {/* la porte de la cabine : ouvre l'etabli d'outils */}
-      {!made.includes("antenne") && !sos && (
-        <Hotspot cx={419} cy={456} r={22} label="la porte de la cabine" reveal={reveal} onClick={() => action("outils")} />
-      )}
-      {/* la cabine elle-meme : cible pour brancher l'antenne */}
+      {/* la porte de la cabine : ouvre l'etabli d'outils tant qu'on n'a
+          pas encore recupere quelque chose la-bas et que le sos n'est pas
+          parti. Reste cliquable meme si on a deja gagne l'antenne, pour
+          repartir dans le mini-jeu si on veut. */}
       {!sos && (
-        <Hotspot cx={430} cy={442} r={60} label="la cabine de Marconi" item="station_marconi" reveal={reveal} onClick={() => collect("station_marconi")} />
+        <Hotspot cx={430} cy={475} r={44} label="la porte" reveal={reveal} onClick={() => action("outils")} />
+      )}
+      {/* le TOIT de la cabine : cible pour brancher l'antenne (n'apparait
+          qu'une fois l'antenne dans la besace). */}
+      {made.includes("antenne") && !sos && (
+        <Hotspot cx={430} cy={425} r={40} label="le toit — poser l'antenne" item="station_marconi" reveal={reveal} onClick={() => collect("station_marconi")} />
       )}
     </svg>
   );
