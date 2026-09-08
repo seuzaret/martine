@@ -89,7 +89,8 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
         <ellipse cx="650" cy="184" rx="90" ry="6" fill="#ffe8c0" opacity="0.5" />
         <ellipse cx="852" cy="106" rx="115" ry="9" fill="#d8a0a8" opacity="0.35" />
       </g>
-      <Birds />
+      {/* (les <Birds /> statiques ont ete retirees, on garde les 4 hirondelles
+          animees ajoutees plus bas et le vol des mammouths anime.) */}
 
       {/* ═══ couche lointaine (bouge peu) ═══ */}
       <PLayer depth={1}>
@@ -131,23 +132,6 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
           <rect x="7" y="-4" width="8" height="26" rx="3" />
           <path d="M-36 0 Q-40 -14 -30 -22 Q-20 -32 -6 -32 Q2 -40 12 -38 Q24 -36 28 -26 Q32 -18 28 -10 Q24 -2 16 0 Q-6 4 -24 3 Q-33 3 -36 0 Z" />
           <path d="M27 -22 q11 8 9 20 q-2 11 -11 13 q6 -9 4 -16 q-2 -9 -8 -13 Z" />
-        </g>
-      </g>
-
-      {/* MAMMOUTH SUPPLEMENTAIRE qui traverse la crete lointaine, tres
-          lentement — on peut retirer les 2 statiques ci-dessus si celui-la
-          convient. Silhouette plus petite (perspective plus lointaine). */}
-      <g opacity="0.9">
-        <animateTransform attributeName="transform" type="translate"
-          values="-80,0; 1100,0" dur="90s" repeatCount="indefinite" />
-        <g transform="translate(0,340) scale(0.6)" fill="#1a1024">
-          <rect x="-27" y="-4" width="6" height="22" rx="3" />
-          <rect x="-13" y="-2" width="6" height="20" rx="3" />
-          <rect x="5" y="-4" width="6" height="22" rx="3" />
-          <rect x="17" y="-2" width="6" height="20" rx="3" />
-          <path d="M-36 0 Q-40 -14 -30 -22 Q-20 -32 -6 -32 Q2 -40 12 -38 Q24 -36 28 -26 Q32 -18 28 -10 Q24 -2 16 0 Q-6 4 -24 3 Q-33 3 -36 0 Z" />
-          <path d="M27 -22 q11 8 9 20 q-2 11 -11 13 q6 -9 4 -16 q-2 -9 -8 -13 Z" />
-          <path d="M24 -6 q13 6 20 -3" stroke="#c8b8a0" strokeWidth="3" fill="none" strokeLinecap="round" />
         </g>
       </g>
 
@@ -269,6 +253,31 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
       </g>
       {[430, 540, 660, 950].map((x, i) => <GrassTuft key={i} x={x} y={470 + (i % 2) * 40} c={i % 2 ? "#5d6b2e" : "#4e5c28"} />)}
       <GrassTuft x={200} y={540} c="#6b5a2e" />
+
+      {/* MAMMOUTH sur le sol, cote droit — beau, plus grand, se balade
+          juste sur une courte distance. Ses pattes touchent bien la terre. */}
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 120,0; 0,0" dur="60s" repeatCount="indefinite" />
+        <g transform="translate(720,478) scale(0.85)" fill="#2a1a34">
+          {/* pattes robustes */}
+          <rect x="-27" y="-4" width="8" height="28" rx="3" />
+          <rect x="-13" y="-2" width="8" height="26" rx="3" />
+          <rect x="5" y="-4" width="8" height="28" rx="3" />
+          <rect x="17" y="-2" width="8" height="26" rx="3" />
+          {/* corps */}
+          <path d="M-36 0 Q-40 -14 -30 -22 Q-20 -32 -6 -32 Q2 -40 12 -38 Q24 -36 28 -26 Q32 -18 28 -10 Q24 -2 16 0 Q-6 4 -24 3 Q-33 3 -36 0 Z" />
+          {/* trompe enroulee */}
+          <path d="M27 -22 q11 8 9 20 q-2 11 -11 13 q6 -9 4 -16 q-2 -9 -8 -13 Z" />
+          {/* poils qui pendent */}
+          <path d="M-26 3 l-2 8 M-12 4 l-2 9 M2 4 l-1 8 M12 2 l-2 8" stroke="#2a1a34" strokeWidth="2.4" />
+          {/* defenses claires courbees */}
+          <path d="M24 -6 q15 6 22 -3" stroke="#e0d0b8" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+          <path d="M22 -3 q11 6 17 1" stroke="#c8b8a0" strokeWidth="2.8" fill="none" strokeLinecap="round" />
+          {/* petit oeil */}
+          <circle cx="8" cy="-24" r="1" fill="#ffd166" opacity="0.6" />
+        </g>
+      </g>
       </PLayer>
 
       {/* ═══ premier plan (bouge le plus) ═══ */}

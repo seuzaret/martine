@@ -253,18 +253,23 @@ export default function SceneInterieur({ collect, action, reveal, made = [], que
       {/* blocs sombres qui cadrent les coins du bas */}
       <path d="M0 560 L0 508 Q40 502 74 522 Q96 538 88 560 Z" fill="#120b06" />
       <path d="M1000 560 L1000 500 Q952 496 924 520 Q904 540 916 560 Z" fill="#100a05" />
-      {/* PETITE SOURIS qui detale au fond de la grotte, silhouette
-          discrete a la lueur du feu — tete a gauche donc marche
-          de droite a gauche. */}
-      <g opacity="0.75">
+      {/* CHAUVE-SOURIS qui vole en zigzag sous la voute — bien plus
+          visible qu'une souris au sol, et parfaitement adapte a une
+          grotte du paleolithique. Ailes qui battent. */}
+      <g opacity="0.85">
         <animateTransform attributeName="transform" type="translate"
-          values="1050,0; -40,-3; 1050,0" dur="34s" repeatCount="indefinite" />
-        <g transform="translate(0,548)">
-          <ellipse cx="0" cy="0" rx="4.5" ry="2.2" fill="#2a1e10" />
-          <circle cx="-3.5" cy="-1" r="1.8" fill="#2a1e10" />
-          <circle cx="-5" cy="-2.5" r="1" fill="#2a1e10" />
-          <circle cx="-2.2" cy="-2.5" r="1" fill="#2a1e10" />
-          <path d="M4.5 0 q5 4 7 -1.5" stroke="#2a1e10" strokeWidth="0.7" fill="none" strokeLinecap="round" />
+          values="1050,180; 200,90; 750,150; 100,110; 1050,180" dur="16s" repeatCount="indefinite" />
+        <g>
+          {/* battement d'ailes en scale X */}
+          <animateTransform attributeName="transform" type="scale"
+            values="1,1; 0.5,1; 1,1" dur="0.3s" repeatCount="indefinite" />
+          {/* corps */}
+          <ellipse cx="0" cy="0" rx="1.6" ry="3" fill="#1a1004" />
+          {/* ailes membraneuses */}
+          <path d="M0 -1 q-10 -5 -14 2 q6 -1 8 3 q-6 -1 -8 3 q10 -1 14 -3 Z" fill="#1a1004" stroke="#0a0602" strokeWidth="0.3" />
+          <path d="M0 -1 q10 -5 14 2 q-6 -1 -8 3 q6 -1 8 3 q-10 -1 -14 -3 Z" fill="#1a1004" stroke="#0a0602" strokeWidth="0.3" />
+          {/* petites oreilles */}
+          <path d="M-1 -3 l-0.5 -1.5 M1 -3 l0.5 -1.5" stroke="#1a1004" strokeWidth="0.6" />
         </g>
       </g>
       </PLayer>
