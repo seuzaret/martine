@@ -43,6 +43,7 @@ const ITEMS = {
   fiches_calcul: { name: "Fiches de calcul", emoji: "📋", desc: "Des colonnes de nombres — les trajectoires d'obus que 20 humains calculaient en 20 heures. L'ENIAC va faire ça en 30 secondes." },
   cables:        { name: "Câbles de programmation", emoji: "🔌", desc: "L'ENIAC ne se programme pas avec du code : on BRANCHE des câbles à la main sur un tableau. Chaque cheminement = une instruction. Programmation physique." },
   eniac_machine: { name: "L'ENIAC", emoji: "🖥️", support: true, desc: "30 tonnes, 18 000 tubes à vide, une salle entière. Il chauffe comme une forge — un tube grille toutes les deux minutes. Insère les fiches, branche le programme, et allume." },
+  eniac_fente:   { name: "Fente à cartes", emoji: "🗂️", support: true, desc: "Le lecteur de cartes perforees sur la baie de gauche. C'est ici et seulement ici que les fiches de calcul entrent." },
 };
 
 /* ------------------------------------------------------------
@@ -86,7 +87,7 @@ const RECIPES = [
     line: "🧣 Tu jettes la grosse couverture sur le poste. Le son est étouffé — les voisins n'entendront rien. Maintenant, cherche la BBC dans le brouillage (clique sur la TSF)." },
 
   /* T4 — ENIAC : deux étapes avant l'allumage */
-  { a: "fiches_calcul", b: "eniac_machine", out: "fiches_chargees", gives: [], consume: ["fiches_calcul"], flag: "fiches_chargees",
+  { a: "fiches_calcul", b: "eniac_fente", out: "fiches_chargees", gives: [], consume: ["fiches_calcul"], flag: "fiches_chargees",
     line: "📋 Kay insère la pile de fiches de calcul dans le lecteur — trajectoires d'obus, coordonnées, vitesse initiale. Il manque encore le programme, à câbler à la main." },
   { a: "cables", b: "eniac_machine", out: "cables_branches", gives: [], consume: ["cables"], flag: "cables_branches", needsFlag: "fiches_chargees",
     line: "🔌 Kay branche les câbles sur le plugboard. Les 18 000 tubes s'allument… mais ça grille de partout ! Il va falloir DÉBUGGER : clique l'ENIAC pour lancer le mini-jeu." },
@@ -117,7 +118,7 @@ const HINTS = [
   { needs: ["tsf", "table"], out: "tsf_posee", text: "Sors le poste TSF du buffet et pose-le sur la table du salon (glisse la TSF sur la table)." },
   { needs: ["antenne", "tsf"], out: "tsf_reliee", text: "Tends le fil d'antenne de la fenêtre au poste (glisse l'antenne sur la TSF)." },
   { needs: ["couverture", "tsf"], out: "tsf_prete", text: "Jette la couverture sur le poste pour étouffer le son, puis clique sur la TSF pour chercher Londres." },
-  { needs: ["fiches_calcul", "eniac_machine"], out: "fiches_chargees", text: "Glisse la pile de fiches de calcul sur l'ENIAC : Kay les charge dans le lecteur." },
+  { needs: ["fiches_calcul", "eniac_fente"], out: "fiches_chargees", text: "Glisse la pile de fiches de calcul dans la fente à cartes de la baie de gauche : Kay les charge dans le lecteur." },
   { needs: ["cables", "eniac_machine"], out: "cables_branches", text: "Glisse les câbles sur l'ENIAC : Kay câble le programme, puis clique l'ENIAC pour le mini-jeu de débuggage." },
 ];
 

@@ -251,7 +251,7 @@ export default function SceneEniac({ collect, action, reveal, made = [], flags =
           une fois les câbles branchés, clique dessus ouvre le mini-jeu
           de débuggage (bugs + tubes grillés) avant d'accepter msg_eniac. */}
       {!cablees && (
-        <Hotspot cx={100} cy={300} r={38} label={chargees ? "la fente est deja pleine" : "la fente à cartes — glisse les fiches ici"} item="eniac_machine" reveal={reveal} />
+        <Hotspot cx={100} cy={300} r={38} label={chargees ? "la fente est deja pleine" : "la fente à cartes — glisse les fiches ici"} item="eniac_fente" reveal={reveal} />
       )}
       {cablees && !allume && (
         <Hotspot cx={220} cy={270} r={100} label="l'ENIAC — débuguer avant de lancer !" reveal={reveal} onClick={() => action("eniac_debug")} />

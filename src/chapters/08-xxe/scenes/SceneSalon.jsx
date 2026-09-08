@@ -42,6 +42,24 @@ export default function SceneSalon({ collect, action, reveal, made = [], flags =
       {/* ═══ FENÊTRE aux rideaux tirés (black-out) ═══ */}
       <PLayer depth={3}>
         <rect x="380" y="60" width="220" height="180" fill="#0a0604" stroke="#3a2418" strokeWidth="4" />
+        {/* un seul faisceau DCA, discret, qui balaie a travers la fente
+            entre les rideaux (clip strict a la vitre pour qu'il ne
+            deborde jamais dehors). */}
+        <defs><clipPath id="sd-slitclip"><rect x="384" y="64" width="212" height="172" /></clipPath></defs>
+        <g clipPath="url(#sd-slitclip)">
+          <g>
+            <animateTransform attributeName="transform" type="rotate"
+              values="14 490 240; -18 490 240; 14 490 240" dur="12s" repeatCount="indefinite" />
+            <path d="M488 240 L474 70 L502 70 L492 240 Z" fill="#ffe08a" opacity="0.22" />
+          </g>
+          {/* petits eclairs de DCA loin */}
+          <circle cx="440" cy="120" r="2" fill="#ff9a4a">
+            <animate attributeName="opacity" values="0;0.9;0;0;0" dur="6s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="560" cy="90" r="2" fill="#ff9a4a">
+            <animate attributeName="opacity" values="0;0;0;0.9;0" dur="7s" repeatCount="indefinite" />
+          </circle>
+        </g>
         <path d="M370 60 L400 60 L410 240 L370 240 Z" fill="url(#sd-curtain)" />
         <path d="M600 60 L630 60 L630 240 L590 240 Z" fill="url(#sd-curtain)" />
         <path d="M400 60 Q450 30 500 60" stroke="#5a3818" strokeWidth="3" fill="none" />
