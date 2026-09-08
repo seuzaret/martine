@@ -48,12 +48,11 @@ export default function SceneCrete({ collect, action, reveal, made = [], inv = [
             <path key={i} d={`M${x} ${y} q-3 -3 -6 0 M${x} ${y} q3 -3 6 0`} stroke="#2a1e10" strokeWidth="1.2" fill="none" strokeLinecap="round" />
           ))}
         </g>
-        {/* AIGLE qui PLANE — traverse le ciel horizontalement avec une
-            legere oscillation verticale (thermiques). Beaucoup plus vivant
-            que le simple float precedent. */}
+        {/* AIGLE qui PLANE — traverse le ciel horizontalement bien AU-DESSUS
+            des montagnes (les crêtes montent à y=180). */}
         <g>
           <animateTransform attributeName="transform" type="translate"
-            values="200,190; 800,215; 200,190" dur="34s" repeatCount="indefinite" />
+            values="200,100; 800,130; 200,100" dur="34s" repeatCount="indefinite" />
           <g>
             {/* ombre légère sous les ailes */}
             <path d="M0 4 Q-40 -4 -50 4 Q-40 8 -20 8 L20 8 Q40 8 50 4 Q40 -4 0 4 Z" fill="#0a0604" opacity="0.35" />
