@@ -63,11 +63,16 @@ export default function SceneLumiere({ action, reveal, made = [], queteQui }) {
         {[50, 66, 82, 98].map((y, i) => (
           <path key={i} d={`M-200 ${y} q50 ${i % 2 ? 3 : -3} 100 0 t100 0 t100 0 t100 0`} stroke="#b48a5a" strokeWidth="1.2" fill="none" opacity={0.5 - i * 0.08} />
         ))}
-        <g transform="translate(-40,20) rotate(-14)">
-          <path d="M-70 0 Q0 12 70 0 L60 14 Q0 22 -60 14 Z" fill="#1a0e04" />
-          <rect x="-52" y="-14" width="104" height="20" fill="#2a1608" />
-          {[-30, -8, 14, 34].map((x, i) => <rect key={i} x={x} y="-30" width="10" height="18" rx="2" fill="#3a1c0a" />)}
-          {[-44, -30, -16, -2, 12, 26, 40].map((x, i) => <circle key={i} cx={x} cy="-4" r="1.6" fill="#ffe08a" opacity="0.85" />)}
+        {/* le bateau du film tangue (bercement de la scene projetee) */}
+        <g>
+          <animateTransform attributeName="transform" type="rotate"
+            values="-18 -40 20; -10 -40 20; -18 -40 20" dur="4s" repeatCount="indefinite" />
+          <g transform="translate(-40,20)">
+            <path d="M-70 0 Q0 12 70 0 L60 14 Q0 22 -60 14 Z" fill="#1a0e04" />
+            <rect x="-52" y="-14" width="104" height="20" fill="#2a1608" />
+            {[-30, -8, 14, 34].map((x, i) => <rect key={i} x={x} y="-30" width="10" height="18" rx="2" fill="#3a1c0a" />)}
+            {[-44, -30, -16, -2, 12, 26, 40].map((x, i) => <circle key={i} cx={x} cy="-4" r="1.6" fill="#ffe08a" opacity="0.85" />)}
+          </g>
         </g>
         {/* Dorothy Gibson debout, rescapée */}
         <g transform="translate(60,-20)">
@@ -80,11 +85,15 @@ export default function SceneLumiere({ action, reveal, made = [], queteQui }) {
           <text x="0" y="4" textAnchor="middle" fontFamily="Georgia,serif" fontStyle="italic" fontSize="12" fill="#e8d8b0">« Saved from the Titanic »</text>
         </g>
 
-        <rect x="-200" y="-110" width="400" height="230" fill="#000" opacity="0.06" style={{ animation: "flicker 0.12s steps(2) infinite" }} />
+        <rect x="-200" y="-110" width="400" height="230" fill="#000" opacity="0.06">
+          <animate attributeName="opacity" values="0.02;0.14;0.05;0.11;0.03;0.09" dur="0.4s" repeatCount="indefinite" />
+        </rect>
       </g>
 
       {/* le CÔNE de lumière du projecteur */}
-      <path d="M900 500 L360 220 L640 220 L980 500 Z" fill="url(#ci-beam)" opacity="0.8" style={{ animation: "flicker 0.14s steps(2) infinite" }} />
+      <path d="M900 500 L360 220 L640 220 L980 500 Z" fill="url(#ci-beam)" opacity="0.8">
+        <animate attributeName="opacity" values="0.7;0.9;0.75;0.85;0.7" dur="0.5s" repeatCount="indefinite" />
+      </path>
 
       {/* ═══ la SALLE : rangées de fauteuils (silhouettes en contre-jour) ═══ */}
       <PLayer depth={2}>
@@ -135,8 +144,12 @@ export default function SceneLumiere({ action, reveal, made = [], queteQui }) {
           </g>
         )}
 
-        {/* L'OUVREUSE avec sa petite lampe */}
-        <g transform="translate(140,490)">
+        {/* L'OUVREUSE avec sa petite lampe — avance et recule dans l'allee */}
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="140,490; 200,492; 240,494; 200,492; 140,490; 100,488; 140,490"
+            keyTimes="0; 0.15; 0.3; 0.45; 0.6; 0.8; 1"
+            dur="18s" repeatCount="indefinite" />
           <path d="M-14 -50 Q-18 -80 0 -90 Q18 -80 14 -50 L12 0 L-12 0 Z" fill="#3a0808" />
           <circle cx="0" cy="-98" r="8" fill="#e0b084" />
           <path d="M-8 -100 Q-6 -110 0 -110 Q6 -110 8 -100 Z" fill="#3a2818" />
@@ -155,14 +168,6 @@ export default function SceneLumiere({ action, reveal, made = [], queteQui }) {
       {!done && (
         <Hotspot cx={880} cy={430} r={60} label="la cabine de projection — tourner la manivelle" reveal={reveal} onClick={() => action("projecteur")} />
       )}
-          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
-      <g opacity="0.75">
-        <animateTransform attributeName="transform" type="translate"
-          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
-        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-      </g>
-</svg>
+    </svg>
   );
 }

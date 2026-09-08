@@ -69,13 +69,23 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [], qu
                 <path d="M-9 -34 h18" stroke="#4a3320" strokeWidth="2.4" />
               </g>
             ))}
-            {/* le TRAIN À VAPEUR sur ses rails, qui fume — glisse
-                lentement de gauche a droite puis se re-positionne */}
+            {/* les RAILS restent en place, y compris cote droit
+                (traverses qui filent au loin — illusion de perspective
+                et de mouvement quand le train est passe) */}
+            <g transform="translate(0,74)">
+              <path d="M-118 6 h236" stroke="#5a4630" strokeWidth="2" />
+              {[-100, -70, -40, -10, 20, 50, 80, 108].map((x, i) => <rect key={i} x={x} y="2" width="4" height="6" fill="#3a2c1c" />)}
+              {/* deuxieme rail parallele en perspective */}
+              <path d="M-118 12 h236" stroke="#5a4630" strokeWidth="1.5" opacity="0.7" />
+            </g>
+
+            {/* le TRAIN À VAPEUR qui passe de droite a gauche UNE
+                SEULE FOIS puis attend longtemps (fin = repositionne
+                a droite, mais discret). */}
             <g>
               <animateTransform attributeName="transform" type="translate"
-                values="-140,74; 200,74; -140,74" dur="18s" repeatCount="indefinite" />
-              <path d="M-118 6 h236" stroke="#5a4630" strokeWidth="2" />
-              {[-100, -70, -40, -10, 20, 50, 80].map((x, i) => <rect key={i} x={x} y="2" width="4" height="6" fill="#3a2c1c" />)}
+                values="200,74; 200,74; -200,74; -200,74"
+                keyTimes="0;0.2;0.5;1" dur="25s" repeatCount="indefinite" />
               {/* wagons */}
               <rect x="34" y="-16" width="30" height="18" rx="2" fill="#6a3a2a" /><rect x="68" y="-16" width="30" height="18" rx="2" fill="#5a3a2a" />
               {/* locomotive */}

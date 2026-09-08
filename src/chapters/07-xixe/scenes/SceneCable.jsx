@@ -66,11 +66,39 @@ export default function SceneCable({ collect, action, reveal, made = [], queteQu
           <path key={i} d={`M0 ${y} q120 ${i % 2 ? 6 : -6} 240 0 t240 0 t240 0 t240 0`} stroke="#7ab0b8" strokeWidth="2" fill="none" opacity="0.4" style={{ animation: `ripple ${3 + (i % 3)}s ease-in-out infinite` }} />
         ))}
 
+        {/* BALEINE qui traverse l'ocean lentement, dos qui affleure et
+            queue qui plonge de temps en temps. Souffle discret. */}
+        <g opacity="0.85">
+          <animateTransform attributeName="transform" type="translate"
+            values="-100,0; 1100,10; -100,0" dur="55s" repeatCount="indefinite" />
+          <g transform="translate(0,400)">
+            {/* dos courbe qui sort de l'eau */}
+            <path d="M-30 0 Q-10 -16 10 -16 Q30 -14 40 -8 L44 -4 L-30 -4 Z" fill="#2a3848" stroke="#0e1420" strokeWidth="0.5" />
+            {/* petit reflet clair */}
+            <path d="M-10 -12 Q10 -14 25 -10" stroke="#5a7a94" strokeWidth="1" fill="none" opacity="0.7" />
+            {/* queue qui pointe vers le haut (bilobee) */}
+            <path d="M-30 -4 q-15 -6 -22 -18 q0 8 8 14 q-10 0 -14 6 Z" fill="#2a3848" stroke="#0e1420" strokeWidth="0.5" />
+            {/* evacuation de souffle : petit jet blanc au-dessus */}
+            <g transform="translate(-4,-16)">
+              <path d="M0 0 q-3 -10 4 -18 q-5 6 -1 -12" stroke="#e8eef2" strokeWidth="3" fill="none" opacity="0.5">
+                <animate attributeName="opacity" values="0;0.7;0" keyTimes="0;0.5;1" dur="4s" repeatCount="indefinite" />
+              </path>
+              {/* petites gouttelettes du souffle */}
+              <circle cx="0" cy="-6" r="1.5" fill="#f0f4f8" opacity="0.6" />
+              <circle cx="4" cy="-14" r="1" fill="#f0f4f8" opacity="0.4" />
+            </g>
+            {/* sillage derriere elle */}
+            <path d="M-40 0 q-14 -1 -22 -4" stroke="#c0d8e0" strokeWidth="1.2" fill="none" opacity="0.55" />
+          </g>
+        </g>
+
         {/* la GRUE FLOTTANTE — un ponton avec un bras de grue qui pivote, cliquable
             tant qu'on ne l'a pas ramassée. Une fois attrapée, elle disparaît du décor
             (le joueur la « prend » dans son sac). */}
         {!built && (
-          <g transform="translate(210,378)" style={{ animation: "float 4s ease-in-out infinite" }}>
+          <g>
+            <animateTransform attributeName="transform" type="translate"
+              values="210,378; 220,374; 210,378" dur="5s" repeatCount="indefinite" />
             {/* la coque du ponton (large et plate) */}
             <path d="M-56 12 Q0 22 56 12 L46 24 Q0 32 -46 24 Z" fill="#1a2028" />
             <path d="M-56 12 Q0 22 56 12 L46 24 Q0 32 -46 24 Z" fill="none" stroke="#0a0e14" strokeWidth="1.5" />

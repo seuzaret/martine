@@ -58,21 +58,48 @@ export default function SceneTSF({ collect, action, reveal, made = [], queteQui 
           </g>
         )}
 
-        {/* LE PAQUEBOT : il gîte et lance ses feux ; une fois secouru, il se redresse */}
-        <g transform={`translate(800,368) rotate(${sos ? -4 : -10})`}>
-          <path d="M-70 6 Q0 22 70 6 L58 22 Q0 32 -58 22 Z" fill="#0e1620" />
-          <rect x="-52" y="-14" width="104" height="20" fill="#1a2430" />
-          {[-30, -8, 14, 34].map((x, i) => <rect key={i} x={x} y="-30" width="10" height="18" rx="2" fill="#2a2018" />)}
-          {[-44, -30, -16, -2, 12, 26, 40].map((x, i) => (
-            <circle key={i} cx={x} cy="-4" r="2" fill="#ffd166" opacity="0.9" style={{ animation: `twinkle ${1.4 + (i % 3) * 0.5}s infinite` }} />
-          ))}
-          {/* fusée de détresse — seulement tant qu'il n'est pas secouru */}
-          {!sos && (
-            <g>
-              <path d="M50 -30 q10 -30 4 -56" stroke="#ff6a4a" strokeWidth="2" fill="none" opacity="0.7" />
-              <circle cx="55" cy="-88" r="3" fill="#ffd166" style={{ animation: "pulse 1.2s infinite" }} />
-            </g>
-          )}
+        {/* LE PAQUEBOT (Titanic) : il gîte et lance ses feux, en tanguant
+            doucement sur les vagues (bercement SMIL avec un peu de rotation
+            supplementaire de -3 a +3 degres autour de son inclinaison de base). */}
+        <g transform="translate(800,368)">
+          <g>
+            <animateTransform attributeName="transform" type="rotate"
+              values={`${sos ? -7 : -13} 0 0; ${sos ? -1 : -7} 0 0; ${sos ? -7 : -13} 0 0`}
+              dur="5s" repeatCount="indefinite" />
+            <path d="M-70 6 Q0 22 70 6 L58 22 Q0 32 -58 22 Z" fill="#0e1620" />
+            <rect x="-52" y="-14" width="104" height="20" fill="#1a2430" />
+            {[-30, -8, 14, 34].map((x, i) => <rect key={i} x={x} y="-30" width="10" height="18" rx="2" fill="#2a2018" />)}
+            {[-44, -30, -16, -2, 12, 26, 40].map((x, i) => (
+              <circle key={i} cx={x} cy="-4" r="2" fill="#ffd166" opacity="0.9" style={{ animation: `twinkle ${1.4 + (i % 3) * 0.5}s infinite` }} />
+            ))}
+            {/* fusée de détresse — seulement tant qu'il n'est pas secouru */}
+            {!sos && (
+              <g>
+                <path d="M50 -30 q10 -30 4 -56" stroke="#ff6a4a" strokeWidth="2" fill="none" opacity="0.7" />
+                <circle cx="55" cy="-88" r="3" fill="#ffd166" style={{ animation: "pulse 1.2s infinite" }} />
+              </g>
+            )}
+          </g>
+        </g>
+
+        {/* ICEBERG qui derive doucement sur la mer, en travers du champ.
+            Silhouette blanche irreguliere avec une partie immergee bleutee. */}
+        <g opacity="0.9">
+          <animateTransform attributeName="transform" type="translate"
+            values="-80,0; 1080,20; -80,0" dur="90s" repeatCount="indefinite" />
+          <g transform="translate(0,378)">
+            {/* partie immergee, plus bleutee et effacee */}
+            <path d="M-24 6 Q-20 22 -8 24 L14 24 Q22 22 22 6 Z" fill="#7ab0c8" opacity="0.55" />
+            {/* partie visible : glace claire */}
+            <path d="M-22 6 L-14 -18 L-6 -6 L4 -22 L14 -12 L20 6 Z" fill="#e8f4f8" stroke="#8ab0c4" strokeWidth="0.6" />
+            {/* facettes et ombres */}
+            <path d="M-14 -18 L-6 -6 L-14 4 Z" fill="#c8dae2" opacity="0.7" />
+            <path d="M4 -22 L14 -12 L4 6 Z" fill="#c8dae2" opacity="0.5" />
+            {/* reflet blanc au sommet */}
+            <path d="M-8 -14 L-2 -18 L2 -14 Z" fill="#ffffff" opacity="0.9" />
+            {/* petit sillage clair */}
+            <path d="M22 8 q10 -2 16 -6" stroke="#c8dae2" strokeWidth="1" fill="none" opacity="0.6" />
+          </g>
         </g>
       </PLayer>
 
@@ -86,18 +113,21 @@ export default function SceneTSF({ collect, action, reveal, made = [], queteQui 
           <path d="M0 -228 q120 6 260 -10" stroke="#3a424c" strokeWidth="1.4" fill="none" opacity="0.7" />
         </g>
 
-        {/* AVANT : des ondes faibles, à ramasser (l'idée est dans l'air…) */}
-        {/* ⚠️ animation sur le <g>, opacité sur le <path> : une animation CSS
-            d'opacité écrase l'attribut opacity (sinon les ondes « faibles »
-            brillent autant que les fortes). */}
+        {/* AVANT : des ondes qui SORTENT de l'antenne — cercles concentriques
+            qui grandissent et s'estompent (SMIL, marche partout). Plus visible
+            qu'avant. */}
         {!sos && (
-          <g transform="translate(430,178)" fill="none" stroke="#7fd8ff">
-            {[26, 46, 66].map((r, i) => (
-              <g key={i} style={{ animation: `pulse ${2 + i * 0.4}s infinite` }}>
-                <path d={`M${r} -${r * 0.5} A${r} ${r} 0 0 1 ${r} ${r * 0.5}`} strokeWidth="2" opacity={0.35 - i * 0.08} />
-                <path d={`M-${r} -${r * 0.5} A${r} ${r} 0 0 0 -${r} ${r * 0.5}`} strokeWidth="2" opacity={0.35 - i * 0.08} />
-              </g>
+          <g transform="translate(430,178)" fill="none" stroke="#7fd8ff" strokeWidth="2">
+            {[0, 1.2, 2.4].map((delay, i) => (
+              <circle key={i} cx="0" cy="0" r="10" opacity="0.7">
+                <animate attributeName="r" values="10;90;10" dur="3.6s" begin={`${delay}s`} repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.9;0;0.9" dur="3.6s" begin={`${delay}s`} repeatCount="indefinite" />
+              </circle>
             ))}
+            {/* petit point lumineux au sommet de l'antenne */}
+            <circle cx="0" cy="0" r="3" fill="#eaf8ff" stroke="none">
+              <animate attributeName="opacity" values="0.6;1;0.6" dur="1.2s" repeatCount="indefinite" />
+            </circle>
           </g>
         )}
 

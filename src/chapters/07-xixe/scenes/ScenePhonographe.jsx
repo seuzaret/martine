@@ -78,8 +78,10 @@ export default function ScenePhonographe({ action, reveal, made = [], queteQui }
           <rect x="-60" y="30" width="120" height="30" fill="#3a2a20" />
           <circle cx="-52" cy="45" r="10" fill="#7a6a5a" stroke="#3a2a20" strokeWidth="2" />
           <circle cx="-52" cy="45" r="4" fill="#3a2a20" />
-          {/* manivelle */}
-          <g style={{ transformOrigin: "-52px 45px", animation: done ? "spin 3.2s linear infinite" : "none" }}>
+          {/* manivelle qui tourne en continu (SMIL, marche partout) */}
+          <g>
+            <animateTransform attributeName="transform" type="rotate"
+              values="0 -52 45; 360 -52 45" dur="3.2s" repeatCount="indefinite" />
             <rect x="-58" y="43" width="26" height="4" fill="#a89878" />
             <circle cx="-32" cy="45" r="3.4" fill="#5a4a3a" />
           </g>
@@ -100,6 +102,21 @@ export default function ScenePhonographe({ action, reveal, made = [], queteQui }
             <path d="M0 0 L120 -70 L120 -30 L0 30 Z" fill="none" stroke="#7a4a10" strokeWidth="2" />
             <ellipse cx="120" cy="-50" rx="10" ry="40" fill="#7a4a10" />
             <path d="M0 -6 L20 -14 L20 22 L0 14 Z" fill="#7a4a10" />
+            {/* NOTES DE MUSIQUE qui sortent du cornet — 3 notes qui
+                s'envolent en decalage. Croche + tete de note noire. */}
+            {[
+              { d: 0, sym: "♪", drift: 30 },
+              { d: 1.6, sym: "♫", drift: 45 },
+              { d: 3.2, sym: "♩", drift: 36 },
+            ].map((n, i) => (
+              <g key={i}>
+                <animateTransform attributeName="transform" type="translate"
+                  values={`120,-50; 200,-${80 + n.drift}; 260,-${100 + n.drift * 1.4}`}
+                  dur="4.5s" begin={`${n.d}s`} repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.4;1" dur="4.5s" begin={`${n.d}s`} repeatCount="indefinite" />
+                <text x="0" y="0" fontSize="22" fontWeight="700" fill="#3a2818" fontFamily="Georgia, serif">{n.sym}</text>
+              </g>
+            ))}
           </g>
         </g>
 
@@ -114,8 +131,16 @@ export default function ScenePhonographe({ action, reveal, made = [], queteQui }
           <path d="M-24 -60 Q-30 -110 0 -122 Q30 -110 24 -60 L20 -50 L-20 -50 Z" fill="#1c1610" />
           <path d="M-8 -122 L0 -110 L8 -122 L6 -80 L-6 -80 Z" fill="#efe6d2" />
           <path d="M-3 -110 L3 -110 L3 -84 L-3 -84 Z" fill="#0a0a10" />
-          {/* le bras qui se tend vers le cornet à sa gauche */}
-          <path d="M-22 -100 q-50 -8 -80 8" stroke="#e0b084" strokeWidth="6" fill="none" strokeLinecap="round" />
+          {/* le bras qui se tend vers le cornet a sa gauche, avec un
+              petit mouvement d'oscillation vertical (comme s'il actionnait
+              la manivelle a chaque tour). */}
+          <g>
+            <animateTransform attributeName="transform" type="translate"
+              values="0,0; 0,3; 0,0" dur="1.6s" repeatCount="indefinite" />
+            <path d="M-22 -100 q-50 -8 -80 8" stroke="#e0b084" strokeWidth="6" fill="none" strokeLinecap="round" />
+            {/* petite main (rond) au bout du bras, pres du cornet */}
+            <circle cx="-102" cy="-93" r="4" fill="#e0b084" />
+          </g>
           {/* la tête — cheveux blancs, moustache blanche, petites lunettes rondes */}
           <path d="M0 -150 c14 0 22 12 22 26 c0 14 -8 24 -22 24 c-14 0 -22 -10 -22 -24 c0 -14 8 -26 22 -26 Z" fill="#e0b084" />
           <path d="M-20 -134 Q-16 -156 0 -158 Q16 -156 20 -134 Q10 -148 0 -148 Q-10 -148 -20 -134 Z" fill="#e8e4dc" />
