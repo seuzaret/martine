@@ -95,6 +95,31 @@ export default function ScenePlaine({ collect, action, reveal, made = [], queteQ
           <g key={i}><ellipse cx={x} cy={y} rx="4.5" ry="3.5" fill="#2c2c32" /><ellipse cx={x - 1} cy={y - 1} rx="1.6" ry="1" fill="#6a6a72" opacity="0.5" /></g>
         ))}</g>
 
+        {/* PETITS CRABES qui trottinent en travers sur la berge du fleuve
+            — mouvement lateral typique du crabe, timings decales. Rouge
+            brique, pinces devant, huit pattes. */}
+        {[[840, 545, 4, 0], [880, 552, 5, 1.5], [810, 548, 4.5, 3]].map(([bx, by, dur, off], i) => (
+          <g key={i}>
+            <animateTransform attributeName="transform" type="translate"
+              values={`${bx - 8},${by}; ${bx + 8},${by}; ${bx - 8},${by}`}
+              dur={`${dur}s`} begin={`${off}s`} repeatCount="indefinite" />
+            {/* corps aplati */}
+            <ellipse cx="0" cy="0" rx="4.5" ry="3" fill="#a03018" stroke="#4a1408" strokeWidth="0.4" />
+            {/* petites taches */}
+            <circle cx="-1" cy="-0.5" r="0.6" fill="#5a1810" />
+            <circle cx="1.5" cy="-0.5" r="0.6" fill="#5a1810" />
+            {/* deux yeux sur pedoncules */}
+            <circle cx="-1.2" cy="-2.5" r="0.5" fill="#0a0604" />
+            <circle cx="1.2" cy="-2.5" r="0.5" fill="#0a0604" />
+            {/* pinces (grandes) devant */}
+            <path d="M-4 -1 l-3 -1 q-1 1 1 2 M-4 -1 l-2 1 q0 -1 2 -2" stroke="#a03018" strokeWidth="1.2" fill="#a03018" strokeLinecap="round" />
+            <path d="M4 -1 l3 -1 q1 1 -1 2 M4 -1 l2 1 q0 -1 -2 -2" stroke="#a03018" strokeWidth="1.2" fill="#a03018" strokeLinecap="round" />
+            {/* pattes (4 par cote) */}
+            <path d="M-3 1 l-3 1 M-3 2 l-4 2 M-3 2.5 l-3 2 M-3 3 l-3 3" stroke="#7a2010" strokeWidth="0.6" strokeLinecap="round" />
+            <path d="M3 1 l3 1 M3 2 l4 2 M3 2.5 l3 2 M3 3 l3 3" stroke="#7a2010" strokeWidth="0.6" strokeLinecap="round" />
+          </g>
+        ))}
+
         {/* LE CHANTIER (tant que le mégalithe n'est pas dressé) */}
         {!dresse && (
           <>

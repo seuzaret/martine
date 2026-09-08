@@ -188,13 +188,34 @@ export default function SceneMontagne({ collect, action, reveal, made = [], quet
       <Hotspot cx={760} cy={484} r={50} label="le feu" item="feu" reveal={reveal} onClick={() => collect("feu")} />
       <Hotspot cx={588} cy={510} r={24} label="bol d'argile" item="bol" reveal={reveal} onClick={() => collect("bol")} />
       <Hotspot cx={814} cy={478} r={24} label="os (le gigot)" item="os" reveal={reveal} onClick={() => collect("os")} />
-          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
-      <g opacity="0.75">
+      {/* OURS qu'on apercoit tres brievement dans la grotte de la mine :
+          il sort la tete, jette un oeil, disparait. Boucle longue (25s)
+          pour que ce soit fugace et surprenant. */}
+      <g>
+        {/* alternance visible/invisible : 2s de sortie sur 25s de cycle */}
+        <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.6;0.62;0.7;0.72;1" dur="25s" repeatCount="indefinite" />
+        {/* petit va-et-vient pendant que l'ours regarde */}
         <animateTransform attributeName="transform" type="translate"
-          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
-        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
+          values="0,0; 0,0; 0,0; 4,0; 0,0; 0,0" keyTimes="0;0.6;0.62;0.66;0.7;1" dur="25s" repeatCount="indefinite" />
+        <g transform="translate(70,340)">
+          {/* tete d'ours qui depasse de la grotte */}
+          <ellipse cx="0" cy="0" rx="18" ry="14" fill="#3a2010" stroke="#1a0e04" strokeWidth="0.8" />
+          {/* oreilles rondes */}
+          <circle cx="-13" cy="-11" r="5" fill="#3a2010" stroke="#1a0e04" strokeWidth="0.6" />
+          <circle cx="13" cy="-11" r="5" fill="#3a2010" stroke="#1a0e04" strokeWidth="0.6" />
+          <circle cx="-13" cy="-11" r="2.5" fill="#5a3020" />
+          <circle cx="13" cy="-11" r="2.5" fill="#5a3020" />
+          {/* yeux */}
+          <circle cx="-6" cy="-2" r="1.5" fill="#0a0604" />
+          <circle cx="6" cy="-2" r="1.5" fill="#0a0604" />
+          <circle cx="-5.5" cy="-2.5" r="0.5" fill="#ffd166" opacity="0.7" />
+          <circle cx="6.5" cy="-2.5" r="0.5" fill="#ffd166" opacity="0.7" />
+          {/* museau */}
+          <ellipse cx="0" cy="6" rx="7" ry="5" fill="#5a3020" />
+          <ellipse cx="0" cy="4" rx="3" ry="2" fill="#0a0604" />
+          {/* petite bouche */}
+          <path d="M-3 9 q3 2 6 0" stroke="#0a0604" strokeWidth="0.7" fill="none" />
+        </g>
       </g>
 </svg>
   );
