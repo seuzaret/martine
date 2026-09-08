@@ -52,6 +52,10 @@ const ITEMS = {
   cablier: { name: "Navire câblier", emoji: "🚢", desc: "La grue flottante chargée du grand rouleau de câble : c'est un navire câblier, comme le fameux Great Eastern qui a posé le premier câble transatlantique en 1866. Il ne reste plus qu'à traverser l'océan…" },
   ocean: { name: "L'océan", emoji: "🌊", support: true, desc: "Entre l'Europe et l'Amérique, des semaines de bateau… ou quelques minutes, si on ose poser un câble au fond." },
 
+  /* T5 — la station Marconi (nuit du Titanic, 1912). */
+  antenne: { name: "Antenne", emoji: "📡", desc: "Un mât hérissé de fils : gagné à l'établi de Marconi. Il faut le brancher sur la cabine pour lancer les ondes." },
+  station_marconi: { name: "Cabine de Marconi", emoji: "🛖", support: true, desc: "La cabine de la station côtière : c'est là qu'on branche l'antenne pour transmettre." },
+
   /* T7 — le téléphone (New York, 1915) : combiner l'écouteur et le
      microphone du téléphone à colonne Bell pour joindre San Francisco. */
   micro:    { name: "Microphone (embouchure)", emoji: "🎙️", desc: "Le petit cône noir au sommet de la colonne Bell : c'est là qu'on PARLE. Une membrane à l'intérieur transforme la voix en courant électrique." },
@@ -104,6 +108,8 @@ const RECIPES = [
   { a: "grue", b: "cable", out: "cablier", gives: ["cablier"], consume: ["grue", "cable"],
     line: "🚢 La grue soulève le grand rouleau de câble et l'installe sur le pont : voilà un vrai NAVIRE CÂBLIER, prêt pour la traversée. Il ne reste qu'à le lancer dans l'océan." },
   { a: "cablier", b: "ocean", out: "msg_cable", msg: true },
+  /* T5 : brancher l'antenne (gagnee au mini-jeu) sur la cabine de Marconi. */
+  { a: "antenne", b: "station_marconi", out: "msg_sos", msg: true, consume: ["antenne"] },
   /* T7 : brancher l'écouteur au microphone du téléphone à colonne Bell. */
   { a: "micro", b: "ecouteur", out: "msg_telephone", msg: true },
 ];
@@ -144,6 +150,7 @@ const HINTS = [
   { needs: ["iodure", "chambre"], out: "sensible", text: "Une fois la plaque en place, verse (glisse) le flacon d'iodure sur la chambre : les vapeurs jaunes vont la sensibiliser." },
   { needs: ["grue", "cable"], out: "cablier", text: "La grue flottante peut soulever ton grand rouleau de câble : combine-les pour armer un vrai NAVIRE CÂBLIER." },
   { needs: ["cablier", "ocean"], out: "msg_cable", text: "Le navire câblier prêt, ose dérouler le câble tout au fond de l'océan : il reliera l'Irlande à l'Amérique." },
+  { needs: ["antenne", "station_marconi"], out: "msg_sos", text: "Une fois l'antenne recuperee a l'etabli, va la brancher sur la cabine de Marconi : les ondes pourront alors partir dans la nuit." },
   { needs: ["micro", "ecouteur"], out: "msg_telephone", text: "Sur le téléphone à colonne : accroche l'écouteur au microphone. La voix de Sean partira jusqu'à San Francisco." },
 ];
 
@@ -162,8 +169,7 @@ const FAIL_LINES = [
 
 const INTRO = [
   "Tu as bien la pile de Volta ? Sans elle, ce siècle ne tourne pas. Bienvenue au XIXe : le siècle pressé, celui qui veut vaincre la DISTANCE — et fixer l'INSTANT.",
-  "Une cabane de télégraphe en plein Far West : JAMES O'SULLIVAN, émigré irlandais, débarque tout excité — il a trouvé un FILON D'OR ! Il faut télégraphier la nouvelle à ses cousins de New York en une seconde, puis, devenu riche, envoyer son portrait à sa mère en Irlande par un procédé tout neuf : le daguerréotype.",
-  "Suit alors le câble sous l'océan (1866), puis la voix de James âgé gravée sur un cylindre Edison (1878). Vient enfin 1912, le Titanic — la TSF de Marconi sauve les rescapés. Sean, 15 ans, va au cinéma voir un film sur le naufrage. Trois ans plus tard, il décroche à New York pour appeler la Californie par la première ligne téléphonique transcontinentale.",
+  "Tu vas suivre la famille O'SULLIVAN sur quatre générations, du Far West de 1849 aux nuits de New York de 1915. Chaque tableau te posera son propre defi ; a toi de trouver ce qui, dans le decor, peut porter le message.",
 ];
 
 const ACTIONS = {
@@ -235,44 +241,44 @@ const ACTIONS = {
    ------------------------------------------------------------ */
 const QUETE = [
   { perso: "james", portrait: "james", auto: true,
-    bubble: "Bénie soit la Sainte Patronne ! James O'Sullivan, émigré d'Irlande — et regarde cette pépite : j'ai trouvé le FILON, un vrai, plein d'or ! Il faut prévenir mes cousins à New York avant que la nouvelle s'ébruite. Vite, le télégraphe ! Mais l'appareil est mort… il lui faut du courant. Cette drôle de pile que tu tiens — c'est exactement ça !",
-    say: "James a trouvé de l'or et veut télégraphier « OR » à New York, vite ! Apporte ta pile de Volta au manipulateur : tu taperas le message toi-même en Morse.",
+    bubble: "Bénie soit la Sainte Patronne ! James O'Sullivan, émigré d'Irlande — et regarde cette pépite : j'ai trouvé le FILON, un vrai, plein d'or ! Il faut prévenir ma famille à New York avant que la nouvelle s'ébruite. L'appareil du bureau est mort… il lui faudrait du jus.",
+    say: "James veut prevenir sa famille a New York — et vite. Regarde ce que tu as dans la besace : il y a peut-etre de quoi reveiller l'appareil.",
     attend: "msg_telegraphe",
-    suite: "Message reçu à New York en une seconde ! Riche du jour au lendemain, James pense à sa vieille mère restée en Irlande. Il veut lui envoyer… son PORTRAIT. Suis-le chez le photographe ›" },
+    suite: "Le message est parti ! Riche du jour au lendemain, James pense à sa vieille mère restée en Irlande. Il voudrait lui envoyer son visage — mais comment ? ›" },
 
   { perso: "photographe", portrait: "photographe", auto: true,
-    bubble: "James, monsieur, asseyez-vous et NE BOUGEZ PLUS. Ma plaque de cuivre argentée va capter votre visage grâce à la lumière du jour — mais il faut 15 secondes de pose immobile. Le fer à poser tient votre tête. Toi, l'assistant, appuie sur le déclencheur et empêche l'appareil de trembler !",
-    say: "Clique sur la chambre photographique : un mini-jeu s'ouvre. Cadre bien James, puis tiens la pose sans qu'il tremble — à la moindre secousse, la plaque devient floue !",
+    bubble: "James, monsieur, asseyez-vous et NE BOUGEZ PLUS. Ma chambre va capter votre visage grâce à la lumière du jour — mais il va falloir preparer la plaque comme il faut avant d'ouvrir l'objectif.",
+    say: "Le photographe attend une plaque prete a recevoir la lumiere. Regarde ce qu'il a laisse traîner dans son studio et essaie de comprendre l'ordre des choses.",
     attend: "msg_daguerreotype",
-    suite: "La plaque est révélée : voilà James à jamais, endimanché. Il l'envoie à sa mère par bateau — mais elle mettra deux semaines à traverser l'océan. Et si on posait un CÂBLE au fond de la mer ? Vite, sur le navire câblier !" },
+    suite: "La plaque est revelee. James envoie son portrait a sa mère par bateau — deux semaines de traversée. Et si on faisait plus rapide ?" },
 
   { perso: "james", portrait: "james",
-    bubble: "Me voilà riche, grâce à Dieu ! Mais mon cœur est resté en Irlande, avec ma vieille mère et mes sœurs. Je voudrais leur écrire : « Venez me rejoindre, il y a de la place pour tout le monde ! ». Seulement, une lettre par bateau met DEUX SEMAINES à traverser l'Atlantique… Comment faire parvenir un message par-delà les océans ?",
-    say: "La question de James : franchir l'océan vite. La réponse — armer un NAVIRE CÂBLIER (grue flottante + câble) puis poser le câble au fond de la mer (câblier + océan). Le monde rétrécit d'un coup.",
+    bubble: "Me voilà riche, grâce à Dieu ! Mais mon cœur est resté en Irlande, avec ma vieille mère et mes sœurs. Comment faire arriver un message la-bas en quelques minutes plutot qu'en deux semaines ?",
+    say: "James veut relier deux continents. Cherche ce qui, sur le pont, pourrait franchir l'ocean.",
     attend: "msg_cable",
-    suite: "Le câble touche l'Irlande : le message de James file à Cobh en quelques minutes. Sa famille recevra bien la nouvelle. Douze ans passent — James est un vieil homme, à New York, et il a un dernier message à léguer…" },
+    suite: "Le message file : sa famille recevra la nouvelle en quelques minutes. Douze ans passent — James est un vieil homme, à New York, et il a un dernier message à léguer…" },
 
   { perso: "james-vieux", portrait: "james-vieux", auto: true,
-    bubble: "J'ai 66 ans, et je n'en ai plus pour longtemps. Mr. Edison vient d'inventer une machine incroyable : le PHONOGRAPHE. Une aiguille grave la voix sur un cylindre de cire. Je veux y déposer un message pour mes petits-enfants — pour qu'après ma mort, ils entendent encore la voix de leur grand-père. Mon fils tourne la manivelle ; toi, veille à la BONNE vitesse.",
-    say: "Clique sur le phonographe : un mini-jeu s'ouvre. Tourne la manivelle en cadence (2 tours par seconde environ) — trop vite, la voix monte dans les aigus ; trop lent, elle devient caverneuse.",
+    bubble: "J'ai 66 ans, et je n'en ai plus pour longtemps. Il vient de sortir une machine incroyable, qui capte le SON. Je voudrais y laisser un mot pour mes petits-enfants — pour qu'après ma mort, ils entendent encore la voix de leur grand-pere.",
+    say: "James veut confier sa voix a l'appareil au fond du salon. A toi de le faire marcher.",
     attend: "msg_phonographe",
-    suite: "Le cylindre est gravé. James pose l'oreille près du pavillon — et s'entend lui-même. « Voilà, dit-il, un peu de moi qui restera. » 34 ans passent. Nous sommes dans la nuit du 15 avril 1912…" },
+    suite: "Le cylindre est grave. « Voila, dit-il, un peu de moi qui restera. » 34 ans passent. Nous sommes dans la nuit du 15 avril 1912…" },
 
   { perso: "marconi", portrait: "marconi", auto: true,
-    bubble: "Une génération après James, sa famille a enfin décidé d'émigrer : ils ont embarqué à Cobh sur le paquebot le plus grand du monde, le Titanic. Cette nuit, ma station capte ses BIPS DE DÉTRESSE — il coule dans l'Atlantique. Vite ! Parmi tous les outils de mon établi, lequel peut porter secours SANS AUCUN FIL, à des centaines de kilomètres ?",
-    say: "Clique sur l'établi de Marconi : un mini-jeu s'ouvre. Choisis l'outil capable d'envoyer un message par-dessus la mer, dans la nuit — sans fil.",
+    bubble: "Une génération après James, sa famille a enfin décidé d'émigrer : ils ont embarqué sur le paquebot le plus grand du monde. Cette nuit, ma station capte ses bips de detresse — il coule dans l'Atlantique. Il faut agir MAINTENANT.",
+    say: "Marconi a un etabli plein d'outils. Un seul peut porter secours au large. A toi de le trouver — et de le brancher sur la cabine.",
     attend: "msg_sos",
     suite: "Les rescapés sont recueillis par le Carpathia. Mais des cousins irlandais des O'Sullivan sont morts dans le naufrage. Sean, 15 ans, en deuil, entre au Nickelodeon voir un film sur le drame…" },
 
   { perso: "ouvreuse", portrait: "ouvreuse", auto: true,
-    bubble: "Bienvenue au Nickelodeon de la 14ᵉ rue, 5 cents la place ! Ce soir, le film qui bouleverse toute l'Amérique : « Saved from the Titanic », avec Miss Dorothy Gibson — vraie rescapée du naufrage ! Sean est déjà installé au premier rang. Mais mon projectionniste est malade… saurais-tu tourner la manivelle à la bonne vitesse ?",
-    say: "Clique sur la cabine de projection : un mini-jeu s'ouvre. Charge la bobine, puis tourne la manivelle à 16 images/seconde — l'écran s'anime, Sean découvre le naufrage en images animées.",
+    bubble: "Bienvenue au Nickelodeon, 5 cents la place ! Ce soir, un film qui bouleverse toute l'Amerique. Sean est déjà installé au premier rang. Mais mon projectionniste est malade… tu voudrais bien monter la-haut ?",
+    say: "Il faut passer le film pour Sean. Monte a la cabine et essaie de comprendre comment ca marche.",
     attend: "msg_cinema",
-    suite: "Sean sort du Nickelodeon en larmes. Ces images l'ont remué : le cinéma peut donc RACONTER, garder la mémoire d'un événement. Il a une idée — appeler sa mère et ses tantes à San Francisco pour leur parler, VRAIMENT. Trois ans plus tard, une prouesse va le lui permettre…" },
+    suite: "Sean sort du Nickelodeon en larmes. Ces images l'ont remue : le cinema peut donc RACONTER, garder la memoire d'un evenement. Il a une idee — appeler sa famille en Californie. Trois ans plus tard, une prouesse va le lui permettre…" },
 
   { perso: "sean", portrait: "sean", auto: true,
-    bubble: "Sean O'Sullivan, fils de James, à votre service ! On est le 25 janvier 1915, et une prouesse vient d'être achevée : la première ligne téléphonique TRANSCONTINENTALE d'AT&T — 5 500 km de fil entre New York et San Francisco ! Bell l'a inaugurée hier. Cette fois, ce n'est plus un télégramme : ma tante et ma mère vont ENTENDRE ma voix, en direct. Aide-moi à brancher le combiné.",
-    say: "Sur le téléphone à colonne Bell : accroche l'ÉCOUTEUR au MICROPHONE. La voix de Sean partira le long de la ligne jusqu'à San Francisco. Ce n'est plus un message : c'est une CONVERSATION en direct.",
+    bubble: "Sean O'Sullivan, fils de James, à votre service ! On vient d'achever une prouesse : une nouvelle ligne traverse le continent d'un ocean a l'autre. Cette fois, ma famille pourra ENTENDRE ma voix, en direct.",
+    say: "Sean a besoin d'aide pour brancher l'appareil sur son bureau.",
     attend: "msg_telephone",
     suite: "« Allô, San Francisco ? » — les voix se croisent d'un océan à l'autre. Ma jauge déborde : de la plume au fil, du fil au câble, du câble aux ondes, des ondes à la VOIX en direct. Et grâce à la photo, au cylindre et au film, on peut désormais FIXER les visages, les voix et les mouvements pour toujours. Le XXe siècle nous attend." },
 ];

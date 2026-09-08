@@ -137,12 +137,6 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [], qu
 
       {/* ═══ couche intermédiaire : le télégraphiste au bureau + le « ? » ═══ */}
       <PLayer depth={2}>
-        {queteQui === "james" && !tg && (
-          <g transform="translate(240,300) scale(0.55)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
-            <path d="M0 0 q0 -26 26 -26 q26 0 26 22 q0 18 -22 24 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
-            <circle cx="26" cy="40" r="3" fill="#ffd166" />
-          </g>
-        )}
         {/* le télégraphiste assis derrière le bureau (à droite), au manipulateur */}
         <g transform="translate(540,372)">
           <path d="M-26 96 Q-34 22 -4 10 Q10 4 24 10 Q36 22 30 96 Z" fill="#3a4152" />

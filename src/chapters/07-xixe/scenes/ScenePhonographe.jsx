@@ -177,12 +177,6 @@ export default function ScenePhonographe({ action, reveal, made = [], queteQui }
         </g>
 
         {/* « ? » de James âgé (tant qu'il guide) */}
-        {queteQui === "james-vieux" && !done && (
-          <g transform="translate(720,240)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
-            <path d="M0 0 q0 -24 24 -24 q24 0 24 20 q0 17 -20 22 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
-            <circle cx="24" cy="37" r="3" fill="#ffd166" />
-          </g>
-        )}
       </PLayer>
 
       <rect width="1000" height="560" fill="#141810" opacity="0.06" style={{ pointerEvents: "none" }} />
