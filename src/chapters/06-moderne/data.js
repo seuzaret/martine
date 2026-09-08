@@ -198,8 +198,8 @@ const ACTIONS = {
    ------------------------------------------------------------ */
 const QUETE = [
   { perso: "jules", portrait: "jules", auto: true,
-    bubble: "Vite, vite ! Regarde ce globe de taffetas qui gonfle — il va s'élever dans le ciel ! Personne à Paris ne le croira. Aide-moi : prends ma plume, écris tout ce que tu vois sur cette montgolfière, puis cours au relais de poste : il faut que Paris l'apprenne !",
-    say: "Écris l'article (plume + la montgolfière), puis envoie-le à Paris par la poste (l'article + le relais de chevaux). Le message : la poste royale, un vrai réseau.",
+    bubble: "Vite, vite ! Regarde ce globe de taffetas qui gonfle — il va s'élever dans le ciel ! Personne à Paris ne le croira. Aide-moi : il faut RACONTER ça, et vite le faire partir vers la capitale.",
+    say: "Le message : la poste royale, un vrai réseau. À toi de trouver comment fabriquer l'article et le faire filer à Paris.",
     attend: "msg_poste",
     suite: "L'article file vers Paris au galop ! Suis-le : direction l'imprimerie du journal, chez le rédacteur en chef Sigismond." },
 

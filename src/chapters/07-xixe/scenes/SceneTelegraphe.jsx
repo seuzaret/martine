@@ -69,8 +69,11 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [], qu
                 <path d="M-9 -34 h18" stroke="#4a3320" strokeWidth="2.4" />
               </g>
             ))}
-            {/* le TRAIN À VAPEUR sur ses rails, qui fume */}
-            <g transform="translate(-30,74)">
+            {/* le TRAIN À VAPEUR sur ses rails, qui fume — glisse
+                lentement de gauche a droite puis se re-positionne */}
+            <g>
+              <animateTransform attributeName="transform" type="translate"
+                values="-140,74; 200,74; -140,74" dur="18s" repeatCount="indefinite" />
               <path d="M-118 6 h236" stroke="#5a4630" strokeWidth="2" />
               {[-100, -70, -40, -10, 20, 50, 80].map((x, i) => <rect key={i} x={x} y="2" width="4" height="6" fill="#3a2c1c" />)}
               {/* wagons */}
@@ -208,12 +211,17 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [], qu
           <path d="M-13 -26 q13 -8 26 0" stroke="#5a4028" strokeWidth="3" fill="none" />
           <path d="M-18 -30 Q0 -46 18 -30 Q10 -34 0 -34 Q-10 -34 -18 -30 Z" fill="#6a4c2e" />
           <path d="M-18 -30 q18 6 36 0" stroke="#4a3218" strokeWidth="3" fill="none" />
-          {/* bras LEVÉ brandissant la pépite d'or qui scintille */}
-          <path d="M14 -6 Q30 -18 30 -38" stroke="#a83a2c" strokeWidth="6" fill="none" strokeLinecap="round" />
-          <g transform="translate(30,-44)">
-            <path d="M-7 4 L-3 -6 L6 -4 L4 6 Z" fill="#ffd44a" stroke="#c8961e" strokeWidth="1.4" />
-            <path d="M-3 -1 l3 3" stroke="#fff6c8" strokeWidth="1.4" />
-            {[[-10, -8], [10, -6], [0, -12]].map(([x, y], i) => <path key={i} d={`M${x} ${y} l2 2 l-2 2 l-2 -2 Z`} fill="#fff2b0" style={{ animation: `twinkle ${1.4 + i * 0.3}s ease-in-out infinite` }} />)}
+          {/* bras LEVÉ brandissant la pépite d'or, qui AGITE en cadence
+              (pivote autour de l'epaule) — appel du public. */}
+          <g style={{ transformOrigin: "14px -6px" }}>
+            <animateTransform attributeName="transform" type="rotate"
+              values="-25; 15; -25" dur="1.6s" repeatCount="indefinite" />
+            <path d="M14 -6 Q30 -18 30 -38" stroke="#a83a2c" strokeWidth="6" fill="none" strokeLinecap="round" />
+            <g transform="translate(30,-44)">
+              <path d="M-7 4 L-3 -6 L6 -4 L4 6 Z" fill="#ffd44a" stroke="#c8961e" strokeWidth="1.4" />
+              <path d="M-3 -1 l3 3" stroke="#fff6c8" strokeWidth="1.4" />
+              {[[-10, -8], [10, -6], [0, -12]].map(([x, y], i) => <path key={i} d={`M${x} ${y} l2 2 l-2 2 l-2 -2 Z`} fill="#fff2b0" style={{ animation: `twinkle ${1.4 + i * 0.3}s ease-in-out infinite` }} />)}
+            </g>
           </g>
           {/* l'autre main tient une batée avec des paillettes */}
           <path d="M-14 -4 q-16 6 -18 18" stroke="#a83a2c" strokeWidth="5.5" fill="none" strokeLinecap="round" />
