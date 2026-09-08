@@ -162,15 +162,25 @@ export default function SceneArtisans({ collect, action, reveal, made = [], quet
         )}
 
         {/* ═══ CÔTÉ MARCHAND (droite) ═══ */}
-        {/* le troupeau (moutons) */}
+        {/* le troupeau (moutons) — chacun bouge doucement d'avant en
+            arriere autour de sa position, timings decales pour eviter
+            l'effet de synchronisation ridicule. */}
         <g transform="translate(800,476)">
-          {[[-42, 2], [2, 10], [42, -4], [72, 12]].map(([dx, dy], i) => (
-            <g key={i} transform={`translate(${dx},${dy})`}>
+          {[[-42, 2, 3.5, 0], [2, 10, 4, 0.7], [42, -4, 3, 1.4], [72, 12, 4.5, 2.1]].map(([dx, dy, dur, off], i) => (
+            <g key={i}>
+              <animateTransform attributeName="transform" type="translate"
+                values={`${dx - 3},${dy}; ${dx + 3},${dy}; ${dx - 3},${dy}`}
+                dur={`${dur}s`} begin={`${off}s`} repeatCount="indefinite" />
               <ellipse cx="0" cy="15" rx="20" ry="5" fill="#2a1c10" opacity="0.35" />
               <ellipse cx="0" cy="0" rx="19" ry="14" fill="#e8e1d0" />
               <ellipse cx="0" cy="0" rx="19" ry="14" fill="#b0a488" opacity="0.2" filter="url(#ar-grain)" />
-              <ellipse cx="15" cy="-4" rx="8" ry="7.5" fill="#4a3a2c" />
-              <ellipse cx="18" cy="-5" rx="2" ry="2.5" fill="#2a2018" />
+              {/* tete qui se penche pour brouter puis se releve */}
+              <g style={{ transformOrigin: "10px 0px" }}>
+                <animateTransform attributeName="transform" type="rotate"
+                  values="0; 25; 0" dur={`${dur + 1.5}s`} begin={`${off}s`} repeatCount="indefinite" />
+                <ellipse cx="15" cy="-4" rx="8" ry="7.5" fill="#4a3a2c" />
+                <ellipse cx="18" cy="-5" rx="2" ry="2.5" fill="#2a2018" />
+              </g>
               <path d="M-11 12 v9 M-3 13 v9 M6 13 v9 M15 10 v9" stroke="#4a3a2c" strokeWidth="3.2" strokeLinecap="round" />
             </g>
           ))}
