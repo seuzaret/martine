@@ -234,6 +234,26 @@ export default function SceneMonastere({ collect, action, reveal, made = [], fla
             <circle cx={-6} cy={0} r={1.2} fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
           </g>
         )}
+        {/* CHAT du scriptorium qui traverse lentement le fond, entre les
+            rayonnages et le pupitre — sans doute a un manuscrit a garder
+            des souris. Silhouette simple, sombre sur fond dallé. */}
+        <g opacity="0.85">
+          <animateTransform attributeName="transform" type="translate"
+            values="1050,0; -60,-4; 1050,0" dur="42s" repeatCount="indefinite" />
+          <g transform="translate(0,480)">
+            {/* corps */}
+            <ellipse cx="0" cy="0" rx="14" ry="5" fill="#2a1e14" />
+            {/* tete */}
+            <circle cx="-12" cy="-3" r="4.5" fill="#2a1e14" />
+            {/* oreilles */}
+            <path d="M-15 -6 l-1 -4 l3 2 Z" fill="#2a1e14" />
+            <path d="M-9 -6 l1 -4 l-3 2 Z" fill="#2a1e14" />
+            {/* queue */}
+            <path d="M12 -2 q6 -6 2 -12" stroke="#2a1e14" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+            {/* pattes qui bougent en marchant */}
+            <path d="M-6 4 v3 M-2 4 v3 M4 4 v3 M8 4 v3" stroke="#2a1e14" strokeWidth="1.6" strokeLinecap="round" />
+          </g>
+        </g>
       </PLayer>
 
       {/* voile de grain global */}

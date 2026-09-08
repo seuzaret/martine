@@ -223,6 +223,22 @@ export default function SceneImprimerie({ collect, action, reveal, made = [], qu
             <circle cx={0} cy={6} r={1.5} fill="#5eff9e" style={{ animation: "pulse 1.6s infinite" }} />
           </g>
         )}
+        {/* SOURIS d'atelier qui traverse au sol — inevitable dans une
+            imprimerie du XVe. Petite silhouette rapide qui detale sous
+            la casse a caracteres. */}
+        <g opacity="0.85">
+          <animateTransform attributeName="transform" type="translate"
+            values="-40,0; 1050,-5; -40,0" dur="30s" repeatCount="indefinite" />
+          <g transform="translate(0,545)">
+            <ellipse cx="0" cy="0" rx="5" ry="2.4" fill="#3a2818" />
+            <circle cx="-4" cy="-1" r="2" fill="#3a2818" />
+            {/* oreilles */}
+            <circle cx="-5.5" cy="-3" r="1.2" fill="#3a2818" />
+            <circle cx="-2.5" cy="-3" r="1.2" fill="#3a2818" />
+            {/* queue */}
+            <path d="M5 0 q6 4 8 -2" stroke="#3a2818" strokeWidth="0.8" fill="none" strokeLinecap="round" />
+          </g>
+        </g>
       </PLayer>
 
       {/* voile de grain global */}

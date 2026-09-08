@@ -28,6 +28,13 @@ export default function SceneParis({ collect, action, reveal, made = [], mode })
         {[[120, 60], [420, 40], [780, 80]].map(([x, y], i) => (
           <ellipse key={i} cx={x} cy={y} rx="80" ry="14" fill="#e8dfc8" opacity="0.5" />
         ))}
+        {/* Une CHAUVE-SOURIS a la nuit tombante — appropriee pour ce
+            Paris occupe et sombre. Vole lentement. */}
+        <g opacity="0.55">
+          <animateTransform attributeName="transform" type="translate"
+            values="1050,0; -30,20; 1050,0" dur="28s" repeatCount="indefinite" />
+          <path d="M0 130 q-4 -2 -8 0 q4 -6 8 -3 q4 -3 8 3 q-4 -2 -8 0 Z" fill="#1a1408" stroke="#0a0604" strokeWidth="0.4" />
+        </g>
       </PLayer>
 
       {/* ═══ TOUR EIFFEL en fond + drapeau à croix gammée (silhouette grise) ═══ */}

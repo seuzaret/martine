@@ -60,6 +60,16 @@ export default function SceneUruk({ collect, action, reveal, made = [], queteQui
             <path d="M0 -60 q-30 -6 -46 12 M0 -60 q30 -6 46 12 M0 -60 q-20 -22 -34 -30 M0 -60 q20 -22 34 -30 M0 -60 q0 -26 0 -40" stroke="#4a6a30" strokeWidth="4" fill="none" />
           </g>
         ))}
+        {/* MILAN NOIR qui plane au-dessus de la cité — cercles lents, très
+            oriental. Rotation autour d'un point du ciel, silhouette simple. */}
+        <g opacity="0.7">
+          <animateTransform attributeName="transform" type="rotate"
+            values="0 500 120; 360 500 120" dur="34s" repeatCount="indefinite" />
+          <g transform="translate(200,0)">
+            <path d="M0 120 q-8 -3 -16 0 M0 120 q8 -3 16 0" stroke="#1a1408" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+            <ellipse cx="0" cy="120" rx="1.2" ry="2" fill="#1a1408" />
+          </g>
+        </g>
       </PLayer>
 
       {/* ═══ couche intermédiaire : bâtiments + l'étable ═══ */}

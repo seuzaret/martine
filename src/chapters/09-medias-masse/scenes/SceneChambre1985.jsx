@@ -62,6 +62,12 @@ export default function SceneChambre1985({ collect, action, reveal, made = [], f
           {/* rideau à motif rouge fripé sur le côté */}
           <path d="M650 60 L680 60 L676 240 L650 240 Z" fill="#c02830" />
           <path d="M660 70 v170 M670 70 v170" stroke="#8a1820" strokeWidth="1" opacity="0.7" />
+          {/* pigeon urbain qui passe devant la fenetre — signature parisienne */}
+          <g opacity="0.7">
+            <animateTransform attributeName="transform" type="translate"
+              values="450,0; 680,-8" dur="10s" begin="4s" repeatCount="indefinite" />
+            <path d="M0 150 q3 -3 6 0 q3 -3 6 0" stroke="#3a2a1c" strokeWidth="1.4" fill="none" strokeLinecap="round" />
+          </g>
         </g>
       </PLayer>
 
