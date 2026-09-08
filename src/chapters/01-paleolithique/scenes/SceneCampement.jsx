@@ -96,6 +96,23 @@ export default function SceneCampement({ collect, action, reveal, made = [], que
         <path d="M18 108 q3 -4 6 0 q3 -4 6 0" stroke="#1c1810" strokeWidth="1.2" fill="none" strokeLinecap="round" />
         <path d="M32 96 q3 -4 6 0 q3 -4 6 0" stroke="#1c1810" strokeWidth="1.2" fill="none" strokeLinecap="round" />
       </g>
+
+      {/* PETIT FEU DE CAMP au fond de la foret embrumee, cote droit —
+          un autre clan qui campe au loin, halo orange qui pulse et
+          un peu de fumee qui monte entre les troncs. */}
+      <g transform="translate(830,340)">
+        {/* halo orange dans la brume */}
+        <ellipse cx="0" cy="6" rx="16" ry="6" fill="#ff9540" opacity="0.35" filter="url(#c1blur)">
+          <animate attributeName="opacity" values="0.22;0.5;0.22" dur="1.5s" repeatCount="indefinite" />
+        </ellipse>
+        {/* petite flamme */}
+        <g style={{ transformOrigin: "0px 8px", animation: "flick 0.7s ease-in-out infinite" }}>
+          <path d="M0 8 Q-4 0 -1 -8 Q1 -3 2 -6 Q6 0 3 8 Z" fill="#ff7f24" />
+          <path d="M0 8 Q-2 3 0 -3 Q1 0 2 -2 Q4 3 2 7 Z" fill="#ffb347" />
+        </g>
+        {/* fumee qui monte entre les arbres */}
+        <path d="M0 -6 q-4 -12 3 -22 q-6 4 -1 -14" stroke="#a8b0a8" strokeWidth="4" fill="none" opacity="0.4" filter="url(#c1blur)" />
+      </g>
       </PLayer>
 
       {/* ═══ couche intermédiaire : les grands arbres de la clairière ═══ */}
@@ -291,6 +308,38 @@ export default function SceneCampement({ collect, action, reveal, made = [], que
           <circle cx="-22.5" cy="-9.5" r="1.2" fill="#c8382e" />
         </g>
       )}
+
+      {/* PETIT LAPIN qui saute au sol de la clairiere — bondit en 3
+          etapes de gauche a droite avant de repartir en sens inverse.
+          Silhouette blanche-grise, avec oreilles dressees. */}
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="140,530; 240,520; 340,530; 440,520; 340,530; 240,520; 140,530"
+          dur="18s" repeatCount="indefinite" />
+        <g>
+          {/* petit rebond vertical qui simule les sauts */}
+          <animateTransform attributeName="transform" type="translate"
+            values="0,0; 0,-6; 0,0; 0,-6; 0,0; 0,-6; 0,0"
+            dur="18s" repeatCount="indefinite" />
+          {/* corps */}
+          <ellipse cx="0" cy="0" rx="7" ry="4.5" fill="#c8b8a0" stroke="#5a4028" strokeWidth="0.5" />
+          {/* tete */}
+          <circle cx="5" cy="-3" r="3.5" fill="#c8b8a0" stroke="#5a4028" strokeWidth="0.4" />
+          {/* oreilles dressees */}
+          <ellipse cx="6" cy="-8" rx="1.2" ry="4" fill="#c8b8a0" stroke="#5a4028" strokeWidth="0.4" />
+          <ellipse cx="8" cy="-8" rx="1.2" ry="4" fill="#c8b8a0" stroke="#5a4028" strokeWidth="0.4" />
+          <ellipse cx="6" cy="-8" rx="0.6" ry="2.8" fill="#e8b8a8" opacity="0.7" />
+          {/* petit oeil noir */}
+          <circle cx="6.5" cy="-3" r="0.6" fill="#0a0604" />
+          {/* petit museau + moustaches */}
+          <path d="M8 -1.5 l1 0.5 M8 -0.5 l1 0.5" stroke="#5a4028" strokeWidth="0.3" />
+          {/* queue en pompon */}
+          <circle cx="-7" cy="-1" r="1.6" fill="#f0e4d0" stroke="#5a4028" strokeWidth="0.4" />
+          {/* pattes qui poussent */}
+          <ellipse cx="-3" cy="4" rx="2" ry="1" fill="#a89478" />
+          <ellipse cx="3" cy="4" rx="2" ry="1" fill="#a89478" />
+        </g>
+      </g>
       </PLayer>
 
       {/* léger voile de grain sur toute l'image */}

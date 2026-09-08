@@ -254,34 +254,6 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
       {[430, 540, 660, 950].map((x, i) => <GrassTuft key={i} x={x} y={470 + (i % 2) * 40} c={i % 2 ? "#5d6b2e" : "#4e5c28"} />)}
       <GrassTuft x={200} y={540} c="#6b5a2e" />
 
-      {/* PETIT FEU DE FORET au loin cote droit, entre les silhouettes
-          d'arbres — halo orange qui bat, flammes qui s'agitent, colonne
-          de fumee qui monte. Petit et discret, pas d'incendie. */}
-      <g transform="translate(860,460)">
-        {/* halo pulse */}
-        <ellipse cx="0" cy="8" rx="24" ry="10" fill="#ff9540" opacity="0.28">
-          <animate attributeName="opacity" values="0.2;0.42;0.2" dur="1.4s" repeatCount="indefinite" />
-        </ellipse>
-        {/* flammes qui dansent (3 langues) */}
-        <g style={{ transformOrigin: "0px 12px", animation: "flick 0.65s ease-in-out infinite" }}>
-          <path d="M0 12 Q-8 -2 -2 -14 Q1 -6 3 -10 Q10 0 4 12 Z" fill="#ff7f24" />
-          <path d="M0 12 Q-4 2 -1 -6 Q1 -1 2 -4 Q6 2 3 11 Z" fill="#ffb347" />
-          <path d="M0 11 Q-2 4 0 -2 Q1 1 2 -1 Q4 3 2 10 Z" fill="#fff2c4" />
-        </g>
-        {/* etincelles qui montent */}
-        <circle cx="-2" cy="-6" r="0.9" fill="#ffd166">
-          <animate attributeName="cy" values="-6;-30;-6" dur="1.8s" repeatCount="indefinite" />
-          <animate attributeName="opacity" values="1;0;1" dur="1.8s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="3" cy="-2" r="0.7" fill="#ffb347">
-          <animate attributeName="cy" values="-2;-24;-2" dur="2.3s" repeatCount="indefinite" />
-          <animate attributeName="opacity" values="1;0;1" dur="2.3s" repeatCount="indefinite" />
-        </circle>
-        {/* colonne de fumee grise qui monte */}
-        <path d="M0 -14 q-6 -14 4 -28 q-8 6 -2 -18 q6 -10 -2 -22" stroke="#8a9084" strokeWidth="6" fill="none" opacity="0.5" filter="url(#x2blur)" />
-        {/* buches noircies au sol */}
-        <path d="M-8 12 l16 0 M-6 15 l14 0" stroke="#2a1408" strokeWidth="2.5" strokeLinecap="round" />
-      </g>
 
       </PLayer>
 
