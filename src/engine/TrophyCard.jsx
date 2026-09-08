@@ -110,7 +110,7 @@ export default function TrophyCard({ fluxTotal, totalTarget, bonusChapters = [],
         position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         zIndex: 90, padding: 20, backdropFilter: 'blur(4px)',
-        animation: 'cardFadeIn .35s ease-out',
+        animation: 'cardFadeIn 1.6s ease-out',
       }}>
       <div
         onClick={(e) => e.stopPropagation()}
@@ -120,7 +120,7 @@ export default function TrophyCard({ fluxTotal, totalTarget, bonusChapters = [],
           border: `4px solid ${niv.color}`, borderRadius: 20,
           boxShadow: `0 0 40px ${niv.color}aa, 0 12px 48px rgba(0,0,0,0.7)`,
           padding: 10, position: 'relative',
-          animation: 'cardPop .5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          animation: 'cardPop 1.4s cubic-bezier(0.34, 1.4, 0.5, 1) both',
           fontFamily: '"Segoe UI", system-ui, sans-serif', color: '#f8efdd',
         }}>
 
@@ -188,7 +188,7 @@ export default function TrophyCard({ fluxTotal, totalTarget, bonusChapters = [],
 
       <style>{`
         @keyframes cardFadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes cardPop { 0% { transform: scale(0.5) rotate(-8deg); opacity: 0; } 60% { transform: scale(1.05) rotate(2deg); } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+        @keyframes cardPop { 0% { transform: scale(0.7) rotate(-4deg); opacity: 0; } 60% { transform: scale(1.02) rotate(1deg); opacity: 1; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
       `}</style>
     </div>
   );
