@@ -49,6 +49,51 @@ export default function SceneTelephone({ collect, action, reveal, made = [], que
             {/* mer */}
             <rect x="-90" y="30" width="180" height="42" fill="#5a94a4" opacity="0.85" />
             <path d="M-90 32 h180" stroke="#cfe0dc" strokeWidth="1" opacity="0.4" />
+
+            {/* GODZILLA-DINOSAURE derriere la baie : silhouette tres sombre
+                qui emerge de la mer, s'approche de la Statue puis repart.
+                Apparait 10 secondes apres le chargement (begin="10s"). */}
+            <g opacity="0.92">
+              <animateTransform attributeName="transform" type="translate"
+                values="120,0; 120,0; -20,0; -20,0; -20,0; 120,0; 120,0"
+                keyTimes="0; 0.15; 0.42; 0.55; 0.68; 0.92; 1"
+                dur="50s" begin="10s" repeatCount="indefinite" />
+              <g>
+                {/* petit bercement de marche */}
+                <animateTransform attributeName="transform" type="translate"
+                  values="0,0; 0,-0.6; 0,0; 0,-0.6; 0,0" dur="1.8s" repeatCount="indefinite" />
+                {/* remous autour des jambes (au niveau de la mer) */}
+                <ellipse cx="0" cy="42" rx="22" ry="3" fill="#cfe0dc" opacity="0.55">
+                  <animate attributeName="opacity" values="0.35;0.7;0.35" dur="1.8s" repeatCount="indefinite" />
+                </ellipse>
+                {/* queue massive qui balance derriere */}
+                <path d="M10 30 Q34 20 46 26 Q52 30 46 32 Q40 30 28 32 Q18 32 10 34 Z" fill="#0e2418" />
+                {/* corps enorme, immerge en partie */}
+                <path d="M-14 40 Q-20 12 -8 -2 Q10 -10 16 8 Q20 24 14 40 Z" fill="#12301c" />
+                {/* pointes/ecailles dorsales */}
+                {[[-4,-6],[0,-10],[4,-8],[8,-2],[12,6]].map(([x,y],i) => (
+                  <path key={i} d={`M${x} ${y} l2.4 -5 l2.4 5 Z`} fill="#1e4a2c" />
+                ))}
+                {/* cou epais qui monte */}
+                <path d="M-6 -2 Q-10 -18 -2 -26 Q6 -30 10 -18 Q8 -8 4 -4 Z" fill="#12301c" />
+                {/* tete de T-rex avec museau allonge */}
+                <g transform="translate(0,-30)">
+                  <path d="M-6 4 Q-12 -2 -6 -8 Q0 -10 14 -6 Q18 -2 14 4 Q6 6 -6 4 Z" fill="#12301c" />
+                  {/* machoire inferieure */}
+                  <path d="M-2 2 Q6 6 14 4 L14 6 Q6 8 -2 5 Z" fill="#0a1c12" />
+                  {/* dents visibles */}
+                  <path d="M2 2 l0.6 2 l0.6 -2 M6 2 l0.6 2.4 l0.6 -2.4 M10 2 l0.6 2 l0.6 -2" fill="#efe6d2" stroke="#efe6d2" strokeWidth="0.3" />
+                  {/* oeil rouge lueur */}
+                  <circle cx="4" cy="-3" r="1.2" fill="#ff6b3a">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite" />
+                  </circle>
+                </g>
+                {/* petites pattes avant caracteristiques */}
+                <path d="M-4 6 q-6 4 -3 10" stroke="#0e2418" strokeWidth="2" fill="none" strokeLinecap="round" />
+                <path d="M6 8 q-4 5 -1 11" stroke="#0e2418" strokeWidth="2" fill="none" strokeLinecap="round" />
+              </g>
+            </g>
+
             {/* Statue de la Liberté au loin */}
             <g transform="translate(-30,42)">
               {/* socle */}
@@ -73,40 +118,6 @@ export default function SceneTelephone({ collect, action, reveal, made = [], que
               </g>
             ))}
 
-            {/* GODZILLA emerge de la baie, s'approche de la Statue puis repart */}
-            <g>
-              <animateTransform attributeName="transform" type="translate"
-                values="90,30; 90,30; -30,30; -30,30; -30,30; 90,30; 90,30"
-                keyTimes="0; 0.15; 0.45; 0.55; 0.65; 0.9; 1"
-                dur="42s" repeatCount="indefinite" />
-              <g>
-                {/* petit bercement de marche */}
-                <animateTransform attributeName="transform" type="translate"
-                  values="0,0; 0,-1; 0,0; 0,-1; 0,0" dur="1.4s" repeatCount="indefinite" />
-                {/* remous autour des jambes */}
-                <ellipse cx="0" cy="14" rx="16" ry="2.5" fill="#cfe0dc" opacity="0.55">
-                  <animate attributeName="opacity" values="0.35;0.7;0.35" dur="1.4s" repeatCount="indefinite" />
-                </ellipse>
-                {/* queue */}
-                <path d="M8 8 Q22 6 32 12 Q26 14 20 12 Q14 12 8 12 Z" fill="#1e3a24" />
-                {/* corps massif */}
-                <path d="M-8 12 Q-14 -4 -6 -14 Q6 -18 12 -6 Q14 6 10 14 Z" fill="#26502e" />
-                {/* dos avec ecailles/pointes */}
-                {[[-6,-14],[-2,-16],[2,-15],[6,-12]].map(([x,y],i) => (
-                  <path key={i} d={`M${x} ${y} l1.6 -3 l1.6 3 Z`} fill="#3a7a44" />
-                ))}
-                {/* tete */}
-                <path d="M-4 -14 Q-10 -22 -4 -26 Q4 -28 8 -22 Q6 -16 -2 -14 Z" fill="#26502e" />
-                {/* oeil rouge lueur */}
-                <circle cx="2" cy="-22" r="0.9" fill="#ff6b3a">
-                  <animate attributeName="opacity" values="0.5;1;0.5" dur="1.8s" repeatCount="indefinite" />
-                </circle>
-                {/* dent visible */}
-                <path d="M-2 -18 l0 2 l1.4 0 Z" fill="#efe6d2" />
-                {/* petites pattes avant */}
-                <path d="M-4 -6 q-3 4 -2 8" stroke="#1e3a24" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-              </g>
-            </g>
           </g>
           {/* cadre + croisillons */}
           <rect x="-92" y="-84" width="184" height="156" fill="none" stroke="#3a2a18" strokeWidth="8" />

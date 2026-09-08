@@ -79,24 +79,26 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [], qu
               <path d="M-118 12 h236" stroke="#5a4630" strokeWidth="1.5" opacity="0.7" />
             </g>
 
-            {/* le TRAIN À VAPEUR qui passe de droite a gauche UNE
-                SEULE FOIS puis attend longtemps (fin = repositionne
-                a droite, mais discret). */}
-            <g>
-              <animateTransform attributeName="transform" type="translate"
-                values="200,74; 200,74; -200,74; -200,74"
-                keyTimes="0;0.2;0.5;1" dur="25s" repeatCount="indefinite" />
-              {/* wagons */}
-              <rect x="34" y="-16" width="30" height="18" rx="2" fill="#6a3a2a" /><rect x="68" y="-16" width="30" height="18" rx="2" fill="#5a3a2a" />
-              {/* locomotive */}
-              <rect x="-6" y="-20" width="36" height="22" rx="2" fill="#2c2620" />
-              <rect x="-18" y="-12" width="14" height="14" fill="#2c2620" /> {/* cabine */}
-              <path d="M-20 2 l-6 6 h8 Z" fill="#1c1610" /> {/* chasse-pierres */}
-              <circle cx="-2" cy="4" r="4" fill="#3a3a44" /><circle cx="14" cy="4" r="4" fill="#3a3a44" /><circle cx="52" cy="4" r="3" fill="#3a3a44" />
-              {/* cheminée + fumée */}
-              <rect x="18" y="-30" width="8" height="12" fill="#1c1610" />
-              <g style={{ animation: "drift 5s ease-in-out infinite" }}>
-                <circle cx="24" cy="-36" r="7" fill="#d8d0c4" opacity="0.5" /><circle cx="34" cy="-44" r="9" fill="#cfc8bc" opacity="0.4" /><circle cx="48" cy="-50" r="11" fill="#c8c0b4" opacity="0.3" />
+            {/* le TRAIN À VAPEUR au loin (echelle reduite) qui passe de
+                droite a gauche UNE SEULE FOIS puis attend longtemps. */}
+            <g transform="translate(0,64) scale(0.7)">
+              <g>
+                <animateTransform attributeName="transform" type="translate"
+                  values="220,0; 220,0; -260,0; -260,0"
+                  keyTimes="0;0.2;0.55;1" dur="30s" repeatCount="indefinite" />
+                {/* wagons */}
+                <rect x="34" y="-16" width="30" height="18" rx="2" fill="#6a3a2a" /><rect x="68" y="-16" width="30" height="18" rx="2" fill="#5a3a2a" />
+                {/* locomotive */}
+                <rect x="-6" y="-20" width="36" height="22" rx="2" fill="#2c2620" />
+                <rect x="-18" y="-12" width="14" height="14" fill="#2c2620" />
+                <path d="M-20 2 l-6 6 h8 Z" fill="#1c1610" />
+                <circle cx="-2" cy="4" r="4" fill="#3a3a44" /><circle cx="14" cy="4" r="4" fill="#3a3a44" /><circle cx="52" cy="4" r="3" fill="#3a3a44" />
+                <rect x="18" y="-30" width="8" height="12" fill="#1c1610" />
+                <g>
+                  <animateTransform attributeName="transform" type="translate"
+                    values="0,0; 4,-4; 0,0" dur="5s" repeatCount="indefinite" />
+                  <circle cx="24" cy="-36" r="7" fill="#d8d0c4" opacity="0.5" /><circle cx="34" cy="-44" r="9" fill="#cfc8bc" opacity="0.4" /><circle cx="48" cy="-50" r="11" fill="#c8c0b4" opacity="0.3" />
+                </g>
               </g>
             </g>
           </g>
@@ -131,19 +133,12 @@ export default function SceneTelegraphe({ collect, action, reveal, made = [], qu
             <path d="M-13 4 q13 6 26 0" stroke="#4a3218" strokeWidth="3" fill="none" />
           </g>
         </g>
-        {/* PIGEON qui traverse le ciel — banal et parfait pour une gare
-            du XIXe. Vol simple et lent. */}
-        <g opacity="0.7">
-          <animateTransform attributeName="transform" type="translate"
-            values="-30,0; 1050,10" dur="26s" repeatCount="indefinite" />
-          <path d="M0 90 q3 -3 6 0 q3 -3 6 0" stroke="#3a2418" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-        </g>
       </PLayer>
 
       {/* ═══ couche intermédiaire : le télégraphiste au bureau + le « ? » ═══ */}
       <PLayer depth={2}>
         {queteQui === "james" && !tg && (
-          <g transform="translate(232,272)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
+          <g transform="translate(240,300) scale(0.55)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
             <path d="M0 0 q0 -26 26 -26 q26 0 26 22 q0 18 -22 24 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
             <circle cx="26" cy="40" r="3" fill="#ffd166" />
           </g>

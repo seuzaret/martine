@@ -42,6 +42,24 @@ export default function SceneCable({ collect, action, reveal, made = [], queteQu
         ))}
         <path d="M780 266 L860 266 L890 380 L740 380 Z" fill="#f0e6c8" opacity="0.16" />
 
+        {/* BALEINE au LOIN (dans la mer lointaine), plus petite et plus discrete */}
+        <g opacity="0.7">
+          <animateTransform attributeName="transform" type="translate"
+            values="-80,0; 1080,6; -80,0" dur="80s" repeatCount="indefinite" />
+          <g transform="translate(0,320) scale(0.55)">
+            <path d="M-30 0 Q-10 -16 10 -16 Q30 -14 40 -8 L44 -4 L-30 -4 Z" fill="#1c2c3a" stroke="#0a121c" strokeWidth="0.5" />
+            <path d="M-10 -12 Q10 -14 25 -10" stroke="#4a6a84" strokeWidth="1" fill="none" opacity="0.6" />
+            <path d="M-30 -4 q-15 -6 -22 -18 q0 8 8 14 q-10 0 -14 6 Z" fill="#1c2c3a" stroke="#0a121c" strokeWidth="0.5" />
+            <g transform="translate(-4,-16)">
+              <path d="M0 0 q-3 -10 4 -18" stroke="#e0e8ec" strokeWidth="2.4" fill="none" opacity="0.4">
+                <animate attributeName="opacity" values="0;0.55;0" keyTimes="0;0.5;1" dur="5s" repeatCount="indefinite" />
+              </path>
+              <circle cx="0" cy="-6" r="1.2" fill="#eef2f6" opacity="0.5" />
+            </g>
+            <path d="M-40 0 q-14 -1 -22 -4" stroke="#a8c0c8" strokeWidth="1" fill="none" opacity="0.45" />
+          </g>
+        </g>
+
         {/* APPARAÎT : la côte d'Amérique, atteinte par le câble */}
         {built && (
           <g style={{ animation: "pulse 0.9s ease-out 2" }}>
@@ -226,14 +244,6 @@ export default function SceneCable({ collect, action, reveal, made = [], queteQu
           <Hotspot cx={740} cy={320} r={80} label="océan" item="ocean" reveal={reveal} onClick={() => collect("ocean")} />
         </>
       )}
-          {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
-      <g opacity="0.75">
-        <animateTransform attributeName="transform" type="translate"
-          values="-40,0; 1050,-20" dur="28s" repeatCount="indefinite" />
-        <path d="M0 130 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-        <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-        <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
-      </g>
-</svg>
+    </svg>
   );
 }
