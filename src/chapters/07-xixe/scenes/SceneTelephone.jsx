@@ -53,50 +53,62 @@ export default function SceneTelephone({ collect, action, reveal, made = [], que
             {/* GODZILLA a hauteur de la Statue de la Liberte : silhouette
                 sombre qui traverse la baie de GAUCHE a DROITE, 15 s apres
                 le chargement (clin d'oeil, humour reference). */}
-            <g opacity="0.92">
+            <g opacity="0.92" transform="translate(-140,42)">
               <animateTransform attributeName="transform" type="translate"
-                values="-90,0; -90,0; 100,0; 100,0"
+                values="-140,42; -140,42; 110,42; 110,42"
                 keyTimes="0; 0.08; 0.92; 1"
-                dur="60s" begin="15s" repeatCount="indefinite" />
-              {/* echelle ~0.5 pour tenir dans la meme hauteur que la Statue,
-                  et miroir horizontal (scaleX -0.5) pour qu'il regarde a droite */}
-              <g transform="scale(-0.5, 0.5) translate(0,84)">
+                dur="60s" begin="15s" fill="freeze" repeatCount="indefinite" />
+              {/* dessine en local (feet a y=0, tete en haut vers y=-40),
+                  facing RIGHT, echelle 0.6 pour ~ meme hauteur que la Statue */}
+              <g transform="scale(0.6)">
                 {/* petit bercement de marche */}
                 <animateTransform attributeName="transform" type="translate"
                   additive="sum"
-                  values="0,0; 0,-1.5; 0,0; 0,-1.5; 0,0" dur="2s" repeatCount="indefinite" />
+                  values="0,0; 0,-1.6; 0,0; 0,-1.6; 0,0" dur="2s" repeatCount="indefinite" />
                 {/* remous autour des jambes (au niveau de la mer) */}
-                <ellipse cx="0" cy="0" rx="26" ry="4" fill="#cfe0dc" opacity="0.55">
+                <ellipse cx="0" cy="0" rx="30" ry="4" fill="#cfe0dc" opacity="0.55">
                   <animate attributeName="opacity" values="0.35;0.7;0.35" dur="2s" repeatCount="indefinite" />
                 </ellipse>
-                {/* queue massive qui balance derriere */}
-                <path d="M12 -12 Q40 -22 54 -14 Q60 -8 54 -10 Q46 -12 32 -12 Q22 -12 12 -10 Z" fill="#0e2418" />
-                {/* corps enorme */}
-                <path d="M-14 0 Q-22 -30 -8 -46 Q10 -54 18 -34 Q22 -14 14 0 Z" fill="#12301c" />
-                {/* pattes arrieres puissantes */}
+                {/* QUEUE massive derriere (a gauche, opposee au mouvement) */}
+                <path d="M-6 -14 Q-30 -20 -46 -12 Q-52 -6 -44 -8 Q-30 -12 -14 -12 Q-8 -14 -6 -14 Z" fill="#0e2418" />
+                {/* pattes arrieres puissantes qui plongent dans l'eau */}
                 <path d="M-8 -4 Q-12 -18 -4 -22 Q4 -22 4 -8 L8 -4 L2 -2 L-6 -2 Z" fill="#0e2418" />
-                <path d="M4 -4 Q0 -20 8 -24 Q16 -24 16 -10 L18 -4 L12 -2 L4 -2 Z" fill="#0e2418" />
-                {/* pointes/ecailles dorsales */}
-                {[[-8,-40],[-2,-48],[4,-50],[10,-46],[16,-38],[20,-28]].map(([x,y],i) => (
+                <path d="M6 -4 Q2 -20 10 -24 Q18 -24 18 -10 L20 -4 L14 -2 L6 -2 Z" fill="#12301c" />
+                {/* CORPS enorme, ventre plus clair */}
+                <path d="M-12 -6 Q-16 -34 0 -46 Q18 -52 22 -32 Q24 -14 16 -4 Z" fill="#12301c" />
+                <path d="M-4 -12 Q-8 -30 4 -38 Q14 -40 16 -26 Q16 -12 8 -6 Z" fill="#1a3a24" opacity="0.7" />
+                {/* pointes/ecailles dorsales le long du dos */}
+                {[[-10,-32],[-4,-40],[4,-44],[12,-42],[18,-36],[22,-28]].map(([x,y],i) => (
                   <path key={i} d={`M${x} ${y} l3 -6 l3 6 Z`} fill="#1e4a2c" />
                 ))}
-                {/* cou epais qui monte */}
-                <path d="M-4 -46 Q-10 -60 -2 -72 Q10 -76 14 -62 Q10 -50 6 -48 Z" fill="#12301c" />
-                {/* tete de T-rex avec museau allonge */}
-                <g transform="translate(4,-74)">
-                  <path d="M-8 4 Q-14 -2 -6 -10 Q4 -12 20 -8 Q26 -2 20 6 Q10 8 -8 4 Z" fill="#12301c" />
+                {/* PETITES MAINS de T-rex TENDUES vers la Statue (a droite) */}
+                <g>
+                  {/* bras droit, tendu vers l'avant */}
+                  <path d="M18 -22 q10 -2 18 2 q2 2 -2 3 q-3 -1 -6 -1 q-3 1 -7 0 Z" fill="#0e2418" />
+                  {/* petites griffes */}
+                  <path d="M34 -18 l3 1 M34 -20 l3 0 M34 -22 l3 -1" stroke="#0e2418" strokeWidth="0.6" fill="none" />
+                  {/* bras gauche, un peu plus court */}
+                  <path d="M14 -18 q8 -1 14 3 q1 2 -2 2 q-3 -1 -6 -1 q-3 1 -6 0 Z" fill="#12301c" opacity="0.85" />
+                </g>
+                {/* COU epais qui monte, incline vers l'avant */}
+                <path d="M6 -44 Q8 -56 18 -62 Q28 -60 26 -50 Q22 -46 18 -44 Z" fill="#12301c" />
+                {/* TETE de T-rex avec museau allonge, tournee vers la droite */}
+                <g transform="translate(24,-62)">
+                  {/* crane */}
+                  <path d="M-8 -2 Q-6 -12 6 -12 Q18 -10 20 -2 Q18 4 8 4 Q-6 4 -8 -2 Z" fill="#12301c" />
+                  {/* museau allonge en avant */}
+                  <path d="M8 -4 Q18 -6 26 -2 Q28 2 24 4 Q14 6 8 4 Z" fill="#12301c" />
                   {/* machoire inferieure ouverte */}
-                  <path d="M-2 4 Q10 10 20 8 L22 10 Q10 12 -2 8 Z" fill="#0a1c12" />
-                  {/* dents visibles */}
-                  <path d="M4 4 l0.8 3 l0.8 -3 M9 4 l0.8 3.2 l0.8 -3.2 M14 4 l0.8 3 l0.8 -3" fill="#efe6d2" stroke="#efe6d2" strokeWidth="0.3" />
+                  <path d="M6 4 Q16 8 24 5 L26 6 Q16 10 6 6 Z" fill="#0a1c12" />
+                  {/* DENTS visibles */}
+                  <path d="M10 4 l0.8 3 l0.8 -3 M15 4 l0.8 3.4 l0.8 -3.4 M20 4 l0.8 3 l0.8 -3" fill="#efe6d2" stroke="#efe6d2" strokeWidth="0.4" />
                   {/* oeil rouge lueur */}
-                  <circle cx="8" cy="-3" r="1.4" fill="#ff6b3a">
+                  <circle cx="12" cy="-4" r="1.4" fill="#ff6b3a">
                     <animate attributeName="opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite" />
                   </circle>
+                  {/* narine */}
+                  <circle cx="22" cy="0" r="0.6" fill="#0a1c12" />
                 </g>
-                {/* petites pattes avant caracteristiques */}
-                <path d="M-2 -34 q-8 4 -4 12" stroke="#0e2418" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-                <path d="M8 -34 q-6 5 -2 12" stroke="#0e2418" strokeWidth="2.5" fill="none" strokeLinecap="round" />
               </g>
             </g>
 
