@@ -248,6 +248,28 @@ export default function SceneAtelier({ collect, action, reveal, made = [], inv =
           <path d="M-4 -5 l3 -1 M2 -6 l3 -1 M-1 -3 l2 -2" stroke="#c8b8a0" strokeWidth="0.6" strokeLinecap="round" opacity="0.7" />
         </g>
 
+        {/* PAPILLON qui vole en boucle entre les touffes d'herbe — ambiance
+            vivante, discrète. Chemin en zigzag naturel, ailes qui battent. */}
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="150,480; 300,440; 480,470; 620,430; 750,470; 900,440; 150,480"
+            dur="18s" repeatCount="indefinite" />
+          <g>
+            {/* battement d'ailes en scale sur X */}
+            <animateTransform attributeName="transform" type="scale"
+              values="1,1; 0.35,1; 1,1" dur="0.28s" repeatCount="indefinite" />
+            {/* corps */}
+            <ellipse cx="0" cy="0" rx="0.8" ry="3" fill="#1a1408" />
+            {/* aile gauche */}
+            <path d="M0 -1 q-6 -4 -6 1 q0 4 6 2 Z" fill="#e08840" stroke="#5a2810" strokeWidth="0.3" />
+            {/* aile droite */}
+            <path d="M0 -1 q6 -4 6 1 q0 4 -6 2 Z" fill="#e08840" stroke="#5a2810" strokeWidth="0.3" />
+            {/* petits points sur les ailes */}
+            <circle cx="-3" cy="0" r="0.6" fill="#1a1408" />
+            <circle cx="3" cy="0" r="0.6" fill="#1a1408" />
+          </g>
+        </g>
+
         {/* NUAGE DE POUSSIÈRE DE TAILLE : petits points blancs qui montent depuis
             l'établi, effet « silex qui se débite en direct ». Discret, pas
             envahissant, mais donne vie à l'atelier. */}

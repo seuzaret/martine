@@ -63,19 +63,17 @@ Citation directe de l'auteur, à conserver comme germe :
 
 ### 2.3 Le rôle d'Al3x1A dans le jeu 3
 
-À trancher — **l'auteur ne veut PAS qu'Al3x1A soit un second joueur.**
-Deux options en lice :
+**Décidé : Al3x1A est la fille du futur-soi** — donc descendante
+du joueur adolescent. Elle lui parle en connaissance de cause
+(elle sait ce qu'il va devenir), et le fait qu'elle soit revenue
+au passé pour trouver un remède prend une profondeur nouvelle :
+c'est aussi pour son grand-père absent.
 
-- **Al3x1A = fille du futur-soi** → donc descendante du joueur.
-  Ouvre une relation intime (elle lui parle en connaissance de cause,
-  elle sait ce qu'il va devenir). Émotionnellement fort.
-- **Al3x1A = amie / collègue de la Résistance** → moins intime, plus
-  camarade. Elle a été la première envoyée dans le passé (jeu 2), le
-  joueur est le deuxième.
-
-L'option « fille » est plus payante narrativement mais introduit une
-question sensible en classe (paternité future = choix personnel). À
-peser.
+**Décidé aussi : le futur-soi (le père d'Al3x1A) reste absent
+jusqu'à la fin.** Pas de retrouvailles finales — la règle du
+paradoxe tient jusqu'au bout. L'émotion vient précisément de
+cette absence tenue. Le joueur reçoit des traces, des messages,
+peut-être un dernier mot programmé — mais jamais la personne.
 
 ### 2.4 L'antagoniste
 
@@ -189,24 +187,24 @@ points d'accès par étage, comme la Frise a du défilement horizontal.
 
 ## 6. Idées à explorer (pas de décision)
 
-### 6.1 Récits enchâssés (deux fils narratifs)
+### 6.1 Récits enchâssés (deux fils narratifs) — REPORTÉ
 
 Alterner **deux personnages** dans le même chapitre, avec deux
 regards sur la même époque, deux missions, deux dialogues avec les
 mêmes PNJ.
 
-Contrainte de l'auteur : **le second personnage n'est pas Al3x1A**.
-Candidats possibles :
-- Le **futur-soi** — mais la règle du paradoxe l'interdit sur la
-  même époque au même moment. On peut tricher via des **flashbacks**
-  (« il y a longtemps, ton toi-adulte est passé ici, voici ce qu'il
-  a fait »). Le joueur voit alors une scène courte du passé récent
-  du futur-soi.
-- Un **PNJ local** promu au rang de co-héros pour ce chapitre.
-- **ALEATOIRE lui-même** — on voit brièvement, en négatif, comment
-  il modifie les faits. Renforce la mécanique de « lutte contre ».
+**Décision de l'auteur : on reporte cette piste.** Elle reste
+intéressante et cohérente avec le thème, mais on la met de côté
+tant que la structure principale du jeu 3 n'est pas stabilisée.
 
-À prototyper sur UNE époque avant de généraliser.
+Note pour plus tard : le second personnage ne peut pas être
+Al3x1A ni le futur-soi (paradoxe). Candidats restant :
+- **Flashbacks du futur-soi** — trichent la règle du paradoxe en
+  situant l'action à un moment où l'ado n'était pas encore
+  arrivé dans cette époque.
+- Un **PNJ local** promu co-héros pour ce chapitre.
+- **ALEATOIRE lui-même** — on voit en négatif comment il modifie
+  les faits.
 
 ### 6.2 Mouvement dans les décors
 
@@ -236,15 +234,17 @@ manipulation d'objets et de sources.
 
 ## 7. Questions ouvertes à trancher plus tard
 
-- Al3x1A : fille du joueur ou amie de la Résistance ?
 - MARTINE elle-même méchante à la fin du jeu 3 — on le fait ou pas ?
 - L'événement final qui se restaure : réel ou fictif ?
 - 10 époques ou un sous-ensemble ciblé (5-6) ?
 - Le titre définitif : ALEATOIRE, ou autre ?
 - Le SILO remplace-t-il complètement la station des chronautes, ou
   s'ajoute-t-il (station = accueil, silo = enquête) ?
-- Fin du jeu 3 : le futur-soi revient-il enfin (une fois qu'ALEATOIRE
-  est neutralisé, le paradoxe se lève-t-il) ?
+
+Décisions déjà prises (voir 2.3) :
+- Al3x1A est la fille du futur-soi.
+- Le futur-soi reste absent jusqu'à la fin.
+- Les récits enchâssés sont reportés.
 
 ---
 
