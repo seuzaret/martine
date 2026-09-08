@@ -200,7 +200,19 @@ export default function SceneEcoleScribe({ collect, action, reveal, inv = [] }) 
       <Hotspot cx={470} cy={220} r={40} label="mur d'exercices" reveal={reveal} onClick={() => action("mur_exercices")} />
       <Hotspot cx={120} cy={500} r={30} label="panier d'argile fraîche" item="argile" reveal={reveal} onClick={() => collect("argile")} />
       <Hotspot cx={420} cy={536} r={12} label="boulette d'argile" item="boulette_argile" reveal={reveal} onClick={() => collect("boulette_argile")} />
-      <Hotspot cx={560} cy={540} r={16} label="tablette cassée" item="tablette_cassee" reveal={reveal} onClick={() => collect("tablette_cassee")} />
+      {/* PETITE SOURIS qui detale au sol de l'ecole — silhouette
+          tete-a-gauche, se deplace donc de droite a gauche. */}
+      <g opacity="0.85">
+        <animateTransform attributeName="transform" type="translate"
+          values="1050,0; -40,-3; 1050,0" dur="30s" repeatCount="indefinite" />
+        <g transform="translate(0,552)">
+          <ellipse cx="0" cy="0" rx="5" ry="2.4" fill="#3a2818" />
+          <circle cx="-4" cy="-1" r="2" fill="#3a2818" />
+          <circle cx="-5.5" cy="-3" r="1.2" fill="#3a2818" />
+          <circle cx="-2.5" cy="-3" r="1.2" fill="#3a2818" />
+          <path d="M5 0 q6 4 8 -2" stroke="#3a2818" strokeWidth="0.8" fill="none" strokeLinecap="round" />
+        </g>
+      </g>
     </svg>
   );
 }

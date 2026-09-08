@@ -197,6 +197,19 @@ export default function SceneCol({ collect, action, reveal, made = [] }) {
         <path d="M28 142 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
         <path d="M54 128 q6 -8 12 0 q6 -8 12 0" stroke="#1a1408" strokeWidth="2" fill="none" strokeLinecap="round" />
       </g>
+      {/* LUCIOLE qui danse autour du feu — point jaune-vert qui pulse */}
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="390,463; 410,438; 450,443; 470,468; 450,483; 410,478; 390,463"
+          dur="12s" repeatCount="indefinite" />
+        <circle r="4" fill="#eeff88" opacity="0.35">
+          <animate attributeName="opacity" values="0.15;0.55;0.15" dur="1.2s" repeatCount="indefinite" />
+          <animate attributeName="r" values="3;6;3" dur="1.2s" repeatCount="indefinite" />
+        </circle>
+        <circle r="1.4" fill="#fffca8">
+          <animate attributeName="opacity" values="0.7;1;0.7" dur="1.2s" repeatCount="indefinite" />
+        </circle>
+      </g>
 </svg>
   );
 }

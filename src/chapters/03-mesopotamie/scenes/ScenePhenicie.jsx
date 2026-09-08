@@ -159,29 +159,33 @@ export default function ScenePhenicie({ collect, action, reveal, made = [], mode
       {/* la tablette : APPRENDRE l'alphabet (mini-jeu) → on gagne les 22 signes */}
       <Hotspot cx={300} cy={494} r={46} label="apprendre l'alphabet" reveal={reveal} onClick={() => action("alphabet")} />
       <Hotspot cx={470} cy={356} r={70} label="navires marchands" item="navires" reveal={reveal} onClick={() => collect("navires")} />
-      {/* MOUETTE posee sur la pile de ballots — bouge legerement la tete
-          de gauche a droite (regarde autour). Blanche avec bec jaune,
-          silhouette maritime typique. */}
-      <g transform="translate(150,472)">
-        {/* corps arrondi */}
-        <ellipse cx="0" cy="0" rx="8" ry="6" fill="#f5f2ea" stroke="#4a4a4a" strokeWidth="0.5" />
-        {/* aile pliee */}
-        <path d="M-2 -1 q6 -3 8 2 q-2 4 -8 2 Z" fill="#c8ccd0" stroke="#4a4a4a" strokeWidth="0.4" />
-        {/* extremite d'aile noire */}
-        <path d="M6 1 l3 -1 l-1 3 Z" fill="#1a1408" />
-        {/* petites pattes jaunes */}
-        <path d="M-2 6 v3 M2 6 v3" stroke="#e8a028" strokeWidth="0.8" strokeLinecap="round" />
-        {/* tete + bec + oeil, qui pivote de gauche a droite */}
-        <g style={{ transformOrigin: "-4px -4px" }}>
-          <animateTransform attributeName="transform" type="rotate"
-            values="-15; 15; -15" dur="3.5s" repeatCount="indefinite" />
-          <circle cx="-4" cy="-5" r="3" fill="#f5f2ea" stroke="#4a4a4a" strokeWidth="0.4" />
-          {/* bec jaune-orange caracteristique */}
-          <path d="M-7 -5 l-4 0.5 l4 1 Z" fill="#e8a028" stroke="#7a5010" strokeWidth="0.3" />
-          {/* petite tache rouge sur le bec */}
-          <circle cx="-9" cy="-4.5" r="0.4" fill="#c02830" />
-          {/* oeil */}
-          <circle cx="-5" cy="-5.5" r="0.5" fill="#0a0604" />
+      {/* MOUETTE posee AU SOMMET de la pile de ballots — bouge la tete
+          en va-et-vient et se retourne parfois completement de l'autre
+          cote. Blanche, bec jaune-orange, tache rouge caracteristique. */}
+      <g>
+        {/* toggle du corps entier qui se retourne de temps en temps :
+            scaleX -1 pendant une partie du cycle */}
+        <animateTransform attributeName="transform" type="translate"
+          values="150,447; 150,447" dur="14s" repeatCount="indefinite" />
+        <g>
+          <animateTransform attributeName="transform" type="scale"
+            values="1,1; 1,1; -1,1; -1,1; 1,1"
+            keyTimes="0;0.45;0.5;0.9;1" dur="14s" repeatCount="indefinite" />
+          {/* corps arrondi */}
+          <ellipse cx="0" cy="0" rx="8" ry="6" fill="#f5f2ea" stroke="#4a4a4a" strokeWidth="0.5" />
+          <path d="M-2 -1 q6 -3 8 2 q-2 4 -8 2 Z" fill="#c8ccd0" stroke="#4a4a4a" strokeWidth="0.4" />
+          <path d="M6 1 l3 -1 l-1 3 Z" fill="#1a1408" />
+          {/* petites pattes jaunes */}
+          <path d="M-2 6 v3 M2 6 v3" stroke="#e8a028" strokeWidth="0.8" strokeLinecap="round" />
+          {/* tete + bec, qui pivote de gauche a droite quand elle regarde */}
+          <g style={{ transformOrigin: "-4px -4px" }}>
+            <animateTransform attributeName="transform" type="rotate"
+              values="-15; 15; -15" dur="3.5s" repeatCount="indefinite" />
+            <circle cx="-4" cy="-5" r="3" fill="#f5f2ea" stroke="#4a4a4a" strokeWidth="0.4" />
+            <path d="M-7 -5 l-4 0.5 l4 1 Z" fill="#e8a028" stroke="#7a5010" strokeWidth="0.3" />
+            <circle cx="-9" cy="-4.5" r="0.4" fill="#c02830" />
+            <circle cx="-5" cy="-5.5" r="0.5" fill="#0a0604" />
+          </g>
         </g>
       </g>
 </svg>

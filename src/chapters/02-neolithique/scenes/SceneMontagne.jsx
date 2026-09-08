@@ -220,6 +220,19 @@ export default function SceneMontagne({ collect, action, reveal, made = [], quet
           <path d="M-3 9 q3 2 6 0" stroke="#0a0402" strokeWidth="0.7" fill="none" />
         </g>
       </g>
+      {/* LUCIOLE qui danse autour du feu — point jaune-vert qui pulse */}
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="720,471; 740,446; 780,451; 800,476; 780,491; 740,486; 720,471"
+          dur="12s" repeatCount="indefinite" />
+        <circle r="4" fill="#eeff88" opacity="0.35">
+          <animate attributeName="opacity" values="0.15;0.55;0.15" dur="1.2s" repeatCount="indefinite" />
+          <animate attributeName="r" values="3;6;3" dur="1.2s" repeatCount="indefinite" />
+        </circle>
+        <circle r="1.4" fill="#fffca8">
+          <animate attributeName="opacity" values="0.7;1;0.7" dur="1.2s" repeatCount="indefinite" />
+        </circle>
+      </g>
 </svg>
   );
 }

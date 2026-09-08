@@ -217,6 +217,19 @@ export default function SceneArtisans({ collect, action, reveal, made = [], quet
       <Hotspot cx={150} cy={448} r={50} label="le four" item="feu" reveal={reveal} onClick={() => collect("feu")} />
       <Hotspot cx={432} cy={500} r={40} label="pigments" item="pigments" reveal={reveal} onClick={() => collect("pigments")} />
       <Hotspot cx={810} cy={472} r={74} label="le troupeau" item="troupeau" reveal={reveal} onClick={() => collect("troupeau")} />
-    </svg>
+          {/* LUCIOLE qui danse autour du feu — point jaune-vert qui pulse */}
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="110,433; 130,408; 170,413; 190,438; 170,453; 130,448; 110,433"
+          dur="12s" repeatCount="indefinite" />
+        <circle r="4" fill="#eeff88" opacity="0.35">
+          <animate attributeName="opacity" values="0.15;0.55;0.15" dur="1.2s" repeatCount="indefinite" />
+          <animate attributeName="r" values="3;6;3" dur="1.2s" repeatCount="indefinite" />
+        </circle>
+        <circle r="1.4" fill="#fffca8">
+          <animate attributeName="opacity" values="0.7;1;0.7" dur="1.2s" repeatCount="indefinite" />
+        </circle>
+      </g>
+</svg>
   );
 }
