@@ -257,6 +257,7 @@ export default function App() {
   const [fluxBubble, setFluxBubble] = useState(null);    // {delta, key} — anim +N/-N flottante
   const [sosChooserOpen, setSosChooserOpen] = useState(false); // choix du support SOS fin de chapitre
   const [anachronismLearned, setAnachronismLearned] = useState(false); // MARTINE a-t-elle déjà expliqué les déchets temporels ?
+  const [anachronismesJetesCount, setAnachronismesJetesCount] = useState(0); // combien de déchets ont déjà été jetés (pour éviter que Martine ré-explique)
   /* Confort de lecture (accessibilité) — mémorisé sur l'appareil, à part
      de la sauvegarde de partie (une même classe garde ses réglages). */
   const [a11y, setA11y] = useState(() => {
@@ -623,7 +624,7 @@ export default function App() {
           setAnachronismLearned(true);
           say(`${it.emoji} ${it.name} — 🚨 DÉCHET TEMPOREL ! Cet objet n'a rien à faire ici : un agent du temps peu soigneux l'a laissé traîner et ça POLLUE la ligne temporelle. Vite, une POUBELLE TEMPORELLE 🗑️ vient d'apparaître en bas à gauche — glisse le déchet dedans pour nettoyer et gagner du flux. Il y en a un caché à chaque époque, ouvre l'œil.`, "vexe");
         } else {
-          say(`${it.emoji} ${it.name} — Encore un déchet temporel ! Direction la poubelle 🗑️.`, "vexe");
+          say(`${it.emoji} ${it.name} — dans la poubelle 🗑️.`, "vexe");
         }
       } else {
         say(`${it.emoji} ${it.name} — ${it.desc}`);
@@ -985,10 +986,16 @@ export default function App() {
         setInv((v) => v.filter((x) => x !== src));
         bumpFlux(3);
         flash(); playSfx("success");
-        /* Récompense pédagogique : c'est ICI qu'on apprend POURQUOI
-           l'objet est anachronique (la desc complète). Ordre : nom,
-           puis explication historique, puis félicitations + gain. */
-        say(`✓ ${it.emoji} ${it.name} — jeté dans la poubelle temporelle. ${it.desc || ""} La ligne temporelle respire. +3 flux.`, "content");
+        /* Recompense pedagogique : le TOUT PREMIER dechet jete (celui de la
+           Prehistoire) merite l'explication complete pour que l'eleve
+           comprenne le principe. Les suivants ne meritent qu'une petite
+           confirmation — inutile que Martine re-explique a chaque fois. */
+        if (anachronismesJetesCount === 0) {
+          say(`✓ ${it.emoji} ${it.name} — jeté dans la poubelle temporelle. ${it.desc || ""} La ligne temporelle respire. +3 flux.`, "content");
+        } else {
+          say(`✓ ${it.emoji} ${it.name} — jeté. +3 flux.`, "content");
+        }
+        setAnachronismesJetesCount((n) => n + 1);
       } else {
         setShake(true); setTimeout(() => setShake(false), 500);
         playSfx("fail");
