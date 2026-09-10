@@ -105,11 +105,41 @@ export function TemporalCompass({ onClose, onLock }) {
         p.x = fromX + (toX - fromX) * prog;
         p.y = fromY + (toY - fromY) * prog;
       }
-      /* Arrive : demarrer la case suivante si une fleche est tenue */
+      /* Arrive : demarrer la case suivante.
+         Les tourbillons peuvent detourner (voire imposer) la direction. */
       if (prog >= 1) {
-        const d = dirFor(held);
+        const cx = Math.round(p.x / STEP), cy = Math.round(p.y / STEP);
+
+        /* Cherche le tourbillon dont le nœud actuel est le plus enfonce. */
+        let strongest = null, strongestDepth = 0;
+        for (const w of whirls) {
+          const dx = p.x - w.x, dy = p.y - w.y;
+          const d = Math.hypot(dx, dy);
+          if (d < w.r) {
+            const depth = 1 - d / w.r;   // 0 (bord) -> 1 (centre)
+            if (depth > strongestDepth) { strongestDepth = depth; strongest = w; }
+          }
+        }
+
+        let d = dirFor(held);
+        if (strongest) {
+          /* Direction tangentielle (dans le sens du tourbillon) au nœud actuel. */
+          const rx = p.x - strongest.x, ry = p.y - strongest.y;
+          const tx = -ry * strongest.dir, ty = rx * strongest.dir;
+          /* Snap sur l'axe le plus proche. */
+          const tDir = Math.abs(tx) > Math.abs(ty)
+            ? { dx: Math.sign(tx), dy: 0 }
+            : { dx: 0, dy: Math.sign(ty) };
+          if (!d) {
+            /* Aucune touche : le tourbillon nous emporte des qu'il mord (>=0.2). */
+            if (strongestDepth > 0.2) d = tDir;
+          } else {
+            /* Touche tenue : proba de detournement proportionnelle a la profondeur. */
+            if (Math.random() < strongestDepth * 0.85) d = tDir;
+          }
+        }
+
         if (d) {
-          const cx = Math.round(p.x / STEP), cy = Math.round(p.y / STEP);
           const ncx = Math.max(-CELL_MAX, Math.min(CELL_MAX, cx + d.dx));
           const ncy = Math.max(-CELL_MAX, Math.min(CELL_MAX, cy + d.dy));
           if (ncx !== cx || ncy !== cy) {
