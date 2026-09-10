@@ -78,8 +78,9 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
 
       {/* ═══ couche lointaine : LE LIT AU FOND, la fenetre, les POSTERS ═══ */}
       <PLayer depth={1}>
-        {/* LIT plus grand, cote GAUCHE de la piece. Un JEAN traine dessus. */}
-        <g transform="translate(160,300) scale(0.95)">
+        {/* LIT plus grand, cote GAUCHE de la piece, pose au sol. Un
+            JEAN traine dessus. */}
+        <g transform="translate(120,460) scale(0.95)">
           {/* tete de lit */}
           <rect x="-90" y="-46" width="180" height="14" rx="3" fill="#3a3a4a" />
           {/* matelas + couette */}
@@ -251,8 +252,8 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
         {/* PC TOUR GAMER a DROITE du bureau, avec panneau vitre et
             3 ventilos RGB qui tournent. */}
         <g transform="translate(880,342)">
-          {/* halo RGB autour de la tour */}
-          <ellipse cx="0" cy="70" rx="80" ry="100" fill="url(#ch-magenta)" opacity="0.6">
+          {/* halo RGB autour de la tour — cadre a l'interieur de la tour */}
+          <ellipse cx="0" cy="75" rx="42" ry="75" fill="url(#ch-magenta)" opacity="0.6">
             <animate attributeName="opacity" values="0.35;0.7;0.35" dur="5s" repeatCount="indefinite" />
           </ellipse>
           {/* liseret LED sur les 4 aretes visibles de la tour */}
@@ -499,7 +500,7 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
       {/* les OBJETS a assembler pour la cle USB — jean pose sur le lit */}
       {!usb && (
         <>
-          <Hotspot cx={164} cy={294} r={44} label="jean plié sur le lit (une poche)" item="poche" reveal={reveal} onClick={() => collect("poche")} />
+          <Hotspot cx={124} cy={456} r={44} label="jean plié sur le lit (une poche)" item="poche" reveal={reveal} onClick={() => collect("poche")} />
           <Hotspot cx={320} cy={424} r={22} label="mémoire flash" item="memoire_flash" reveal={reveal} onClick={() => collect("memoire_flash")} />
         </>
       )}
