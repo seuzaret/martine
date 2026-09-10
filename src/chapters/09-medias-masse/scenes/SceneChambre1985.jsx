@@ -62,12 +62,6 @@ export default function SceneChambre1985({ collect, action, reveal, made = [], f
           {/* rideau à motif rouge fripé sur le côté */}
           <path d="M650 60 L680 60 L676 240 L650 240 Z" fill="#c02830" />
           <path d="M660 70 v170 M670 70 v170" stroke="#8a1820" strokeWidth="1" opacity="0.7" />
-          {/* pigeon urbain qui passe devant la fenetre — signature parisienne */}
-          <g opacity="0.7">
-            <animateTransform attributeName="transform" type="translate"
-              values="450,0; 680,-8" dur="10s" begin="4s" repeatCount="indefinite" />
-            <path d="M0 150 q3 -3 6 0 q3 -3 6 0" stroke="#3a2a1c" strokeWidth="1.4" fill="none" strokeLinecap="round" />
-          </g>
         </g>
       </PLayer>
 
@@ -86,6 +80,39 @@ export default function SceneChambre1985({ collect, action, reveal, made = [], f
         <circle cx="375" cy="95" r="3" fill="#c8c8c8" />
         <circle cx="205" cy="305" r="3" fill="#c8c8c8" />
         <circle cx="375" cy="305" r="3" fill="#c8c8c8" />
+
+        {/* GUITARE ELECTRIQUE accrochee sur le mur, en biais entre le poster
+            et la fenetre. Silhouette Stratocaster stylisee. */}
+        <g transform="translate(420,200) rotate(18)">
+          {/* sangle */}
+          <path d="M-6 -80 q-4 -8 -14 -8 M6 60 q10 -2 12 -14" stroke="#3a2818" strokeWidth="3" fill="none" />
+          {/* corps forme S (double cutaway) */}
+          <path d="M-24 40 Q-30 20 -20 4 Q-10 -14 4 -10 Q14 -6 20 8 Q26 26 20 44 Q10 62 -6 60 Q-20 58 -24 40 Z" fill="#e83820" stroke="#3a0a08" strokeWidth="1.4" />
+          {/* trou de pickguard */}
+          <path d="M-14 30 Q-20 10 -8 -2 Q4 -8 12 6 Q18 22 10 40 Q0 52 -14 30 Z" fill="#f0e8d0" stroke="#3a1e10" strokeWidth="0.6" />
+          {/* micros */}
+          <rect x="-8" y="10" width="16" height="4" fill="#c8c8c8" stroke="#3a3a3a" strokeWidth="0.4" />
+          <rect x="-8" y="20" width="16" height="4" fill="#c8c8c8" stroke="#3a3a3a" strokeWidth="0.4" />
+          <rect x="-8" y="30" width="16" height="4" fill="#c8c8c8" stroke="#3a3a3a" strokeWidth="0.4" />
+          {/* volume knobs */}
+          <circle cx="12" cy="42" r="1.6" fill="#f0e8d0" stroke="#3a1e10" strokeWidth="0.4" />
+          <circle cx="6"  cy="46" r="1.6" fill="#f0e8d0" stroke="#3a1e10" strokeWidth="0.4" />
+          {/* selecteur */}
+          <path d="M-10 42 l4 4" stroke="#c8c8c8" strokeWidth="1.4" />
+          {/* manche */}
+          <rect x="-2" y="-80" width="4" height="70" fill="#c8a878" stroke="#3a1e10" strokeWidth="0.8" />
+          {/* frettes */}
+          {[-70, -58, -46, -34, -22].map((y, i) => <path key={i} d={`M-2 ${y} h4`} stroke="#3a1e10" strokeWidth="0.5" />)}
+          {/* tete de manche avec mecaniques */}
+          <path d="M-4 -92 L4 -92 L6 -80 L-6 -80 Z" fill="#c8a878" stroke="#3a1e10" strokeWidth="0.6" />
+          {[-90, -86, -82].map((y, i) => (
+            <circle key={i} cx={i % 2 ? 4 : -4} cy={y} r="0.9" fill="#8a8a8a" />
+          ))}
+          {/* cordes */}
+          {[-1, -0.5, 0, 0.5, 1, 1.5].map((x, i) => (
+            <path key={i} d={`M${x} -90 L${x * 0.5} 55`} stroke="#8a8a8a" strokeWidth="0.3" />
+          ))}
+        </g>
       </PLayer>
 
       {/* ═══ meubles ═══ */}
@@ -94,6 +121,76 @@ export default function SceneChambre1985({ collect, action, reveal, made = [], f
         <rect y="440" width="1000" height="120" fill="url(#c85-floor)" />
         <path d="M0 460 h1000 M0 480 h1000 M0 500 h1000 M0 520 h1000" stroke="#5a3818" strokeWidth="0.6" opacity="0.5" />
 
+        {/* BORNE d'ARCADE plantee au sol entre le lit et le bureau, avec
+            un ecran ou tourne un Pac-Man. */}
+        <g transform="translate(320,320)">
+          {/* silhouette cabinet (haute et etroite) */}
+          <path d="M-40 140 L40 140 L44 0 L36 -30 L36 -70 L-36 -70 L-36 -30 L-44 0 Z" fill="#181818" stroke="#0a0a0a" strokeWidth="1.5" />
+          {/* enseigne "ARCADE" en haut */}
+          <rect x="-32" y="-66" width="64" height="14" rx="2" fill="#3a80c8" stroke="#0a0a0a" strokeWidth="0.8" />
+          <text x="0" y="-56" textAnchor="middle" fontFamily="ui-monospace,monospace" fontWeight="800" fontSize="9" fill="#ffe08a" letterSpacing="2">ARCADE</text>
+          {/* filet neon rose autour de la borne */}
+          <path d="M-40 140 L40 140 L44 0 L36 -30 L36 -70 L-36 -70 L-36 -30 L-44 0 Z" fill="none" stroke="#ff4aa0" strokeWidth="0.8" opacity="0.8" />
+          {/* ecran (fond noir) */}
+          <rect x="-30" y="-46" width="60" height="42" rx="3" fill="#000000" stroke="#3a3a3a" strokeWidth="1.4" />
+          {/* labyrinthe simplifie */}
+          <g transform="translate(-30,-46)">
+            <rect x="0" y="0" width="60" height="42" fill="#000" />
+            <path d="M4 6 h20 M32 6 h24 M4 12 v14 M56 12 v14 M4 36 h52 M18 18 h8 M34 18 h8 M18 24 h8 M34 24 h8 M12 32 h6 M42 32 h6" stroke="#3a3aff" strokeWidth="0.9" fill="none" />
+            {/* points a manger */}
+            {[[10,10],[26,10],[42,10],[52,10],[10,20],[26,20],[42,20],[10,28],[26,28],[42,28],[52,28]].map(([x,y],i) => (
+              <circle key={i} cx={x} cy={y} r="0.9" fill="#ffe08a" />
+            ))}
+            {/* pastilles de puissance clignotantes */}
+            <circle cx="6" cy="10" r="1.8" fill="#ffe08a">
+              <animate attributeName="opacity" values="0.3;1;0.3" dur="0.6s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="54" cy="10" r="1.8" fill="#ffe08a">
+              <animate attributeName="opacity" values="0.3;1;0.3" dur="0.6s" begin="0.3s" repeatCount="indefinite" />
+            </circle>
+            {/* PAC-MAN qui traverse le labyrinthe en boucle */}
+            <g>
+              <animateTransform attributeName="transform" type="translate"
+                values="8,20; 50,20; 50,28; 8,28; 8,20"
+                keyTimes="0; 0.35; 0.5; 0.85; 1"
+                dur="6s" repeatCount="indefinite" />
+              {/* bouche qui claque : deux path qui alternent */}
+              <path fill="#ffe000">
+                <animate attributeName="d" dur="0.28s" repeatCount="indefinite"
+                  values="M0 0 m-3 0 a3 3 0 1 1 6 0 a3 3 0 1 1 -6 0 Z;
+                          M0 0 l3 0 l1 -3 l-4 3 l4 3 l-1 -3 l-3 0 a3 3 0 1 1 0 0 Z;
+                          M0 0 m-3 0 a3 3 0 1 1 6 0 a3 3 0 1 1 -6 0 Z" />
+              </path>
+            </g>
+            {/* petit fantome rouge qui suit */}
+            <g fill="#ff4a4a">
+              <animateTransform attributeName="transform" type="translate"
+                values="4,20; 46,20; 46,28; 4,28; 4,20"
+                keyTimes="0; 0.35; 0.5; 0.85; 1"
+                dur="6s" repeatCount="indefinite" />
+              <path d="M-3 0 a3 3 0 0 1 6 0 L3 3 L2 2 L1 3 L0 2 L-1 3 L-2 2 L-3 3 Z" />
+              <circle cx="-1" cy="-0.4" r="0.7" fill="#fff" />
+              <circle cx="1.2" cy="-0.4" r="0.7" fill="#fff" />
+              <circle cx="-1" cy="-0.4" r="0.35" fill="#0a0aff" />
+              <circle cx="1.2" cy="-0.4" r="0.35" fill="#0a0aff" />
+            </g>
+            {/* HUD */}
+            <text x="4" y="4.5" fontSize="3" fontFamily="ui-monospace,monospace" fill="#ffe08a">1UP</text>
+            <text x="56" y="4.5" textAnchor="end" fontSize="3" fontFamily="ui-monospace,monospace" fill="#ffe08a">HI</text>
+          </g>
+          {/* tableau de commande (joystick + boutons) */}
+          <rect x="-30" y="0" width="60" height="18" fill="#2a2a2a" stroke="#0a0a0a" strokeWidth="1" />
+          <circle cx="-14" cy="9" r="4" fill="#e83820" stroke="#3a0a08" strokeWidth="0.8" />
+          <path d="M-14 9 v-4" stroke="#0a0a0a" strokeWidth="1.2" />
+          <circle cx="4" cy="7" r="2.5" fill="#f8b800" />
+          <circle cx="12" cy="7" r="2.5" fill="#3a80c8" />
+          <circle cx="20" cy="7" r="2.5" fill="#c02830" />
+          {/* fente pieces */}
+          <rect x="-4" y="24" width="10" height="6" fill="#3a3a3a" stroke="#0a0a0a" strokeWidth="0.6" />
+          <path d="M-2 26 h6" stroke="#0a0a0a" strokeWidth="0.8" />
+          {/* base ombre */}
+          <ellipse cx="0" cy="142" rx="42" ry="4" fill="#0a0a0a" opacity="0.5" />
+        </g>
         {/* LIT à gauche */}
         <g>
           <rect x="30" y="380" width="180" height="80" fill="url(#c85-bed)" stroke="#3a1808" strokeWidth="2" />
@@ -150,15 +247,28 @@ export default function SceneChambre1985({ collect, action, reveal, made = [], f
             </g>
           )}
 
-          {/* ZX SPECTRUM (petit ordi 1985) + PILE DE DISQUETTES */}
-          <g transform="translate(830,338)">
-            <rect x="-40" y="0" width="80" height="24" fill="#0a0a0a" stroke="#3a3a3a" strokeWidth="1" />
-            {/* touches caoutchouc */}
-            {[...Array(6)].map((_, c) => [...Array(3)].map((_, r) => (
-              <rect key={`k-${c}-${r}`} x={-32 + c * 11} y={4 + r * 5} width="8" height="3" rx="0.5" fill="#3a3a3a" />
-            )))}
-            <rect x="-38" y="-4" width="14" height="4" fill="#e83820" />
-            <text x="-31" y="-6" fontSize="3" fontFamily="ui-monospace,monospace" fontWeight="700" fill="#fff">SINCLAIR</text>
+          {/* MICRO-ORDINATEUR old school beige : gros ecran CRT sur son
+              boitier + clavier avec ligne d'invite qui clignote. */}
+          <g transform="translate(830,340)">
+            {/* boitier plat sous le moniteur */}
+            <rect x="-50" y="14" width="100" height="12" fill="#d8ccb0" stroke="#3a2818" strokeWidth="0.8" />
+            <rect x="-46" y="16" width="10" height="8" fill="#3a2818" />
+            <text x="-41" y="22" textAnchor="middle" fontSize="4" fontFamily="ui-monospace,monospace" fill="#d8ccb0">A:▸</text>
+            <path d="M20 20 h20" stroke="#8a7c60" strokeWidth="0.4" />
+            {/* moniteur CRT arrondi */}
+            <rect x="-40" y="-40" width="80" height="52" rx="6" fill="#e0d4b8" stroke="#3a2818" strokeWidth="1.2" />
+            {/* ecran noir avec halo */}
+            <rect x="-32" y="-32" width="64" height="40" rx="3" fill="#0a0a0a" stroke="#5a4028" strokeWidth="1" />
+            {/* ligne d'invite verte qui clignote */}
+            <text x="-28" y="-18" fontFamily="ui-monospace,monospace" fontSize="5" fill="#5eff9e">C:\{'>'}</text>
+            <rect x="-14" y="-22" width="4" height="6" fill="#5eff9e">
+              <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite" />
+            </rect>
+            <text x="-28" y="-10" fontFamily="ui-monospace,monospace" fontSize="4" fill="#5eff9e" opacity="0.7">READY.</text>
+            {/* petit voyant marche */}
+            <circle cx="34" cy="8" r="1.2" fill="#5eff9e" />
+            {/* marque */}
+            <text x="0" y="8" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="3.5" fill="#5a4028">PC 1985</text>
           </g>
 
           {/* DISQUETTE 3½ » posée à côté (héritage) */}
