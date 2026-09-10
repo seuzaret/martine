@@ -81,37 +81,25 @@ export default function SceneChambre1985({ collect, action, reveal, made = [], f
         <circle cx="205" cy="305" r="3" fill="#c8c8c8" />
         <circle cx="375" cy="305" r="3" fill="#c8c8c8" />
 
-        {/* GUITARE ELECTRIQUE accrochee sur le mur, en biais entre le poster
-            et la fenetre. Silhouette Stratocaster stylisee. */}
-        <g transform="translate(420,200) rotate(18)">
-          {/* sangle */}
-          <path d="M-6 -80 q-4 -8 -14 -8 M6 60 q10 -2 12 -14" stroke="#3a2818" strokeWidth="3" fill="none" />
-          {/* corps forme S (double cutaway) */}
-          <path d="M-24 40 Q-30 20 -20 4 Q-10 -14 4 -10 Q14 -6 20 8 Q26 26 20 44 Q10 62 -6 60 Q-20 58 -24 40 Z" fill="#e83820" stroke="#3a0a08" strokeWidth="1.4" />
-          {/* trou de pickguard */}
-          <path d="M-14 30 Q-20 10 -8 -2 Q4 -8 12 6 Q18 22 10 40 Q0 52 -14 30 Z" fill="#f0e8d0" stroke="#3a1e10" strokeWidth="0.6" />
-          {/* micros */}
-          <rect x="-8" y="10" width="16" height="4" fill="#c8c8c8" stroke="#3a3a3a" strokeWidth="0.4" />
-          <rect x="-8" y="20" width="16" height="4" fill="#c8c8c8" stroke="#3a3a3a" strokeWidth="0.4" />
-          <rect x="-8" y="30" width="16" height="4" fill="#c8c8c8" stroke="#3a3a3a" strokeWidth="0.4" />
-          {/* volume knobs */}
-          <circle cx="12" cy="42" r="1.6" fill="#f0e8d0" stroke="#3a1e10" strokeWidth="0.4" />
-          <circle cx="6"  cy="46" r="1.6" fill="#f0e8d0" stroke="#3a1e10" strokeWidth="0.4" />
-          {/* selecteur */}
-          <path d="M-10 42 l4 4" stroke="#c8c8c8" strokeWidth="1.4" />
-          {/* manche */}
-          <rect x="-2" y="-80" width="4" height="70" fill="#c8a878" stroke="#3a1e10" strokeWidth="0.8" />
-          {/* frettes */}
-          {[-70, -58, -46, -34, -22].map((y, i) => <path key={i} d={`M-2 ${y} h4`} stroke="#3a1e10" strokeWidth="0.5" />)}
-          {/* tete de manche avec mecaniques */}
-          <path d="M-4 -92 L4 -92 L6 -80 L-6 -80 Z" fill="#c8a878" stroke="#3a1e10" strokeWidth="0.6" />
-          {[-90, -86, -82].map((y, i) => (
-            <circle key={i} cx={i % 2 ? 4 : -4} cy={y} r="0.9" fill="#8a8a8a" />
-          ))}
-          {/* cordes */}
-          {[-1, -0.5, 0, 0.5, 1, 1.5].map((x, i) => (
-            <path key={i} d={`M${x} -90 L${x * 0.5} 55`} stroke="#8a8a8a" strokeWidth="0.3" />
-          ))}
+        {/* PLAQUE d'immatriculation OUTATIME (clin d'oeil Back to the
+            Future) accrochee sur le mur au-dessus du bureau. */}
+        <g transform="translate(770,140) rotate(-3)">
+          {/* ombre portee */}
+          <rect x="-52" y="-16" width="104" height="34" rx="3" fill="#0a0604" opacity="0.35" transform="translate(2,3)" />
+          {/* plaque : fond blanc creme, cadre bleu */}
+          <rect x="-52" y="-16" width="104" height="34" rx="3" fill="#f0e6d2" stroke="#3a2818" strokeWidth="1" />
+          <rect x="-52" y="-16" width="104" height="34" rx="3" fill="none" stroke="#c8382e" strokeWidth="1.4" />
+          {/* bandeau CALIFORNIA rouge en haut */}
+          <text x="0" y="-6" textAnchor="middle" fontFamily="Georgia,serif" fontStyle="italic" fontSize="6.5" fontWeight="700" fill="#c8382e" letterSpacing="1">California</text>
+          {/* le texte OUTATIME en gros, style embossage */}
+          <text x="0" y="12" textAnchor="middle" fontFamily="Impact, 'Arial Black', sans-serif" fontSize="18" fontWeight="900" fill="#1a2a54" letterSpacing="2.5">OUTATIME</text>
+          <text x="0" y="12" textAnchor="middle" fontFamily="Impact, 'Arial Black', sans-serif" fontSize="18" fontWeight="900" fill="none" stroke="#0a1230" strokeWidth="0.4" letterSpacing="2.5">OUTATIME</text>
+          {/* vignette SEP 85 en bas a droite */}
+          <rect x="34" y="12" width="14" height="6" fill="#f8b800" stroke="#3a2818" strokeWidth="0.4" />
+          <text x="41" y="17" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="4" fontWeight="700" fill="#3a2818">SEP</text>
+          {/* petits trous de fixation */}
+          <circle cx="-46" cy="-10" r="1" fill="#5a4028" />
+          <circle cx="46"  cy="-10" r="1" fill="#5a4028" />
         </g>
       </PLayer>
 
@@ -123,7 +111,7 @@ export default function SceneChambre1985({ collect, action, reveal, made = [], f
 
         {/* BORNE d'ARCADE plantee au sol entre le lit et le bureau, avec
             un ecran ou tourne un Pac-Man. */}
-        <g transform="translate(320,320)">
+        <g transform="translate(410,320)">
           {/* silhouette cabinet (haute et etroite) */}
           <path d="M-40 140 L40 140 L44 0 L36 -30 L36 -70 L-36 -70 L-36 -30 L-44 0 Z" fill="#181818" stroke="#0a0a0a" strokeWidth="1.5" />
           {/* enseigne "ARCADE" en haut */}
