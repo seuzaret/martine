@@ -49,7 +49,7 @@ const ITEMS = {
   /* fabriqués */
   codex:      { name: "Codex (livre à pages)", emoji: "📕", desc: "Des feuilles pliées et cousues : un LIVRE À PAGES qu'on feuillette. Fini le rouleau — on saute à la page voulue. Mais il est encore nu : il faut l'enluminer." },
   codex_enlumine: { name: "Codex enluminé", emoji: "📖", desc: "Le livre orné à la main : lettrines dorées, rinceaux, petites scènes peintes à l'or et aux couleurs vives. Des mois de travail — un objet de luxe. Reste à le ranger précieusement." },
-  traite_galien: { name: "Traité de médecine de Galien", emoji: "📗", desc: "La copie payée au prix fort : le remède pour le fils du paysan est écrit là-dedans. Encore faut-il savoir le LIRE… Rapporte-le à quelqu'un d'instruit, au château." },
+  traite_galien: { name: "Traité de médecine de Galien", emoji: "📗", desc: "La copie payée au prix fort : le remède pour le fils du paysan est écrit là-dedans. Encore faut-il savoir le LIRE…" },
   caracteres: { name: "Caractères mobiles", emoji: "🔡", desc: "Des centaines de petites lettres de plomb, qu'on assemble en mots, puis en pages, puis qu'on démonte pour recommencer." },
   papier:      { name: "Feuille de papier de chiffon", emoji: "📄", desc: "Une feuille tirée de la pâte de chiffons. Bien moins chère que le parchemin (fait de peau) : sans ce papier bon marché, imprimer par milliers ne servirait à rien." },
 

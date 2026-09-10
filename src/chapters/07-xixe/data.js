@@ -36,20 +36,20 @@ const ITEMS = {
   smartphone: { name: "Smartphone", emoji: "📱", anachronic: true, desc: "Un smartphone tactile — l'iPhone date de 2007, 158 ans après le Far West de James O'Sullivan. Ici, il n'a même pas de réseau." },
 
   /* héritage du chapitre 6 (voyage dans la besace) */
-  pile: { name: "Pile de Volta", emoji: "⚡", heirloom: true, desc: "Ta pile du chapitre précédent : la source d'électricité qui rend possible tout ce siècle. La voilà enfin utile — apporte-la au télégraphe !" },
+  pile: { name: "Pile de Volta", emoji: "⚡", heirloom: true, desc: "Ta pile du chapitre précédent : la source d'électricité qui rend possible tout ce siècle." },
 
   /* T1 — le bureau du télégraphe (western, ~1849) */
   code_morse: { name: "Manipulateur Morse", emoji: "🎛️", support: true, desc: "La touche du télégraphe : elle coupe le courant en impulsions, courtes et longues — les points et les traits du code Morse. Branche-lui du courant, et tape !" },
 
   /* T2 — le studio du daguerréotypist (Californie, ~1855) */
-  plaque: { name: "Plaque de cuivre argentée", emoji: "🟫", desc: "Une plaque de cuivre polie miroir, recouverte d'une fine couche d'argent : le support qui va capter la lumière. Glisse-la dans la chambre photographique." },
-  iodure: { name: "Iodure d'argent (flacon)", emoji: "⚗️", desc: "Un flacon jaune : les vapeurs d'iodure d'argent SENSIBILISENT la plaque à la lumière. Sans ça, aucune image ne se formera. Verse-le sur la chambre, une fois la plaque à l'intérieur." },
+  plaque: { name: "Plaque de cuivre argentée", emoji: "🟫", desc: "Une plaque de cuivre polie miroir, recouverte d'une fine couche d'argent : le support qui capte la lumière." },
+  iodure: { name: "Iodure d'argent (flacon)", emoji: "⚗️", desc: "Un flacon jaune : les vapeurs d'iodure d'argent sensibilisent une plaque à la lumière. Sans ça, aucune image ne se forme." },
   chambre: { name: "Chambre photographique", emoji: "📷", support: true, desc: "Le grand appareil en bois : boîte étanche à la lumière, objectif à l'avant, plaque à l'arrière. On y CHARGE la plaque puis on la SENSIBILISE avant d'exposer." },
 
   /* T3 — la pose du câble (1866) */
   cable: { name: "Câble gainé", emoji: "➿", desc: "Un fil de cuivre isolé de gutta-percha, capable de résister à l'eau et à la pression. Des milliers de kilomètres à dérouler." },
-  grue: { name: "Grue flottante", emoji: "🏗️", desc: "Un ponton à vapeur équipé d'une flèche articulée : il peut soulever de très lourdes charges, comme un rouleau de câble. Combine-le avec le câble pour armer un vrai NAVIRE CÂBLIER." },
-  cablier: { name: "Navire câblier", emoji: "🚢", desc: "La grue flottante chargée du grand rouleau de câble : c'est un navire câblier, comme le fameux Great Eastern qui a posé le premier câble transatlantique en 1866. Il ne reste plus qu'à traverser l'océan…" },
+  grue: { name: "Grue flottante", emoji: "🏗️", desc: "Un ponton à vapeur équipé d'une flèche articulée : il peut soulever de très lourdes charges, comme un rouleau de câble." },
+  cablier: { name: "Navire câblier", emoji: "🚢", desc: "La grue flottante chargée du grand rouleau de câble : c'est un navire câblier, comme le fameux Great Eastern qui a posé le premier câble transatlantique en 1866." },
   ocean: { name: "L'océan", emoji: "🌊", support: true, desc: "Entre l'Europe et l'Amérique, des semaines de bateau… ou quelques minutes, si on ose poser un câble au fond." },
 
   /* T5 — la station Marconi (nuit du Titanic, 1912). */
@@ -59,7 +59,7 @@ const ITEMS = {
   /* T7 — le téléphone (New York, 1915) : combiner l'écouteur et le
      microphone du téléphone à colonne Bell pour joindre San Francisco. */
   micro:    { name: "Microphone (embouchure)", emoji: "🎙️", desc: "Le petit cône noir au sommet de la colonne Bell : c'est là qu'on PARLE. Une membrane à l'intérieur transforme la voix en courant électrique." },
-  ecouteur: { name: "Écouteur", emoji: "🎧", desc: "Le petit combiné qu'on colle à l'oreille : à l'autre bout du fil, la voix redevient vibration. Sean l'a en main — accroche-le au microphone pour faire le circuit." },
+  ecouteur: { name: "Écouteur", emoji: "🎧", desc: "Le petit combiné qu'on colle à l'oreille : à l'autre bout du fil, la voix redevient vibration. Sean l'a en main." },
 };
 
 /* ------------------------------------------------------------

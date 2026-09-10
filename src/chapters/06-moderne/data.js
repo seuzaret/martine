@@ -31,7 +31,7 @@ const ITEMS = {
   chevaux:      { name: "Relais de chevaux", emoji: "🐴", support: true, desc: "Au relais de poste, on change de monture pour repartir aussitôt vers Paris. Confie-lui ton pli : il ira de relais en relais." },
 
   /* L'imprimerie */
-  sigismond:    { name: "Sigismond, rédacteur en chef", emoji: "📰", support: true, desc: "Il tient le journal d'une main de fer. Apporte-lui un bon article et il en fera une gazette tirée à des centaines d'exemplaires." },
+  sigismond:    { name: "Sigismond, rédacteur en chef", emoji: "📰", support: true, desc: "Il tient le journal d'une main de fer. Avec un bon article, il en fait une gazette tirée à des centaines d'exemplaires." },
 
   /* Après la Révolution — la tour de Chappe */
   bras:      { name: "Bras articulés", emoji: "🚦", support: true, desc: "Les grands bras de bois de la tour. En les positionnant selon le code, on forme des signes visibles à des kilomètres." },
@@ -39,7 +39,7 @@ const ITEMS = {
   longuevue: { name: "Longue-vue", emoji: "🔭", desc: "Pour lire les signaux de la tour suivante, là-bas sur la colline, et les répéter aussitôt." },
   espion:    { name: "L'espion", emoji: "🕵️", support: true, desc: "Tapi dans les buissons, il observe la tour à la longue-vue et note tout. Un code n'est secret que si personne ne regarde…" },
   zinc_cuivre: { name: "Disques de zinc & cuivre", emoji: "🔘", desc: "Deux métaux différents, en rondelles. Empilés en alternance, il s'y passe quelque chose d'électrique." },
-  saumure:     { name: "Chiffons à la saumure", emoji: "🧂", desc: "Des feutres imbibés d'eau salée, à glisser entre les disques de métal. La touche finale de l'invention de Volta." },
+  saumure:     { name: "Chiffons à la saumure", emoji: "🧂", desc: "Des feutres imbibés d'eau salée : la touche finale de l'invention de Volta." },
 
   /* fabriqués */
   article:     { name: "L'article de Jules", emoji: "📝", desc: "Le récit fébrile du vol de la montgolfière, signé Jules. À envoyer à Paris — et à confier au journal pour qu'il touche tout le pays." },
