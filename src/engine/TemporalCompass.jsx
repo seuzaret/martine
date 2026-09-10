@@ -413,7 +413,7 @@ export function TemporalCompass({ onClose, onLock }) {
       style={{ position: "fixed", inset: 0, zIndex: 100, background: "linear-gradient(180deg,#2a3a58 0%,#14203a 65%,#0a1224 100%)", overflow: "hidden" }}>
       <div onClick={(e) => e.stopPropagation()}
         style={{ position: "absolute", inset: 0, color: "#e8eef5", fontFamily: "ui-monospace,monospace" }}>
-        <svg viewBox={`0 0 ${VW} ${VH}`} preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+        <svg viewBox={`0 0 ${VW} ${VH}`} preserveAspectRatio="xMidYMid meet" width="100%" height="100%">
           <g ref={cameraRef} transform={`translate(${VW / 2} ${VH / 2})`}>
             {worldStatic}
             {/* Trainee rouge du tachyon (les segments sont ajoutes en direct) */}
