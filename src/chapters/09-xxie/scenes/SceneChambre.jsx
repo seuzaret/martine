@@ -132,7 +132,7 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
         </g>
 
         {/* POSTER MINECRAFT (bloc de terre pixelise) */}
-        <g transform="translate(360,120) rotate(-6)">
+        <g transform="translate(340,110)">
           <rect x="-40" y="-56" width="80" height="112" rx="2" fill="#0a0a10" stroke="#8ac86a" strokeWidth="2" />
           {/* fond ciel Minecraft */}
           <rect x="-38" y="-54" width="76" height="72" fill="#7fbbe0" />
@@ -148,7 +148,7 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
         </g>
 
         {/* POSTER K-POP (silhouettes + coeur/paillettes) */}
-        <g transform="translate(500,80) rotate(5)">
+        <g transform="translate(500,110)">
           <rect x="-40" y="-56" width="80" height="112" rx="2" fill="#f8c8e0" stroke="#a840f0" strokeWidth="2" />
           {/* gradient de fond magenta pastel */}
           <rect x="-38" y="-54" width="76" height="90" fill="#f8c8e0" />
@@ -170,7 +170,7 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
         </g>
 
         {/* POSTER 67 (rap french touch) */}
-        <g transform="translate(640,180) rotate(-3)">
+        <g transform="translate(660,110)">
           <rect x="-40" y="-56" width="80" height="112" rx="2" fill="#0a0a0a" stroke="#c8963e" strokeWidth="2" />
           {/* fond degrade sombre */}
           <rect x="-38" y="-54" width="76" height="108" fill="#0a0a0a" />
@@ -248,9 +248,9 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
           <rect x="308"  y="19" width="8" height="72" fill="#0a0a10" />
         </g>
 
-        {/* PC TOUR GAMER a droite du bureau, avec panneau vitre et
+        {/* PC TOUR GAMER a DROITE du bureau, avec panneau vitre et
             3 ventilos RGB qui tournent. */}
-        <g transform="translate(180,342)">
+        <g transform="translate(880,342)">
           {/* halo RGB autour de la tour */}
           <ellipse cx="0" cy="70" rx="80" ry="100" fill="url(#ch-magenta)" opacity="0.6">
             <animate attributeName="opacity" values="0.35;0.7;0.35" dur="5s" repeatCount="indefinite" />
