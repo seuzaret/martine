@@ -135,8 +135,8 @@ const ACTIONS = {
     jeu2Variants: [
       { bubble: "Une chronaute est venue dans MA CHAMBRE. Elle a posé un truc tout à gauche sur mon lit. Genre chelou. Va voir.",
         say: "L'ado : ICI DANS LA CHAMBRE, tout à gauche sur le lit." },
-      { bubble: "Ouais, elle est passée ICI. Elle a collé un mot derrière mon POSTER MUSIQUE. Trop rebelle.",
-        say: "L'ado : ICI DANS LA CHAMBRE, sur le poster MUSIQUE." },
+      { bubble: "Ouais, elle est passée ICI. Elle a collé un mot derrière mon POSTER K-POP. Trop rebelle.",
+        say: "L'ado : ICI DANS LA CHAMBRE, sur le poster K-POP." },
       { bubble: "Elle est partie au datacenter voisin. Elle a stocké son fichier tout en haut à gauche des serveurs.",
         say: "L'ado renvoie AU DATACENTER, en haut à gauche sur les serveurs." },
     ] },
@@ -147,8 +147,8 @@ const ACTIONS = {
     jeu2Variants: [
       { bubble: "La chronaute a laissé quelque chose DANS LA CHAMBRE D'ADO à côté, tout à gauche sur son lit.",
         say: "Le technicien renvoie DANS LA CHAMBRE, tout à gauche sur le lit." },
-      { bubble: "Elle a collé son mot derrière le poster MUSIQUE de l'ado. La chambre à côté.",
-        say: "Le technicien renvoie DANS LA CHAMBRE, sur le poster MUSIQUE." },
+      { bubble: "Elle a collé son mot derrière le poster K-POP de l'ado. La chambre à côté.",
+        say: "Le technicien renvoie DANS LA CHAMBRE, sur le poster K-POP." },
       { bubble: "Elle a stocké un fichier ICI même, tout en haut à gauche de mes serveurs. Beaucoup plus stable qu'un smartphone.",
         say: "Le technicien : ICI DANS LE DATACENTER, en haut à gauche sur les serveurs." },
     ] },
