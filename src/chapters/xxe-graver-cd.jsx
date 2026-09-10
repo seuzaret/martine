@@ -1,35 +1,53 @@
 import { useState, useEffect } from "react";
 
 /* ============================================================
-   MINI-JEU : « Graver un CD-Rom » (Bureau, 1990)
+   MINI-JEU : « Graver un CD-Rom » (Bureau, 1990) — knapsack
    ------------------------------------------------------------
-   Interface façon Windows 3.0 : fenêtre « Mon PC » à gauche
-   avec des fichiers, fenêtre « CD-R (D:) 650 Mo » à droite.
-   Il faut sélectionner un lot de fichiers qui rentre dans la
-   capacité du CD (650 Mo) et lancer la gravure.
-   Leçon EMI : la CAPACITÉ des supports change tout — la
-   disquette faisait 1,44 Mo, le CD 650 Mo (450× plus), un
-   disque dur d'aujourd'hui 4 000 000 Mo. Ce qui « tient » sur
-   un support définit ce qu'on peut transmettre.
+   Céline veut sauvegarder toutes les MUSIQUES et toutes les
+   PHOTOS de la famille sur un CD-R de 650 Mo. Mais il y a des
+   fichiers pieges (ISO, gros backup) qui feraient tout deborder.
+   Le joueur doit selectionner la bonne combinaison :
+     - TOUTES les musiques
+     - TOUTES les photos
+     - sans depasser 650 Mo
+   Leçon EMI : la CAPACITE des supports change tout — un CD tient
+   dans 650 Mo mille fois plus qu'une disquette, mais pas TOUT.
+   Choisir ce qu'on sauvegarde, c'est deja archiver — et perdre
+   ce qu'on n'a pas choisi.
    ============================================================ */
 
 const CAPA_MO = 650;
 
-/* Une petite bibliothèque de fichiers 1990 crédibles.
-   Tailles en méga-octets. */
+/* Familles : "music", "photo", "doc", "autre". Le joueur doit
+   selectionner TOUS les music + TOUS les photo pour gagner. */
 const FILES = [
-  { id: "autoexec", nom: "AUTOEXEC.BAT",       size: 0.001, icon: "⚙️" },
-  { id: "doc",      nom: "Note_reunion.txt",   size: 0.008, icon: "📄" },
-  { id: "rapport",  nom: "Rapport_final.doc",  size: 0.240, icon: "📝" },
-  { id: "compta",   nom: "Comptabilite.xls",   size: 1.8,   icon: "📊" },
-  { id: "photo",    nom: "Photo_Noel_89.bmp",  size: 2.4,   icon: "🖼️" },
-  { id: "musique",  nom: "Musique_bureau.wav", size: 24,    icon: "🎵" },
-  { id: "clients",  nom: "Base_clients.mdb",   size: 118,   icon: "💼" },
-  { id: "jeu",      nom: "DOOM.exe",           size: 12,    icon: "🎮" },
-  { id: "photos",   nom: "Photos_ete_1989.zip", size: 68,    icon: "📸" },
-  { id: "backup",   nom: "Backup_projet_v3.zip", size: 380,  icon: "💾" },
-  { id: "iso",      nom: "Windows95_beta.iso", size: 620,   icon: "💿" },
+  /* Musiques de la famille */
+  { id: "musique",       cat: "music", nom: "Musique_bureau.wav",     size: 24,   icon: "🎵" },
+  { id: "top50",         cat: "music", nom: "Enregistrement_top50.wav", size: 48, icon: "🎶" },
+  { id: "radio_ete89",   cat: "music", nom: "Radio_ete_89.wav",        size: 32,  icon: "📻" },
+  { id: "repondeur",     cat: "music", nom: "Messages_repondeur.wav",  size: 18,  icon: "☎️" },
+
+  /* Photos de la famille */
+  { id: "photo_noel",    cat: "photo", nom: "Photo_Noel_89.bmp",       size: 4,    icon: "🖼️" },
+  { id: "photos_ete",    cat: "photo", nom: "Photos_ete_89.zip",       size: 68,   icon: "📸" },
+  { id: "photos_famille",cat: "photo", nom: "Photos_famille.zip",      size: 42,   icon: "📸" },
+  { id: "photos_vac",    cat: "photo", nom: "Vacances_Bretagne.zip",   size: 96,   icon: "🏖️" },
+  { id: "photos_bebe",   cat: "photo", nom: "Bebe_Emma.zip",           size: 56,   icon: "👶" },
+  { id: "photos_mariage",cat: "photo", nom: "Mariage_Marc_88.zip",     size: 84,   icon: "💍" },
+
+  /* Documents de travail (optionnels — n'apportent rien a la mission) */
+  { id: "rapport",       cat: "doc",   nom: "Rapport_final.doc",       size: 0.24, icon: "📝" },
+  { id: "compta",        cat: "doc",   nom: "Comptabilite.xls",        size: 1.8,  icon: "📊" },
+  { id: "clients",       cat: "doc",   nom: "Base_clients.mdb",        size: 118,  icon: "💼" },
+
+  /* Pieges : gros fichiers qui feraient deborder le CD */
+  { id: "jeu",           cat: "autre", nom: "DOOM.exe",                size: 12,   icon: "🎮" },
+  { id: "backup",        cat: "autre", nom: "Backup_projet_v3.zip",    size: 380,  icon: "💾" },
+  { id: "iso",           cat: "autre", nom: "Windows95_beta.iso",      size: 620,  icon: "💿" },
 ];
+
+const REQUIRED_CATS = ["music", "photo"];
+const REQUIRED_IDS = FILES.filter((f) => REQUIRED_CATS.includes(f.cat)).map((f) => f.id);
 
 const fmtSize = (mo) => {
   if (mo < 1) return `${Math.round(mo * 1000)} Ko`;
@@ -37,8 +55,8 @@ const fmtSize = (mo) => {
 };
 
 export function GraverCdGame({ onClose, onWin }) {
-  const [selected, setSelected] = useState([]); // ids sélectionnés = dans le CD
-  const [phase, setPhase] = useState("choix");  // "choix" → "grave" → "done"
+  const [selected, setSelected] = useState([]);
+  const [phase, setPhase] = useState("choix");
   const [progress, setProgress] = useState(0);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -47,6 +65,11 @@ export function GraverCdGame({ onClose, onWin }) {
   const pct = Math.min(100, (total / CAPA_MO) * 100);
   const trop = total > CAPA_MO;
   const vide = total === 0;
+  const missingReq = REQUIRED_IDS.filter((id) => !selected.includes(id));
+  const nbMusicSel  = selected.filter((id) => FILES.find((f) => f.id === id)?.cat === "music").length;
+  const nbPhotoSel  = selected.filter((id) => FILES.find((f) => f.id === id)?.cat === "photo").length;
+  const nbMusicTot  = FILES.filter((f) => f.cat === "music").length;
+  const nbPhotoTot  = FILES.filter((f) => f.cat === "photo").length;
 
   const toggle = (id) => {
     if (phase !== "choix") return;
@@ -55,12 +78,18 @@ export function GraverCdGame({ onClose, onWin }) {
   };
 
   const graver = () => {
-    if (vide) { setErrorMsg("Ton CD est VIDE — sélectionne au moins un fichier."); return; }
-    if (trop) { setErrorMsg("Ton CD est trop PLEIN ! Retire quelques fichiers."); return; }
+    if (vide) { setErrorMsg("Ton CD est VIDE — coche au moins un fichier."); return; }
+    if (trop) { setErrorMsg(`Ton CD est TROP PLEIN (${fmtSize(total)} > ${CAPA_MO} Mo). Retire un fichier trop lourd — regarde du côté des sauvegardes et des .iso.`); return; }
+    if (missingReq.length > 0) {
+      const cats = [];
+      if (nbMusicSel < nbMusicTot) cats.push(`${nbMusicTot - nbMusicSel} musique${nbMusicTot - nbMusicSel > 1 ? "s" : ""}`);
+      if (nbPhotoSel < nbPhotoTot) cats.push(`${nbPhotoTot - nbPhotoSel} photo${nbPhotoTot - nbPhotoSel > 1 ? "s" : ""}`);
+      setErrorMsg(`Il te manque encore ${cats.join(" et ")} de la famille — objectif : sauvegarder TOUT.`);
+      return;
+    }
     setPhase("grave");
   };
 
-  /* animation de gravure : 3 secondes environ, puis fiche */
   useEffect(() => {
     if (phase !== "grave") return;
     const id = setInterval(() => setProgress((p) => {
@@ -72,17 +101,19 @@ export function GraverCdGame({ onClose, onWin }) {
 
   useEffect(() => { if (phase === "done") onWin?.(); }, [phase]); // eslint-disable-line
 
+  const catLabel = { music: "musique", photo: "photo", doc: "document", autre: "autre" };
+  const catColor = { music: "#a83080", photo: "#0a7010", doc: "#5a4028", autre: "#6a6a6a" };
+
   return (
     <div onClick={onClose}
       style={{ position: "fixed", inset: 0, background: "rgba(4,8,14,0.88)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, zIndex: 70, backdropFilter: "blur(3px)" }}>
       <div onClick={(e) => e.stopPropagation()}
-        style={{ background: "#c8c0b0", border: "3px solid #0a0a0a", boxShadow: "4px 4px 0 #0a0a0a, 8px 8px 24px rgba(0,0,0,0.6)", maxWidth: 720, width: "100%", maxHeight: "94vh", overflowY: "auto", color: "#0a0a0a", fontFamily: "'MS Sans Serif', 'Arial', sans-serif" }}>
+        style={{ background: "#c8c0b0", border: "3px solid #0a0a0a", boxShadow: "4px 4px 0 #0a0a0a, 8px 8px 24px rgba(0,0,0,0.6)", maxWidth: 780, width: "100%", maxHeight: "94vh", overflowY: "auto", color: "#0a0a0a", fontFamily: "'MS Sans Serif', 'Arial', sans-serif" }}>
         {/* Barre de titre Windows 3.0 */}
         <div style={{ background: "#0a3878", color: "#fff", padding: "4px 8px", display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 700, fontSize: 12 }}>
           <span>💿 Assistant de Gravure CD-Rom — Céline (1990)</span>
           <span style={{ background: "#c8c0b0", color: "#0a0a0a", padding: "0 6px", border: "1px solid #0a0a0a", cursor: "pointer" }} onClick={onClose}>×</span>
         </div>
-        {/* Barre de menu */}
         <div style={{ background: "#c8c0b0", borderBottom: "1px solid #6a6a6a", padding: "2px 8px", fontSize: 11 }}>
           <span style={{ marginRight: 12 }}>Fichier</span>
           <span style={{ marginRight: 12 }}>Édition</span>
@@ -93,9 +124,11 @@ export function GraverCdGame({ onClose, onWin }) {
         <div style={{ padding: 12 }}>
           {phase === "choix" && (
             <>
-              <p style={{ fontSize: 12.5, margin: "0 0 10px", background: "#fff", border: "1px inset #6a6a6a", padding: "6px 10px" }}>
-                Sélectionne les fichiers à graver sur le CD-R (capacité <b>650 Mo</b>). Clique un fichier pour l'ajouter/le retirer.
-              </p>
+              {/* MISSION */}
+              <div style={{ background: "#fff8d8", border: "2px inset #c8a848", padding: "8px 12px", marginBottom: 10, fontSize: 12.5, lineHeight: 1.5 }}>
+                <div style={{ fontWeight: 700, color: "#804000", marginBottom: 3 }}>📋 Mission :</div>
+                Sauvegarde <b>TOUTES</b> les <span style={{ color: catColor.music, fontWeight: 700 }}>MUSIQUES</span> ({nbMusicSel}/{nbMusicTot}) <b>et TOUTES</b> les <span style={{ color: catColor.photo, fontWeight: 700 }}>PHOTOS</span> ({nbPhotoSel}/{nbPhotoTot}) de la famille sur ce CD-R de <b>{CAPA_MO} Mo</b>. Attention aux gros fichiers de travail — ils feraient déborder le disque !
+              </div>
 
               {/* Les deux fenêtres côte à côte */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
@@ -104,15 +137,12 @@ export function GraverCdGame({ onClose, onWin }) {
                   <div style={{ background: "#c8c0b0", padding: "3px 8px", borderBottom: "1px solid #6a6a6a", fontSize: 11, fontWeight: 700 }}>
                     🖥️ Mon PC — C:\
                   </div>
-                  <div style={{ maxHeight: 260, overflowY: "auto" }}>
+                  <div style={{ maxHeight: 320, overflowY: "auto" }}>
                     {FILES.filter((f) => !selected.includes(f.id)).map((f) => (
                       <div key={f.id} onClick={() => toggle(f.id)}
-                        style={{ padding: "4px 8px", cursor: "pointer", display: "flex", justifyContent: "space-between", fontSize: 11.5, borderBottom: "1px dotted #c8c0b0" }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = "#0a3878"}
-                        onMouseLeave={(e) => e.currentTarget.style.background = ""}
-                        onMouseDown={(e) => e.currentTarget.style.color = "#fff"}
-                        onMouseUp={(e) => e.currentTarget.style.color = ""}>
+                        style={{ padding: "4px 8px", cursor: "pointer", display: "grid", gridTemplateColumns: "1fr auto auto", gap: 8, alignItems: "center", fontSize: 11.5, borderBottom: "1px dotted #c8c0b0" }}>
                         <span>{f.icon} {f.nom}</span>
+                        <span style={{ fontSize: 9.5, background: catColor[f.cat] + "22", color: catColor[f.cat], padding: "0 6px", borderRadius: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{catLabel[f.cat]}</span>
                         <span style={{ color: "#6a6a6a" }}>{fmtSize(f.size)}</span>
                       </div>
                     ))}
@@ -127,19 +157,20 @@ export function GraverCdGame({ onClose, onWin }) {
                 {/* CD-R (cible) */}
                 <div style={{ background: "#fff", border: "2px inset #6a6a6a" }}>
                   <div style={{ background: "#c8c0b0", padding: "3px 8px", borderBottom: "1px solid #6a6a6a", fontSize: 11, fontWeight: 700 }}>
-                    💿 CD-R (D:) — Gravure en cours
+                    💿 CD-R (D:) — à graver
                   </div>
-                  <div style={{ maxHeight: 260, overflowY: "auto" }}>
+                  <div style={{ maxHeight: 320, overflowY: "auto" }}>
                     {selected.length === 0 ? (
                       <div style={{ padding: 20, textAlign: "center", color: "#6a6a6a", fontSize: 11, fontStyle: "italic" }}>
-                        (CD vide — sélectionne des fichiers à gauche)
+                        (CD vide — clique un fichier à gauche)
                       </div>
                     ) : selected.map((id) => {
                       const f = FILES.find((x) => x.id === id);
                       return (
                         <div key={id} onClick={() => toggle(id)}
-                          style={{ padding: "4px 8px", cursor: "pointer", display: "flex", justifyContent: "space-between", fontSize: 11.5, borderBottom: "1px dotted #c8c0b0" }}>
+                          style={{ padding: "4px 8px", cursor: "pointer", display: "grid", gridTemplateColumns: "1fr auto auto", gap: 8, alignItems: "center", fontSize: 11.5, borderBottom: "1px dotted #c8c0b0" }}>
                           <span>{f.icon} {f.nom}</span>
+                          <span style={{ fontSize: 9.5, background: catColor[f.cat] + "22", color: catColor[f.cat], padding: "0 6px", borderRadius: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{catLabel[f.cat]}</span>
                           <span style={{ color: "#6a6a6a" }}>{fmtSize(f.size)}</span>
                         </div>
                       );
@@ -163,7 +194,7 @@ export function GraverCdGame({ onClose, onWin }) {
               </div>
 
               {errorMsg && (
-                <div style={{ marginTop: 8, background: "#fff8d8", border: "2px inset #c8a848", padding: "6px 10px", fontSize: 12, color: "#804000" }}>
+                <div style={{ marginTop: 8, background: "#ffd8d8", border: "2px inset #c84848", padding: "6px 10px", fontSize: 12, color: "#800000" }}>
                   ⚠ {errorMsg}
                 </div>
               )}
@@ -208,11 +239,11 @@ export function GraverCdGame({ onClose, onWin }) {
                   ✓ Gravure terminée avec succès !
                 </div>
                 <div style={{ fontSize: 12, marginBottom: 6 }}>
-                  {selected.length} fichier{selected.length > 1 ? "s" : ""} · {fmtSize(total)} sur {CAPA_MO} Mo
+                  {selected.length} fichier{selected.length > 1 ? "s" : ""} · {fmtSize(total)} / {CAPA_MO} Mo — toutes les musiques et toutes les photos de la famille sont dessus.
                 </div>
               </div>
               <div style={{ background: "#0e1420", border: "1px solid #2a3648", padding: "12px 14px", color: "#e8eef5", fontFamily: "Palatino, Georgia, serif", fontSize: 13.5, lineHeight: 1.6 }}>
-                « Un CD-Rom peut contenir <b>650 Mo</b> — soit 450 fois une disquette 3½" (1,44 Mo), soit 200 000 pages de texte. En 1990, c'est vertigineux : on tient une petite bibliothèque dans un disque de 12 cm. On te le vend « inaltérable » — durera 100 ans, disent les fabricants. La réalité 30 ans plus tard : beaucoup de CD gravés dans les années 90 sont ILLISIBLES, la couche métallique s'oxyde et se décolle (la « maladie du disque »). La CAPACITÉ ne garantit rien sur la DURABILITÉ. On verra ce que la disquette de Julien nous réserve au prochain chapitre… » — MARTINE
+                « Un CD-Rom, c'est <b>650 Mo</b> — 450 fois une disquette 3½" (1,44 Mo), soit 200 000 pages de texte. Vertigineux pour 1990. Mais tu vois, il a quand même fallu CHOISIR : le Windows95 beta et le gros backup, on les laisse. Toute archive, c'est déjà un tri. On te vendra le CD « inaltérable », 100 ans garantis. La réalité 30 ans plus tard : beaucoup de CD gravés des années 90 sont ILLISIBLES — la couche métallique s'oxyde (la « maladie du disque »). La CAPACITÉ ne garantit rien sur la DURABILITÉ. » — MARTINE
               </div>
               <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
                 <button onClick={onClose}
@@ -224,7 +255,6 @@ export function GraverCdGame({ onClose, onWin }) {
           )}
         </div>
 
-        {/* Barre d'état Windows 3.0 */}
         <div style={{ background: "#c8c0b0", borderTop: "1px solid #6a6a6a", padding: "3px 8px", fontSize: 10.5, display: "flex", justifyContent: "space-between", color: "#3a3a3a" }}>
           <span>Prêt</span>
           <span>{selected.length} fichier(s) — {fmtSize(total)}</span>
