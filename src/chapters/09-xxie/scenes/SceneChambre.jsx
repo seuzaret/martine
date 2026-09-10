@@ -225,16 +225,16 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
           <rect x="76"  y="10" width="10" height="24" fill="#1a1a20" />
         </g>
 
-        {/* GRAND BUREAU GAMER noir occupant tout l'avant */}
+        {/* GRAND BUREAU GAMER noir : raccourci a gauche pour laisser voir le lit */}
         <g transform="translate(500,432)">
-          <rect x="-320" y="0" width="640" height="16" rx="3" fill="url(#ch-desk)" />
+          <rect x="-240" y="0" width="560" height="16" rx="3" fill="url(#ch-desk)" />
           {/* eclairage RGB sous le bureau */}
-          <rect x="-320" y="16" width="640" height="3" fill="#ff4aa0">
+          <rect x="-240" y="16" width="560" height="3" fill="#ff4aa0">
             <animate attributeName="fill" dur="7s" repeatCount="indefinite"
               values="#ff4aa0; #4ae0ff; #a840f0; #7fe0a8; #ff4aa0" />
           </rect>
           {/* pieds fins metal */}
-          <rect x="-316" y="19" width="8" height="72" fill="#0a0a10" />
+          <rect x="-236" y="19" width="8" height="72" fill="#0a0a10" />
           <rect x="308"  y="19" width="8" height="72" fill="#0a0a10" />
         </g>
 
