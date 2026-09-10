@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 /* ============================================================
-   PROTOTYPE v3 : Boussole temporelle
+   PROTOTYPE v4 : Boussole temporelle
    ------------------------------------------------------------
-   - Vue de dessus (plus d'angle iso : deplacements 100% intuitifs)
-   - Camera + joueur mis a jour via refs (pas de re-render React
-     par frame) => plus de saccades
-   - Grille et tourbillons dessines UNE fois, en memo
+   - Retour a l'isometrique, mais angle plus doux (moins ecrase)
+   - Deplacements relatifs a l'ecran : fleche haut = vers le haut
+   - Boucle refs-DOM directs (pas de re-render React par frame)
    ============================================================ */
 
 const VW = 1600;
@@ -15,6 +14,12 @@ const WORLD = 2400;
 const LOCK_RADIUS = 60;
 const LOCK_MS = 900;
 const NUM_WHIRLS = 10;
+
+/* Angle iso plus doux : moins ecrase verticalement.
+   sx = (x - y) * ISO_X ; sy = (x + y) * ISO_Y */
+const ISO_X = 0.95;
+const ISO_Y = 0.35;
+const iso = (x, y) => ({ sx: (x - y) * ISO_X, sy: (x + y) * ISO_Y });
 
 const rand = (min, max) => min + Math.random() * (max - min);
 
@@ -68,14 +73,22 @@ export function TemporalCompass({ onClose, onLock }) {
   useEffect(() => {
     let raf, last = performance.now();
     let lock = 0, isDone = false;
+    /* Vecteurs monde correspondant a chaque fleche ECRAN, normalises.
+       En iso, ecran-haut => (dx=dy<0), ecran-droite => (dx>0, dy<0). */
+    const INV = 1 / Math.SQRT2;
     const step = (t) => {
       const dt = Math.min(50, t - last); last = t;
       const p = posRef.current, held = heldRef.current;
-      const speed = 0.9;
-      if (held.up)    p.y -= speed * dt;
-      if (held.down)  p.y += speed * dt;
-      if (held.left)  p.x -= speed * dt;
-      if (held.right) p.x += speed * dt;
+      const speed = 1.2;
+      let mx = 0, my = 0;
+      if (held.up)    { mx -= INV; my -= INV; }
+      if (held.down)  { mx += INV; my += INV; }
+      if (held.left)  { mx -= INV; my += INV; }
+      if (held.right) { mx += INV; my -= INV; }
+      /* normaliser si diagonale (haut+droite = up + right, deja unitaire) */
+      const m = Math.hypot(mx, my) || 1;
+      p.x += (mx / m) * speed * dt;
+      p.y += (my / m) * speed * dt;
       for (const w of whirls) {
         const dx = p.x - w.x, dy = p.y - w.y;
         const d = Math.hypot(dx, dy);
@@ -89,18 +102,23 @@ export function TemporalCompass({ onClose, onLock }) {
       p.x = Math.max(-WORLD + 20, Math.min(WORLD - 20, p.x));
       p.y = Math.max(-WORLD + 20, Math.min(WORLD - 20, p.y));
 
-      /* camera & player DOM update */
-      if (cameraRef.current) cameraRef.current.setAttribute("transform", `translate(${VW / 2 - p.x} ${VH / 2 - p.y})`);
-      if (playerRef.current) playerRef.current.setAttribute("transform", `translate(${p.x} ${p.y})`);
+      /* projection iso pour camera + joueur */
+      const psx = (p.x - p.y) * ISO_X;
+      const psy = (p.x + p.y) * ISO_Y;
+      if (cameraRef.current) cameraRef.current.setAttribute("transform", `translate(${VW / 2 - psx} ${VH / 2 - psy})`);
+      if (playerRef.current) playerRef.current.setAttribute("transform", `translate(${psx} ${psy})`);
       if (minimapPlayerRef.current) {
         minimapPlayerRef.current.setAttribute("cx", (p.x / WORLD) * 60);
         minimapPlayerRef.current.setAttribute("cy", (p.y / WORLD) * 60);
       }
 
-      /* boussole */
+      /* boussole : angle en coordonnees ECRAN (iso) pour que la fleche
+         pointe visuellement vers le noeud tel qu'affiche a l'ecran. */
       const dxT = target.x - p.x, dyT = target.y - p.y;
       const distT = Math.hypot(dxT, dyT);
-      const angT = Math.atan2(dyT, dxT);
+      const dsxT = (dxT - dyT) * ISO_X;
+      const dsyT = (dxT + dyT) * ISO_Y;
+      const angT = Math.atan2(dsyT, dsxT);
       if (needleRef.current) needleRef.current.setAttribute("transform", `rotate(${(angT * 180) / Math.PI})`);
       const prox = Math.max(0, Math.min(1, 1 - distT / (WORLD * 1.05)));
       const lit = Math.round(prox * 5);
@@ -139,43 +157,58 @@ export function TemporalCompass({ onClose, onLock }) {
     return () => cancelAnimationFrame(raf);
   }, [whirls, target, onClose, onLock]);
 
-  /* Monde statique memoise : grille + tourbillons + noeud */
+  /* Monde statique memoise : grille + tourbillons + noeud, en iso.
+     Le losange iso s'obtient en projetant les 4 coins du carre monde. */
   const worldStatic = useMemo(() => {
-    const step = WORLD * 2 / 20;
-    const lines = [];
-    for (let i = 0; i <= 20; i++) {
-      const t = -WORLD + i * step;
-      lines.push(<line key={`v${i}`} x1={t} y1={-WORLD} x2={t} y2={WORLD} />);
-      lines.push(<line key={`h${i}`} x1={-WORLD} y1={t} x2={WORLD} y2={t} />);
+    const c1 = iso(-WORLD, -WORLD), c2 = iso(WORLD, -WORLD), c3 = iso(WORLD, WORLD), c4 = iso(-WORLD, WORLD);
+    const diamond = `M${c1.sx} ${c1.sy} L${c2.sx} ${c2.sy} L${c3.sx} ${c3.sy} L${c4.sx} ${c4.sy} Z`;
+    const N = 20;
+    const grid = [];
+    for (let i = 0; i <= N; i++) {
+      const t = -WORLD + (i * WORLD * 2) / N;
+      const a = iso(t, -WORLD), b = iso(t, WORLD);
+      grid.push(<line key={`v${i}`} x1={a.sx} y1={a.sy} x2={b.sx} y2={b.sy} />);
+      const c = iso(-WORLD, t), d = iso(WORLD, t);
+      grid.push(<line key={`h${i}`} x1={c.sx} y1={c.sy} x2={d.sx} y2={d.sy} />);
     }
+    const ax1 = iso(-WORLD, 0), ax2 = iso(WORLD, 0);
+    const ay1 = iso(0, -WORLD), ay2 = iso(0, WORLD);
     return (
       <>
-        <rect x={-WORLD} y={-WORLD} width={WORLD * 2} height={WORLD * 2} fill="#1a2a48" opacity="0.55" />
-        <g stroke="#3f5f88" strokeWidth="1" fill="none" opacity="0.55">{lines}</g>
-        <line x1={-WORLD} y1="0" x2={WORLD} y2="0" stroke="#7fd8ff" strokeWidth="1.4" opacity="0.4" />
-        <line x1="0" y1={-WORLD} x2="0" y2={WORLD} stroke="#7fd8ff" strokeWidth="1.4" opacity="0.4" />
-        <rect x={-WORLD} y={-WORLD} width={WORLD * 2} height={WORLD * 2} fill="none" stroke="#7fb0e0" strokeWidth="3" strokeDasharray="12 8" opacity="0.9" />
+        <path d={diamond} fill="#1a2a48" opacity="0.55" />
+        <g stroke="#3f5f88" strokeWidth="1" fill="none" opacity="0.55">{grid}</g>
+        <line x1={ax1.sx} y1={ax1.sy} x2={ax2.sx} y2={ax2.sy} stroke="#7fd8ff" strokeWidth="1.4" opacity="0.4" />
+        <line x1={ay1.sx} y1={ay1.sy} x2={ay2.sx} y2={ay2.sy} stroke="#7fd8ff" strokeWidth="1.4" opacity="0.4" />
+        <path d={diamond} fill="none" stroke="#7fb0e0" strokeWidth="3" strokeDasharray="12 8" opacity="0.9" />
 
-        {whirls.map((w, i) => (
-          <g key={i} transform={`translate(${w.x} ${w.y})`}>
-            <g>
-              <animateTransform attributeName="transform" type="rotate" values={`0; ${360 * w.dir}`} dur={`${5 + (i % 4)}s`} repeatCount="indefinite" />
-              {[0.35, 0.6, 0.85, 1].map((k, j) => (
-                <circle key={j} r={w.r * k} fill="none" stroke="#c8a8f0" strokeWidth="2" opacity={0.7 - j * 0.13} />
-              ))}
+        {whirls.map((w, i) => {
+          const c = iso(w.x, w.y);
+          return (
+            <g key={i} transform={`translate(${c.sx} ${c.sy})`}>
+              <g>
+                <animateTransform attributeName="transform" type="rotate" values={`0; ${360 * w.dir}`} dur={`${5 + (i % 4)}s`} repeatCount="indefinite" />
+                {[0.35, 0.6, 0.85, 1].map((k, j) => (
+                  <ellipse key={j} rx={w.r * k * ISO_X} ry={w.r * k * ISO_Y * 2.2} fill="none" stroke="#c8a8f0" strokeWidth="2" opacity={0.7 - j * 0.13} />
+                ))}
+              </g>
+              <circle r="5" fill="#e8d8ff" />
             </g>
-            <circle r="5" fill="#e8d8ff" />
-          </g>
-        ))}
+          );
+        })}
 
-        <g ref={targetGroupRef} transform={`translate(${target.x} ${target.y})`}>
-          {[60, 42, 26].map((r, i) => (
-            <circle key={i} r={r} fill="none" stroke="#ffe08a" strokeWidth="2.4">
-              <animate attributeName="opacity" values="0.2;0.95;0.2" dur={`${1.6 + i * 0.4}s`} repeatCount="indefinite" />
-            </circle>
-          ))}
-          <circle r="10" fill="#fff2b8" />
-        </g>
+        {(() => {
+          const c = iso(target.x, target.y);
+          return (
+            <g ref={targetGroupRef} transform={`translate(${c.sx} ${c.sy})`}>
+              {[60, 42, 26].map((r, i) => (
+                <ellipse key={i} rx={r * ISO_X} ry={r * ISO_Y * 2.2} fill="none" stroke="#ffe08a" strokeWidth="2.4">
+                  <animate attributeName="opacity" values="0.2;0.95;0.2" dur={`${1.6 + i * 0.4}s`} repeatCount="indefinite" />
+                </ellipse>
+              ))}
+              <circle r="10" fill="#fff2b8" />
+            </g>
+          );
+        })()}
       </>
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -190,12 +223,13 @@ export function TemporalCompass({ onClose, onLock }) {
           <g ref={cameraRef} transform={`translate(${VW / 2} ${VH / 2})`}>
             {worldStatic}
             <g ref={playerRef}>
-              <ellipse cy="6" rx="14" ry="5" fill="#000" opacity="0.5" />
+              <ellipse cy="8" rx="16" ry="5" fill="#000" opacity="0.5" />
               <circle r="11" fill="#7fffb0" stroke="#0e2a1a" strokeWidth="2" />
-              <circle r="18" fill="none" stroke="#7fffb0" strokeWidth="1.6" opacity="0.6">
-                <animate attributeName="r" values="12;24;12" dur="1.8s" repeatCount="indefinite" />
+              <ellipse rx="20" ry="10" fill="none" stroke="#7fffb0" strokeWidth="1.6" opacity="0.6">
+                <animate attributeName="rx" values="14;26;14" dur="1.8s" repeatCount="indefinite" />
+                <animate attributeName="ry" values="7;13;7" dur="1.8s" repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.6;0;0.6" dur="1.8s" repeatCount="indefinite" />
-              </circle>
+              </ellipse>
             </g>
           </g>
 
