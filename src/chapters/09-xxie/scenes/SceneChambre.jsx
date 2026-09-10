@@ -76,62 +76,8 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
           values="#a840f0; #4ae0ff; #ffd166; #ff4aa0; #a840f0" />
       </rect>
 
-      {/* ═══ couche lointaine : LE LIT AU FOND, la fenetre, les POSTERS ═══ */}
+      {/* ═══ couche lointaine : la fenetre + les POSTERS ═══ */}
       <PLayer depth={1}>
-        {/* LIT plus grand, cote GAUCHE de la piece, pose au sol. Un
-            JEAN traine dessus. */}
-        <g transform="translate(120,460) scale(0.95)">
-          {/* tete de lit */}
-          <rect x="-90" y="-46" width="180" height="14" rx="3" fill="#3a3a4a" />
-          {/* matelas + couette */}
-          <rect x="-88" y="-32" width="176" height="42" rx="4" fill="#3a4a6a" />
-          <rect x="-88" y="-32" width="176" height="42" rx="4" fill="#101828" opacity="0.24" filter="url(#ch-grain)" />
-          {/* oreiller */}
-          <rect x="-80" y="-26" width="56" height="20" rx="4" fill="#e8e4da" opacity="0.9" />
-          {/* couverture froissee au pied */}
-          <path d="M-30 -20 q22 -6 46 4 q28 8 42 -4 v30 h-88 Z" fill="#5a2a3e" />
-
-          {/* JEAN plie sur le lit (visible sur la couverture) — dessine
-              comme un vrai pantalon plie, avec deux jambes. */}
-          {!usb && (
-            <g transform="translate(4,-4)">
-              {/* ombre portee */}
-              <path d="M-40 12 Q0 22 40 12 L40 16 Q0 26 -40 16 Z" fill="#050510" opacity="0.35" />
-              {/* ceinture */}
-              <rect x="-28" y="-10" width="56" height="6" rx="1.5" fill="#4a6ea0" />
-              <rect x="-24" y="-9" width="6" height="4" fill="#3a5a88" />
-              {[-16, -8, 0, 8, 16].map((x, i) => <rect key={i} x={x - 1} y="-9" width="2" height="4" fill="#8ac0e8" opacity="0.6" />)}
-              {/* corps du jean : bassin + deux jambes */}
-              <path d="M-28 -4 L28 -4 L26 6 L16 6 L14 20 L4 20 L2 6 L-2 6 L-4 20 L-14 20 L-16 6 L-26 6 Z"
-                fill="#3a5a8a" stroke="#1a3060" strokeWidth="1" />
-              <path d="M-28 -4 L28 -4 L26 6 L16 6 L14 20 L4 20 L2 6 L-2 6 L-4 20 L-14 20 L-16 6 L-26 6 Z"
-                fill="#101828" opacity="0.2" filter="url(#ch-grain)" />
-              {/* couture centrale */}
-              <path d="M0 -4 v10" stroke="#7fa8d8" strokeWidth="0.6" strokeDasharray="1.2 1.2" />
-              {/* poches arriere — la POCHE bien visible */}
-              <path d="M-22 -2 q14 -2 16 6 l-2 3 q-8 -4 -14 -3 Z" fill="none" stroke="#7fa8d8" strokeWidth="1.6" />
-              <path d="M22 -2 q-14 -2 -16 6 l2 3 q8 -4 14 -3 Z"   fill="none" stroke="#7fa8d8" strokeWidth="1.2" opacity="0.7" />
-              <path d="M-22 -2 q14 -2 16 6" stroke="#a8ccec" strokeWidth="0.6" strokeDasharray="1 1" fill="none" />
-              {/* etiquette */}
-              <rect x="14" y="-8" width="6" height="4" rx="0.4" fill="#8a5828" stroke="#3a1a08" strokeWidth="0.3" />
-            </g>
-          )}
-          {/* Cle USB gagnee : reste posee sur le lit */}
-          {usb && (
-            <g transform="translate(4,-2)" style={{ animation: "pulse 0.7s ease-out 2" }}>
-              <ellipse cx="0" cy="4" rx="46" ry="16" fill="url(#ch-glow)" />
-              <rect x="-16" y="-5" width="26" height="11" rx="2" fill="#2a2e3a" />
-              <rect x="10" y="-3" width="11" height="7" rx="1" fill="#b8bcc4" />
-              <path d="M12 -1 h7 M12 2 h7" stroke="#6a6e76" strokeWidth="0.8" />
-              <circle cx="-11" cy="0" r="2" fill="#5eff9e" style={{ animation: "pulse 1.4s infinite" }} />
-            </g>
-          )}
-
-          {/* pieds */}
-          <rect x="-82" y="10" width="10" height="20" fill="#1a1a20" />
-          <rect x="72"  y="10" width="10" height="20" fill="#1a1a20" />
-        </g>
-
         {/* POSTER MINECRAFT (bloc de terre pixelise) */}
         <g transform="translate(340,110)">
           <rect x="-40" y="-56" width="80" height="112" rx="2" fill="#0a0a10" stroke="#8ac86a" strokeWidth="2" />
@@ -236,6 +182,49 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
         {/* bandes du plancher */}
         <path d="M0 452 h1000 M0 504 h1000 M180 408 v152 M540 408 v152 M840 408 v152" stroke="#180c08" strokeWidth="1.4" opacity="0.5" />
 
+        {/* LIT pose au sol, cote GAUCHE. Un JEAN plie traine dessus. */}
+        <g transform="translate(140,470) scale(1)">
+          {/* tete de lit */}
+          <rect x="-92" y="-48" width="184" height="14" rx="3" fill="#3a3a4a" />
+          {/* matelas + couette */}
+          <rect x="-90" y="-34" width="180" height="44" rx="4" fill="#3a4a6a" />
+          <rect x="-90" y="-34" width="180" height="44" rx="4" fill="#101828" opacity="0.24" filter="url(#ch-grain)" />
+          {/* oreiller */}
+          <rect x="-82" y="-28" width="60" height="22" rx="4" fill="#e8e4da" opacity="0.9" />
+          {/* couverture froissee au pied */}
+          <path d="M-32 -20 q22 -6 48 4 q28 8 46 -4 v34 h-94 Z" fill="#5a2a3e" />
+
+          {/* JEAN plie sur le lit — pantalon plie avec 2 jambes visibles */}
+          {!usb && (
+            <g transform="translate(10,-6)">
+              <path d="M-40 12 Q0 22 40 12 L40 16 Q0 26 -40 16 Z" fill="#050510" opacity="0.35" />
+              <rect x="-28" y="-10" width="56" height="6" rx="1.5" fill="#4a6ea0" />
+              <rect x="-24" y="-9" width="6" height="4" fill="#3a5a88" />
+              {[-16, -8, 0, 8, 16].map((x, i) => <rect key={i} x={x - 1} y="-9" width="2" height="4" fill="#8ac0e8" opacity="0.6" />)}
+              <path d="M-28 -4 L28 -4 L26 6 L16 6 L14 20 L4 20 L2 6 L-2 6 L-4 20 L-14 20 L-16 6 L-26 6 Z" fill="#3a5a8a" stroke="#1a3060" strokeWidth="1" />
+              <path d="M-28 -4 L28 -4 L26 6 L16 6 L14 20 L4 20 L2 6 L-2 6 L-4 20 L-14 20 L-16 6 L-26 6 Z" fill="#101828" opacity="0.2" filter="url(#ch-grain)" />
+              <path d="M0 -4 v10" stroke="#7fa8d8" strokeWidth="0.6" strokeDasharray="1.2 1.2" />
+              <path d="M-22 -2 q14 -2 16 6 l-2 3 q-8 -4 -14 -3 Z" fill="none" stroke="#7fa8d8" strokeWidth="1.6" />
+              <path d="M22 -2 q-14 -2 -16 6 l2 3 q8 -4 14 -3 Z" fill="none" stroke="#7fa8d8" strokeWidth="1.2" opacity="0.7" />
+              <path d="M-22 -2 q14 -2 16 6" stroke="#a8ccec" strokeWidth="0.6" strokeDasharray="1 1" fill="none" />
+              <rect x="14" y="-8" width="6" height="4" rx="0.4" fill="#8a5828" stroke="#3a1a08" strokeWidth="0.3" />
+            </g>
+          )}
+          {usb && (
+            <g transform="translate(10,-2)" style={{ animation: "pulse 0.7s ease-out 2" }}>
+              <ellipse cx="0" cy="4" rx="46" ry="16" fill="url(#ch-glow)" />
+              <rect x="-16" y="-5" width="26" height="11" rx="2" fill="#2a2e3a" />
+              <rect x="10" y="-3" width="11" height="7" rx="1" fill="#b8bcc4" />
+              <path d="M12 -1 h7 M12 2 h7" stroke="#6a6e76" strokeWidth="0.8" />
+              <circle cx="-11" cy="0" r="2" fill="#5eff9e" style={{ animation: "pulse 1.4s infinite" }} />
+            </g>
+          )}
+
+          {/* pieds */}
+          <rect x="-86" y="10" width="10" height="24" fill="#1a1a20" />
+          <rect x="76"  y="10" width="10" height="24" fill="#1a1a20" />
+        </g>
+
         {/* GRAND BUREAU GAMER noir occupant tout l'avant */}
         <g transform="translate(500,432)">
           <rect x="-320" y="0" width="640" height="16" rx="3" fill="url(#ch-desk)" />
@@ -264,9 +253,9 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
           <rect x="-42" y="0" width="84" height="150" rx="2" fill="url(#ch-tower)" stroke="#2a2a3a" strokeWidth="2" />
           {/* fenetre vitree */}
           <rect x="-34" y="8" width="68" height="130" rx="2" fill="#0a0a16" stroke="#3a3a52" strokeWidth="1.4" />
-          {/* 3 ventilos RGB */}
-          {[24, 68, 112].map((cy, i) => (
-            <g key={i} transform={`translate(0,${cy - 46})`}>
+          {/* 3 ventilos RGB, alignes A L'INTERIEUR de la tour vitree */}
+          {[36, 76, 116].map((cy, i) => (
+            <g key={i} transform={`translate(0,${cy})`}>
               {/* cadre du ventilateur */}
               <rect x="-24" y="-14" width="48" height="28" rx="4" fill="#050510" stroke="#3a3a52" strokeWidth="0.6" />
               {/* halo colore */}
@@ -500,7 +489,7 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
       {/* les OBJETS a assembler pour la cle USB — jean pose sur le lit */}
       {!usb && (
         <>
-          <Hotspot cx={124} cy={456} r={44} label="jean plié sur le lit (une poche)" item="poche" reveal={reveal} onClick={() => collect("poche")} />
+          <Hotspot cx={150} cy={464} r={48} label="jean plié sur le lit (une poche)" item="poche" reveal={reveal} onClick={() => collect("poche")} />
           <Hotspot cx={320} cy={424} r={22} label="mémoire flash" item="memoire_flash" reveal={reveal} onClick={() => collect("memoire_flash")} />
         </>
       )}
