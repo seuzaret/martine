@@ -1,19 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 /* ============================================================
-   PROTOTYPE v4 : Boussole temporelle
+   PROTOTYPE v5 : Boussole temporelle
    ------------------------------------------------------------
-   - Retour a l'isometrique, mais angle plus doux (moins ecrase)
-   - Deplacements relatifs a l'ecran : fleche haut = vers le haut
-   - Boucle refs-DOM directs (pas de re-render React par frame)
+   - Deplacement le long des lignes de la grille iso, case par case
+   - 4 fleches = les 4 axes de la grille (NE / SE / SW / NW ecran)
+   - Boucle refs-DOM directs (fluide)
    ============================================================ */
 
 const VW = 1600;
 const VH = 900;
 const WORLD = 2400;
-const LOCK_RADIUS = 60;
+const LOCK_RADIUS = 100;   // un peu plus large : on s'arrete sur une case
 const LOCK_MS = 900;
 const NUM_WHIRLS = 10;
+const GRID_N = 20;                       // 20 subdivisions
+const STEP = (WORLD * 2) / GRID_N;       // 240 unites monde par case
+const CELL_MS = 260;                     // temps pour traverser une case
 
 /* Angle iso plus doux : moins ecrase verticalement.
    sx = (x - y) * ISO_X ; sy = (x + y) * ISO_Y */
@@ -37,10 +40,13 @@ export function TemporalCompass({ onClose, onLock }) {
   const [done, setDone] = useState(false);
 
   const { target, whirls } = useMemo(() => {
+    const snap = (v) => Math.round(v / STEP) * STEP;
     const angle = Math.random() * Math.PI * 2;
     const dist = rand(1400, 2100);
+    let tx = snap(Math.cos(angle) * dist), ty = snap(Math.sin(angle) * dist);
+    if (tx === 0 && ty === 0) tx = STEP * 6;
     return {
-      target: { x: Math.cos(angle) * dist, y: Math.sin(angle) * dist },
+      target: { x: tx, y: ty },
       whirls: Array.from({ length: NUM_WHIRLS }, () => ({
         x: rand(-WORLD + 300, WORLD - 300),
         y: rand(-WORLD + 300, WORLD - 300),
@@ -69,38 +75,51 @@ export function TemporalCompass({ onClose, onLock }) {
     return () => { window.removeEventListener("keydown", down); window.removeEventListener("keyup", up); };
   }, [onClose]);
 
-  /* boucle */
+  /* boucle : deplacement le long des lignes de la grille.
+     La position ecran interpole entre 2 noeuds (from -> to). Quand on
+     arrive, on regarde les fleches maintenues pour partir sur la case
+     suivante. Une case = STEP unites monde. */
   useEffect(() => {
     let raf, last = performance.now();
     let lock = 0, isDone = false;
-    /* Vecteurs monde correspondant a chaque fleche ECRAN, normalises.
-       En iso, ecran-haut => (dx=dy<0), ecran-droite => (dx>0, dy<0). */
-    const INV = 1 / Math.SQRT2;
+    /* Etat de deplacement */
+    let fromX = 0, fromY = 0, toX = 0, toY = 0, prog = 1;
+    const CELL_MAX = Math.floor(WORLD / STEP);
+    /* Correspondance fleche ECRAN -> direction monde (une ligne de la grille).
+       Convention : les 4 fleches forment une croix tournee de 45 deg qui
+       suit les 4 axes visibles de la grille iso. */
+    const dirFor = (h) => {
+      if (h.up)    return { dx:  0, dy: -1 };
+      if (h.right) return { dx: +1, dy:  0 };
+      if (h.down)  return { dx:  0, dy: +1 };
+      if (h.left)  return { dx: -1, dy:  0 };
+      return null;
+    };
     const step = (t) => {
       const dt = Math.min(50, t - last); last = t;
       const p = posRef.current, held = heldRef.current;
-      const speed = 1.2;
-      let mx = 0, my = 0;
-      if (held.up)    { mx -= INV; my -= INV; }
-      if (held.down)  { mx += INV; my += INV; }
-      if (held.left)  { mx -= INV; my += INV; }
-      if (held.right) { mx += INV; my -= INV; }
-      /* normaliser si diagonale (haut+droite = up + right, deja unitaire) */
-      const m = Math.hypot(mx, my) || 1;
-      p.x += (mx / m) * speed * dt;
-      p.y += (my / m) * speed * dt;
-      for (const w of whirls) {
-        const dx = p.x - w.x, dy = p.y - w.y;
-        const d = Math.hypot(dx, dy);
-        if (d < w.r) {
-          const force = (1 - d / w.r) * 0.4 * dt;
-          const invD = 1 / (d || 1);
-          p.x += (-dy * invD) * force * w.dir + (-dx * invD) * force * 0.3;
-          p.y += ( dx * invD) * force * w.dir + (-dy * invD) * force * 0.3;
+
+      /* Progression sur la case en cours */
+      if (prog < 1) {
+        prog = Math.min(1, prog + dt / CELL_MS);
+        p.x = fromX + (toX - fromX) * prog;
+        p.y = fromY + (toY - fromY) * prog;
+      }
+      /* Arrive : demarrer la case suivante si une fleche est tenue */
+      if (prog >= 1) {
+        const d = dirFor(held);
+        if (d) {
+          const cx = Math.round(p.x / STEP), cy = Math.round(p.y / STEP);
+          const ncx = Math.max(-CELL_MAX, Math.min(CELL_MAX, cx + d.dx));
+          const ncy = Math.max(-CELL_MAX, Math.min(CELL_MAX, cy + d.dy));
+          if (ncx !== cx || ncy !== cy) {
+            fromX = cx * STEP; fromY = cy * STEP;
+            toX = ncx * STEP; toY = ncy * STEP;
+            p.x = fromX; p.y = fromY;
+            prog = 0;
+          }
         }
       }
-      p.x = Math.max(-WORLD + 20, Math.min(WORLD - 20, p.x));
-      p.y = Math.max(-WORLD + 20, Math.min(WORLD - 20, p.y));
 
       /* projection iso pour camera + joueur */
       const psx = (p.x - p.y) * ISO_X;
@@ -260,7 +279,7 @@ export function TemporalCompass({ onClose, onLock }) {
           )}
 
           <text x="24" y={VH - 24} fontSize="12" fill="#a8c8ff" letterSpacing="2">
-            ↑ ↓ ← →  ou  W A S D   ·   trouve le nœud, evite les tourbillons   ·   ESC pour quitter
+            ↑ ↓ ← →  ou  W A S D   ·   deplacement de case en case le long des lignes   ·   ESC pour quitter
           </text>
 
           {/* mini-map */}
