@@ -17,6 +17,8 @@ const NUM_WHIRLS = 10;
 const GRID_N = 20;                       // 20 subdivisions
 const STEP = (WORLD * 2) / GRID_N;       // 240 unites monde par case
 const CELL_MS = 260;                     // temps pour traverser une case
+const TACHYON_CELL_MS = 340;             // le tachyon rouge, un peu plus lent
+const TACHYON_RANDOM = 0.15;             // chance d'un mouvement aleatoire
 
 /* Angle iso plus doux : moins ecrase verticalement.
    sx = (x - y) * ISO_X ; sy = (x + y) * ISO_Y */
@@ -38,7 +40,11 @@ export function TemporalCompass({ onClose, onLock }) {
   const lockGroupRef = useRef(null);
   const ringsRef = useRef([]);
   const warpRef = useRef((x, y) => [x, y]);
+  const tachyonRef = useRef(null);          // <g> du tachyon rouge
+  const trailGroupRef = useRef(null);       // <g> ou on append les segments rouges
+  const tachyonMiniRef = useRef(null);      // point rouge sur la mini-carte
   const [done, setDone] = useState(false);
+  const [caught, setCaught] = useState(false);
 
   const { target, whirls } = useMemo(() => {
     const snap = (v) => Math.round(v / STEP) * STEP;
@@ -82,10 +88,74 @@ export function TemporalCompass({ onClose, onLock }) {
      suivante. Une case = STEP unites monde. */
   useEffect(() => {
     let raf, last = performance.now();
-    let lock = 0, isDone = false;
+    let lock = 0, isDone = false, isCaught = false;
     /* Etat de deplacement */
     let fromX = 0, fromY = 0, toX = 0, toY = 0, prog = 1;
     const CELL_MAX = Math.floor(WORLD / STEP);
+
+    /* --- Tachyon rouge : demarre sur un bord au hasard --- */
+    const edgeSide = Math.floor(Math.random() * 4);
+    let tcx, tcy;
+    if (edgeSide === 0)      { tcx = -CELL_MAX; tcy = Math.floor(rand(-CELL_MAX, CELL_MAX + 1)); }
+    else if (edgeSide === 1) { tcx = CELL_MAX;  tcy = Math.floor(rand(-CELL_MAX, CELL_MAX + 1)); }
+    else if (edgeSide === 2) { tcy = -CELL_MAX; tcx = Math.floor(rand(-CELL_MAX, CELL_MAX + 1)); }
+    else                     { tcy = CELL_MAX;  tcx = Math.floor(rand(-CELL_MAX, CELL_MAX + 1)); }
+    let tFromX = tcx * STEP, tFromY = tcy * STEP;
+    let tToX = tFromX, tToY = tFromY, tProg = 1;
+    let tCurX = tFromX, tCurY = tFromY;
+    const trail = new Set();          // cle "cxA,cyA|cxB,cyB" (ordre canonique)
+    const edgeKey = (ax, ay, bx, by) => {
+      if (ax < bx || (ax === bx && ay < by)) return `${ax},${ay}|${bx},${by}`;
+      return `${bx},${by}|${ax},${ay}`;
+    };
+    const addTrailSegment = (ax, ay, bx, by) => {
+      const k = edgeKey(ax, ay, bx, by);
+      if (trail.has(k)) return;
+      trail.add(k);
+      if (!trailGroupRef.current) return;
+      /* Trace le segment warpé */
+      const SUB = 8;
+      const pts = [];
+      for (let i = 0; i <= SUB; i++) {
+        const u = i / SUB;
+        const wxA = ax * STEP + (bx - ax) * STEP * u;
+        const wyA = ay * STEP + (by - ay) * STEP * u;
+        const [wx, wy] = warpRef.current(wxA, wyA);
+        const pr = iso(wx, wy);
+        pts.push(`${pr.sx.toFixed(1)},${pr.sy.toFixed(1)}`);
+      }
+      const el = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+      el.setAttribute("points", pts.join(" "));
+      el.setAttribute("fill", "none");
+      el.setAttribute("stroke", "#ff2a4a");
+      el.setAttribute("stroke-width", "2.4");
+      el.setAttribute("stroke-linecap", "round");
+      el.setAttribute("opacity", "0.9");
+      trailGroupRef.current.appendChild(el);
+    };
+    const tachyonChooseDir = (curCx, curCy) => {
+      const pCx = Math.round(posRef.current.x / STEP);
+      const pCy = Math.round(posRef.current.y / STEP);
+      const dx = pCx - curCx, dy = pCy - curCy;
+      const candidates = [];
+      if (Math.random() < TACHYON_RANDOM || (dx === 0 && dy === 0)) {
+        candidates.push({ dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 });
+      } else {
+        /* privilegie l'axe le plus long */
+        if (Math.abs(dx) >= Math.abs(dy)) {
+          if (dx !== 0) candidates.push({ dx: Math.sign(dx), dy: 0 });
+          if (dy !== 0) candidates.push({ dx: 0, dy: Math.sign(dy) });
+        } else {
+          if (dy !== 0) candidates.push({ dx: 0, dy: Math.sign(dy) });
+          if (dx !== 0) candidates.push({ dx: Math.sign(dx), dy: 0 });
+        }
+      }
+      for (const c of candidates) {
+        const nx = curCx + c.dx, ny = curCy + c.dy;
+        if (nx >= -CELL_MAX && nx <= CELL_MAX && ny >= -CELL_MAX && ny <= CELL_MAX) return c;
+      }
+      return null;
+    };
     /* Correspondance fleche ECRAN -> direction monde (une ligne de la grille).
        Convention : les 4 fleches forment une croix tournee de 45 deg qui
        suit les 4 axes visibles de la grille iso. */
@@ -144,11 +214,52 @@ export function TemporalCompass({ onClose, onLock }) {
           const ncx = Math.max(-CELL_MAX, Math.min(CELL_MAX, cx + d.dx));
           const ncy = Math.max(-CELL_MAX, Math.min(CELL_MAX, cy + d.dy));
           if (ncx !== cx || ncy !== cy) {
+            /* Traverser une arete rouge = attrape. */
+            if (trail.has(edgeKey(cx, cy, ncx, ncy)) && !isCaught) {
+              isCaught = true; setCaught(true);
+              setTimeout(() => onClose?.(), 1500);
+            }
             fromX = cx * STEP; fromY = cy * STEP;
             toX = ncx * STEP; toY = ncy * STEP;
             p.x = fromX; p.y = fromY;
             prog = 0;
           }
+        }
+      }
+
+      /* --- Tachyon rouge : avance sur la grille, laisse un trait --- */
+      if (!isCaught) {
+        if (tProg < 1) {
+          tProg = Math.min(1, tProg + dt / TACHYON_CELL_MS);
+          tCurX = tFromX + (tToX - tFromX) * tProg;
+          tCurY = tFromY + (tToY - tFromY) * tProg;
+        }
+        if (tProg >= 1) {
+          const ccx = Math.round(tCurX / STEP), ccy = Math.round(tCurY / STEP);
+          const d = tachyonChooseDir(ccx, ccy);
+          if (d) {
+            const nx = ccx + d.dx, ny = ccy + d.dy;
+            addTrailSegment(ccx, ccy, nx, ny);
+            tFromX = ccx * STEP; tFromY = ccy * STEP;
+            tToX = nx * STEP;    tToY = ny * STEP;
+            tCurX = tFromX;      tCurY = tFromY;
+            tProg = 0;
+          }
+        }
+        /* Render tachyon (warped iso). */
+        if (tachyonRef.current) {
+          const [wxT, wyT] = warpRef.current(tCurX, tCurY);
+          const ptT = iso(wxT, wyT);
+          tachyonRef.current.setAttribute("transform", `translate(${ptT.sx} ${ptT.sy})`);
+        }
+        if (tachyonMiniRef.current) {
+          tachyonMiniRef.current.setAttribute("cx", (tCurX / WORLD) * 60);
+          tachyonMiniRef.current.setAttribute("cy", (tCurY / WORLD) * 60);
+        }
+        /* Collision directe joueur / tachyon */
+        if (Math.hypot(p.x - tCurX, p.y - tCurY) < STEP * 0.5) {
+          isCaught = true; setCaught(true);
+          setTimeout(() => onClose?.(), 1500);
         }
       }
 
@@ -305,6 +416,18 @@ export function TemporalCompass({ onClose, onLock }) {
         <svg viewBox={`0 0 ${VW} ${VH}`} preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
           <g ref={cameraRef} transform={`translate(${VW / 2} ${VH / 2})`}>
             {worldStatic}
+            {/* Trainee rouge du tachyon (les segments sont ajoutes en direct) */}
+            <g ref={trailGroupRef} />
+            {/* Le tachyon rouge lui-meme */}
+            <g ref={tachyonRef}>
+              <ellipse rx="16" ry="8" fill="none" stroke="#ff2a4a" strokeWidth="1.6" opacity="0.7">
+                <animate attributeName="rx" values="10;22;10" dur="1.2s" repeatCount="indefinite" />
+                <animate attributeName="ry" values="5;11;5" dur="1.2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.7;0.15;0.7" dur="1.2s" repeatCount="indefinite" />
+              </ellipse>
+              <circle r="10" fill="#ff2a4a" stroke="#480010" strokeWidth="2" />
+              <circle r="4" fill="#ffd0d8" />
+            </g>
             <g ref={playerRef}>
               <ellipse cy="8" rx="16" ry="5" fill="#000" opacity="0.5" />
               <circle r="11" fill="#7fffb0" stroke="#0e2a1a" strokeWidth="2" />
@@ -341,6 +464,15 @@ export function TemporalCompass({ onClose, onLock }) {
               <text textAnchor="middle" fontSize="34" fontWeight="800" fill="#7fffb0" letterSpacing="6">✓ NŒUD VERROUILLÉ</text>
             </g>
           )}
+          {caught && (
+            <>
+              <rect x="0" y="0" width={VW} height={VH} fill="#3a0010" opacity="0.55" />
+              <g transform={`translate(${VW / 2} ${VH / 2})`}>
+                <text textAnchor="middle" fontSize="42" fontWeight="800" fill="#ff5266" letterSpacing="6">⚠ TACHYON ROUGE ⚠</text>
+                <text y="42" textAnchor="middle" fontSize="18" fill="#ffd0d8" letterSpacing="3">La ligne temporelle est coupée</text>
+              </g>
+            </>
+          )}
 
           <text x="24" y={VH - 24} fontSize="12" fill="#a8c8ff" letterSpacing="2">
             ↑ ↓ ← →  ou  W A S D   ·   deplacement de case en case le long des lignes   ·   ESC pour quitter
@@ -355,6 +487,7 @@ export function TemporalCompass({ onClose, onLock }) {
                 <circle key={i} cx={(w.x / WORLD) * 60} cy={(w.y / WORLD) * 60} r={(w.r / WORLD) * 60 + 1} fill="none" stroke="#c8a8f0" strokeWidth="0.6" opacity="0.6" />
               ))}
               <circle cx={(target.x / WORLD) * 60} cy={(target.y / WORLD) * 60} r="3" fill="#ffe08a" />
+              <circle ref={tachyonMiniRef} cx="0" cy="0" r="2.4" fill="#ff2a4a" />
               <circle ref={minimapPlayerRef} cx="0" cy="0" r="2.4" fill="#7fffb0" />
               <rect x="-62" y="-62" width="124" height="124" fill="none" stroke="#7fb0e0" strokeWidth="0.6" strokeDasharray="3 3" />
             </g>
