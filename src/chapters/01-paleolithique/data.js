@@ -48,7 +48,7 @@ const ITEMS = {
      APPORTE un objet (glisser un outil dessus). Le moteur les affiche
      d'une autre couleur (cyan) et refuse de les ramasser. */
   paroi:    { name: "Paroi de la grotte", emoji: "🪨", support: true, desc: "Immense, lisse, à l'abri du vent et de la pluie. Un écran naturel." },
-  rocher_taille: { name: "Rocher de taille", emoji: "🪨", support: true, desc: "Un rocher plat, cerné d'éclats de silex : la table de travail d'Ough. Pose-y un silex brut (glisse-le dessus) et frappe au bon moment !" },
+  rocher_taille: { name: "Rocher de taille", emoji: "🪨", support: true, desc: "Un rocher plat, cerné d'éclats de silex : la table de travail d'Ough." },
   feu:      { name: "Feu de camp", emoji: "🔥", support: true, desc: "Chaleur, lumière… et le lieu où le clan se rassemble le soir." },
   voix:     { name: "Ta voix", emoji: "🗣️", desc: "Le tout premier média. Livré d'origine avec chaque être humain." },
   tronc:    { name: "Tronc creux", emoji: "🪵", desc: "Un tronc échoué, évidé par l'eau. Ça résonne quand on tape dessus." },
