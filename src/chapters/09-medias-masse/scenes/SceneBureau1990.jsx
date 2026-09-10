@@ -28,19 +28,81 @@ export default function SceneBureau1990({ collect, action, reveal, made = [], fl
         {/* frise horizontale */}
         <rect x="0" y="220" width="1000" height="2" fill="#8a7060" />
         <rect x="0" y="222" width="1000" height="6" fill="#6a5040" />
-        {/* palmier en pot du bureau chic 90s */}
+
+        {/* FENETRE : vue open-space sur les tours de La Defense (ou tout
+            quartier d'affaires 90s), ciel matin bleute + skyline dentelee. */}
+        <g transform="translate(390,50)">
+          {/* dormant */}
+          <rect x="-90" y="0" width="180" height="160" fill="#3a2818" />
+          {/* vitre */}
+          <rect x="-84" y="6" width="168" height="148" fill="#a8c8e0" />
+          {/* ciel dégradé matin */}
+          <rect x="-84" y="6"   width="168" height="80" fill="#b8dcf0" />
+          <rect x="-84" y="86"  width="168" height="68" fill="#e6d8b0" />
+          {/* soleil pale */}
+          <circle cx="60" cy="42" r="12" fill="#fff2c8" opacity="0.9" />
+          {/* skyline : tours de bureaux */}
+          <path d="M-84 154 L-84 100 L-64 100 L-64 88 L-44 88 L-44 108 L-24 108 L-24 76 L-4 76 L-4 108 L16 108 L16 96 L36 96 L36 118 L56 118 L56 108 L76 108 L76 128 L84 128 L84 154 Z" fill="#4a5a70" opacity="0.85" />
+          <path d="M-84 154 L-84 130 L-40 130 L-40 118 L-10 118 L-10 132 L20 132 L20 122 L60 122 L60 138 L84 138 L84 154 Z" fill="#2a3648" opacity="0.9" />
+          {/* fenetres eclairees des tours */}
+          {[[-58,110],[-48,115],[-32,90],[-14,94],[-8,102],[4,84],[24,100],[40,108],[62,120],[70,130]].map(([x,y],i) => (
+            <rect key={i} x={x} y={y} width="2" height="2" fill="#ffe08a" opacity="0.9" />
+          ))}
+          {/* petite pancarte "6ᵉ étage" */}
+          <rect x="-80" y="10" width="24" height="8" fill="#f0e6d0" stroke="#3a2818" strokeWidth="0.4" />
+          <text x="-68" y="17" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="5" fill="#3a2818">6e</text>
+          {/* croisillon central */}
+          <path d="M-84 80 h168 M0 6 v148" stroke="#3a2818" strokeWidth="3" />
+        </g>
+
+        {/* AFFICHE JURASSIC PARK au mur entre la fenetre et le tableau blanc */}
+        <g transform="translate(600,60)">
+          <rect x="0" y="0" width="88" height="120" fill="#0a0806" stroke="#c8b090" strokeWidth="2" />
+          {/* fond degrade rouge/orangé (jungle en feu) */}
+          <rect x="4" y="4" width="80" height="112" fill="#2a1408" />
+          {/* silhouette du dino T-Rex qui rugit */}
+          <path d="M20 92 L20 60 L28 56 L34 46 L46 40 L58 44 L64 52 L60 60 L64 66 L68 78 L60 84 L52 82 L44 88 L36 84 L28 92 Z" fill="#1a0e04" />
+          {/* dents */}
+          <path d="M52 46 l1 3 l1.4 -3 M55 46 l1 3 l1.4 -3 M58 46 l1 3 l1.4 -3" stroke="#f8f0d8" strokeWidth="0.6" fill="none" />
+          {/* oeil rouge */}
+          <circle cx="52" cy="50" r="1.2" fill="#c02830" />
+          {/* soleil rouge derrière le dino (silhouette iconique) */}
+          <circle cx="60" cy="30" r="14" fill="#c02830" opacity="0.85" />
+          {/* logo JURASSIC PARK stylise en jaune */}
+          <text x="44" y="106" textAnchor="middle" fontFamily="Impact, 'Arial Black', sans-serif" fontSize="9" fontWeight="900" fill="#e0a848" letterSpacing="0.6">JURASSIC</text>
+          <text x="44" y="114" textAnchor="middle" fontFamily="Impact, 'Arial Black', sans-serif" fontSize="9" fontWeight="900" fill="#e0a848" letterSpacing="0.6">PARK</text>
+          {/* punaises */}
+          <circle cx="6"  cy="6"   r="1.4" fill="#c8c8c8" />
+          <circle cx="82" cy="6"   r="1.4" fill="#c8c8c8" />
+        </g>
+
+        {/* palmier en pot du bureau chic 90s (+ SUPPORT en bois) */}
         <g transform="translate(150,340)">
+          {/* stand/pied cache-pot en bois clair */}
+          <rect x="-24" y="90" width="48" height="10" fill="#8a5828" stroke="#3a1e10" strokeWidth="1" />
+          <rect x="-20" y="100" width="6" height="60" fill="#5a3818" />
+          <rect x="14" y="100" width="6" height="60" fill="#5a3818" />
+          <rect x="-24" y="150" width="48" height="10" fill="#8a5828" stroke="#3a1e10" strokeWidth="1" />
+          {/* le pot */}
           <path d="M-14 60 L-18 90 L18 90 L14 60 Z" fill="#3a2418" />
           <path d="M0 60 Q-20 20 -40 30 M0 60 Q20 20 40 30 M0 60 Q-30 0 -50 -10 M0 60 Q30 0 50 -10 M0 60 Q-10 -20 -20 -40 M0 60 Q10 -20 20 -40 M0 60 Q0 -40 -6 -70" stroke="#4a7a30" strokeWidth="4" fill="none" strokeLinecap="round" />
           <path d="M-40 30 q-6 -6 -4 -14" fill="#5a9040" opacity="0.8" />
           <path d="M40 30 q6 -6 4 -14" fill="#5a9040" opacity="0.8" />
         </g>
         {/* tableau blanc au mur avec quelques notes */}
-        <g transform="translate(700,60)">
-          <rect x="0" y="0" width="200" height="120" fill="#f8f8f0" stroke="#3a3a3a" strokeWidth="2" />
-          <path d="M20 30 h60 M20 45 h80 M20 60 h40 M20 80 h100 M20 95 h50" stroke="#4a6aa0" strokeWidth="1.4" />
-          <path d="M140 30 L170 30 L170 55 L140 55 Z" fill="none" stroke="#e83820" strokeWidth="1.4" />
-          <path d="M144 42 L152 50 L166 34" stroke="#e83820" strokeWidth="1.4" fill="none" />
+        <g transform="translate(720,80)">
+          <rect x="0" y="0" width="180" height="100" fill="#f8f8f0" stroke="#3a3a3a" strokeWidth="2" />
+          <path d="M20 22 h60 M20 36 h80 M20 50 h40 M20 66 h100 M20 80 h50" stroke="#4a6aa0" strokeWidth="1.4" />
+          <path d="M136 24 L162 24 L162 46 L136 46 Z" fill="none" stroke="#e83820" strokeWidth="1.4" />
+          <path d="M140 34 L148 42 L160 28" stroke="#e83820" strokeWidth="1.4" fill="none" />
+          {/* petit sticker POKEBALL colle dans le coin du tableau */}
+          <g transform="translate(168,90)">
+            <circle r="10" fill="#f0f0e8" stroke="#0a0806" strokeWidth="1.6" />
+            <path d="M-10 0 a10 10 0 0 1 20 0 Z" fill="#e83820" stroke="#0a0806" strokeWidth="1.6" />
+            <path d="M-10 0 h20" stroke="#0a0806" strokeWidth="1.6" />
+            <circle r="3" fill="#f8f8f0" stroke="#0a0806" strokeWidth="1.4" />
+            <circle r="1.4" fill="#c8c8c8" />
+          </g>
         </g>
       </PLayer>
 
@@ -122,6 +184,42 @@ export default function SceneBureau1990({ collect, action, reveal, made = [], fl
           <path d="M-16 0 q-6 -4 -14 0" stroke="#3a3a3a" strokeWidth="1.4" fill="none" />
         </g>
 
+        {/* GAME BOY posee sur le bureau, ecran vert allume avec un
+            petit sprite qui saute. */}
+        <g transform="translate(370,384) rotate(-6)">
+          {/* coque grise */}
+          <rect x="-18" y="-32" width="36" height="64" rx="4" fill="#c8c8c8" stroke="#3a3a3a" strokeWidth="1" />
+          {/* petit bandeau plus fonce en haut */}
+          <rect x="-18" y="-32" width="36" height="6" rx="2" fill="#8a8a8a" />
+          {/* ecran cerne noir */}
+          <rect x="-14" y="-22" width="28" height="20" rx="1" fill="#2a2a2a" />
+          {/* ecran LCD vert */}
+          <rect x="-12" y="-20" width="24" height="16" fill="#9ec830" />
+          {/* petit sprite qui saute (pixels) */}
+          <g fill="#0a2a08">
+            <rect x="-4" y="-12" width="8" height="6">
+              <animate attributeName="y" values="-10;-16;-10" dur="0.9s" repeatCount="indefinite" />
+            </rect>
+            <rect x="-2" y="-14" width="4" height="2">
+              <animate attributeName="y" values="-12;-18;-12" dur="0.9s" repeatCount="indefinite" />
+            </rect>
+          </g>
+          <text x="0" y="-24" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="2.6" fill="#3a3a3a">DOT MATRIX WITH STEREO SOUND</text>
+          {/* croix directionnelle */}
+          <g transform="translate(-9,7)">
+            <path d="M-5 -2 h4 v-2 h2 v2 h4 v4 h-4 v2 h-2 v-2 h-4 z" fill="#3a3a3a" />
+          </g>
+          {/* boutons A B en rouge */}
+          <circle cx="7"  cy="8"  r="2.5" fill="#c02830" />
+          <circle cx="12" cy="4"  r="2.5" fill="#c02830" />
+          {/* start / select */}
+          <path d="M-4 20 h4 M4 20 h4" stroke="#5a5a5a" strokeWidth="1.4" />
+          {/* haut-parleur */}
+          <path d="M6 24 l8 6 M4 26 l8 6 M2 28 l8 6" stroke="#8a8a8a" strokeWidth="0.6" />
+          {/* logo NINTENDO */}
+          <text x="0" y="-1" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="2.4" fontWeight="800" fill="#3a2a80">NINTENDO GAME BOY</text>
+        </g>
+
         {/* PILE DE CD-Rom vierges — bien visible sur le bureau, entre l'imprimante
             et l'écran. Boîtier ouvert avec un CD qui reflète les arcs-en-ciel. */}
         {!grave && (
@@ -163,14 +261,22 @@ export default function SceneBureau1990({ collect, action, reveal, made = [], fl
         <g transform="translate(560,470)">
           {/* fauteuil de bureau à roulettes */}
           <path d="M-40 -10 L40 -10 L34 40 L-34 40 Z" fill="#1a1a1a" />
-          {/* corps assis */}
-          <path d="M-24 0 Q-22 -40 0 -46 Q22 -40 24 0 Z" fill="#5a2030" />
-          {/* épaulettes marquées */}
-          <path d="M-24 -40 L-28 -30 M24 -40 L28 -30" stroke="#5a2030" strokeWidth="8" />
-          {/* col chemise crème */}
-          <path d="M-6 -40 L0 -28 L6 -40 L10 -20 L-10 -20 Z" fill="#f0e0d0" />
-          {/* nœud lavallière rouge */}
-          <path d="M-4 -34 L4 -34 L2 -22 L0 -26 L-2 -22 Z" fill="#c02830" />
+          {/* T-SHIRT JAUNE (fan de Nirvana) */}
+          <path d="M-26 0 Q-24 -40 0 -46 Q24 -40 26 0 Z" fill="#f8d838" stroke="#a88020" strokeWidth="1" />
+          {/* bord de manches un peu plus fonce */}
+          <path d="M-26 -8 Q-30 -20 -22 -32" stroke="#c8a828" strokeWidth="4" fill="none" />
+          <path d="M26 -8 Q30 -20 22 -32" stroke="#c8a828" strokeWidth="4" fill="none" />
+          {/* le SMILEY Nirvana */}
+          <g transform="translate(0,-18)">
+            <circle r="10" fill="#f8d838" stroke="#1a1408" strokeWidth="1.4" />
+            {/* yeux en X */}
+            <path d="M-4 -3 l3 3 l-3 3 M-1 -3 l-3 3 l3 3" stroke="#1a1408" strokeWidth="0.8" fill="none" />
+            <path d="M4 -3 l-3 3 l3 3 M1 -3 l3 3 l-3 3" stroke="#1a1408" strokeWidth="0.8" fill="none" />
+            {/* sourire de traviole avec la langue qui pend */}
+            <path d="M-5 3 Q-2 6 2 5 Q4 4 5 3 L4 6 L2 5 L1 7" stroke="#1a1408" strokeWidth="1" fill="none" strokeLinecap="round" />
+          </g>
+          {/* col de t-shirt en cotes */}
+          <path d="M-6 -40 Q0 -34 6 -40" stroke="#c8a828" strokeWidth="1.4" fill="none" />
           {/* tête */}
           <ellipse cx="0" cy="-60" rx="14" ry="16" fill="#f4d8b8" />
           {/* cheveux carrés blonds vénitiens volumineux */}
