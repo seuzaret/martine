@@ -184,9 +184,9 @@ export default function SceneBureau1990({ collect, action, reveal, made = [], fl
           <path d="M-16 0 q-6 -4 -14 0" stroke="#3a3a3a" strokeWidth="1.4" fill="none" />
         </g>
 
-        {/* GAME BOY posee sur le bureau, ecran vert allume avec un
-            petit sprite qui saute. */}
-        <g transform="translate(370,384) rotate(-6)">
+        {/* GAME BOY posee sur le bureau, plus petite et bien en face de
+            Celine — ecran vert allume avec un sprite qui saute. */}
+        <g transform="translate(505,395) rotate(-10) scale(0.65)">
           {/* coque grise */}
           <rect x="-18" y="-32" width="36" height="64" rx="4" fill="#c8c8c8" stroke="#3a3a3a" strokeWidth="1" />
           {/* petit bandeau plus fonce en haut */}
