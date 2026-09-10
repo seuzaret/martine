@@ -2,33 +2,36 @@ import Hotspot from "../../../engine/Hotspot.jsx";
 import { PLayer } from "../../../engine/Parallax.jsx";
 
 /* ============================================================
-   CHAPITRE 9 — Tableau-ÉNIGME : « Et si tout tenait dans ma poche ? »
-   ------------------------------------------------------------
-   Ta chambre, aujourd'hui. Le bureau croule sous les objets.
-   L'ado (cliquable) en a assez de tout trimballer.
-   → puce flash + poche → la clé USB apparaît, minuscule.
-   → écran tactile + réseau mobile → LE smartphone apparaît, et
-     tous les médias du voyage s'affichent dedans.
-   ⚠️ C'est ici qu'on tente de lire la DISQUETTE du chapitre 8
-      sur le PC moderne… (message perdu)
-   Ce décor réagit à l'état du jeu via la prop `made`.
+   CHAPITRE 9 (XXIe) — Tableau : Ta chambre, aujourd'hui.
+   Chambre d'ado moderne : lumieres LED RGB, posters (Minecraft,
+   K-Pop, 67), lit tout au fond, gros setup GAMER au premier plan
+   (PC tour vitree + ventilos RGB, ecran incurve, clavier
+   mecanique, souris RGB, siege bucket).
+   L'enchainement d'objets a assembler reste :
+     - Memoire flash + Poche (jean)     -> cle USB
+     - Ecran tactile + Reseau mobile    -> smartphone
+     - Disquette + PC moderne           -> MESSAGE PERDU
+     - Photos d'enfance (tablette)      -> pour le datacenter
    ============================================================ */
 
 export default function SceneChambre({ collect, action, reveal, made = [], mode }) {
-  const usb = made.includes("msg_usb");           // la clé USB existe
-  const phone = made.includes("msg_smartphone");  // le smartphone existe
-  const dead = made.includes("msg_disquette");    // la disquette a rendu l'âme
-  const compte = made.includes("msg_compte");     // les photos ont disparu
+  const usb   = made.includes("msg_usb");
+  const phone = made.includes("msg_smartphone");
+  const dead  = made.includes("msg_disquette");
+  const compte = made.includes("msg_compte");
 
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
-        <linearGradient id="ch-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#3a4058" /><stop offset="100%" stopColor="#20243a" /></linearGradient>
-        <linearGradient id="ch-win" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#141c34" /><stop offset="100%" stopColor="#3a4a68" /></linearGradient>
-        <linearGradient id="ch-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#5a4a3e" /><stop offset="100%" stopColor="#2a2018" /></linearGradient>
-        <linearGradient id="ch-desk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8a8478" /><stop offset="100%" stopColor="#4e4a42" /></linearGradient>
-        <radialGradient id="ch-scr" cx="50%" cy="40%" r="70%"><stop offset="0%" stopColor="#7fd8ff" stopOpacity="0.35" /><stop offset="100%" stopColor="#7fd8ff" stopOpacity="0" /></radialGradient>
+        <linearGradient id="ch-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#1a1830" /><stop offset="100%" stopColor="#0a0a1c" /></linearGradient>
+        <linearGradient id="ch-win"  x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#141c34" /><stop offset="100%" stopColor="#3a4a68" /></linearGradient>
+        <linearGradient id="ch-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#2a1e18" /><stop offset="100%" stopColor="#100a08" /></linearGradient>
+        <linearGradient id="ch-desk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#161624" /><stop offset="100%" stopColor="#050510" /></linearGradient>
+        <linearGradient id="ch-tower" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#2a2a3a" /><stop offset="100%" stopColor="#0a0a12" /></linearGradient>
+        <radialGradient id="ch-scr"  cx="50%" cy="40%" r="70%"><stop offset="0%" stopColor="#7fd8ff" stopOpacity="0.35" /><stop offset="100%" stopColor="#7fd8ff" stopOpacity="0" /></radialGradient>
         <radialGradient id="ch-glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ffe9a8" stopOpacity="0.65" /><stop offset="100%" stopColor="#ffe9a8" stopOpacity="0" /></radialGradient>
+        <radialGradient id="ch-magenta" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ff4aa0" stopOpacity="0.35" /><stop offset="100%" stopColor="#ff4aa0" stopOpacity="0" /></radialGradient>
+        <radialGradient id="ch-cyan"    cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#4ae0ff" stopOpacity="0.35" /><stop offset="100%" stopColor="#4ae0ff" stopOpacity="0" /></radialGradient>
         <filter id="ch-grain" x="0%" y="0%" width="100%" height="100%">
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" />
           <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0" result="a" />
@@ -37,47 +40,147 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
         <clipPath id="ch-winclip"><rect x="-56" y="-56" width="112" height="112" /></clipPath>
       </defs>
 
-      {/* ═══ le mur de la chambre ═══ */}
+      {/* ═══ mur sombre + grain ═══ */}
       <rect width="1000" height="560" fill="url(#ch-wall)" />
-      <rect width="1000" height="560" fill="#10121e" opacity="0.24" filter="url(#ch-grain)" />
-      {/* la lueur bleue des écrans sur le mur */}
-      <ellipse cx="620" cy="380" rx="300" ry="180" fill="url(#ch-scr)" style={{ animation: "glow 4s ease-in-out infinite" }} />
+      <rect width="1000" height="560" fill="#050510" opacity="0.24" filter="url(#ch-grain)" />
 
-      {/* ═══ couche lointaine : la fenêtre + l'antenne-relais, le poster ═══ */}
+      {/* HALOS ambiants des LEDs RGB : deux nappes qui bougent en couleur */}
+      <ellipse cx="220" cy="180" rx="260" ry="180" fill="url(#ch-magenta)">
+        <animate attributeName="opacity" values="0.7;0.35;0.7" dur="6s" repeatCount="indefinite" />
+      </ellipse>
+      <ellipse cx="720" cy="200" rx="280" ry="200" fill="url(#ch-cyan)">
+        <animate attributeName="opacity" values="0.35;0.75;0.35" dur="6s" repeatCount="indefinite" />
+      </ellipse>
+
+      {/* BANDEAU LED RGB en haut du mur : degrade qui defile */}
+      <g>
+        <rect x="0" y="14" width="1000" height="8" fill="#4ae0ff">
+          <animate attributeName="fill" dur="8s" repeatCount="indefinite"
+            values="#4ae0ff; #ff4aa0; #7fe0a8; #ffd166; #a840f0; #4ae0ff" />
+        </rect>
+        {/* LEDs individuelles qui clignotent chacune a un tempo */}
+        {[...Array(28)].map((_, i) => (
+          <circle key={i} cx={20 + i * 35} cy="18" r="2.4" fill="#ffffff">
+            <animate attributeName="opacity"
+              values="0.3;1;0.4;0.9;0.3"
+              dur={`${1.2 + (i % 4) * 0.5}s`}
+              begin={`${(i * 0.07) % 2}s`}
+              repeatCount="indefinite" />
+          </circle>
+        ))}
+      </g>
+
+      {/* BANDEAU LED lateral droit (colle au bord de la fenetre) */}
+      <rect x="990" y="30" width="6" height="380" fill="#a840f0">
+        <animate attributeName="fill" dur="10s" repeatCount="indefinite"
+          values="#a840f0; #4ae0ff; #ffd166; #ff4aa0; #a840f0" />
+      </rect>
+
+      {/* ═══ couche lointaine : LE LIT AU FOND, la fenetre, les POSTERS ═══ */}
       <PLayer depth={1}>
-        <g transform="translate(770,158)">
+        {/* LIT tout au fond, au centre-gauche, dessine petit pour la
+            perspective. */}
+        <g transform="translate(200,270) scale(0.75)">
+          {/* tete de lit */}
+          <rect x="-72" y="-40" width="144" height="12" rx="3" fill="#3a3a4a" />
+          {/* matelas + couette */}
+          <rect x="-70" y="-28" width="140" height="34" rx="4" fill="#3a4a6a" />
+          <rect x="-70" y="-28" width="140" height="34" rx="4" fill="#101828" opacity="0.24" filter="url(#ch-grain)" />
+          {/* oreiller */}
+          <rect x="-64" y="-22" width="42" height="16" rx="4" fill="#e8e4da" opacity="0.85" />
+          {/* couverture froissee */}
+          <path d="M-24 -14 q20 -6 44 4 q26 8 44 -4 v22 h-88 Z" fill="#5a2a3e" />
+          {/* pieds */}
+          <rect x="-64" y="6" width="8" height="16" fill="#1a1a20" />
+          <rect x="56"  y="6" width="8" height="16" fill="#1a1a20" />
+        </g>
+
+        {/* POSTER MINECRAFT (bloc de terre pixelise) */}
+        <g transform="translate(70,150)">
+          <rect x="-40" y="-56" width="80" height="112" rx="2" fill="#0a0a10" stroke="#8ac86a" strokeWidth="2" />
+          {/* fond ciel Minecraft */}
+          <rect x="-38" y="-54" width="76" height="72" fill="#7fbbe0" />
+          {/* soleil carre */}
+          <rect x="14" y="-48" width="14" height="14" fill="#ffe08a" />
+          {/* bloc de terre au sol */}
+          {[...Array(6)].map((_, r) => [...Array(6)].map((_, c) => {
+            const shades = r < 2 ? ["#7fbb4a","#6aa03e","#8ac860","#5a8830","#7fbb4a","#6aa03e"]
+                                 : ["#8a5828","#a06840","#7a4820","#a06840","#8a5828","#6a3818"];
+            return <rect key={`${r}-${c}`} x={-38 + c * 13} y={18 + r * 6} width="13" height="6" fill={shades[c]} stroke="#3a2010" strokeWidth="0.3" />;
+          }))}
+          <text x="0" y="52" textAnchor="middle" fontFamily="ui-monospace,monospace" fontWeight="800" fontSize="9" fill="#8ac86a" letterSpacing="2">MINECRAFT</text>
+        </g>
+
+        {/* POSTER K-POP (silhouettes + coeur/paillettes) */}
+        <g transform="translate(200,150)">
+          <rect x="-40" y="-56" width="80" height="112" rx="2" fill="#f8c8e0" stroke="#a840f0" strokeWidth="2" />
+          {/* gradient de fond magenta pastel */}
+          <rect x="-38" y="-54" width="76" height="90" fill="#f8c8e0" />
+          {/* silhouettes du groupe */}
+          {[-24, -12, 0, 12, 24].map((x, i) => (
+            <g key={i} transform={`translate(${x},0)`}>
+              <circle cx="0" cy="-14" r="5" fill="#5a2058" />
+              <path d="M-5 -8 L5 -8 L4 18 L-4 18 Z" fill={["#a840f0","#f870b0","#a840f0","#f870b0","#a840f0"][i]} />
+            </g>
+          ))}
+          {/* coeurs pailletes */}
+          <path d="M-28 -40 q-3 -6 -6 -2 q-3 -4 -6 2 q0 4 6 8 q6 -4 6 -8 Z" fill="#ff4aa0" />
+          <path d="M28 -30 q-3 -6 -6 -2 q-3 -4 -6 2 q0 4 6 8 q6 -4 6 -8 Z" fill="#ff4aa0" opacity="0.85" />
+          {/* etoiles */}
+          {[[-30,-10],[26,20],[-14,-46],[16,-38]].map(([x,y],i) => (
+            <path key={i} d={`M${x} ${y} l1.4 3 l3 0 l-2.4 2 l1 3 l-3 -1.8 l-3 1.8 l1 -3 l-2.4 -2 l3 0 Z`} fill="#ffe08a" />
+          ))}
+          <text x="0" y="50" textAnchor="middle" fontFamily="Impact, 'Arial Black', sans-serif" fontWeight="900" fontSize="14" fill="#a840f0" letterSpacing="2">K-POP</text>
+        </g>
+
+        {/* POSTER 67 (rap french touch) */}
+        <g transform="translate(330,150)">
+          <rect x="-40" y="-56" width="80" height="112" rx="2" fill="#0a0a0a" stroke="#c8963e" strokeWidth="2" />
+          {/* fond degrade sombre */}
+          <rect x="-38" y="-54" width="76" height="108" fill="#0a0a0a" />
+          {/* rayons dores */}
+          {[-40,-20,0,20,40].map((a,i) => (
+            <path key={i} d={`M0 20 L${a * 1.2} -50`} stroke="#c8963e" strokeWidth="0.6" opacity="0.4" />
+          ))}
+          {/* le "67" en gros */}
+          <text x="0" y="10" textAnchor="middle" fontFamily="Impact, 'Arial Black', sans-serif" fontSize="60" fontWeight="900" fill="#c8963e" letterSpacing="-4">67</text>
+          <text x="0" y="10" textAnchor="middle" fontFamily="Impact, 'Arial Black', sans-serif" fontSize="60" fontWeight="900" fill="none" stroke="#f8d838" strokeWidth="1" letterSpacing="-4">67</text>
+          {/* tag / signature */}
+          <text x="0" y="38" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fill="#c8963e" letterSpacing="3">EN CE MOMENT</text>
+        </g>
+
+        {/* FENETRE + antenne 5G (RESEAU MOBILE) */}
+        <g transform="translate(830,158)">
           <rect x="-58" y="-58" width="116" height="116" fill="url(#ch-win)" />
           <g clipPath="url(#ch-winclip)">
-            {/* la ville la nuit */}
+            {/* ville la nuit */}
             <path d="M-56 44 L-56 6 L-36 6 L-36 26 L-14 26 L-14 -4 L10 -4 L10 22 L34 22 L34 2 L56 2 L56 44 Z" fill="#151b2c" />
             {[[-48, 14], [-28, 34], [-6, 6], [18, 30], [42, 12], [-44, 30], [24, 8]].map(([x, y], i) => (
-              <rect key={i} x={x} y={y} width="4" height="4" fill="#ffd166" opacity="0.8" style={{ animation: `twinkle ${2 + (i % 3)}s infinite` }} />
+              <rect key={i} x={x} y={y} width="4" height="4" fill="#ffd166" opacity="0.85">
+                <animate attributeName="opacity" values="0.6;1;0.6" dur={`${2 + (i % 3)}s`} repeatCount="indefinite" />
+              </rect>
             ))}
-            {/* L'ANTENNE-RELAIS sur le toit */}
+            {/* antenne 5G */}
             <g transform="translate(20,-16)">
               <path d="M-3 26 L-7 -22 L7 -22 L3 26 Z" fill="#2a3040" />
-              {[...Array(4)].map((_, i) => <path key={i} d={`M${-6 + i * 0.6} ${-16 + i * 10} h${12 - i * 1.2}`} stroke="#3a4050" strokeWidth="1.4" />)}
-              {/* les panneaux de l'antenne */}
               {[-1, 1].map((s, i) => <rect key={i} x={s * 7 - 2} y="-24" width="4" height="11" rx="1" fill="#4a5060" />)}
-              {/* le réseau mobile qui rayonne */}
               <g fill="none" stroke="#7fd8ff">
                 {[10, 18, 26].map((r, i) => (
-                  <g key={i} style={{ animation: `pulse ${1.6 + i * 0.4}s infinite` }}>
-                    <path d={`M${r * 0.6} -${r * 0.5 + 22} A${r} ${r} 0 0 1 ${r * 0.6} ${r * 0.5 - 22}`} strokeWidth="1.8" opacity={0.9 - i * 0.2} />
-                    <path d={`M-${r * 0.6} -${r * 0.5 + 22} A${r} ${r} 0 0 0 -${r * 0.6} ${r * 0.5 - 22}`} strokeWidth="1.8" opacity={0.9 - i * 0.2} />
+                  <g key={i}>
+                    <animate attributeName="opacity" values="0.9;0.1;0.9" dur="1.8s" begin={`${i * 0.4}s`} repeatCount="indefinite" />
+                    <path d={`M${r * 0.6} -${r * 0.5 + 22} A${r} ${r} 0 0 1 ${r * 0.6} ${r * 0.5 - 22}`} strokeWidth="1.8" />
+                    <path d={`M-${r * 0.6} -${r * 0.5 + 22} A${r} ${r} 0 0 0 -${r * 0.6} ${r * 0.5 - 22}`} strokeWidth="1.8" />
                   </g>
                 ))}
               </g>
             </g>
-            {/* DRONE de livraison qui traverse la ville, vu a travers la
-                fenetre — clippe par le cadre. Petit clignotant rouge. */}
+            {/* drone */}
             <g>
               <animateTransform attributeName="transform" type="translate"
                 values="-60,0; 60,-6; -60,0" dur="18s" repeatCount="indefinite" />
               <g transform="translate(0,-10)">
                 <rect x="-6" y="-2" width="12" height="4" rx="0.8" fill="#0a0e18" stroke="#5a6a80" strokeWidth="0.5" />
-                <path d="M-8 -1 h4 M4 -1 h4" stroke="#8a94a8" strokeWidth="0.8" />
-                <path d="M-8 1 h4 M4 1 h4" stroke="#8a94a8" strokeWidth="0.8" />
+                <path d="M-8 -1 h4 M4 -1 h4 M-8 1 h4 M4 1 h4" stroke="#8a94a8" strokeWidth="0.6" />
                 <circle cx="0" cy="0" r="1.4" fill="#e83820">
                   <animate attributeName="opacity" values="0.2;1;0.2" dur="0.9s" repeatCount="indefinite" />
                 </circle>
@@ -87,184 +190,259 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
           <rect x="-58" y="-58" width="116" height="116" fill="none" stroke="#2a3040" strokeWidth="7" />
           <path d="M0 -58 v116 M-58 0 h116" stroke="#2a3040" strokeWidth="3.5" />
         </g>
-
-        {/* un poster au mur */}
-        <g transform="translate(200,150)">
-          <rect x="-44" y="-56" width="88" height="112" rx="2" fill="#2c3350" stroke="#465070" strokeWidth="3" />
-          <circle cx="0" cy="-18" r="20" fill="#c8483a" opacity="0.8" />
-          <path d="M-30 40 q30 -44 60 0 Z" fill="#3a6ac8" opacity="0.7" />
-          <text x="0" y="48" textAnchor="middle" fontSize="9" fill="#8fa3bd" fontFamily="ui-monospace,monospace">MUSIQUE</text>
-        </g>
-        {/* DRONE de livraison qui traverse le ciel — signature XXIe siecle,
-            avec petit clignotant rouge. */}
-        <g opacity="0.8">
-          <animateTransform attributeName="transform" type="translate"
-            values="-40,0; 1050,20" dur="20s" repeatCount="indefinite" />
-          <g transform="translate(0,80)">
-            {/* corps */}
-            <rect x="-4" y="-1.5" width="8" height="3" rx="0.6" fill="#3a3a3a" />
-            {/* helices */}
-            <path d="M-6 -1 h4 M2 -1 h4" stroke="#6a6a6a" strokeWidth="0.6" />
-            <path d="M-6 1 h4 M2 1 h4" stroke="#6a6a6a" strokeWidth="0.6" />
-            {/* clignotant */}
-            <circle cx="0" cy="0" r="0.8" fill="#e83820">
-              <animate attributeName="opacity" values="0.3;1;0.3" dur="0.9s" repeatCount="indefinite" />
-            </circle>
-          </g>
-        </g>
       </PLayer>
 
-      {/* ═══ couche intermédiaire : l'étagère ═══ */}
-      <PLayer depth={2}>
-        <g transform="translate(360,300)">
-          <rect x="-70" y="0" width="140" height="9" rx="2" fill="#5a4a3e" />
-          {/* des livres et une console posés dessus */}
-          {[-58, -50, -42, -34].map((x, i) => <rect key={i} x={x} y="-34" width="7" height="34" fill={["#c8483a", "#3a6ac8", "#c9a24a", "#5a8a4a"][i]} />)}
-          <rect x="10" y="-18" width="44" height="18" rx="3" fill="#2a2e3a" />
-          <circle cx="20" cy="-9" r="3" fill="#5a6070" /><circle cx="44" cy="-9" r="3" fill="#5a6070" />
-        </g>
-      </PLayer>
-
-      {/* ═══ premier plan : le sol, le lit, le bureau, l'ado ═══ */}
+      {/* ═══ SOL + BUREAU GAMER + ADO + PC TOUR ═══ */}
       <PLayer depth={3}>
         <rect y="408" width="1000" height="152" fill="url(#ch-floor)" />
-        <rect y="410" width="1000" height="150" fill="#1a1208" opacity="0.34" filter="url(#ch-grain)" />
-        <path d="M0 452 h1000 M0 504 h1000 M150 408 v152 M420 408 v152 M690 408 v152 M900 408 v152" stroke="#241810" strokeWidth="1.4" opacity="0.45" />
+        <rect y="410" width="1000" height="150" fill="#050510" opacity="0.34" filter="url(#ch-grain)" />
+        {/* bandes du plancher */}
+        <path d="M0 452 h1000 M0 504 h1000 M180 408 v152 M540 408 v152 M840 408 v152" stroke="#180c08" strokeWidth="1.4" opacity="0.5" />
 
-        {/* LE LIT, à gauche : le jean (poche) et la tablette (photos) dessus */}
-        <g transform="translate(190,470)">
-          <rect x="-90" y="0" width="180" height="34" rx="4" fill="#3a4a6a" />
-          <rect x="-90" y="0" width="180" height="34" rx="4" fill="#101828" opacity="0.24" filter="url(#ch-grain)" />
-          <rect x="-90" y="-16" width="54" height="18" rx="6" fill="#e8e4da" opacity="0.85" />
-          <rect x="-86" y="34" width="10" height="26" fill="#2a2018" /><rect x="76" y="34" width="10" height="26" fill="#2a2018" />
-
-          {/* PIÈCE : le jean roulé en boule (la poche) */}
-          {!usb && (
-            <g transform="translate(24,-14)">
-              <path d="M-26 14 q-6 -20 6 -24 q20 -6 40 2 q10 4 4 22 Z" fill="#3a5a8a" />
-              <path d="M-26 14 q-6 -20 6 -24 q20 -6 40 2 q10 4 4 22 Z" fill="#101828" opacity="0.22" filter="url(#ch-grain)" />
-              {/* la poche, bien visible */}
-              <path d="M2 -12 q12 -3 18 2 l-3 12 q-9 3 -16 -1 Z" fill="none" stroke="#7fa8d8" strokeWidth="1.6" />
-              <path d="M-14 -6 q10 -4 18 -2" stroke="#7fa8d8" strokeWidth="1.2" fill="none" />
-            </g>
-          )}
-          {/* APPARAÎT : LA CLÉ USB, minuscule, posée sur le lit */}
-          {usb && (
-            <g transform="translate(24,-10)" style={{ animation: "pulse 0.7s ease-out 2" }}>
-              <ellipse cx="0" cy="6" rx="60" ry="26" fill="url(#ch-glow)" />
-              <rect x="-16" y="-5" width="26" height="11" rx="2" fill="#2a2e3a" />
-              <rect x="10" y="-3" width="11" height="7" rx="1" fill="#b8bcc4" />
-              <path d="M12 -1 h7 M12 2 h7" stroke="#6a6e76" strokeWidth="0.8" />
-              <circle cx="-11" cy="0" r="2" fill="#5eff9e" style={{ animation: "pulse 1.4s infinite" }} />
-            </g>
-          )}
+        {/* GRAND BUREAU GAMER noir occupant tout l'avant */}
+        <g transform="translate(500,432)">
+          <rect x="-320" y="0" width="640" height="16" rx="3" fill="url(#ch-desk)" />
+          {/* eclairage RGB sous le bureau */}
+          <rect x="-320" y="16" width="640" height="3" fill="#ff4aa0">
+            <animate attributeName="fill" dur="7s" repeatCount="indefinite"
+              values="#ff4aa0; #4ae0ff; #a840f0; #7fe0a8; #ff4aa0" />
+          </rect>
+          {/* pieds fins metal */}
+          <rect x="-316" y="19" width="8" height="72" fill="#0a0a10" />
+          <rect x="308"  y="19" width="8" height="72" fill="#0a0a10" />
         </g>
 
-        {/* LE BUREAU, à droite */}
-        <g transform="translate(620,452)">
-          <rect x="-130" y="0" width="260" height="12" rx="3" fill="url(#ch-desk)" />
-          <rect x="-122" y="12" width="12" height="52" fill="#3a3e46" /><rect x="110" y="12" width="12" height="52" fill="#3a3e46" />
+        {/* PC TOUR GAMER a droite du bureau, avec panneau vitre et
+            3 ventilos RGB qui tournent. */}
+        <g transform="translate(180,342)">
+          <rect x="-42" y="0" width="84" height="150" rx="2" fill="url(#ch-tower)" stroke="#2a2a3a" strokeWidth="2" />
+          {/* fenetre vitree */}
+          <rect x="-34" y="8" width="68" height="130" rx="2" fill="#0a0a16" stroke="#3a3a52" strokeWidth="1.4" />
+          {/* 3 ventilos RGB */}
+          {[24, 68, 112].map((cy, i) => (
+            <g key={i} transform={`translate(0,${cy - 46})`}>
+              {/* cadre du ventilateur */}
+              <rect x="-24" y="-14" width="48" height="28" rx="4" fill="#050510" stroke="#3a3a52" strokeWidth="0.6" />
+              {/* halo colore */}
+              <circle r="14" fill="#7fe0ff" opacity="0.25">
+                <animate attributeName="fill" dur={`${4 + i}s`} repeatCount="indefinite"
+                  values={["#7fe0ff;#ff4aa0;#7fe0ff", "#a840f0;#7fe0a8;#a840f0", "#ffd166;#4ae0ff;#ffd166"][i]} />
+              </circle>
+              {/* pales qui tournent */}
+              <g>
+                <animateTransform attributeName="transform" type="rotate"
+                  values={`0; ${360 * (i % 2 ? 1 : -1)}`}
+                  dur={`${1.5 + i * 0.3}s`} repeatCount="indefinite" />
+                {[0, 90, 180, 270].map((a, k) => (
+                  <path key={k} d="M0 -12 q3 6 -1 12 q-2 -8 1 -12 Z" fill="#2a2a3a" transform={`rotate(${a})`} />
+                ))}
+                <circle r="4" fill="#3a3a52" stroke="#0a0a10" strokeWidth="0.6" />
+              </g>
+              {/* liseret RGB autour du ventilo */}
+              <circle r="13" fill="none" strokeWidth="1.4" stroke="#ff4aa0">
+                <animate attributeName="stroke" dur={`${5 + i}s`} repeatCount="indefinite"
+                  values={["#ff4aa0;#4ae0ff;#ff4aa0", "#a840f0;#ffd166;#a840f0", "#7fe0a8;#ff4aa0;#7fe0a8"][i]} />
+              </circle>
+            </g>
+          ))}
+          {/* bouton power avec LED */}
+          <circle cx="0" cy="146" r="3" fill="#2a2a3a" />
+          <circle cx="0" cy="146" r="1.4" fill="#5eff9e">
+            <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" />
+          </circle>
+        </g>
 
-          {/* LE PC MODERNE : fin, sans lecteur de disquette (il reste dessiné) */}
-          <g transform="translate(-58,-2)">
-            {/* l'écran */}
-            <rect x="-52" y="-72" width="104" height="66" rx="4" fill="#2a2e3a" />
-            <rect x="-48" y="-68" width="96" height="54" rx="2" fill={dead ? "#2a1418" : "#101828"} />
-            {dead ? (
-              /* APPARAÎT : le message d'erreur, quand la disquette a échoué */
-              <g fontFamily="ui-monospace,monospace">
-                <text x="0" y="-48" textAnchor="middle" fontSize="8" fill="#ff6a4a">⚠ ERREUR</text>
-                <text x="0" y="-36" textAnchor="middle" fontSize="5.5" fill="#ff9a8a">périphérique inconnu</text>
-                <text x="0" y="-27" textAnchor="middle" fontSize="5.5" fill="#ff9a8a">format illisible</text>
-                <rect x="-20" y="-22" width="40" height="6" rx="1" fill="#5a2a2a" />
-              </g>
-            ) : (
-              <g fontFamily="ui-monospace,monospace">
-                <path d="M-40 -58 h30 M-40 -50 h48 M-40 -42 h22" stroke="#3a6ac8" strokeWidth="2" opacity="0.7" />
-                <rect x="-40" y="-34" width="5" height="7" fill="#5eff9e" opacity="0.8" style={{ animation: "pulse 1.1s steps(2) infinite" }} />
-              </g>
-            )}
-            <rect x="-8" y="-6" width="16" height="5" fill="#4a4e58" />
-            <rect x="-26" y="-1" width="52" height="4" rx="2" fill="#5a5e68" />
+        {/* ECRAN GAMER ULTRAWIDE incurve, dresse sur le bureau */}
+        <g transform="translate(560,340)">
+          {/* pied */}
+          <rect x="-6" y="88" width="12" height="10" fill="#1a1a24" />
+          <path d="M-40 98 L40 98 L36 104 L-36 104 Z" fill="#0a0a12" />
+          {/* dos + LED RGB derriere */}
+          <g>
+            <path d="M-180 -60 Q0 -70 180 -60 L180 88 L-180 88 Z" fill="#0a0a12" stroke="#2a2a3a" strokeWidth="2" />
+            {/* halo RGB derriere l'ecran */}
+            <ellipse cx="0" cy="14" rx="200" ry="80" fill="url(#ch-scr)" style={{ animation: "glow 4s ease-in-out infinite" }} />
           </g>
-
-          {/* PIÈCE : la puce de mémoire flash, minuscule, sur le bureau */}
-          {!usb && (
-            <g transform="translate(24,-8)">
-              <rect x="-9" y="-6" width="18" height="12" rx="1.5" fill="#1c2028" />
-              <rect x="-6" y="-4" width="12" height="8" rx="1" fill="#3a4050" />
-              {[-7, -4, -1, 2, 5].map((x, i) => <path key={i} d={`M${x} 6 v3`} stroke="#c9a24a" strokeWidth="1.2" />)}
-              {[-7, -4, -1, 2, 5].map((x, i) => <path key={`t${i}`} d={`M${x} -6 v-3`} stroke="#c9a24a" strokeWidth="1.2" />)}
+          {/* dalle avec un jeu qui tourne (perspective incurvee) */}
+          <path d="M-172 -50 Q0 -60 172 -50 L172 80 L-172 80 Z" fill={dead ? "#2a1418" : "#0e1a2a"} />
+          {dead ? (
+            <g fontFamily="ui-monospace,monospace">
+              <text x="0" y="-16" textAnchor="middle" fontSize="20" fontWeight="800" fill="#ff6a4a">⚠ ERREUR</text>
+              <text x="0" y="6"   textAnchor="middle" fontSize="12" fill="#ff9a8a">Périphérique inconnu</text>
+              <text x="0" y="24"  textAnchor="middle" fontSize="12" fill="#ff9a8a">Format illisible : disquette 3½"</text>
+              <rect x="-70" y="34" width="140" height="8" rx="1" fill="#5a2a2a" />
+              <text x="0" y="60" textAnchor="middle" fontSize="9" fill="#c88080">OK</text>
             </g>
-          )}
-
-          {/* PIÈCE : l'écran tactile, une vitre nue posée là */}
-          {!phone && (
-            <g transform="translate(84,-16)">
-              <rect x="-20" y="-30" width="40" height="58" rx="5" fill="#cfe4ff" opacity="0.5" stroke="#8fb8e0" strokeWidth="1.6" />
-              <path d="M-14 -22 q14 -6 28 4" stroke="#eaf4ff" strokeWidth="2" fill="none" opacity="0.8" />
-              {/* une empreinte de doigt qui pulse : « touche-moi » */}
-              <circle cx="2" cy="4" r="7" fill="none" stroke="#7fd8ff" strokeWidth="1.6" style={{ animation: "pulse 1.6s infinite" }} />
-              <circle cx="2" cy="4" r="2.4" fill="#7fd8ff" />
-            </g>
-          )}
-          {/* APPARAÎT : LE SMARTPHONE — tous les médias du voyage dedans */}
-          {phone && (
-            <g transform="translate(84,-18)" style={{ animation: "pulse 0.7s ease-out 2" }}>
-              <ellipse cx="0" cy="4" rx="80" ry="52" fill="url(#ch-glow)" />
-              <rect x="-22" y="-34" width="44" height="66" rx="6" fill="#1c2028" />
-              <rect x="-19" y="-30" width="38" height="58" rx="4" fill="#0e1420" />
-              {/* la grille d'icônes : TOUS les médias du jeu */}
-              {["📷", "📻", "📺", "🎞️", "📰", "✉️", "📚", "🎵", "☎️"].map((e, i) => (
-                <text key={i} x={-13 + (i % 3) * 12} y={-19 + Math.floor(i / 3) * 15} fontSize="9" textAnchor="middle">{e}</text>
+          ) : (
+            <g>
+              {/* HUD de jeu factice : mini-map + vie + kills */}
+              <rect x="-160" y="-42" width="60" height="34" fill="#050510" stroke="#4ae0ff" strokeWidth="0.8" />
+              <text x="-155" y="-32" fontFamily="ui-monospace,monospace" fontSize="6" fill="#4ae0ff">MAP</text>
+              {/* barre de vie */}
+              <rect x="-90" y="-40" width="80" height="8" fill="#3a0a10" />
+              <rect x="-90" y="-40" width="52" height="8" fill="#e83820">
+                <animate attributeName="width" values="52;44;52;38;52" dur="6s" repeatCount="indefinite" />
+              </rect>
+              <text x="-88" y="-33" fontFamily="ui-monospace,monospace" fontSize="6" fill="#ffe0d0">HP</text>
+              {/* silhouette de perso en pixels */}
+              <g transform="translate(0,20)">
+                <rect x="-6" y="-14" width="12" height="8" fill="#7fe0a8" />
+                <rect x="-8" y="-6"  width="16" height="14" fill="#4a90c8" />
+                <rect x="-6" y="8"   width="4" height="10" fill="#2a1810" />
+                <rect x="2"  y="8"   width="4" height="10" fill="#2a1810" />
+              </g>
+              {/* particules d'action */}
+              {[[-40,10],[52,-4],[70,30],[-90,20],[110,10]].map(([x,y],i) => (
+                <circle key={i} cx={x} cy={y} r={1.6} fill="#ffe08a">
+                  <animate attributeName="opacity" values="0.2;1;0.2" dur={`${1 + (i % 3) * 0.4}s`} repeatCount="indefinite" />
+                </circle>
               ))}
-              <rect x="-8" y="25" width="16" height="2" rx="1" fill="#5a6070" />
-              <circle cx="0" cy="-33" r="1.4" fill="#3a4050" />
-            </g>
-          )}
-
-          {/* PIÈCE : la tablette avec les photos d'enfance */}
-          {!compte && (
-            <g transform="translate(-124,-14)">
-              <rect x="-26" y="-20" width="52" height="40" rx="3" fill="#2a2e3a" />
-              <rect x="-23" y="-17" width="46" height="34" rx="2" fill="#dfe8f2" />
-              {/* une grille de petites photos */}
-              {[...Array(6)].map((_, i) => (
-                <rect key={i} x={-20 + (i % 3) * 15} y={-14 + Math.floor(i / 3) * 16} width="12" height="13" rx="1"
-                  fill={["#c8a882", "#8ab0c8", "#c8c07a", "#b08a9a", "#8ac8a0", "#c88a6a"][i]} />
-              ))}
-              <path d="M-14 -8 l3 -3 l4 4" stroke="#6a5a48" strokeWidth="1" fill="none" />
+              {/* kills / score */}
+              <text x="150" y="-32" textAnchor="end" fontFamily="ui-monospace,monospace" fontSize="8" fill="#7fe0a8">KILLS 12</text>
+              <text x="150" y="-20" textAnchor="end" fontFamily="ui-monospace,monospace" fontSize="8" fill="#ffd166">SCORE 8420</text>
             </g>
           )}
         </g>
 
-        {/* des chargeurs qui traînent au sol */}
-        <path d="M400 528 q26 -14 50 2 q22 14 46 -4" stroke="#e8e4da" strokeWidth="3" fill="none" opacity="0.65" />
-        <rect x="392" y="522" width="12" height="9" rx="2" fill="#e8e4da" opacity="0.75" />
-        <path d="M300 546 q30 -12 58 4" stroke="#2a2e3a" strokeWidth="3" fill="none" opacity="0.8" />
+        {/* CLAVIER mecanique RGB devant l'ecran */}
+        <g transform="translate(560,420)">
+          <rect x="-96" y="-6" width="192" height="14" rx="2" fill="#0a0a12" stroke="#2a2a3a" strokeWidth="1" />
+          {/* touches */}
+          {[...Array(14)].map((_, c) => [...Array(3)].map((_, r) => (
+            <rect key={`k-${c}-${r}`} x={-92 + c * 13} y={-4 + r * 4.5} width="10" height="3.4" rx="0.4" fill="#1a1a22" />
+          )))}
+          {/* eclairage RGB sous le clavier */}
+          {[...Array(14)].map((_, c) => (
+            <rect key={`led-${c}`} x={-92 + c * 13} y={8} width="10" height="1" fill="#4ae0ff">
+              <animate attributeName="fill" dur={`${3 + c * 0.15}s`} repeatCount="indefinite"
+                values="#4ae0ff;#ff4aa0;#a840f0;#7fe0a8;#ffd166;#4ae0ff" />
+            </rect>
+          ))}
+        </g>
 
-        {/* « ? » tant qu'il reste une invention */}
-        {!(usb && phone) && (
-          <g transform="translate(392,318)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
-            <path d="M0 0 q0 -24 24 -24 q24 0 24 20 q0 17 -20 22 l0 8" fill="none" stroke="#ffd166" strokeWidth="4" />
-            <circle cx="24" cy="37" r="3" fill="#ffd166" />
+        {/* SOURIS gamer RGB, tapis assorti */}
+        <g transform="translate(700,420)">
+          <rect x="-30" y="-2" width="80" height="10" rx="2" fill="#050510" stroke="#4ae0ff" strokeWidth="0.6" />
+          <path d="M0 -6 Q6 -14 14 -6 Q16 6 8 8 L-4 8 Q-8 4 -6 -2 Z" fill="#1a1a24" stroke="#3a3a52" strokeWidth="0.8" />
+          <path d="M2 -4 v6" stroke="#4ae0ff" strokeWidth="0.6" />
+          <circle cx="4" cy="6" r="1" fill="#ff4aa0">
+            <animate attributeName="fill" dur="4s" repeatCount="indefinite" values="#ff4aa0;#4ae0ff;#7fe0a8;#ff4aa0" />
+          </circle>
+        </g>
+
+        {/* SIEGE GAMER derriere le bureau + L'ADO assis */}
+        <g transform="translate(560,470)">
+          {/* base 5 branches + verin */}
+          <ellipse cx="0" cy="86" rx="52" ry="6" fill="#050510" />
+          <rect x="-3" y="30" width="6" height="60" fill="#2a2a3a" />
+          {/* accoudoirs */}
+          <rect x="-46" y="6" width="10" height="30" fill="#1a1a22" />
+          <rect x="36"  y="6" width="10" height="30" fill="#1a1a22" />
+          {/* dossier haut bucket-seat */}
+          <path d="M-42 30 Q-46 -60 0 -68 Q46 -60 42 30 Z" fill="#151520" stroke="#2a2a3a" strokeWidth="1.4" />
+          {/* liseret RGB sur les cotes du dossier */}
+          <path d="M-40 -50 Q-42 -6 -40 26" stroke="#ff4aa0" strokeWidth="1.6" fill="none">
+            <animate attributeName="stroke" dur="7s" repeatCount="indefinite" values="#ff4aa0;#4ae0ff;#a840f0;#ff4aa0" />
+          </path>
+          <path d="M40 -50 Q42 -6 40 26" stroke="#4ae0ff" strokeWidth="1.6" fill="none">
+            <animate attributeName="stroke" dur="7s" repeatCount="indefinite" values="#4ae0ff;#ff4aa0;#7fe0a8;#4ae0ff" />
+          </path>
+          {/* assise */}
+          <path d="M-40 30 L40 30 L34 46 L-34 46 Z" fill="#1a1a22" />
+
+          {/* L'ADO assis */}
+          <g transform="translate(0,-4)">
+            {/* torse — sweat colore avec LED reflet */}
+            <path d="M-20 24 Q-22 -20 0 -26 Q22 -20 20 24 Z" fill="#2a2038" />
+            <path d="M-20 24 Q-22 -20 0 -26 Q22 -20 20 24 Z" fill="#050510" opacity="0.24" filter="url(#ch-grain)" />
+            {/* capuche */}
+            <path d="M-18 -14 Q-14 -30 0 -30 Q14 -30 18 -14" stroke="#1a1420" strokeWidth="4" fill="none" />
+            {/* tête */}
+            <circle cx="0" cy="-38" r="11" fill="#e0b090" />
+            {/* casque gamer RGB */}
+            <path d="M-11 -40 a11 11 0 0 1 22 0" stroke="#3a3a52" strokeWidth="3" fill="none" />
+            <ellipse cx="-11" cy="-38" rx="3.4" ry="4.4" fill="#151520" stroke="#ff4aa0" strokeWidth="0.8">
+              <animate attributeName="stroke" dur="5s" repeatCount="indefinite" values="#ff4aa0;#4ae0ff;#7fe0a8;#ff4aa0" />
+            </ellipse>
+            <ellipse cx="11" cy="-38"  rx="3.4" ry="4.4" fill="#151520" stroke="#4ae0ff" strokeWidth="0.8">
+              <animate attributeName="stroke" dur="5s" repeatCount="indefinite" values="#4ae0ff;#ff4aa0;#a840f0;#4ae0ff" />
+            </ellipse>
+            {/* micro rabattable */}
+            <path d="M-11 -35 q-8 4 -8 12" stroke="#3a3a52" strokeWidth="1.4" fill="none" />
+            <circle cx="-19" cy="-23" r="1.6" fill="#0a0a12" />
+            {/* petits yeux visibles */}
+            <circle cx="-3" cy="-38" r="1.2" fill="#0a0a12" />
+            <circle cx="3"  cy="-38" r="1.2" fill="#0a0a12" />
+          </g>
+        </g>
+
+        {/* --- PIECES A RAMASSER SUR LE BUREAU (bien devant l'ecran) --- */}
+
+        {/* JEAN roule au sol devant le siege : contient la POCHE */}
+        {!usb && (
+          <g transform="translate(360,510)">
+            <path d="M-32 -6 q-6 -18 8 -22 q22 -6 40 4 q10 4 4 22 Z" fill="#3a5a8a" />
+            <path d="M-32 -6 q-6 -18 8 -22 q22 -6 40 4 q10 4 4 22 Z" fill="#101828" opacity="0.22" filter="url(#ch-grain)" />
+            {/* la poche mise en evidence */}
+            <path d="M6 -18 q12 -3 18 2 l-3 12 q-9 3 -16 -1 Z" fill="none" stroke="#7fa8d8" strokeWidth="1.8" />
+            <path d="M-8 -12 q10 -4 18 -2" stroke="#7fa8d8" strokeWidth="1.2" fill="none" />
+          </g>
+        )}
+        {usb && (
+          <g transform="translate(360,510)" style={{ animation: "pulse 0.7s ease-out 2" }}>
+            <ellipse cx="0" cy="4" rx="46" ry="16" fill="url(#ch-glow)" />
+            <rect x="-16" y="-5" width="26" height="11" rx="2" fill="#2a2e3a" />
+            <rect x="10" y="-3" width="11" height="7" rx="1" fill="#b8bcc4" />
+            <path d="M12 -1 h7 M12 2 h7" stroke="#6a6e76" strokeWidth="0.8" />
+            <circle cx="-11" cy="0" r="2" fill="#5eff9e" style={{ animation: "pulse 1.4s infinite" }} />
           </g>
         )}
 
-        {/* L'ADO, assis sur le bord du lit, découragé devant le bazar */}
-        <g transform="translate(420,466)">
-          <path d="M-14 8 Q-18 -16 0 -21 Q18 -16 14 8 L12 42 L-12 42 Z" fill="#3a6ac8" />
-          <path d="M-14 8 Q-18 -16 0 -21 Q18 -16 14 8 L12 42 L-12 42 Z" fill="#101828" opacity="0.22" filter="url(#ch-grain)" />
-          <circle cx="0" cy="-31" r="10" fill="#e0b090" />
-          <path d="M-10 -35 q2 -12 10 -11 q11 1 10 11 q-4 -6 -10 -6 q-7 0 -10 6 Z" fill="#2c2018" />
-          {/* écouteurs autour du cou */}
-          <path d="M-9 -24 a9 9 0 0 0 18 0" stroke="#e8e4da" strokeWidth="2" fill="none" />
-          {/* le bras qui montre le bureau, dépité */}
-          <path d="M13 -6 q22 2 30 14" stroke="#e0b090" strokeWidth="5" fill="none" strokeLinecap="round" />
-        </g>
+        {/* MEMOIRE FLASH (puce nue) posee sur le bureau, cote gauche */}
+        {!usb && (
+          <g transform="translate(320,424)">
+            <rect x="-9" y="-6" width="18" height="12" rx="1.5" fill="#1c2028" />
+            <rect x="-6" y="-4" width="12" height="8"  rx="1" fill="#3a4050" />
+            {[-7,-4,-1,2,5].map((x,i) => <path key={i} d={`M${x} 6 v3`}  stroke="#c9a24a" strokeWidth="1.2" />)}
+            {[-7,-4,-1,2,5].map((x,i) => <path key={`t${i}`} d={`M${x} -6 v-3`} stroke="#c9a24a" strokeWidth="1.2" />)}
+          </g>
+        )}
 
-        {/* épave de MARTINE, entre deux chargeurs (x ≤ 860 : au-delà, c'est rogné) */}
-        <g transform="translate(830,516) rotate(-7)">
+        {/* ECRAN TACTILE nu (vitre) : sur le bureau cote gauche */}
+        {!phone && (
+          <g transform="translate(410,410)">
+            <rect x="-18" y="-24" width="36" height="52" rx="4" fill="#cfe4ff" opacity="0.5" stroke="#8fb8e0" strokeWidth="1.4" />
+            <path d="M-12 -18 q14 -6 24 4" stroke="#eaf4ff" strokeWidth="2" fill="none" opacity="0.8" />
+            <circle cx="0" cy="4" r="7" fill="none" stroke="#7fd8ff" strokeWidth="1.6" style={{ animation: "pulse 1.6s infinite" }} />
+            <circle cx="0" cy="4" r="2.4" fill="#7fd8ff" />
+          </g>
+        )}
+        {phone && (
+          <g transform="translate(410,410)" style={{ animation: "pulse 0.7s ease-out 2" }}>
+            <ellipse cx="0" cy="4" rx="80" ry="52" fill="url(#ch-glow)" />
+            <rect x="-22" y="-30" width="44" height="60" rx="6" fill="#1c2028" />
+            <rect x="-19" y="-26" width="38" height="52" rx="4" fill="#0e1420" />
+            {["📷", "📻", "📺", "🎞️", "📰", "✉️", "📚", "🎵", "☎️"].map((e, i) => (
+              <text key={i} x={-13 + (i % 3) * 12} y={-15 + Math.floor(i / 3) * 15} fontSize="9" textAnchor="middle">{e}</text>
+            ))}
+            <rect x="-8" y="24" width="16" height="2" rx="1" fill="#5a6070" />
+          </g>
+        )}
+
+        {/* TABLETTE posee sur le bureau, cote droit : contient les photos */}
+        {!compte && (
+          <g transform="translate(760,414)">
+            <rect x="-28" y="-20" width="56" height="42" rx="3" fill="#2a2e3a" />
+            <rect x="-25" y="-17" width="50" height="36" rx="2" fill="#dfe8f2" />
+            {[...Array(6)].map((_, i) => (
+              <rect key={i} x={-22 + (i % 3) * 16} y={-14 + Math.floor(i / 3) * 17} width="14" height="15" rx="1"
+                fill={["#c8a882", "#8ab0c8", "#c8c07a", "#b08a9a", "#8ac8a0", "#c88a6a"][i]} />
+            ))}
+          </g>
+        )}
+
+        {/* epave de MARTINE au sol devant la tour */}
+        <g transform="translate(870,516) rotate(-7)">
           <ellipse cx="0" cy="12" rx="26" ry="6" fill="#0a0603" opacity="0.6" />
           <path d="M0 -20 Q18 -18 20 -4 Q22 8 11 11 L-11 11 Q-22 8 -20 -4 Q-18 -18 0 -20 Z" fill="#8a6240" />
           <circle cx="-1" cy="-4" r="5.5" fill="#cfeaff" stroke="#5c3a22" strokeWidth="1.4" />
@@ -274,28 +452,16 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
           <path d="M8 -20 q6 -8 13 -6" stroke="#8a94a8" strokeWidth="2.3" fill="none" strokeLinecap="round" />
         </g>
 
-        {/* ANACHRONISME DU FUTUR : NEURO-LIEN™ (2141) posé sur le bureau.
-            Un disque bio-imprimé qui projette un hologramme neuronal. */}
+        {/* ANACHRONISME DU FUTUR : le NEURO-LIEN sur le tapis */}
         {!made.includes("neurolien") && mode !== "jeu2" && (
-          <g transform="translate(140,506)">
-            {/* halo violet-cyan pulsé */}
+          <g transform="translate(120,510)">
             <circle r={38} fill="#a840c0" opacity="0.25" style={{ animation: "pulse 2s infinite" }} />
             <circle r={24} fill="#7fe0ff" opacity="0.35" style={{ animation: "pulse 2s infinite" }} />
-            {/* disque bio-imprimé translucide (plus gros) */}
             <ellipse cx={0} cy={2} rx={20} ry={6} fill="#c8a8e0" stroke="#7fe0ff" strokeWidth="1.5" opacity="0.9" />
             <ellipse cx={0} cy={0} rx={16} ry={5} fill="#e0c8f0" opacity="0.85" />
-            {/* motif neuronal (nœuds reliés) */}
-            {[[-11, 0], [-4, -2], [4, 0], [11, -2]].map(([nx, ny], i) => (
-              <circle key={i} cx={nx} cy={ny} r={1.6} fill="#3a1a58" />
-            ))}
+            {[[-11, 0], [-4, -2], [4, 0], [11, -2]].map(([nx, ny], i) => <circle key={i} cx={nx} cy={ny} r={1.6} fill="#3a1a58" />)}
             <path d="M-11 0 L-4 -2 L4 0 L11 -2" stroke="#5a2088" strokeWidth="1" fill="none" />
-            {/* logo « NL™ » */}
             <text x={0} y={4} textAnchor="middle" fontSize="4" fontFamily="ui-monospace,monospace" fontWeight="800" fill="#3a1a58">NL™</text>
-            {/* hologramme triangulaire qui monte au-dessus */}
-            <g transform="translate(0,-14)">
-              <path d="M-6 0 L6 0 L0 -10 Z" fill="#7fe0ff" opacity="0.6" style={{ animation: "float 2s ease-in-out infinite" }} />
-              <path d="M-3 -4 h6 M-2 -6 h4" stroke="#7fe0ff" strokeWidth="0.8" opacity="0.7" />
-            </g>
           </g>
         )}
       </PLayer>
@@ -303,29 +469,37 @@ export default function SceneChambre({ collect, action, reveal, made = [], mode 
       <rect width="1000" height="560" fill="#0c0e1a" opacity="0.06" style={{ pointerEvents: "none" }} />
 
       {/* ═══ zones cliquables ═══ */}
-      <Hotspot cx={420} cy={444} r={50} label="toi" reveal={reveal} onClick={() => action("ado")} />
+      <Hotspot cx={560} cy={430} r={54} label="toi (gaming)" reveal={reveal} onClick={() => action("ado")} />
+
+      {/* les OBJETS a assembler pour la cle USB */}
       {!usb && (
         <>
-          <Hotspot cx={214} cy={452} r={38} label="poche" item="poche" reveal={reveal} onClick={() => collect("poche")} />
-          <Hotspot cx={644} cy={444} r={26} label="mémoire flash" item="memoire_flash" reveal={reveal} onClick={() => collect("memoire_flash")} />
+          <Hotspot cx={360} cy={510} r={36} label="jean (une poche)" item="poche" reveal={reveal} onClick={() => collect("poche")} />
+          <Hotspot cx={320} cy={424} r={22} label="mémoire flash" item="memoire_flash" reveal={reveal} onClick={() => collect("memoire_flash")} />
         </>
       )}
+
+      {/* les OBJETS a assembler pour le smartphone */}
       {!phone && (
         <>
-          <Hotspot cx={704} cy={436} r={34} label="écran tactile" item="ecran_tactile" reveal={reveal} onClick={() => collect("ecran_tactile")} />
-          <Hotspot cx={790} cy={142} r={44} label="réseau mobile" item="reseau_mobile" reveal={reveal} onClick={() => collect("reseau_mobile")} />
+          <Hotspot cx={410} cy={410} r={30} label="écran tactile" item="ecran_tactile" reveal={reveal} onClick={() => collect("ecran_tactile")} />
+          <Hotspot cx={850} cy={142} r={44} label="antenne 5G — réseau mobile" item="reseau_mobile" reveal={reveal} onClick={() => collect("reseau_mobile")} />
         </>
       )}
-      {/* le PC : sert à tenter de lire la disquette */}
+
+      {/* le PC gamer : cible pour tenter de lire la disquette */}
       {!dead && (
-        <Hotspot cx={562} cy={412} r={48} label="PC moderne" item="pc_moderne" reveal={reveal} onClick={() => collect("pc_moderne")} />
+        <Hotspot cx={560} cy={340} r={90} label="PC gamer — glisse la disquette dessus" item="pc_moderne" reveal={reveal} onClick={() => collect("pc_moderne")} />
       )}
+
+      {/* la tablette avec les photos */}
       {!compte && (
-        <Hotspot cx={496} cy={438} r={32} label="photos d'enfance" item="photos_enfance" reveal={reveal} onClick={() => collect("photos_enfance")} />
+        <Hotspot cx={760} cy={414} r={28} label="tablette (photos d'enfance)" item="photos_enfance" reveal={reveal} onClick={() => collect("photos_enfance")} />
       )}
-      <Hotspot cx={830} cy={512} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
+
+      <Hotspot cx={870} cy={512} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
       {mode !== "jeu2" && (
-        <Hotspot cx={140} cy={506} r={44} label="… quelque chose de très bizarre" item="neurolien" reveal={reveal} onClick={() => collect("neurolien")} />
+        <Hotspot cx={120} cy={506} r={44} label="… quelque chose de très bizarre" item="neurolien" reveal={reveal} onClick={() => collect("neurolien")} />
       )}
     </svg>
   );
