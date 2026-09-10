@@ -35,8 +35,9 @@ export function TemporalCompass({ onClose, onLock }) {
   const targetGroupRef = useRef(null);
   const minimapPlayerRef = useRef(null);
   const lockBarRef = useRef(null);
-  const lockTextRef = useRef(null);
+  const lockGroupRef = useRef(null);
   const ringsRef = useRef([]);
+  const warpRef = useRef((x, y) => [x, y]);
   const [done, setDone] = useState(false);
 
   const { target, whirls } = useMemo(() => {
@@ -151,9 +152,11 @@ export function TemporalCompass({ onClose, onLock }) {
         }
       }
 
-      /* projection iso pour camera + joueur */
-      const psx = (p.x - p.y) * ISO_X;
-      const psy = (p.x + p.y) * ISO_Y;
+      /* projection iso pour camera + joueur, avec la meme deformation
+         que la grille pour rester "sur les lignes". */
+      const [wx, wy] = warpRef.current(p.x, p.y);
+      const psx = (wx - wy) * ISO_X;
+      const psy = (wx + wy) * ISO_Y;
       if (cameraRef.current) cameraRef.current.setAttribute("transform", `translate(${VW / 2 - psx} ${VH / 2 - psy})`);
       if (playerRef.current) playerRef.current.setAttribute("transform", `translate(${psx} ${psy})`);
       if (minimapPlayerRef.current) {
@@ -184,10 +187,8 @@ export function TemporalCompass({ onClose, onLock }) {
       /* verrouillage */
       if (distT < LOCK_RADIUS) {
         lock = Math.min(1, lock + dt / LOCK_MS);
-        if (lockBarRef.current) {
-          lockBarRef.current.setAttribute("width", 312 * lock);
-          lockBarRef.current.parentNode.setAttribute("visibility", "visible");
-        }
+        if (lockBarRef.current) lockBarRef.current.setAttribute("width", 312 * lock);
+        if (lockGroupRef.current) lockGroupRef.current.setAttribute("opacity", "1");
         if (lock >= 1 && !isDone) {
           isDone = true;
           setDone(true);
@@ -195,10 +196,8 @@ export function TemporalCompass({ onClose, onLock }) {
         }
       } else {
         lock = 0;
-        if (lockBarRef.current) {
-          lockBarRef.current.setAttribute("width", 0);
-          lockBarRef.current.parentNode.setAttribute("visibility", "hidden");
-        }
+        if (lockBarRef.current) lockBarRef.current.setAttribute("width", 0);
+        if (lockGroupRef.current) lockGroupRef.current.setAttribute("opacity", "0");
       }
       raf = requestAnimationFrame(step);
     };
@@ -206,28 +205,62 @@ export function TemporalCompass({ onClose, onLock }) {
     return () => cancelAnimationFrame(raf);
   }, [whirls, target, onClose, onLock]);
 
-  /* Monde statique memoise : grille + tourbillons + noeud, en iso.
-     Le losange iso s'obtient en projetant les 4 coins du carre monde. */
+  /* Deformation "gravitationnelle" : chaque tourbillon attire les points
+     alentours vers son centre, avec un rayon d'influence 2.2*w.r et une
+     force plafonnee pour eviter les singularites. */
+  const warp = useMemo(() => (x, y) => {
+    let dx = 0, dy = 0;
+    for (const w of whirls) {
+      const rx = x - w.x, ry = y - w.y;
+      const d2 = rx * rx + ry * ry;
+      const d = Math.sqrt(d2) || 1;
+      const R = w.r * 2.4;
+      if (d > R) continue;
+      /* Chute progressive au bord + saturation au coeur. */
+      const t = 1 - d / R;                       // 0 (bord) -> 1 (centre)
+      const pull = Math.min(0.75, t * t * 1.6) * w.r * 0.55;
+      dx -= (rx / d) * pull;
+      dy -= (ry / d) * pull;
+    }
+    return [x + dx, y + dy];
+  }, [whirls]);
+  warpRef.current = warp;
+
+  /* Monde statique memoise : grille (deformee) + tourbillons + noeud. */
   const worldStatic = useMemo(() => {
     const c1 = iso(-WORLD, -WORLD), c2 = iso(WORLD, -WORLD), c3 = iso(WORLD, WORLD), c4 = iso(-WORLD, WORLD);
     const diamond = `M${c1.sx} ${c1.sy} L${c2.sx} ${c2.sy} L${c3.sx} ${c3.sy} L${c4.sx} ${c4.sy} Z`;
-    const N = 20;
+
+    /* Trace une polyligne monde -> iso, avec deformation, sur N+1 points. */
+    const N = 20;             // subdivisions le long d'une ligne
+    const SUB = 4;            // sous-echantillons par cellule pour lisser
+    const seg = (a, b) => {
+      const pts = [];
+      const steps = N * SUB;
+      for (let i = 0; i <= steps; i++) {
+        const u = i / steps;
+        const wx = a[0] + (b[0] - a[0]) * u;
+        const wy = a[1] + (b[1] - a[1]) * u;
+        const [xw, yw] = warp(wx, wy);
+        const p = iso(xw, yw);
+        pts.push(`${p.sx.toFixed(1)},${p.sy.toFixed(1)}`);
+      }
+      return pts.join(" ");
+    };
     const grid = [];
     for (let i = 0; i <= N; i++) {
       const t = -WORLD + (i * WORLD * 2) / N;
-      const a = iso(t, -WORLD), b = iso(t, WORLD);
-      grid.push(<line key={`v${i}`} x1={a.sx} y1={a.sy} x2={b.sx} y2={b.sy} />);
-      const c = iso(-WORLD, t), d = iso(WORLD, t);
-      grid.push(<line key={`h${i}`} x1={c.sx} y1={c.sy} x2={d.sx} y2={d.sy} />);
+      grid.push(<polyline key={`v${i}`} points={seg([t, -WORLD], [t, WORLD])} />);
+      grid.push(<polyline key={`h${i}`} points={seg([-WORLD, t], [WORLD, t])} />);
     }
-    const ax1 = iso(-WORLD, 0), ax2 = iso(WORLD, 0);
-    const ay1 = iso(0, -WORLD), ay2 = iso(0, WORLD);
+    const axV = <polyline points={seg([0, -WORLD], [0, WORLD])} stroke="#7fd8ff" strokeWidth="1.6" opacity="0.55" fill="none" />;
+    const axH = <polyline points={seg([-WORLD, 0], [WORLD, 0])} stroke="#7fd8ff" strokeWidth="1.6" opacity="0.55" fill="none" />;
+
     return (
       <>
         <path d={diamond} fill="#1a2a48" opacity="0.55" />
-        <g stroke="#3f5f88" strokeWidth="1" fill="none" opacity="0.55">{grid}</g>
-        <line x1={ax1.sx} y1={ax1.sy} x2={ax2.sx} y2={ax2.sy} stroke="#7fd8ff" strokeWidth="1.4" opacity="0.4" />
-        <line x1={ay1.sx} y1={ay1.sy} x2={ay2.sx} y2={ay2.sy} stroke="#7fd8ff" strokeWidth="1.4" opacity="0.4" />
+        <g stroke="#3f5f88" strokeWidth="1" fill="none" opacity="0.6">{grid}</g>
+        {axH}{axV}
         <path d={diamond} fill="none" stroke="#7fb0e0" strokeWidth="3" strokeDasharray="12 8" opacity="0.9" />
 
         {whirls.map((w, i) => {
@@ -246,7 +279,8 @@ export function TemporalCompass({ onClose, onLock }) {
         })}
 
         {(() => {
-          const c = iso(target.x, target.y);
+          const [tx, ty] = warp(target.x, target.y);
+          const c = iso(tx, ty);
           return (
             <g ref={targetGroupRef} transform={`translate(${c.sx} ${c.sy})`}>
               {[60, 42, 26].map((r, i) => (
@@ -261,7 +295,7 @@ export function TemporalCompass({ onClose, onLock }) {
       </>
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [whirls, target]);
+  }, [whirls, target, warp]);
 
   return (
     <div onClick={onClose}
@@ -297,10 +331,10 @@ export function TemporalCompass({ onClose, onLock }) {
           </g>
 
           {/* barre de verrouillage */}
-          <g transform={`translate(${VW / 2} 50)`} visibility="hidden">
+          <g ref={lockGroupRef} transform={`translate(${VW / 2} 50)`} opacity="0">
             <rect x="-160" y="-12" width="320" height="24" rx="4" fill="#0e1a30" stroke="#7fffb0" strokeWidth="1.4" />
             <rect ref={lockBarRef} x="-156" y="-9" width="0" height="18" rx="3" fill="#7fffb0" />
-            <text ref={lockTextRef} y="-20" textAnchor="middle" fontSize="12" fill="#7fffb0" letterSpacing="3">VERROUILLAGE…</text>
+            <text y="-20" textAnchor="middle" fontSize="14" fontWeight="700" fill="#7fffb0" letterSpacing="3">VERROUILLAGE…</text>
           </g>
           {done && (
             <g transform={`translate(${VW / 2} 80)`}>
