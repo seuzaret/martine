@@ -47,6 +47,28 @@ const eraIndexForX = (x) => {
   return Math.max(0, Math.min(ERAS.length - 1, Math.floor(t * ERAS.length)));
 };
 
+/* Reperes de dates dissemines sur le plateau. Le x rappelle l'epoque
+   (bande), le y est arbitraire pour ne pas empiler les etiquettes.
+   `tick` : petit trait vertical si vrai. */
+const DATE_MARKERS = [
+  { x: -WORLD * 0.95, y: -WORLD * 0.55, text: "-30 000", tick: true  },
+  { x: -WORLD * 0.80, y:  WORLD * 0.25, text: "-8 000",  tick: false },
+  { x: -WORLD * 0.60, y: -WORLD * 0.15, text: "-800",    tick: true  },
+  { x: -WORLD * 0.50, y:  WORLD * 0.55, text: "100",     tick: false },
+  { x: -WORLD * 0.32, y: -WORLD * 0.42, text: "800",     tick: true  },
+  { x: -WORLD * 0.20, y:  WORLD * 0.10, text: "1200",    tick: false },
+  { x: -WORLD * 0.05, y: -WORLD * 0.65, text: "1500",    tick: true  },
+  { x:  WORLD * 0.08, y:  WORLD * 0.35, text: "1600",    tick: false },
+  { x:  WORLD * 0.18, y: -WORLD * 0.05, text: "1789",    tick: true  },
+  { x:  WORLD * 0.30, y:  WORLD * 0.60, text: "1830",    tick: false },
+  { x:  WORLD * 0.42, y: -WORLD * 0.30, text: "1889",    tick: true  },
+  { x:  WORLD * 0.55, y:  WORLD * 0.05, text: "1918",    tick: false },
+  { x:  WORLD * 0.65, y: -WORLD * 0.55, text: "1944",    tick: true  },
+  { x:  WORLD * 0.78, y:  WORLD * 0.30, text: "1969",    tick: true  },
+  { x:  WORLD * 0.86, y: -WORLD * 0.10, text: "1985",    tick: false },
+  { x:  WORLD * 0.94, y:  WORLD * 0.50, text: "2024",    tick: true  },
+];
+
 export function TemporalCompass({ onClose, onLock, nextLabel }) {
   const posRef = useRef({ x: 0, y: 0 });
   const heldRef = useRef({ up: false, down: false, left: false, right: false });
@@ -413,6 +435,22 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         <g fill="none">{grid}</g>
         <path d={diamond} fill="none" stroke="#7fb0e0" strokeWidth="3" strokeDasharray="12 8" opacity="0.9" />
 
+        {/* Reperes de dates en blanc, disperses sur le plateau. */}
+        {DATE_MARKERS.map((m, i) => {
+          const [wx, wy] = warp(m.x, m.y);
+          const p = iso(wx, wy);
+          return (
+            <g key={`d${i}`} transform={`translate(${p.sx} ${p.sy})`} opacity="0.85">
+              {m.tick && <line x1="0" y1="-9" x2="0" y2="0" stroke="#f5faff" strokeWidth="1.2" />}
+              <text x="4" y={m.tick ? -3 : 2} fontSize="12" fontWeight="600"
+                fill="#f5faff" letterSpacing="1"
+                style={{ paintOrder: "stroke", stroke: "#0a1224", strokeWidth: 3, strokeLinejoin: "round" }}>
+                {m.text}
+              </text>
+            </g>
+          );
+        })}
+
         {whirls.map((w, i) => {
           const c = iso(w.x, w.y);
           return (
@@ -527,15 +565,6 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
             ↑ ↓ ← →  ou  W A S D   ·   deplacement de case en case le long des lignes   ·   ESC pour quitter
           </text>
 
-          {/* Legende des epoques : petit ruban en bas a gauche */}
-          <g transform={`translate(24 ${VH - 60})`}>
-            {ERAS.map((e, i) => (
-              <g key={e.key} transform={`translate(${i * 96} 0)`}>
-                <rect x="0" y="-10" width="88" height="14" rx="3" fill={e.color} opacity="0.7" />
-                <text x="6" y="1" fontSize="10" fontWeight="700" fill="#0e1a30">{e.name}</text>
-              </g>
-            ))}
-          </g>
 
           {/* mini-map */}
           <g transform={`translate(${VW - 170} ${VH - 170})`}>
