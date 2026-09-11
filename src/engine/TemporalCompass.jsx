@@ -607,13 +607,24 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
             </g>
           </g>
 
-          {/* HUD boussole */}
+          {/* HUD boussole : 5 arcs concentriques orientes vers la cible */}
           <g transform={`translate(${VW - 140} 140)`}>
             <circle r="96" fill="#0e1a30" stroke="#7fb0e0" strokeWidth="1.6" opacity="0.9" />
-            {[0, 1, 2, 3, 4].map((k) => (
-              <circle key={k} ref={(el) => (ringsRef.current[k] = el)} r={16 + (k + 1) * 12} fill="none" stroke="#233855" strokeWidth="1.2" opacity="0.45" />
-            ))}
             <g ref={needleRef}>
+              {/* Arcs de +/-40 deg centres sur la direction de la cible.
+                  chord = 2 * r * sin(40 deg) ; on trace un arc SVG. */}
+              {[0, 1, 2, 3, 4].map((k) => {
+                const r = 16 + (k + 1) * 12;
+                const a = (40 * Math.PI) / 180;
+                const x1 = r * Math.cos(-a), y1 = r * Math.sin(-a);
+                const x2 = r * Math.cos( a), y2 = r * Math.sin( a);
+                return (
+                  <path key={k} ref={(el) => (ringsRef.current[k] = el)}
+                    d={`M ${x1.toFixed(1)} ${y1.toFixed(1)} A ${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}`}
+                    fill="none" stroke="#233855" strokeWidth="1.2" opacity="0.45" strokeLinecap="round" />
+                );
+              })}
+              {/* fleche + rivet au centre */}
               <path d="M0 0 L76 0 L68 -5 M76 0 L68 5" stroke="#ffe08a" strokeWidth="3" fill="none" strokeLinecap="round" />
               <circle r="5" fill="#ffe08a" />
             </g>
