@@ -28,7 +28,26 @@ const iso = (x, y) => ({ sx: (x - y) * ISO_X, sy: (x + y) * ISO_Y });
 
 const rand = (min, max) => min + Math.random() * (max - min);
 
-export function TemporalCompass({ onClose, onLock }) {
+/* Epoques du jeu, ordonnees du passe (Ouest) vers le futur (Est).
+   Les couleurs sont tenues (chaudes -> froides -> menthe) pour lire
+   d'un coup d'oeil la region du plateau. */
+const ERAS = [
+  { key: "prehistoire", name: "Préhistoire",   color: "#c07040" },
+  { key: "antiquite",   name: "Antiquité",     color: "#d0a24a" },
+  { key: "moyen-age",   name: "Moyen Âge",     color: "#8b6bd0" },
+  { key: "renaissance", name: "Renaissance",   color: "#c85fa0" },
+  { key: "moderne",     name: "Époque moderne",color: "#5a9be0" },
+  { key: "xixe",        name: "XIXᵉ siècle",   color: "#4ac0b0" },
+  { key: "xxe-guerres", name: "Grandes Guerres",color:"#7a8a6a" },
+  { key: "xxe-medias",  name: "Médias de masse",color:"#e0a058" },
+  { key: "xxie",        name: "XXIᵉ siècle",   color: "#7fffb0" },
+];
+const eraIndexForX = (x) => {
+  const t = (x + WORLD) / (WORLD * 2);        // 0 -> 1
+  return Math.max(0, Math.min(ERAS.length - 1, Math.floor(t * ERAS.length)));
+};
+
+export function TemporalCompass({ onClose, onLock, nextLabel }) {
   const posRef = useRef({ x: 0, y: 0 });
   const heldRef = useRef({ up: false, down: false, left: false, right: false });
   const cameraRef = useRef(null);
@@ -52,8 +71,9 @@ export function TemporalCompass({ onClose, onLock }) {
     const dist = rand(1400, 2100);
     let tx = snap(Math.cos(angle) * dist), ty = snap(Math.sin(angle) * dist);
     if (tx === 0 && ty === 0) tx = STEP * 6;
+    const era = ERAS[eraIndexForX(tx)];
     return {
-      target: { x: tx, y: ty },
+      target: { x: tx, y: ty, era, label: nextLabel || era.name },
       whirls: Array.from({ length: NUM_WHIRLS }, () => ({
         x: rand(-WORLD + 300, WORLD - 300),
         y: rand(-WORLD + 300, WORLD - 300),
@@ -61,7 +81,7 @@ export function TemporalCompass({ onClose, onLock }) {
         dir: Math.random() < 0.5 ? 1 : -1,
       })),
     };
-  }, []);
+  }, [nextLabel]);
 
   /* clavier */
   useEffect(() => {
@@ -342,36 +362,55 @@ export function TemporalCompass({ onClose, onLock }) {
     const c1 = iso(-WORLD, -WORLD), c2 = iso(WORLD, -WORLD), c3 = iso(WORLD, WORLD), c4 = iso(-WORLD, WORLD);
     const diamond = `M${c1.sx} ${c1.sy} L${c2.sx} ${c2.sy} L${c3.sx} ${c3.sy} L${c4.sx} ${c4.sy} Z`;
 
-    /* Trace une polyligne monde -> iso, avec deformation, sur N+1 points. */
+    /* Trace une polyligne monde -> iso avec deformation, en la coupant
+       chaque fois que l'epoque change (couleur d'epoque par tronçon). */
     const N = 20;             // subdivisions le long d'une ligne
-    const SUB = 4;            // sous-echantillons par cellule pour lisser
-    const seg = (a, b) => {
-      const pts = [];
+    const SUB = 4;            // sous-echantillons par cellule
+    const projectSample = (wx, wy) => {
+      const [xw, yw] = warp(wx, wy);
+      return iso(xw, yw);
+    };
+    const buildColoredLine = (ax, ay, bx, by, keyBase) => {
+      const out = [];
       const steps = N * SUB;
+      let curEra = eraIndexForX(ax);
+      let curPts = [];
+      const flush = (i) => {
+        if (curPts.length >= 2) {
+          out.push(
+            <polyline key={`${keyBase}_${i}`} points={curPts.join(" ")}
+              fill="none" stroke={ERAS[curEra].color} strokeWidth="1.3" opacity="0.55" />
+          );
+        }
+        curPts = [];
+      };
       for (let i = 0; i <= steps; i++) {
         const u = i / steps;
-        const wx = a[0] + (b[0] - a[0]) * u;
-        const wy = a[1] + (b[1] - a[1]) * u;
-        const [xw, yw] = warp(wx, wy);
-        const p = iso(xw, yw);
-        pts.push(`${p.sx.toFixed(1)},${p.sy.toFixed(1)}`);
+        const wx = ax + (bx - ax) * u;
+        const wy = ay + (by - ay) * u;
+        const e = eraIndexForX(wx);
+        const p = projectSample(wx, wy);
+        if (e !== curEra && curPts.length > 0) {
+          curPts.push(`${p.sx.toFixed(1)},${p.sy.toFixed(1)}`); // finit le troncon
+          flush(i);
+          curEra = e;
+        }
+        curPts.push(`${p.sx.toFixed(1)},${p.sy.toFixed(1)}`);
       }
-      return pts.join(" ");
+      flush("end");
+      return out;
     };
     const grid = [];
     for (let i = 0; i <= N; i++) {
       const t = -WORLD + (i * WORLD * 2) / N;
-      grid.push(<polyline key={`v${i}`} points={seg([t, -WORLD], [t, WORLD])} />);
-      grid.push(<polyline key={`h${i}`} points={seg([-WORLD, t], [WORLD, t])} />);
+      grid.push(...buildColoredLine(t, -WORLD, t, WORLD, `v${i}`));
+      grid.push(...buildColoredLine(-WORLD, t, WORLD, t, `h${i}`));
     }
-    const axV = <polyline points={seg([0, -WORLD], [0, WORLD])} stroke="#7fd8ff" strokeWidth="1.6" opacity="0.55" fill="none" />;
-    const axH = <polyline points={seg([-WORLD, 0], [WORLD, 0])} stroke="#7fd8ff" strokeWidth="1.6" opacity="0.55" fill="none" />;
 
     return (
       <>
         <path d={diamond} fill="#1a2a48" opacity="0.55" />
-        <g stroke="#3f5f88" strokeWidth="1" fill="none" opacity="0.6">{grid}</g>
-        {axH}{axV}
+        <g fill="none">{grid}</g>
         <path d={diamond} fill="none" stroke="#7fb0e0" strokeWidth="3" strokeDasharray="12 8" opacity="0.9" />
 
         {whirls.map((w, i) => {
@@ -392,14 +431,24 @@ export function TemporalCompass({ onClose, onLock }) {
         {(() => {
           const [tx, ty] = warp(target.x, target.y);
           const c = iso(tx, ty);
+          const col = target.era.color;
           return (
             <g ref={targetGroupRef} transform={`translate(${c.sx} ${c.sy})`}>
               {[60, 42, 26].map((r, i) => (
-                <ellipse key={i} rx={r * ISO_X} ry={r * ISO_Y * 2.2} fill="none" stroke="#ffe08a" strokeWidth="2.4">
+                <ellipse key={i} rx={r * ISO_X} ry={r * ISO_Y * 2.2} fill="none" stroke={col} strokeWidth="2.4">
                   <animate attributeName="opacity" values="0.2;0.95;0.2" dur={`${1.6 + i * 0.4}s`} repeatCount="indefinite" />
                 </ellipse>
               ))}
-              <circle r="10" fill="#fff2b8" />
+              <circle r="10" fill="#ffffff" stroke={col} strokeWidth="2.2" />
+              {/* Etiquette du tableau suivant, avec halo pour la lisibilite. */}
+              <g transform="translate(28 -14)">
+                <rect x="-4" y="-16" width={target.label.length * 8.6 + 40} height="26"
+                  rx="13" fill="#0e1a30" stroke={col} strokeWidth="1.4" opacity="0.92" />
+                <circle cx="10" cy="-3" r="5" fill={col} />
+                <text x="24" y="1" fontSize="13" fontWeight="700" fill="#f5faff" letterSpacing="1">
+                  {target.label}
+                </text>
+              </g>
             </g>
           );
         })()}
@@ -477,6 +526,16 @@ export function TemporalCompass({ onClose, onLock }) {
           <text x="24" y={VH - 24} fontSize="12" fill="#a8c8ff" letterSpacing="2">
             ↑ ↓ ← →  ou  W A S D   ·   deplacement de case en case le long des lignes   ·   ESC pour quitter
           </text>
+
+          {/* Legende des epoques : petit ruban en bas a gauche */}
+          <g transform={`translate(24 ${VH - 60})`}>
+            {ERAS.map((e, i) => (
+              <g key={e.key} transform={`translate(${i * 96} 0)`}>
+                <rect x="0" y="-10" width="88" height="14" rx="3" fill={e.color} opacity="0.7" />
+                <text x="6" y="1" fontSize="10" fontWeight="700" fill="#0e1a30">{e.name}</text>
+              </g>
+            ))}
+          </g>
 
           {/* mini-map */}
           <g transform={`translate(${VW - 170} ${VH - 170})`}>
