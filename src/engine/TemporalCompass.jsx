@@ -429,22 +429,65 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       grid.push(...buildColoredLine(-WORLD, t, WORLD, t, `h${i}`));
     }
 
+    /* Carte du monde stylisee en fond : quelques masses continentales
+       en forme de blobs organiques, iso-projetees + warpees, avec une
+       ombre decalee vers le bas pour l'effet de plateau 3D. */
+    const CONTINENTS = [
+      { cx: -1650, cy: -750, rx: 550, ry: 380, seed: 0.4  }, // Amerique du N.
+      { cx: -1350, cy:  650, rx: 320, ry: 460, seed: 1.2  }, // Amerique du S.
+      { cx:  -100, cy: -350, rx: 260, ry: 220, seed: 2.1  }, // Europe
+      { cx:   150, cy:  550, rx: 340, ry: 470, seed: 3.0  }, // Afrique
+      { cx:   950, cy: -450, rx: 620, ry: 420, seed: 4.4  }, // Asie
+      { cx:  1500, cy:  800, rx: 340, ry: 200, seed: 5.7  }, // Oceanie
+    ];
+    const blobPath = (c, dyLift = 0) => {
+      const N = 28;
+      const pts = [];
+      for (let i = 0; i <= N; i++) {
+        const a = (i / N) * Math.PI * 2;
+        const w = 0.72 + 0.32 * Math.sin(a * 3 + c.seed) + 0.15 * Math.sin(a * 5 + c.seed * 1.3);
+        const wx = c.cx + Math.cos(a) * c.rx * w;
+        const wy = c.cy + Math.sin(a) * c.ry * w;
+        const [xw, yw] = warp(wx, wy);
+        const p = iso(xw, yw);
+        pts.push(`${p.sx.toFixed(1)},${(p.sy - dyLift).toFixed(1)}`);
+      }
+      return "M" + pts.join(" L") + " Z";
+    };
+
     return (
       <>
         <path d={diamond} fill="#1a2a48" opacity="0.55" />
+
+        {/* Carte du monde (fond) : ombre + facette du dessus */}
+        <g opacity="0.55">
+          {CONTINENTS.map((c, i) => (
+            <path key={`sh${i}`} d={blobPath(c, 0)} fill="#0a1830" opacity="0.9" />
+          ))}
+          {CONTINENTS.map((c, i) => (
+            <path key={`cn${i}`} d={blobPath(c, 8)} fill="#25436a" stroke="#3a6494" strokeWidth="1.2" />
+          ))}
+        </g>
+
         <g fill="none">{grid}</g>
         <path d={diamond} fill="none" stroke="#7fb0e0" strokeWidth="3" strokeDasharray="12 8" opacity="0.9" />
 
-        {/* Reperes de dates en blanc, disperses sur le plateau. */}
+        {/* Reperes de dates : petits, flottants, coleur de l'epoque. */}
         {DATE_MARKERS.map((m, i) => {
           const [wx, wy] = warp(m.x, m.y);
           const p = iso(wx, wy);
+          const col = ERAS[eraIndexForX(m.x)].color;
+          const dur = 3.6 + (i % 5) * 0.4;
+          const amp = 3 + (i % 3);
           return (
-            <g key={`d${i}`} transform={`translate(${p.sx} ${p.sy})`} opacity="0.85">
-              {m.tick && <line x1="0" y1="-9" x2="0" y2="0" stroke="#f5faff" strokeWidth="1.2" />}
-              <text x="4" y={m.tick ? -3 : 2} fontSize="12" fontWeight="600"
-                fill="#f5faff" letterSpacing="1"
-                style={{ paintOrder: "stroke", stroke: "#0a1224", strokeWidth: 3, strokeLinejoin: "round" }}>
+            <g key={`d${i}`} transform={`translate(${p.sx} ${p.sy})`} opacity="0.9">
+              <animateTransform attributeName="transform" type="translate"
+                values={`${p.sx} ${p.sy}; ${p.sx} ${p.sy - amp}; ${p.sx} ${p.sy}`}
+                dur={`${dur}s`} repeatCount="indefinite" />
+              {m.tick && <line x1="0" y1="-7" x2="0" y2="0" stroke={col} strokeWidth="1" opacity="0.75" />}
+              <text x="3" y={m.tick ? -2 : 2} fontSize="9" fontWeight="600"
+                fill={col} letterSpacing="0.5"
+                style={{ paintOrder: "stroke", stroke: "#0a1224", strokeWidth: 2.4, strokeLinejoin: "round" }}>
                 {m.text}
               </text>
             </g>
