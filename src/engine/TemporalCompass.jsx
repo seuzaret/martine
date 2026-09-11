@@ -143,6 +143,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
     };
     const down = (e) => {
       if (e.key === "Escape") { onClose?.(); return; }
+      if (e.key === " " || e.code === "Space") { heldRef.current.brake = true; e.preventDefault?.(); return; }
       const k = map(e.key); if (k) heldRef.current[k] = true;
     };
     const up = (e) => { const k = map(e.key); if (k) heldRef.current[k] = false; };
@@ -161,10 +162,11 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
     /* Etat de deplacement */
     let fromX = 0, fromY = 0, toX = 0, toY = 0, prog = 1;
     /* Inertie : quand on relache la touche, le joueur continue encore
-       MOMENTUM_STEPS cases dans la meme direction avant de s'arreter. */
+       MOMENTUM_STEPS cases dans la meme direction avant de s'arreter.
+       Barre espace = frein immediat (momentum remis a 0). */
     let lastDir = null;
     let momentum = 0;
-    const MOMENTUM_STEPS = 2;
+    const MOMENTUM_STEPS = 6;
     const CELL_MAX = Math.floor(WORLD / STEP);
 
     /* --- 4 tachyons rouges, un a chaque angle du plateau --- */
@@ -269,6 +271,12 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
           }
         }
 
+        /* Frein (barre espace) : coupe l'inertie immediatement. */
+        if (held.brake) {
+          momentum = 0;
+          lastDir = null;
+          held.brake = false;
+        }
         let d = dirFor(held);
         /* Inertie : si aucune touche, on continue avec la derniere
            direction pendant MOMENTUM_STEPS cases. */
@@ -709,7 +717,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
           )}
 
           <text x="24" y={VH - 24} fontSize="12" fill="#a8c8ff" letterSpacing="2">
-            ↑ ↓ ← →  ou  W A S D   ·   deplacement de case en case le long des lignes   ·   ESC pour quitter
+            ↑ ↓ ← →  ou  W A S D   ·   ESPACE = frein   ·   ESC pour quitter
           </text>
 
 
