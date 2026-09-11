@@ -10,11 +10,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 const VW = 1600;
 const VH = 900;
-const WORLD = 2400;
+/* Plateau 2.4x plus grand qu'avant (5760 au lieu de 2400). La cellule
+   fait toujours 240 unites monde, donc le rythme case-a-case ne change
+   pas ; il y a juste plus de cases a parcourir. */
+const WORLD = 5760;
 const LOCK_RADIUS = 100;   // un peu plus large : on s'arrete sur une case
 const LOCK_MS = 900;
-const NUM_WHIRLS = 10;
-const GRID_N = 20;                       // 20 subdivisions
+const NUM_WHIRLS = 24;     // densite proportionnelle a la nouvelle surface
+const GRID_N = 48;         // 48 subdivisions
 const STEP = (WORLD * 2) / GRID_N;       // 240 unites monde par case
 const CELL_MS = 260;                     // temps pour traverser une case
 const TACHYON_CELL_MS = 340;             // le tachyon rouge, un peu plus lent
@@ -91,7 +94,8 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
   const { target, whirls } = useMemo(() => {
     const snap = (v) => Math.round(v / STEP) * STEP;
     const angle = Math.random() * Math.PI * 2;
-    const dist = rand(1400, 2100);
+    /* Cible plus loin, proportionnelle a la nouvelle taille du plateau. */
+    const dist = rand(WORLD * 0.6, WORLD * 0.88);
     let tx = snap(Math.cos(angle) * dist), ty = snap(Math.sin(angle) * dist);
     if (tx === 0 && ty === 0) tx = STEP * 6;
     const era = ERAS[eraIndexForX(tx)];
@@ -453,13 +457,15 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
     /* Carte du monde stylisee en fond : quelques masses continentales
        en forme de blobs organiques, iso-projetees + warpees, avec une
        ombre decalee vers le bas pour l'effet de plateau 3D. */
+    /* Continents definis pour WORLD=2400 puis mis a l'echelle du plateau. */
+    const CS = WORLD / 2400;
     const CONTINENTS = [
-      { cx: -1650, cy: -750, rx: 550, ry: 380, seed: 0.4  }, // Amerique du N.
-      { cx: -1350, cy:  650, rx: 320, ry: 460, seed: 1.2  }, // Amerique du S.
-      { cx:  -100, cy: -350, rx: 260, ry: 220, seed: 2.1  }, // Europe
-      { cx:   150, cy:  550, rx: 340, ry: 470, seed: 3.0  }, // Afrique
-      { cx:   950, cy: -450, rx: 620, ry: 420, seed: 4.4  }, // Asie
-      { cx:  1500, cy:  800, rx: 340, ry: 200, seed: 5.7  }, // Oceanie
+      { cx: -1650 * CS, cy: -750 * CS, rx: 550 * CS, ry: 380 * CS, seed: 0.4 },
+      { cx: -1350 * CS, cy:  650 * CS, rx: 320 * CS, ry: 460 * CS, seed: 1.2 },
+      { cx:  -100 * CS, cy: -350 * CS, rx: 260 * CS, ry: 220 * CS, seed: 2.1 },
+      { cx:   150 * CS, cy:  550 * CS, rx: 340 * CS, ry: 470 * CS, seed: 3.0 },
+      { cx:   950 * CS, cy: -450 * CS, rx: 620 * CS, ry: 420 * CS, seed: 4.4 },
+      { cx:  1500 * CS, cy:  800 * CS, rx: 340 * CS, ry: 200 * CS, seed: 5.7 },
     ];
     const blobPath = (c, dyLift = 0) => {
       const N = 28;
