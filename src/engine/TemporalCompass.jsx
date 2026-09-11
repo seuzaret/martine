@@ -609,6 +609,32 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
           const col = target.era.color;
           return (
             <g ref={targetGroupRef} transform={`translate(${c.sx} ${c.sy})`}>
+              {/* Halo lumineux ethere : gradient radial pulsant */}
+              <defs>
+                <radialGradient id="compassTargetHalo" cx="0.5" cy="0.5" r="0.5">
+                  <stop offset="0"    stopColor={col} stopOpacity="0.55" />
+                  <stop offset="0.45" stopColor={col} stopOpacity="0.20" />
+                  <stop offset="1"    stopColor={col} stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              <ellipse rx={260 * ISO_X} ry={260 * ISO_Y * 2.2} fill="url(#compassTargetHalo)">
+                <animate attributeName="rx" values={`${240 * ISO_X};${300 * ISO_X};${240 * ISO_X}`}
+                  dur="4.4s" repeatCount="indefinite" />
+                <animate attributeName="ry" values={`${240 * ISO_Y * 2.2};${300 * ISO_Y * 2.2};${240 * ISO_Y * 2.2}`}
+                  dur="4.4s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.7;1;0.7"
+                  dur="4.4s" repeatCount="indefinite" />
+              </ellipse>
+              {/* Second halo plus petit, plus rapide, decale */}
+              <ellipse rx={160 * ISO_X} ry={160 * ISO_Y * 2.2} fill="url(#compassTargetHalo)" opacity="0.6">
+                <animate attributeName="rx" values={`${150 * ISO_X};${200 * ISO_X};${150 * ISO_X}`}
+                  dur="2.6s" repeatCount="indefinite" />
+                <animate attributeName="ry" values={`${150 * ISO_Y * 2.2};${200 * ISO_Y * 2.2};${150 * ISO_Y * 2.2}`}
+                  dur="2.6s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.55;0.9;0.55"
+                  dur="2.6s" repeatCount="indefinite" />
+              </ellipse>
+
               {[60, 42, 26].map((r, i) => (
                 <ellipse key={i} rx={r * ISO_X} ry={r * ISO_Y * 2.2} fill="none" stroke={col} strokeWidth="2.4">
                   <animate attributeName="opacity" values="0.2;0.95;0.2" dur={`${1.6 + i * 0.4}s`} repeatCount="indefinite" />
