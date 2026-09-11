@@ -86,6 +86,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
   const tachyonMiniRef = useRef(null);      // point rouge sur la mini-carte
   const [done, setDone] = useState(false);
   const [caught, setCaught] = useState(false);
+  const [decoys, setDecoys] = useState([]); // faux noeuds temporels ephemeres
 
   const { target, whirls } = useMemo(() => {
     const snap = (v) => Math.round(v / STEP) * STEP;
@@ -104,6 +105,26 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       })),
     };
   }, [nextLabel]);
+
+  /* Faux noeuds : apparaissent au hasard, vivent ~5s puis disparaissent.
+     Purement decoratifs (aucune interaction gameplay). */
+  useEffect(() => {
+    let nextId = 0;
+    const CELL_MAX = Math.floor(WORLD / STEP);
+    const spawn = () => {
+      const dx = (Math.floor(rand(-CELL_MAX, CELL_MAX + 1))) * STEP;
+      const dy = (Math.floor(rand(-CELL_MAX, CELL_MAX + 1))) * STEP;
+      /* Evite de coincider avec la vraie cible. */
+      if (Math.hypot(dx - target.x, dy - target.y) < STEP * 2) return;
+      const life = 4500 + Math.random() * 2500;
+      const era = ERAS[eraIndexForX(dx)];
+      const d = { id: nextId++, x: dx, y: dy, era, life };
+      setDecoys((arr) => (arr.length >= 3 ? arr : [...arr, d]));
+      setTimeout(() => setDecoys((arr) => arr.filter((x) => x.id !== d.id)), life);
+    };
+    const iv = setInterval(spawn, 2600);
+    return () => clearInterval(iv);
+  }, [target]);
 
   /* clavier */
   useEffect(() => {
@@ -548,6 +569,23 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
             {worldStatic}
             {/* Trainee rouge du tachyon (les segments sont ajoutes en direct) */}
             <g ref={trailGroupRef} />
+
+            {/* Faux noeuds temporels : apparaissent et disparaissent */}
+            {decoys.map((d) => {
+              const [wx, wy] = warpRef.current(d.x, d.y);
+              const p = iso(wx, wy);
+              return (
+                <g key={d.id} transform={`translate(${p.sx} ${p.sy})`}>
+                  <animate attributeName="opacity" values="0;0.85;0.85;0" keyTimes="0;0.15;0.75;1"
+                    dur={`${d.life}ms`} repeatCount="1" fill="freeze" />
+                  {[38, 24].map((r, i) => (
+                    <ellipse key={i} rx={r * ISO_X} ry={r * ISO_Y * 2.2} fill="none"
+                      stroke={d.era.color} strokeWidth="1.6" opacity="0.5" />
+                  ))}
+                  <circle r="6" fill={d.era.color} opacity="0.7" />
+                </g>
+              );
+            })}
             {/* Le tachyon rouge lui-meme */}
             <g ref={tachyonRef}>
               <ellipse rx="16" ry="8" fill="none" stroke="#ff2a4a" strokeWidth="1.6" opacity="0.7">
