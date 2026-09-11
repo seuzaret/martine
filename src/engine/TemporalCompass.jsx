@@ -21,8 +21,9 @@ const GRID_N = 48;         // 48 subdivisions
 const STEP = (WORLD * 2) / GRID_N;       // 240 unites monde par case
 const CELL_MS = 260;                     // temps pour traverser une case
 const ZOOM = 0.82;                       // camera legerement reculee
-const TACHYON_CELL_MS = 340;             // le tachyon rouge, un peu plus lent
+const TACHYON_CELL_MS = 520;             // tachyons rouges, plus lents que le joueur
 const TACHYON_RANDOM = 0.15;             // chance d'un mouvement aleatoire
+const TACHYON_COUNT = 4;                 // un a chaque angle
 
 /* Angle iso plus doux : moins ecrase verticalement.
    sx = (x - y) * ISO_X ; sy = (x + y) * ISO_Y */
@@ -85,9 +86,9 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
   const lockGroupRef = useRef(null);
   const ringsRef = useRef([]);
   const warpRef = useRef((x, y) => [x, y]);
-  const tachyonRef = useRef(null);          // <g> du tachyon rouge
+  const tachyonRefs = useRef([]);           // <g> des 4 tachyons rouges
   const trailGroupRef = useRef(null);       // <g> ou on append les segments rouges
-  const tachyonMiniRef = useRef(null);      // point rouge sur la mini-carte
+  const tachyonMiniRefs = useRef([]);       // points rouges sur la mini-carte
   const [done, setDone] = useState(false);
   const [caught, setCaught] = useState(false);
   const [decoys, setDecoys] = useState([]); // faux noeuds temporels ephemeres
@@ -161,16 +162,19 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
     let fromX = 0, fromY = 0, toX = 0, toY = 0, prog = 1;
     const CELL_MAX = Math.floor(WORLD / STEP);
 
-    /* --- Tachyon rouge : demarre sur un bord au hasard --- */
-    const edgeSide = Math.floor(Math.random() * 4);
-    let tcx, tcy;
-    if (edgeSide === 0)      { tcx = -CELL_MAX; tcy = Math.floor(rand(-CELL_MAX, CELL_MAX + 1)); }
-    else if (edgeSide === 1) { tcx = CELL_MAX;  tcy = Math.floor(rand(-CELL_MAX, CELL_MAX + 1)); }
-    else if (edgeSide === 2) { tcy = -CELL_MAX; tcx = Math.floor(rand(-CELL_MAX, CELL_MAX + 1)); }
-    else                     { tcy = CELL_MAX;  tcx = Math.floor(rand(-CELL_MAX, CELL_MAX + 1)); }
-    let tFromX = tcx * STEP, tFromY = tcy * STEP;
-    let tToX = tFromX, tToY = tFromY, tProg = 1;
-    let tCurX = tFromX, tCurY = tFromY;
+    /* --- 4 tachyons rouges, un a chaque angle du plateau --- */
+    const CORNERS = [
+      [-CELL_MAX, -CELL_MAX],
+      [ CELL_MAX, -CELL_MAX],
+      [-CELL_MAX,  CELL_MAX],
+      [ CELL_MAX,  CELL_MAX],
+    ];
+    const tachyons = CORNERS.map(([cx, cy]) => ({
+      fromX: cx * STEP, fromY: cy * STEP,
+      toX:   cx * STEP, toY:   cy * STEP,
+      curX:  cx * STEP, curY:  cy * STEP,
+      prog:  1,
+    }));
     const trail = new Set();          // cle "cxA,cyA|cxB,cyB" (ordre canonique)
     const edgeKey = (ax, ay, bx, by) => {
       if (ax < bx || (ax === bx && ay < by)) return `${ax},${ay}|${bx},${by}`;
@@ -295,39 +299,45 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         }
       }
 
-      /* --- Tachyon rouge : avance sur la grille, laisse un trait --- */
+      /* --- Tachyons rouges : chacun avance sur la grille, laisse un trait --- */
       if (!isCaught) {
-        if (tProg < 1) {
-          tProg = Math.min(1, tProg + dt / TACHYON_CELL_MS);
-          tCurX = tFromX + (tToX - tFromX) * tProg;
-          tCurY = tFromY + (tToY - tFromY) * tProg;
-        }
-        if (tProg >= 1) {
-          const ccx = Math.round(tCurX / STEP), ccy = Math.round(tCurY / STEP);
-          const d = tachyonChooseDir(ccx, ccy);
-          if (d) {
-            const nx = ccx + d.dx, ny = ccy + d.dy;
-            addTrailSegment(ccx, ccy, nx, ny);
-            tFromX = ccx * STEP; tFromY = ccy * STEP;
-            tToX = nx * STEP;    tToY = ny * STEP;
-            tCurX = tFromX;      tCurY = tFromY;
-            tProg = 0;
+        for (let ti = 0; ti < tachyons.length; ti++) {
+          const T = tachyons[ti];
+          if (T.prog < 1) {
+            T.prog = Math.min(1, T.prog + dt / TACHYON_CELL_MS);
+            T.curX = T.fromX + (T.toX - T.fromX) * T.prog;
+            T.curY = T.fromY + (T.toY - T.fromY) * T.prog;
           }
-        }
-        /* Render tachyon (warped iso). */
-        if (tachyonRef.current) {
-          const [wxT, wyT] = warpRef.current(tCurX, tCurY);
-          const ptT = iso(wxT, wyT);
-          tachyonRef.current.setAttribute("transform", `translate(${ptT.sx} ${ptT.sy})`);
-        }
-        if (tachyonMiniRef.current) {
-          tachyonMiniRef.current.setAttribute("cx", (tCurX / WORLD) * 60);
-          tachyonMiniRef.current.setAttribute("cy", (tCurY / WORLD) * 60);
-        }
-        /* Collision directe joueur / tachyon */
-        if (Math.hypot(p.x - tCurX, p.y - tCurY) < STEP * 0.5) {
-          isCaught = true; setCaught(true);
-          setTimeout(() => onClose?.(), 1500);
+          if (T.prog >= 1) {
+            const ccx = Math.round(T.curX / STEP), ccy = Math.round(T.curY / STEP);
+            const d = tachyonChooseDir(ccx, ccy);
+            if (d) {
+              const nx = ccx + d.dx, ny = ccy + d.dy;
+              addTrailSegment(ccx, ccy, nx, ny);
+              T.fromX = ccx * STEP; T.fromY = ccy * STEP;
+              T.toX = nx * STEP;    T.toY = ny * STEP;
+              T.curX = T.fromX;     T.curY = T.fromY;
+              T.prog = 0;
+            }
+          }
+          /* Render tachyon (warped iso). */
+          const el = tachyonRefs.current[ti];
+          if (el) {
+            const [wxT, wyT] = warpRef.current(T.curX, T.curY);
+            const ptT = iso(wxT, wyT);
+            el.setAttribute("transform", `translate(${ptT.sx} ${ptT.sy})`);
+          }
+          const mel = tachyonMiniRefs.current[ti];
+          if (mel) {
+            mel.setAttribute("cx", (T.curX / WORLD) * 60);
+            mel.setAttribute("cy", (T.curY / WORLD) * 60);
+          }
+          /* Collision directe joueur / tachyon */
+          if (Math.hypot(p.x - T.curX, p.y - T.curY) < STEP * 0.5) {
+            isCaught = true; setCaught(true);
+            setTimeout(() => onClose?.(), 1500);
+            break;
+          }
         }
       }
 
@@ -593,16 +603,18 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
                 </g>
               );
             })}
-            {/* Le tachyon rouge lui-meme */}
-            <g ref={tachyonRef}>
-              <ellipse rx="16" ry="8" fill="none" stroke="#ff2a4a" strokeWidth="1.6" opacity="0.7">
-                <animate attributeName="rx" values="10;22;10" dur="1.2s" repeatCount="indefinite" />
-                <animate attributeName="ry" values="5;11;5" dur="1.2s" repeatCount="indefinite" />
-                <animate attributeName="opacity" values="0.7;0.15;0.7" dur="1.2s" repeatCount="indefinite" />
-              </ellipse>
-              <circle r="10" fill="#ff2a4a" stroke="#480010" strokeWidth="2" />
-              <circle r="4" fill="#ffd0d8" />
-            </g>
+            {/* Les 4 tachyons rouges (un par angle) */}
+            {Array.from({ length: TACHYON_COUNT }).map((_, i) => (
+              <g key={`t${i}`} ref={(el) => (tachyonRefs.current[i] = el)}>
+                <ellipse rx="16" ry="8" fill="none" stroke="#ff2a4a" strokeWidth="1.6" opacity="0.7">
+                  <animate attributeName="rx" values="10;22;10" dur="1.2s" repeatCount="indefinite" begin={`${i * 0.25}s`} />
+                  <animate attributeName="ry" values="5;11;5" dur="1.2s" repeatCount="indefinite" begin={`${i * 0.25}s`} />
+                  <animate attributeName="opacity" values="0.7;0.15;0.7" dur="1.2s" repeatCount="indefinite" begin={`${i * 0.25}s`} />
+                </ellipse>
+                <circle r="10" fill="#ff2a4a" stroke="#480010" strokeWidth="2" />
+                <circle r="4" fill="#ffd0d8" />
+              </g>
+            ))}
             <g ref={playerRef}>
               <ellipse cy="8" rx="16" ry="5" fill="#000" opacity="0.5" />
               <circle r="11" fill="#7fffb0" stroke="#0e2a1a" strokeWidth="2" />
@@ -654,7 +666,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
             <>
               <rect x="0" y="0" width={VW} height={VH} fill="#3a0010" opacity="0.55" />
               <g transform={`translate(${VW / 2} ${VH / 2})`}>
-                <text textAnchor="middle" fontSize="42" fontWeight="800" fill="#ff5266" letterSpacing="6">⚠ TACHYON ROUGE ⚠</text>
+                <text textAnchor="middle" fontSize="42" fontWeight="800" fill="#ff5266" letterSpacing="6">⚠ TACHYONS ROUGES ⚠</text>
                 <text y="42" textAnchor="middle" fontSize="18" fill="#ffd0d8" letterSpacing="3">La ligne temporelle est coupée</text>
               </g>
             </>
@@ -674,7 +686,9 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
                 <circle key={i} cx={(w.x / WORLD) * 60} cy={(w.y / WORLD) * 60} r={(w.r / WORLD) * 60 + 1} fill="none" stroke="#c8a8f0" strokeWidth="0.6" opacity="0.6" />
               ))}
               <circle cx={(target.x / WORLD) * 60} cy={(target.y / WORLD) * 60} r="3" fill="#ffe08a" />
-              <circle ref={tachyonMiniRef} cx="0" cy="0" r="2.4" fill="#ff2a4a" />
+              {Array.from({ length: TACHYON_COUNT }).map((_, i) => (
+                <circle key={`tm${i}`} ref={(el) => (tachyonMiniRefs.current[i] = el)} cx="0" cy="0" r="2.4" fill="#ff2a4a" />
+              ))}
               <circle ref={minimapPlayerRef} cx="0" cy="0" r="2.4" fill="#7fffb0" />
               <rect x="-62" y="-62" width="124" height="124" fill="none" stroke="#7fb0e0" strokeWidth="0.6" strokeDasharray="3 3" />
             </g>
