@@ -146,7 +146,10 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       if (e.key === " " || e.code === "Space") { heldRef.current.brake = true; e.preventDefault?.(); return; }
       const k = map(e.key); if (k) heldRef.current[k] = true;
     };
-    const up = (e) => { const k = map(e.key); if (k) heldRef.current[k] = false; };
+    const up = (e) => {
+      if (e.key === " " || e.code === "Space") { heldRef.current.brake = false; return; }
+      const k = map(e.key); if (k) heldRef.current[k] = false;
+    };
     window.addEventListener("keydown", down);
     window.addEventListener("keyup", up);
     return () => { window.removeEventListener("keydown", down); window.removeEventListener("keyup", up); };
@@ -166,7 +169,8 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
        Barre espace = frein immediat (momentum remis a 0). */
     let lastDir = null;
     let momentum = 0;
-    const MOMENTUM_STEPS = 6;
+    const MOMENTUM_STEPS = 4;
+    const BRAKE_FACTOR = 0.35;   // ralentit la case en cours quand on freine
     const CELL_MAX = Math.floor(WORLD / STEP);
 
     /* --- 4 tachyons rouges, un a chaque angle du plateau --- */
@@ -233,6 +237,13 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         const nx = curCx + c.dx, ny = curCy + c.dy;
         if (nx >= -CELL_MAX && nx <= CELL_MAX && ny >= -CELL_MAX && ny <= CELL_MAX) return c;
       }
+      /* Filet de secours : essaie n'importe laquelle des 4 directions
+         qui reste valide (evite un tachyon fige a un coin). */
+      const fallback = [{dx:1,dy:0},{dx:-1,dy:0},{dx:0,dy:1},{dx:0,dy:-1}];
+      for (const c of fallback) {
+        const nx = curCx + c.dx, ny = curCy + c.dy;
+        if (nx >= -CELL_MAX && nx <= CELL_MAX && ny >= -CELL_MAX && ny <= CELL_MAX) return c;
+      }
       return null;
     };
     /* Correspondance fleche ECRAN -> direction monde (une ligne de la grille).
@@ -249,9 +260,11 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       const dt = Math.min(50, t - last); last = t;
       const p = posRef.current, held = heldRef.current;
 
-      /* Progression sur la case en cours */
+      /* Progression sur la case en cours.
+         Si le frein est tenu, la traversee se ralentit (BRAKE_FACTOR). */
       if (prog < 1) {
-        prog = Math.min(1, prog + dt / CELL_MS);
+        const factor = held.brake ? BRAKE_FACTOR : 1;
+        prog = Math.min(1, prog + (dt * factor) / CELL_MS);
         p.x = fromX + (toX - fromX) * prog;
         p.y = fromY + (toY - fromY) * prog;
       }
@@ -271,11 +284,10 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
           }
         }
 
-        /* Frein (barre espace) : coupe l'inertie immediatement. */
+        /* Frein tenu : arrivee au noeud = arret complet (pas de nouvelle case). */
         if (held.brake) {
           momentum = 0;
           lastDir = null;
-          held.brake = false;
         }
         let d = dirFor(held);
         /* Inertie : si aucune touche, on continue avec la derniere
@@ -653,7 +665,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
                 <ellipse rx="16" ry="8" fill="none" stroke="#ff2a4a" strokeWidth="1.6" opacity="0.7">
                   <animate attributeName="rx" values="10;22;10" dur="1.2s" repeatCount="indefinite" begin={`${i * 0.25}s`} />
                   <animate attributeName="ry" values="5;11;5" dur="1.2s" repeatCount="indefinite" begin={`${i * 0.25}s`} />
-                  <animate attributeName="opacity" values="0.7;0.15;0.7" dur="1.2s" repeatCount="indefinite" begin={`${i * 0.25}s`} />
+                  <animate attributeName="opacity" values="0.75;0.45;0.75" dur="1.2s" repeatCount="indefinite" begin={`${i * 0.25}s`} />
                 </ellipse>
                 <circle r="10" fill="#ff2a4a" stroke="#480010" strokeWidth="2" />
                 <circle r="4" fill="#ffd0d8" />
