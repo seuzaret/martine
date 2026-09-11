@@ -20,6 +20,7 @@ const NUM_WHIRLS = 24;     // densite proportionnelle a la nouvelle surface
 const GRID_N = 48;         // 48 subdivisions
 const STEP = (WORLD * 2) / GRID_N;       // 240 unites monde par case
 const CELL_MS = 260;                     // temps pour traverser une case
+const ZOOM = 0.82;                       // camera legerement reculee
 const TACHYON_CELL_MS = 340;             // le tachyon rouge, un peu plus lent
 const TACHYON_RANDOM = 0.15;             // chance d'un mouvement aleatoire
 
@@ -335,7 +336,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       const [wx, wy] = warpRef.current(p.x, p.y);
       const psx = (wx - wy) * ISO_X;
       const psy = (wx + wy) * ISO_Y;
-      if (cameraRef.current) cameraRef.current.setAttribute("transform", `translate(${VW / 2 - psx} ${VH / 2 - psy})`);
+      if (cameraRef.current) cameraRef.current.setAttribute("transform", `translate(${VW / 2} ${VH / 2}) scale(${ZOOM}) translate(${-psx} ${-psy})`);
       if (playerRef.current) playerRef.current.setAttribute("transform", `translate(${psx} ${psy})`);
       if (minimapPlayerRef.current) {
         minimapPlayerRef.current.setAttribute("cx", (p.x / WORLD) * 60);
@@ -571,7 +572,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       <div onClick={(e) => e.stopPropagation()}
         style={{ position: "absolute", inset: 0, color: "#e8eef5", fontFamily: "ui-monospace,monospace" }}>
         <svg viewBox={`0 0 ${VW} ${VH}`} preserveAspectRatio="xMidYMid meet" width="100%" height="100%">
-          <g ref={cameraRef} transform={`translate(${VW / 2} ${VH / 2})`}>
+          <g ref={cameraRef} transform={`translate(${VW / 2} ${VH / 2}) scale(${ZOOM})`}>
             {worldStatic}
             {/* Trainee rouge du tachyon (les segments sont ajoutes en direct) */}
             <g ref={trailGroupRef} />
