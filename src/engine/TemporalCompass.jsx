@@ -237,6 +237,13 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         const nx = curCx + c.dx, ny = curCy + c.dy;
         if (nx >= -CELL_MAX && nx <= CELL_MAX && ny >= -CELL_MAX && ny <= CELL_MAX) return c;
       }
+      /* Filet de secours : essaie n'importe laquelle des 4 directions
+         qui reste valide (evite un tachyon fige a un coin). */
+      const fallback = [{dx:1,dy:0},{dx:-1,dy:0},{dx:0,dy:1},{dx:0,dy:-1}];
+      for (const c of fallback) {
+        const nx = curCx + c.dx, ny = curCy + c.dy;
+        if (nx >= -CELL_MAX && nx <= CELL_MAX && ny >= -CELL_MAX && ny <= CELL_MAX) return c;
+      }
       return null;
     };
     /* Correspondance fleche ECRAN -> direction monde (une ligne de la grille).
@@ -658,7 +665,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
                 <ellipse rx="16" ry="8" fill="none" stroke="#ff2a4a" strokeWidth="1.6" opacity="0.7">
                   <animate attributeName="rx" values="10;22;10" dur="1.2s" repeatCount="indefinite" begin={`${i * 0.25}s`} />
                   <animate attributeName="ry" values="5;11;5" dur="1.2s" repeatCount="indefinite" begin={`${i * 0.25}s`} />
-                  <animate attributeName="opacity" values="0.7;0.15;0.7" dur="1.2s" repeatCount="indefinite" begin={`${i * 0.25}s`} />
+                  <animate attributeName="opacity" values="0.75;0.45;0.75" dur="1.2s" repeatCount="indefinite" begin={`${i * 0.25}s`} />
                 </ellipse>
                 <circle r="10" fill="#ff2a4a" stroke="#480010" strokeWidth="2" />
                 <circle r="4" fill="#ffd0d8" />
