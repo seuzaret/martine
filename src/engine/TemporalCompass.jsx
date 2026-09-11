@@ -146,7 +146,10 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       if (e.key === " " || e.code === "Space") { heldRef.current.brake = true; e.preventDefault?.(); return; }
       const k = map(e.key); if (k) heldRef.current[k] = true;
     };
-    const up = (e) => { const k = map(e.key); if (k) heldRef.current[k] = false; };
+    const up = (e) => {
+      if (e.key === " " || e.code === "Space") { heldRef.current.brake = false; return; }
+      const k = map(e.key); if (k) heldRef.current[k] = false;
+    };
     window.addEventListener("keydown", down);
     window.addEventListener("keyup", up);
     return () => { window.removeEventListener("keydown", down); window.removeEventListener("keyup", up); };
@@ -166,7 +169,8 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
        Barre espace = frein immediat (momentum remis a 0). */
     let lastDir = null;
     let momentum = 0;
-    const MOMENTUM_STEPS = 6;
+    const MOMENTUM_STEPS = 4;
+    const BRAKE_FACTOR = 0.35;   // ralentit la case en cours quand on freine
     const CELL_MAX = Math.floor(WORLD / STEP);
 
     /* --- 4 tachyons rouges, un a chaque angle du plateau --- */
@@ -249,9 +253,11 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       const dt = Math.min(50, t - last); last = t;
       const p = posRef.current, held = heldRef.current;
 
-      /* Progression sur la case en cours */
+      /* Progression sur la case en cours.
+         Si le frein est tenu, la traversee se ralentit (BRAKE_FACTOR). */
       if (prog < 1) {
-        prog = Math.min(1, prog + dt / CELL_MS);
+        const factor = held.brake ? BRAKE_FACTOR : 1;
+        prog = Math.min(1, prog + (dt * factor) / CELL_MS);
         p.x = fromX + (toX - fromX) * prog;
         p.y = fromY + (toY - fromY) * prog;
       }
@@ -271,11 +277,10 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
           }
         }
 
-        /* Frein (barre espace) : coupe l'inertie immediatement. */
+        /* Frein tenu : arrivee au noeud = arret complet (pas de nouvelle case). */
         if (held.brake) {
           momentum = 0;
           lastDir = null;
-          held.brake = false;
         }
         let d = dirFor(held);
         /* Inertie : si aucune touche, on continue avec la derniere
