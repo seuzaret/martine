@@ -2266,10 +2266,19 @@ export default function App() {
           fluxTotal={fluxTotal} bonusChapters={bonusChapters} />
       )}
 
-      {/* PROTOTYPE : BOUSSOLE TEMPORELLE plein ecran (bouton 🧭) */}
-      {showCompass && (
-        <TemporalCompass onClose={() => setShowCompass(false)} onLock={() => flash()} />
-      )}
+      {/* PROTOTYPE : BOUSSOLE TEMPORELLE plein ecran (bouton 🧭).
+          Le nom du prochain tableau est passé au composant : soit la
+          scene suivante du chapitre courant, soit la premiere scene du
+          chapitre suivant. */}
+      {showCompass && (() => {
+        const nextInChap = chapter.scenes[tab + 1];
+        const nextChap = CHAPTERS[chapterIndex + 1]?.scenes?.[0];
+        const nextScene = nextInChap || nextChap;
+        return (
+          <TemporalCompass onClose={() => setShowCompass(false)} onLock={() => flash()}
+            nextLabel={nextScene ? nextScene.name : "Fin de la ligne temporelle"} />
+        );
+      })()}
 
       {/* POUBELLE TEMPORELLE — apparaît quand l'élève ramasse son
           PREMIER déchet anachronique (via `anachronismLearned`). Elle
