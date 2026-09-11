@@ -160,6 +160,11 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
     let lock = 0, isDone = false, isCaught = false;
     /* Etat de deplacement */
     let fromX = 0, fromY = 0, toX = 0, toY = 0, prog = 1;
+    /* Inertie : quand on relache la touche, le joueur continue encore
+       MOMENTUM_STEPS cases dans la meme direction avant de s'arreter. */
+    let lastDir = null;
+    let momentum = 0;
+    const MOMENTUM_STEPS = 2;
     const CELL_MAX = Math.floor(WORLD / STEP);
 
     /* --- 4 tachyons rouges, un a chaque angle du plateau --- */
@@ -265,6 +270,15 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         }
 
         let d = dirFor(held);
+        /* Inertie : si aucune touche, on continue avec la derniere
+           direction pendant MOMENTUM_STEPS cases. */
+        if (d) {
+          lastDir = d;
+          momentum = MOMENTUM_STEPS;
+        } else if (momentum > 0 && lastDir) {
+          d = lastDir;
+          momentum--;
+        }
         if (strongest) {
           /* Direction tangentielle (dans le sens du tourbillon) au nœud actuel. */
           const rx = p.x - strongest.x, ry = p.y - strongest.y;
@@ -295,6 +309,9 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
             toX = ncx * STEP; toY = ncy * STEP;
             p.x = fromX; p.y = fromY;
             prog = 0;
+          } else {
+            /* on est bloque au bord : coupe court a l'inertie */
+            momentum = 0;
           }
         }
       }
@@ -425,7 +442,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
        N = GRID_N pour que les lignes visibles correspondent EXACTEMENT
        aux cases sur lesquelles se deplace le joueur. */
     const N = GRID_N;
-    const SUB = 2;            // sous-echantillons par cellule
+    const SUB = 4;            // sous-echantillons par cellule (lignes plus lisses = joueur pile dessus)
     const projectSample = (wx, wy) => {
       const [xw, yw] = warp(wx, wy);
       return iso(xw, yw);
