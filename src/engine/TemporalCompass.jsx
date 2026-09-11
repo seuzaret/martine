@@ -21,7 +21,7 @@ const GRID_N = 48;         // 48 subdivisions
 const STEP = (WORLD * 2) / GRID_N;       // 240 unites monde par case
 const CELL_MS = 260;                     // temps pour traverser une case
 const ZOOM = 0.82;                       // camera legerement reculee
-const TACHYON_CELL_MS = 450;             // tachyons rouges (joueur = 260 ms/case)
+const TACHYON_CELL_MS = 520;             // tachyons rouges (joueur = 260 ms/case)
 const TACHYON_RANDOM = 0.15;             // chance d'un mouvement aleatoire
 const TACHYON_COUNT = 4;                 // un a chaque angle
 
@@ -421,9 +421,11 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
     const diamond = `M${c1.sx} ${c1.sy} L${c2.sx} ${c2.sy} L${c3.sx} ${c3.sy} L${c4.sx} ${c4.sy} Z`;
 
     /* Trace une polyligne monde -> iso avec deformation, en la coupant
-       chaque fois que l'epoque change (couleur d'epoque par tronçon). */
-    const N = 20;             // subdivisions le long d'une ligne
-    const SUB = 4;            // sous-echantillons par cellule
+       chaque fois que l'epoque change (couleur d'epoque par tronçon).
+       N = GRID_N pour que les lignes visibles correspondent EXACTEMENT
+       aux cases sur lesquelles se deplace le joueur. */
+    const N = GRID_N;
+    const SUB = 2;            // sous-echantillons par cellule
     const projectSample = (wx, wy) => {
       const [xw, yw] = warp(wx, wy);
       return iso(xw, yw);
