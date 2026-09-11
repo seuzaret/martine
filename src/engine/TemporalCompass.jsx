@@ -493,6 +493,22 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       return "M" + pts.join(" L") + " Z";
     };
 
+    /* Points d'intersection de la grille (deformes par la warp). Rendent
+       les noeuds visuellement solidaires des lignes apparentes. */
+    const gridDots = [];
+    for (let i = 0; i <= N; i++) {
+      for (let j = 0; j <= N; j++) {
+        const wx0 = -WORLD + (i * WORLD * 2) / N;
+        const wy0 = -WORLD + (j * WORLD * 2) / N;
+        const [wx, wy] = warp(wx0, wy0);
+        const p = iso(wx, wy);
+        gridDots.push(
+          <circle key={`dot${i}_${j}`} cx={p.sx.toFixed(1)} cy={p.sy.toFixed(1)} r="1.4"
+            fill={ERAS[eraIndexForX(wx0)].color} opacity="0.55" />
+        );
+      }
+    }
+
     return (
       <>
         <path d={diamond} fill="#1a2a48" opacity="0.55" />
@@ -508,6 +524,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         </g>
 
         <g fill="none">{grid}</g>
+        <g>{gridDots}</g>
         <path d={diamond} fill="none" stroke="#7fb0e0" strokeWidth="3" strokeDasharray="12 8" opacity="0.9" />
 
         {/* Reperes de dates : petits, flottants, coleur de l'epoque. */}
