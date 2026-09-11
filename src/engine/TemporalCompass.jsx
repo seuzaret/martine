@@ -21,7 +21,7 @@ const GRID_N = 48;         // 48 subdivisions
 const STEP = (WORLD * 2) / GRID_N;       // 240 unites monde par case
 const CELL_MS = 260;                     // temps pour traverser une case
 const ZOOM = 0.82;                       // camera legerement reculee
-const TACHYON_CELL_MS = 520;             // tachyons rouges, plus lents que le joueur
+const TACHYON_CELL_MS = 360;             // tachyons rouges (joueur = 260 ms/case)
 const TACHYON_RANDOM = 0.15;             // chance d'un mouvement aleatoire
 const TACHYON_COUNT = 4;                 // un a chaque angle
 
