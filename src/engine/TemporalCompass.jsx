@@ -88,6 +88,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
   const warpRef = useRef((x, y) => [x, y]);
   const tachyonRefs = useRef([]);           // <g> des 4 tachyons rouges
   const trailGroupRef = useRef(null);       // <g> ou on append les segments rouges
+  const playerTrailGroupRef = useRef(null); // <g> ou on append la trainee verte du joueur
   const tachyonMiniRefs = useRef([]);       // points rouges sur la mini-carte
   const [done, setDone] = useState(false);
   const [caught, setCaught] = useState(false);
@@ -216,6 +217,36 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       el.setAttribute("opacity", "0.9");
       trailGroupRef.current.appendChild(el);
     };
+    /* Trainee verte du joueur : segment fondant, disparait apres 1.5s. */
+    const addPlayerTrail = (ax, ay, bx, by) => {
+      if (!playerTrailGroupRef.current) return;
+      const SUB = 8;
+      const pts = [];
+      for (let i = 0; i <= SUB; i++) {
+        const u = i / SUB;
+        const wxA = ax * STEP + (bx - ax) * STEP * u;
+        const wyA = ay * STEP + (by - ay) * STEP * u;
+        const [wx, wy] = warpRef.current(wxA, wyA);
+        const pr = iso(wx, wy);
+        pts.push(`${pr.sx.toFixed(1)},${pr.sy.toFixed(1)}`);
+      }
+      const el = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+      el.setAttribute("points", pts.join(" "));
+      el.setAttribute("fill", "none");
+      el.setAttribute("stroke", "#7fffb0");
+      el.setAttribute("stroke-width", "3");
+      el.setAttribute("stroke-linecap", "round");
+      el.setAttribute("opacity", "0.85");
+      const an = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+      an.setAttribute("attributeName", "opacity");
+      an.setAttribute("values", "0.85;0");
+      an.setAttribute("dur", "1500ms");
+      an.setAttribute("fill", "freeze");
+      el.appendChild(an);
+      playerTrailGroupRef.current.appendChild(el);
+      setTimeout(() => el.remove(), 1600);
+    };
+
     const tachyonChooseDir = (curCx, curCy) => {
       const pCx = Math.round(posRef.current.x / STEP);
       const pCy = Math.round(posRef.current.y / STEP);
@@ -329,6 +360,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
             toX = ncx * STEP; toY = ncy * STEP;
             p.x = fromX; p.y = fromY;
             prog = 0;
+            addPlayerTrail(cx, cy, ncx, ncy);
           } else {
             /* on est bloque au bord : coupe court a l'inertie */
             momentum = 0;
@@ -668,6 +700,9 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         <svg viewBox={`0 0 ${VW} ${VH}`} preserveAspectRatio="xMidYMid meet" width="100%" height="100%">
           <g ref={cameraRef} transform={`translate(${VW / 2} ${VH / 2}) scale(${ZOOM})`}>
             {worldStatic}
+            {/* Trainee verte du joueur (segments fondants) */}
+            <g ref={playerTrailGroupRef} />
+
             {/* Trainee rouge du tachyon (les segments sont ajoutes en direct) */}
             <g ref={trailGroupRef} />
 
