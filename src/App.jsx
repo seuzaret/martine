@@ -1482,41 +1482,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* SÉLECTION DE CHAPITRE : terminés/en cours jouables,
-              futurs verrouillés (cadenas + date en teasing) */}
-          <div style={{ marginTop: 28, borderTop: "1px solid #1e2a3a", paddingTop: 16 }}>
-            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10.5, letterSpacing: 2, color: "#7a879e", marginBottom: 10 }}>
-              ⏳ LE VOYAGE
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-              {CHAPTERS.map((ch, i) => {
-                const unlocked = i <= menuMax;
-                return (
-                  <button key={ch.id} disabled={!unlocked}
-                    onClick={() => unlocked && playChapter(i)}
-                    title={unlocked ? `Jouer : ${ch.epoque}` : `Verrouillé — atteins d'abord le saut précédent`}
-                    style={{
-                      display: "flex", alignItems: "center", gap: 10, textAlign: "left",
-                      background: unlocked ? "#101a28" : "#0b1017",
-                      border: `1px solid ${unlocked ? "#2a3f52" : "#1a222e"}`,
-                      borderRadius: 10, padding: "10px 14px",
-                      cursor: unlocked ? "pointer" : "not-allowed",
-                      color: unlocked ? "#e8eef5" : "#4a5568",
-                      fontFamily: "Palatino, Georgia, serif",
-                    }}>
-                    <span style={{ fontSize: 22, filter: unlocked ? "none" : "grayscale(1) opacity(0.5)" }}>{unlocked ? ch.emoji : "🔒"}</span>
-                    <span style={{ flex: 1 }}>
-                      <span style={{ fontWeight: 700 }}>Chapitre {i + 1} — {unlocked ? ch.epoque : "?"}</span>
-                      <span style={{ display: "block", fontSize: 11, color: unlocked ? "#8fa3bd" : "#3a4656", fontFamily: "ui-monospace,monospace" }}>{ch.date}</span>
-                    </span>
-                    {unlocked
-                      ? <span style={{ fontSize: 12, color: "#5eff9e", fontFamily: "ui-monospace,monospace" }}>▶</span>
-                      : <span style={{ fontSize: 11, color: "#3a4656", fontFamily: "ui-monospace,monospace" }}>à venir</span>}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
         </div>
 
         {/* menu réglages (export / import de la sauvegarde) */}
