@@ -1239,18 +1239,183 @@ export default function App() {
       <div style={{ minHeight: "100vh", background: "radial-gradient(ellipse at 50% 30%, #14233a 0%, #080d16 70%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, fontFamily: "Palatino, Georgia, serif" }}>
         {cheatPanel}
         <div style={{ maxWidth: 560, textAlign: "center" }}>
-          {/* bannière illustrée : LES FILS DU TEMPS qui se croisent et se
-              relient d'une époque à l'autre — le fil rouge du jeu, littéral. */}
-          <svg viewBox="0 0 520 72" style={{ width: "100%", maxWidth: 460, height: "auto", display: "block", margin: "0 auto -4px" }} aria-hidden="true">
+          {/* bannière hero : sablier cosmique dans lequel tombent les
+              silhouettes des époques traversées ; 5 fils colorés (les
+              fils du temps) enroulent le tout. */}
+          <svg viewBox="0 0 800 400" style={{ width: "100%", maxWidth: 540, height: "auto", display: "block", margin: "0 auto -18px" }} aria-hidden="true">
+            <defs>
+              <radialGradient id="ttlCosmos" cx="0.5" cy="0.42" r="0.7">
+                <stop offset="0"    stopColor="#5a4a8a" stopOpacity="0.7" />
+                <stop offset="0.55" stopColor="#22284a" stopOpacity="0.55" />
+                <stop offset="1"    stopColor="#080d16" stopOpacity="0" />
+              </radialGradient>
+              <linearGradient id="ttlGlass" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0"   stopColor="#c8ddf5" stopOpacity="0.32" />
+                <stop offset="1"   stopColor="#7fb0e0" stopOpacity="0.42" />
+              </linearGradient>
+              <linearGradient id="ttlWood" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stopColor="#c99060" />
+                <stop offset="1" stopColor="#6b4a26" />
+              </linearGradient>
+              <radialGradient id="ttlBulb" cx="0.5" cy="0.4" r="0.6">
+                <stop offset="0"    stopColor="#fff9d8" stopOpacity="0.35" />
+                <stop offset="1"    stopColor="#fff9d8" stopOpacity="0" />
+              </radialGradient>
+              <clipPath id="ttlTop"><polygon points="200,72 600,72 400,208" /></clipPath>
+              <clipPath id="ttlBot"><polygon points="400,208 600,344 200,344" /></clipPath>
+            </defs>
+
+            {/* fond cosmique + etoiles */}
+            <rect width="800" height="400" fill="url(#ttlCosmos)" />
+            {Array.from({ length: 60 }).map((_, i) => {
+              const sx = (i * 137) % 800, sy = (i * 79) % 400;
+              const r = ((i % 4) * 0.4 + 0.4);
+              return <circle key={`s${i}`} cx={sx} cy={sy} r={r} fill="#d0dcee" opacity={0.35 + (i % 5) * 0.1} />;
+            })}
+
+            {/* 5 fils du temps qui enroulent le sablier */}
             {["#d69a4e", "#c8483a", "#5ab0a0", "#ffd166", "#7fb0e0"].map((c, i) => (
-              <path key={i}
-                d={`M12 ${22 + i * 6} C 150 ${8 + i * 8}, 150 ${52 + i * 4}, 268 ${34 + i * 4} S 400 ${14 + i * 7}, 508 ${30 + i * 5}`}
-                fill="none" stroke={c} strokeWidth="2.3" strokeLinecap="round" opacity="0.85" />
+              <path key={`th${i}`} fill="none" stroke={c} strokeWidth="2.4" strokeLinecap="round" opacity="0.78"
+                d={`M ${40 + i * 6} ${50 + i * 6} C 180 ${120 + i * 8} 300 ${210 - i * 6} 400 ${208} S 620 ${310 - i * 8} 760 ${340 - i * 6}`} />
             ))}
-            {/* les « nœuds » du temps : de petites perles-époques sur les fils */}
-            {[[60, 26, "#d69a4e"], [160, 40, "#c8483a"], [268, 34, "#ffd166"], [372, 24, "#5ab0a0"], [470, 34, "#7fb0e0"]].map(([x, y, c], i) => (
-              <circle key={i} cx={x} cy={y} r="3.4" fill={c} style={{ animation: `pulse ${2 + i * 0.5}s ease-in-out infinite` }} />
-            ))}
+
+            {/* halo autour du sablier */}
+            <ellipse cx="400" cy="208" rx="220" ry="150" fill="url(#ttlBulb)" />
+
+            {/* Cadre bois : plateaux + montants */}
+            <rect x="176" y="60"  width="448" height="16" rx="3" fill="url(#ttlWood)" stroke="#3a2410" strokeWidth="1" />
+            <rect x="176" y="340" width="448" height="16" rx="3" fill="url(#ttlWood)" stroke="#3a2410" strokeWidth="1" />
+            <rect x="178" y="76"  width="10"  height="264" fill="url(#ttlWood)" />
+            <rect x="612" y="76"  width="10"  height="264" fill="url(#ttlWood)" />
+
+            {/* verre : deux triangles */}
+            <polygon points="200,76 600,76 400,208" fill="url(#ttlGlass)" stroke="#e5f0ff" strokeWidth="1.3" opacity="0.95" />
+            <polygon points="400,208 600,340 200,340" fill="url(#ttlGlass)" stroke="#e5f0ff" strokeWidth="1.3" opacity="0.95" />
+            {/* reflets */}
+            <path d="M 210 82 L 396 200" stroke="#ffffff" strokeWidth="1.4" opacity="0.35" strokeLinecap="round" />
+            <path d="M 210 334 L 396 216" stroke="#ffffff" strokeWidth="1.2" opacity="0.28" strokeLinecap="round" />
+
+            {/* Silhouettes qui tombent dans le bulbe HAUT (une meme scene, ecart temporel) */}
+            <g clipPath="url(#ttlTop)">
+              {(() => {
+                const SIL = "#f5efd6";
+                const STK = "#7a4c1e";
+                /* Chacune : un fragment SVG paths, delai different, meme trajectoire. */
+                const shapes = [
+                  /* mammouth : corps + trompe + defenses */
+                  (<g><ellipse cx="0" cy="0" rx="16" ry="9" fill={SIL} stroke={STK} strokeWidth="1" />
+                    <path d="M-14 -3 Q-22 -2 -22 6 Q-22 10 -18 9" fill="none" stroke={STK} strokeWidth="2.2" strokeLinecap="round" />
+                    <path d="M-18 8 L-20 12 M-16 8 L-15 12" stroke="#e8dcb0" strokeWidth="1.4" strokeLinecap="round" />
+                    <line x1="-10" y1="9" x2="-10" y2="15" stroke={STK} strokeWidth="2.4" />
+                    <line x1="-4" y1="9" x2="-4" y2="15" stroke={STK} strokeWidth="2.4" />
+                    <line x1="6" y1="9" x2="6" y2="15" stroke={STK} strokeWidth="2.4" />
+                    <line x1="12" y1="9" x2="12" y2="15" stroke={STK} strokeWidth="2.4" /></g>),
+                  /* colonne grecque : chapiteau + fut + base */
+                  (<g><rect x="-8" y="-18" width="16" height="4" rx="1" fill={SIL} stroke={STK} strokeWidth="0.8" />
+                    <rect x="-5" y="-14" width="10" height="24" fill={SIL} stroke={STK} strokeWidth="0.8" />
+                    <line x1="-3" y1="-13" x2="-3" y2="9" stroke={STK} strokeWidth="0.6" opacity="0.6" />
+                    <line x1="0" y1="-13" x2="0" y2="9" stroke={STK} strokeWidth="0.6" opacity="0.6" />
+                    <line x1="3" y1="-13" x2="3" y2="9" stroke={STK} strokeWidth="0.6" opacity="0.6" />
+                    <rect x="-9" y="10" width="18" height="4" rx="1" fill={SIL} stroke={STK} strokeWidth="0.8" /></g>),
+                  /* cathedrale : fleche + rosace + nef */
+                  (<g><path d="M0 -20 L-3 -8 L-10 -8 L-10 12 L10 12 L10 -8 L3 -8 Z" fill={SIL} stroke={STK} strokeWidth="0.8" />
+                    <circle cx="0" cy="0" r="3.4" fill="none" stroke={STK} strokeWidth="1" />
+                    <line x1="0" y1="-20" x2="0" y2="-24" stroke={STK} strokeWidth="1" /></g>),
+                  /* locomotive a vapeur : chaudiere + cheminee + roues */
+                  (<g><rect x="-14" y="-4" width="22" height="10" rx="1" fill={SIL} stroke={STK} strokeWidth="0.8" />
+                    <rect x="-4" y="-14" width="6" height="10" fill={SIL} stroke={STK} strokeWidth="0.8" />
+                    <circle cx="-1" cy="-15" r="4" fill="#e8dcb0" opacity="0.85" />
+                    <circle cx="4" cy="-17" r="3" fill="#e8dcb0" opacity="0.7" />
+                    <rect x="8" y="-2" width="6" height="8" fill={SIL} stroke={STK} strokeWidth="0.8" />
+                    <circle cx="-9" cy="8" r="3.4" fill={SIL} stroke={STK} strokeWidth="0.8" />
+                    <circle cx="0" cy="8" r="3.4" fill={SIL} stroke={STK} strokeWidth="0.8" />
+                    <circle cx="9" cy="8" r="3.4" fill={SIL} stroke={STK} strokeWidth="0.8" /></g>),
+                  /* tele cathodique : ecran + antennes */
+                  (<g><rect x="-11" y="-6" width="22" height="16" rx="2" fill={SIL} stroke={STK} strokeWidth="0.8" />
+                    <rect x="-8" y="-3" width="16" height="10" rx="1" fill="#5a789b" opacity="0.5" />
+                    <line x1="-4" y1="-6" x2="-8" y2="-14" stroke={STK} strokeWidth="1.2" />
+                    <line x1="4" y1="-6" x2="8" y2="-14" stroke={STK} strokeWidth="1.2" />
+                    <circle cx="-8" cy="-14" r="1.2" fill={STK} />
+                    <circle cx="8" cy="-14" r="1.2" fill={STK} /></g>),
+                  /* fusee : ogive + fenetre + ailerons + flamme */
+                  (<g><path d="M0 -18 L-5 -6 L-5 8 L5 8 L5 -6 Z" fill={SIL} stroke={STK} strokeWidth="0.8" />
+                    <circle cx="0" cy="-4" r="2.2" fill="#5a789b" opacity="0.6" />
+                    <path d="M-5 4 L-9 10 L-5 8 Z" fill={SIL} stroke={STK} strokeWidth="0.8" />
+                    <path d="M5 4 L9 10 L5 8 Z" fill={SIL} stroke={STK} strokeWidth="0.8" />
+                    <path d="M-3 8 L0 15 L3 8 Z" fill="#ffb04a" opacity="0.85" /></g>),
+                ];
+                return shapes.map((sh, i) => (
+                  <g key={`fall${i}`} transform="translate(400 90)">
+                    <animateTransform attributeName="transform" type="translate"
+                      values="400 82; 400 200" keyTimes="0;1" dur="3.4s" repeatCount="indefinite"
+                      begin={`${i * 0.55}s`} />
+                    <animate attributeName="opacity" values="0;1;1;0.1" keyTimes="0;0.15;0.75;1"
+                      dur="3.4s" repeatCount="indefinite" begin={`${i * 0.55}s`} />
+                    {sh}
+                  </g>
+                ));
+              })()}
+            </g>
+
+            {/* pincement : trainee de "sable" qui traverse */}
+            <line x1="400" y1="200" x2="400" y2="220" stroke="#ffd166" strokeWidth="2.2" strokeLinecap="round" opacity="0.85">
+              <animate attributeName="opacity" values="0.4;1;0.4" dur="1.6s" repeatCount="indefinite" />
+            </line>
+
+            {/* Pile de silhouettes accumulees dans le bulbe BAS (statique, tassees) */}
+            <g clipPath="url(#ttlBot)">
+              {/* mini-mammouth au sol */}
+              <g transform="translate(268 330) scale(0.65)">
+                <ellipse cx="0" cy="0" rx="16" ry="9" fill="#f5efd6" stroke="#7a4c1e" strokeWidth="1" />
+                <path d="M-14 -3 Q-22 -2 -22 6 Q-22 10 -18 9" fill="none" stroke="#7a4c1e" strokeWidth="2.2" strokeLinecap="round" />
+              </g>
+              {/* colonne */}
+              <g transform="translate(320 330) scale(0.7)">
+                <rect x="-8" y="-18" width="16" height="4" rx="1" fill="#f5efd6" stroke="#7a4c1e" strokeWidth="0.8" />
+                <rect x="-5" y="-14" width="10" height="24" fill="#f5efd6" stroke="#7a4c1e" strokeWidth="0.8" />
+                <rect x="-9" y="10" width="18" height="4" rx="1" fill="#f5efd6" stroke="#7a4c1e" strokeWidth="0.8" />
+              </g>
+              {/* cathedrale */}
+              <g transform="translate(370 328) scale(0.7)">
+                <path d="M0 -20 L-3 -8 L-10 -8 L-10 12 L10 12 L10 -8 L3 -8 Z" fill="#f5efd6" stroke="#7a4c1e" strokeWidth="0.8" />
+                <circle cx="0" cy="0" r="3" fill="none" stroke="#7a4c1e" strokeWidth="0.8" />
+              </g>
+              {/* loco */}
+              <g transform="translate(430 328) scale(0.7)">
+                <rect x="-14" y="-4" width="22" height="10" rx="1" fill="#f5efd6" stroke="#7a4c1e" strokeWidth="0.8" />
+                <rect x="-4" y="-14" width="6" height="10" fill="#f5efd6" stroke="#7a4c1e" strokeWidth="0.8" />
+                <circle cx="-9" cy="8" r="3.4" fill="#f5efd6" stroke="#7a4c1e" strokeWidth="0.8" />
+                <circle cx="0" cy="8" r="3.4" fill="#f5efd6" stroke="#7a4c1e" strokeWidth="0.8" />
+                <circle cx="9" cy="8" r="3.4" fill="#f5efd6" stroke="#7a4c1e" strokeWidth="0.8" />
+              </g>
+              {/* tele */}
+              <g transform="translate(490 328) scale(0.7)">
+                <rect x="-11" y="-6" width="22" height="16" rx="2" fill="#f5efd6" stroke="#7a4c1e" strokeWidth="0.8" />
+                <rect x="-8" y="-3" width="16" height="10" rx="1" fill="#5a789b" opacity="0.5" />
+                <line x1="-4" y1="-6" x2="-8" y2="-14" stroke="#7a4c1e" strokeWidth="1.2" />
+                <line x1="4" y1="-6" x2="8" y2="-14" stroke="#7a4c1e" strokeWidth="1.2" />
+              </g>
+              {/* fusee */}
+              <g transform="translate(540 328) scale(0.7)">
+                <path d="M0 -18 L-5 -6 L-5 8 L5 8 L5 -6 Z" fill="#f5efd6" stroke="#7a4c1e" strokeWidth="0.8" />
+                <circle cx="0" cy="-4" r="2.2" fill="#5a789b" opacity="0.6" />
+              </g>
+            </g>
+
+            {/* petites poussieres qui volent autour */}
+            {Array.from({ length: 14 }).map((_, i) => {
+              const x0 = 90 + (i * 47) % 620;
+              const y0 = 100 + (i * 31) % 200;
+              const dur = 5 + (i % 4);
+              return (
+                <circle key={`d${i}`} cx={x0} cy={y0} r="1.2" fill="#ffd166" opacity="0.75">
+                  <animateTransform attributeName="transform" type="translate"
+                    values={`0 0; ${20 + (i%3)*10} ${-10 - (i%2)*8}; 0 0`}
+                    dur={`${dur}s`} repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.2;0.9;0.2" dur={`${dur}s`} repeatCount="indefinite" />
+                </circle>
+              );
+            })}
           </svg>
           <h1 style={{ fontFamily: TITRE_FONT, fontSize: "clamp(38px,9.5vw,72px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", margin: "4px 0 0", lineHeight: 1.08, background: "linear-gradient(100deg, #e8a24a 0%, #ffd166 40%, #e86a4a 80%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", textShadow: "0 2px 22px rgba(232,150,74,0.3)" }}>
             Les fils du temps
