@@ -2274,8 +2274,13 @@ export default function App() {
         const nextInChap = chapter.scenes[tab + 1];
         const nextChap = CHAPTERS[chapterIndex + 1]?.scenes?.[0];
         const nextScene = nextInChap || nextChap;
+        const doWarp = () => {
+          flash();
+          if (nextInChap) setTab(tab + 1);
+          else if (nextChap) { setChapterIndex(chapterIndex + 1); setTab(0); }
+        };
         return (
-          <TemporalCompass onClose={() => setShowCompass(false)} onLock={() => flash()}
+          <TemporalCompass onClose={() => setShowCompass(false)} onLock={doWarp}
             nextLabel={nextScene ? nextScene.name : "Fin de la ligne temporelle"} />
         );
       })()}
