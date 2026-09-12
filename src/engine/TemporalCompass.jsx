@@ -418,7 +418,9 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         if (lock >= 1 && !isDone) {
           isDone = true;
           setDone(true);
-          setTimeout(() => { onLock?.(); onClose?.(); }, 600);
+          /* Laisse le temps a l'effet de flash lumineux (1.5s), puis on
+             saute a l'epoque du noeud et on ferme la boussole. */
+          setTimeout(() => { onLock?.(); onClose?.(); }, 1500);
         }
       } else {
         lock = 0;
@@ -740,9 +742,33 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
             <text y="-20" textAnchor="middle" fontSize="14" fontWeight="700" fill="#7fffb0" letterSpacing="3">VERROUILLAGE…</text>
           </g>
           {done && (
-            <g transform={`translate(${VW / 2} 80)`}>
-              <text textAnchor="middle" fontSize="34" fontWeight="800" fill="#7fffb0" letterSpacing="6">✓ NŒUD VERROUILLÉ</text>
-            </g>
+            <>
+              {/* Flash lumineux : gradient radial plein ecran a la couleur
+                  de l'epoque, monte de 0 a 1, effet flou/ethere avant l'atterrissage. */}
+              <defs>
+                <radialGradient id="warpFlash" cx="0.5" cy="0.5" r="0.65">
+                  <stop offset="0"    stopColor="#ffffff"       stopOpacity="1" />
+                  <stop offset="0.35" stopColor={target.era.color} stopOpacity="0.95" />
+                  <stop offset="1"    stopColor={target.era.color} stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              <rect x="0" y="0" width={VW} height={VH} fill="url(#warpFlash)">
+                <animate attributeName="opacity" values="0;1;1" keyTimes="0;0.6;1"
+                  dur="1.5s" repeatCount="1" fill="freeze" />
+              </rect>
+              {/* Nom du tableau atteint qui apparait au coeur du flash. */}
+              <g transform={`translate(${VW / 2} ${VH / 2 - 40})`} opacity="0">
+                <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.3;0.6;1"
+                  dur="1.5s" repeatCount="1" fill="freeze" />
+                <text textAnchor="middle" fontSize="22" letterSpacing="4" fill="#0a1224" opacity="0.7">DESTINATION</text>
+                <text y="52" textAnchor="middle" fontSize="42" fontWeight="800" fill="#0a1224" letterSpacing="4">
+                  {target.label}
+                </text>
+                <text y="92" textAnchor="middle" fontSize="16" letterSpacing="3" fill="#0a1224" opacity="0.7">
+                  {target.era.name}
+                </text>
+              </g>
+            </>
           )}
           {caught && (
             <>
