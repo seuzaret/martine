@@ -1420,22 +1420,6 @@ export default function App() {
           <h1 style={{ fontFamily: TITRE_FONT, fontSize: "clamp(38px,9.5vw,72px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", margin: "4px 0 0", lineHeight: 1.08, background: "linear-gradient(100deg, #e8a24a 0%, #ffd166 40%, #e86a4a 80%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", textShadow: "0 2px 22px rgba(232,150,74,0.3)" }}>
             Les fils du temps
           </h1>
-          {/* MARTINE, désormais la compagne de voyage */}
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 10, marginTop: 10 }}>
-            <div style={{ animation: "floaty 4s ease-in-out infinite" }}>
-              <Avatar mood="content" size={46} date={chapter.date} />
-            </div>
-            <span style={{ color: "#d8e2ee", fontSize: 16, fontStyle: "italic" }}>avec <strong style={{ fontStyle: "normal", color: "#5eff9e", fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>MARTINE</strong></span>
-          </div>
-          <p style={{ color: "#8fa3bd", fontSize: 11.5, letterSpacing: 1, marginTop: 4, fontFamily: "ui-monospace,monospace" }}>
-            {chapter.sousTitre}
-          </p>
-          <p style={{ color: "#d8e2ee", fontSize: 16.5, lineHeight: 1.6, marginTop: 22 }}>
-            <strong>{chapter.presentationTitre}</strong> {chapter.presentation}
-          </p>
-          <p style={{ color: "#8fa3bd", fontSize: 13.5, marginTop: 10 }}>
-            {chapter.accroche}
-          </p>
           <div style={{ marginTop: 26, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
             {saveExists ? (
               <>
