@@ -245,16 +245,16 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         el.setAttribute("opacity", String(opacity));
         return el;
       };
-      grp.appendChild(mkPoly("#7fffb0", 12, 0.35));  // halo diffus
-      grp.appendChild(mkPoly("#c8ffdc", 4,  1));     // ame lumineuse
+      grp.appendChild(mkPoly("#7fffb0", 6, 0.35)); // halo diffus, discret
+      grp.appendChild(mkPoly("#c8ffdc", 2, 0.95)); // ame lumineuse fine
       const an = document.createElementNS("http://www.w3.org/2000/svg", "animate");
       an.setAttribute("attributeName", "opacity");
       an.setAttribute("values", "1;0");
-      an.setAttribute("dur", "1800ms");
+      an.setAttribute("dur", "700ms");
       an.setAttribute("fill", "freeze");
       grp.appendChild(an);
       playerTrailGroupRef.current.appendChild(grp);
-      setTimeout(() => grp.remove(), 1900);
+      setTimeout(() => grp.remove(), 800);
     };
 
     const tachyonChooseDir = (curCx, curCy) => {

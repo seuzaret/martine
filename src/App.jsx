@@ -1264,8 +1264,10 @@ export default function App() {
                 <stop offset="0" stopColor="#e8b96a" />
                 <stop offset="1" stopColor="#b07836" />
               </linearGradient>
-              {/* clip pour cantonner les hieroglyphes a la face lumineuse */}
-              <clipPath id="ttlPyrLitClip"><polygon points="400,40 100,370 400,400" /></clipPath>
+              <linearGradient id="ttlNile" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stopColor="#3b78a8" />
+                <stop offset="1" stopColor="#1e4a6e" />
+              </linearGradient>
               {/* scrim degrade pour la lisibilite du titre et des boutons */}
               <linearGradient id="ttlScrim" x1="0" x2="0" y1="0" y2="1">
                 <stop offset="0"    stopColor="#080d16" stopOpacity="0.55" />
@@ -1282,86 +1284,45 @@ export default function App() {
             <circle cx="660" cy="130" r="170" fill="url(#ttlSun)" />
             <circle cx="660" cy="130" r="40" fill="#fff2c8" opacity="0.95" />
 
-            {/* dune arriere-plan */}
-            <path d="M0 320 Q200 285 400 315 Q560 335 800 300 L800 450 L0 450 Z"
-              fill="url(#ttlSand)" opacity="0.9" />
+            {/* --- LE NIL qui serpente au loin (derriere les dunes) --- */}
+            <path d="M 800 258 C 700 254 640 274 570 268 C 490 262 430 288 360 280 C 300 274 250 292 190 285 L 190 296 C 250 302 300 285 360 293 C 430 300 490 275 570 281 C 640 287 700 268 800 272 Z"
+              fill="url(#ttlNile)" opacity="0.9" />
+            {/* reflets clairs sur le fleuve */}
+            <path d="M 780 262 C 700 259 640 278 560 273 M 480 285 C 420 290 380 282 320 288"
+              fill="none" stroke="#a8d8f0" strokeWidth="1.2" opacity="0.55" strokeLinecap="round" />
 
-            {/* --- GRANDE PYRAMIDE 3/4 (vue de face-gauche) --- */}
+            {/* dunes lointaines chaudes (au-dessus du sable) */}
+            <path d="M 0 315 Q 120 295 260 310 Q 380 320 500 305 Q 620 295 800 310 L 800 325 L 0 325 Z"
+              fill="#c99060" opacity="0.55" />
+
+            {/* dune de premier plan (couvre le pied du desert) */}
+            <path d="M0 335 Q200 310 400 330 Q560 348 800 320 L800 450 L0 450 Z"
+              fill="url(#ttlSand)" opacity="0.95" />
+
+            {/* --- GRANDE PYRAMIDE 3/4 A GAUCHE (decalee pour voir le desert et le Nil) --- */}
             {/* ombre au sol elargie */}
-            <ellipse cx="380" cy="410" rx="330" ry="26" fill="#3a2410" opacity="0.45" />
+            <ellipse cx="220" cy="418" rx="300" ry="24" fill="#3a2410" opacity="0.45" />
             {/* face droite (ombre) : apex -> front-bas -> right-bas */}
-            <polygon points="400,40 400,400 700,370" fill="url(#ttlPyrDark)" />
+            <polygon points="240,60 240,410 500,378" fill="url(#ttlPyrDark)" />
             {/* face gauche (lumiere) : apex -> left-bas -> front-bas */}
-            <polygon points="400,40 100,370 400,400" fill="url(#ttlPyrLit)" />
+            <polygon points="240,60 -40,378 240,410" fill="url(#ttlPyrLit)" />
             {/* aretes principales */}
-            <line x1="400" y1="40" x2="400" y2="400" stroke="#3a2410" strokeWidth="1" opacity="0.6" />
-            <line x1="400" y1="40" x2="100" y2="370" stroke="#3a2410" strokeWidth="1.2" opacity="0.55" />
-            <line x1="400" y1="40" x2="700" y2="370" stroke="#3a2410" strokeWidth="1.2" opacity="0.55" />
+            <line x1="240" y1="60"  x2="240" y2="410" stroke="#3a2410" strokeWidth="1"   opacity="0.6" />
+            <line x1="240" y1="60"  x2="-40" y2="378" stroke="#3a2410" strokeWidth="1.2" opacity="0.55" />
+            <line x1="240" y1="60"  x2="500" y2="378" stroke="#3a2410" strokeWidth="1.2" opacity="0.55" />
             {/* pierres : lignes horizontales sur les 2 faces */}
             {[0.14, 0.28, 0.42, 0.56, 0.7, 0.84].map((t, i) => {
-              const y = 40 + (400 - 40) * t;
-              const xL = 400 - (400 - 100) * t;
-              const yR = 40 + (370 - 40) * t;
-              const xR = 400 + (700 - 400) * t;
+              const y  = 60 + (410 - 60) * t;
+              const xL = 240 - (240 - (-40)) * t;
+              const yR = 60 + (378 - 60) * t;
+              const xR = 240 + (500 - 240) * t;
               return (
                 <g key={`sto${i}`}>
-                  <line x1={xL} y1={y} x2="400" y2={y} stroke="#3a2410" strokeWidth="0.8" opacity="0.28" />
-                  <line x1="400" y1={y} x2={xR} y2={yR} stroke="#3a2410" strokeWidth="0.8" opacity="0.28" />
+                  <line x1={xL} y1={y}  x2="240" y2={y}  stroke="#3a2410" strokeWidth="0.8" opacity="0.28" />
+                  <line x1="240" y1={y} x2={xR} y2={yR} stroke="#3a2410" strokeWidth="0.8" opacity="0.28" />
                 </g>
               );
             })}
-
-            {/* HIEROGLYPHES : sur la face lumineuse, clip pour ne pas deborder */}
-            <g clipPath="url(#ttlPyrLitClip)">
-              {/* Colonne verticale de glyphes le long de l'axe median de la face lumineuse.
-                  Axe apex(400,40) -> centroide base(250,385) : x = 400-150t, y = 40+345t. */}
-              {(() => {
-                const glyphs = [
-                  /* Ankh */
-                  (<g key="g1">
-                    <circle cx="0" cy="-7" r="7" fill="none" stroke="#3a2410" strokeWidth="2.4" />
-                    <line x1="0" y1="0" x2="0" y2="20" stroke="#3a2410" strokeWidth="2.8" strokeLinecap="round" />
-                    <line x1="-9" y1="5" x2="9" y2="5" stroke="#3a2410" strokeWidth="2.8" strokeLinecap="round" />
-                  </g>),
-                  /* Oeil d'Horus */
-                  (<g key="g2">
-                    <path d="M-14 0 Q0 -10 14 0 Q0 10 -14 0 Z" fill="none" stroke="#3a2410" strokeWidth="2.4" />
-                    <circle cx="0" cy="0" r="3.6" fill="#3a2410" />
-                    <path d="M14 0 L20 5" stroke="#3a2410" strokeWidth="2.2" strokeLinecap="round" />
-                    <path d="M-8 5 L-12 11" stroke="#3a2410" strokeWidth="2.2" strokeLinecap="round" />
-                  </g>),
-                  /* Soleil aile */
-                  (<g key="g3">
-                    <circle cx="0" cy="0" r="6" fill="#3a2410" />
-                    <path d="M-6 0 Q-16 -6 -22 0" stroke="#3a2410" strokeWidth="2.2" fill="none" strokeLinecap="round" />
-                    <path d="M6 0 Q16 -6 22 0" stroke="#3a2410" strokeWidth="2.2" fill="none" strokeLinecap="round" />
-                    <path d="M-6 0 Q-14 3 -18 5" stroke="#3a2410" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-                    <path d="M6 0 Q14 3 18 5" stroke="#3a2410" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-                  </g>),
-                  /* Oiseau (silhouette Horus) */
-                  (<g key="g4">
-                    <path d="M-12 0 L0 -6 L12 0 L8 4 L-8 4 Z" fill="#3a2410" />
-                    <line x1="-12" y1="0" x2="-18" y2="-4" stroke="#3a2410" strokeWidth="2.2" strokeLinecap="round" />
-                    <circle cx="-14" cy="-4" r="1.6" fill="#3a2410" />
-                  </g>),
-                ];
-                return glyphs.map((g, i) => {
-                  const t = 0.22 + i * 0.19;
-                  const x = 400 - 150 * t;
-                  const y = 40 + 345 * t;
-                  return <g key={i} transform={`translate(${x} ${y})`} opacity="0.85">{g}</g>;
-                });
-              })()}
-              {/* Bandeaux fins entre les rangees pour appuyer l'idee d'inscription */}
-              {[0.15, 0.34, 0.53, 0.72, 0.91].map((t, i) => {
-                const y = 40 + 345 * t;
-                const xL = 400 - (400 - 100) * ((y - 40) / 330);
-                return (
-                  <line key={`bd${i}`} x1={xL + 6} y1={y} x2={400 - 4} y2={y}
-                    stroke="#3a2410" strokeWidth="0.7" opacity="0.35" />
-                );
-              })}
-            </g>
 
             {/* --- SABLE QUI VOLE (particules horizontales de droite a gauche) --- */}
             {Array.from({ length: 36 }).map((_, i) => {
