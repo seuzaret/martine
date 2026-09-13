@@ -165,9 +165,10 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
     let lock = 0, isDone = false, isCaught = false;
     /* Etat de deplacement */
     let fromX = 0, fromY = 0, toX = 0, toY = 0, prog = 1;
-    /* Suit la case precedente pour dessiner la trainee du segment
-       QUE L'ON VIENT DE TERMINER (derriere le joueur, pas devant). */
-    let prevCellX = 0, prevCellY = 0, hasPrev = false;
+    /* Emission de la trainee : une goutte toutes les TRAIL_EMIT_MS
+       depuis la position courante du joueur. */
+    let lastEmitAt = 0;
+    const TRAIL_EMIT_MS = 45;
     /* Inertie : quand on relache la touche, le joueur continue encore
        MOMENTUM_STEPS cases dans la meme direction avant de s'arreter.
        Barre espace = frein immediat (momentum remis a 0). */
@@ -220,43 +221,24 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       el.setAttribute("opacity", "0.9");
       trailGroupRef.current.appendChild(el);
     };
-    /* Trainee verte du joueur : segment fondant, disparait apres 1.5s. */
-    const addPlayerTrail = (ax, ay, bx, by) => {
+    /* Trainee verte du joueur : petites gouttes emises en continu
+       depuis le cercle du joueur, chacune fondant en ~700ms. Vraiment
+       "a partir du joueur", pas un segment fixe entre 2 cases. */
+    const emitPlayerTrail = (sx, sy) => {
       if (!playerTrailGroupRef.current) return;
-      const SUB = 8;
-      const pts = [];
-      for (let i = 0; i <= SUB; i++) {
-        const u = i / SUB;
-        const wxA = ax * STEP + (bx - ax) * STEP * u;
-        const wyA = ay * STEP + (by - ay) * STEP * u;
-        const [wx, wy] = warpRef.current(wxA, wyA);
-        const pr = iso(wx, wy);
-        pts.push(`${pr.sx.toFixed(1)},${pr.sy.toFixed(1)}`);
-      }
-      /* Groupe halo + trait net, taille en px ecran (non-scaling-stroke)
-         pour que la trainee reste bien visible malgre le zoom camera. */
-      const grp = document.createElementNS("http://www.w3.org/2000/svg", "g");
-      const mkPoly = (stroke, w, opacity) => {
-        const el = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-        el.setAttribute("points", pts.join(" "));
-        el.setAttribute("fill", "none");
-        el.setAttribute("stroke", stroke);
-        el.setAttribute("stroke-width", String(w));
-        el.setAttribute("stroke-linecap", "round");
-        el.setAttribute("stroke-linejoin", "round");
-        el.setAttribute("vector-effect", "non-scaling-stroke");
-        el.setAttribute("opacity", String(opacity));
-        return el;
-      };
-      grp.appendChild(mkPoly("#7fffb0", 10, 0.55)); // halo diffus vert
-      grp.appendChild(mkPoly("#eaffef", 4,  1));    // ame quasi blanche
-      /* CSS transition (plus fiable que SMIL sur elements ajoutes dynamiquement)
-         + une petite animation de "traine" comme le rouge, mais courte. */
-      grp.style.opacity = "1";
-      grp.style.transition = "opacity 900ms linear";
-      playerTrailGroupRef.current.appendChild(grp);
-      requestAnimationFrame(() => { grp.style.opacity = "0"; });
-      setTimeout(() => grp.remove(), 1000);
+      const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      dot.setAttribute("cx", sx.toFixed(1));
+      dot.setAttribute("cy", sy.toFixed(1));
+      dot.setAttribute("r", "5");
+      dot.setAttribute("fill", "#7fffb0");
+      dot.style.opacity = "0.85";
+      dot.style.transition = "opacity 700ms linear, r 700ms linear";
+      playerTrailGroupRef.current.appendChild(dot);
+      requestAnimationFrame(() => {
+        dot.style.opacity = "0";
+        dot.setAttribute("r", "1.5");
+      });
+      setTimeout(() => dot.remove(), 800);
     };
 
     const tachyonChooseDir = (curCx, curCy) => {
@@ -372,14 +354,6 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
             toX = ncx * STEP; toY = ncy * STEP;
             p.x = fromX; p.y = fromY;
             prog = 0;
-            /* La trainee visible est celle du segment que l'on VIENT
-               DE TERMINER : de la case precedente jusqu'a la case
-               actuelle (cx, cy). Elle reste derriere le joueur. */
-            if (hasPrev && (prevCellX !== cx || prevCellY !== cy)) {
-              addPlayerTrail(prevCellX, prevCellY, cx, cy);
-            }
-            prevCellX = cx; prevCellY = cy;
-            hasPrev = true;
           } else {
             /* on est bloque au bord : coupe court a l'inertie */
             momentum = 0;
@@ -436,6 +410,13 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       const psy = (wx + wy) * ISO_Y;
       if (cameraRef.current) cameraRef.current.setAttribute("transform", `translate(${VW / 2} ${VH / 2}) scale(${ZOOM}) translate(${-psx} ${-psy})`);
       if (playerRef.current) playerRef.current.setAttribute("transform", `translate(${psx} ${psy})`);
+
+      /* Trainee : emet une petite goutte a la position ecran (iso+warp)
+         du joueur toutes les TRAIL_EMIT_MS, seulement pendant qu'il bouge. */
+      if (!isCaught && prog < 1 && t - lastEmitAt >= TRAIL_EMIT_MS) {
+        emitPlayerTrail(psx, psy);
+        lastEmitAt = t;
+      }
       if (minimapPlayerRef.current) {
         minimapPlayerRef.current.setAttribute("cx", (p.x / WORLD) * 60);
         minimapPlayerRef.current.setAttribute("cy", (p.y / WORLD) * 60);
