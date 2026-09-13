@@ -1236,12 +1236,11 @@ export default function App() {
        sauvegarde (car `maxReached` repart à 0 tant qu'on n'a pas repris) */
     const menuMax = Math.max(maxReached, saved?.maxReached ?? saved?.chapterIndex ?? 0);
     return (
-      <div style={{ minHeight: "100vh", background: "radial-gradient(ellipse at 50% 30%, #14233a 0%, #080d16 70%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, fontFamily: "Palatino, Georgia, serif" }}>
+      <div style={{ minHeight: "100vh", background: "#080d16", position: "relative", overflow: "hidden", fontFamily: "Palatino, Georgia, serif" }}>
         {cheatPanel}
-        <div style={{ maxWidth: 560, textAlign: "center" }}>
-          {/* bannière hero : desert et pyramide iso avec hieroglyphes,
-              ciel bleu chaud, sable qui vole, petite caravane. */}
-          <svg viewBox="0 0 800 400" style={{ width: "100%", maxWidth: 540, height: "auto", display: "block", margin: "0 auto -18px" }} aria-hidden="true">
+        {/* Illustration plein ecran : desert 3/4 avec grande pyramide et hieroglyphes */}
+        <svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }} aria-hidden="true">
             <defs>
               <linearGradient id="ttlSky" x1="0" x2="0" y1="0" y2="1">
                 <stop offset="0"    stopColor="#2d69a8" />
@@ -1265,106 +1264,133 @@ export default function App() {
                 <stop offset="0" stopColor="#e8b96a" />
                 <stop offset="1" stopColor="#b07836" />
               </linearGradient>
+              {/* clip pour cantonner les hieroglyphes a la face lumineuse */}
+              <clipPath id="ttlPyrLitClip"><polygon points="400,40 100,370 400,400" /></clipPath>
+              {/* scrim degrade pour la lisibilite du titre et des boutons */}
+              <linearGradient id="ttlScrim" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0"    stopColor="#080d16" stopOpacity="0.55" />
+                <stop offset="0.35" stopColor="#080d16" stopOpacity="0.15" />
+                <stop offset="0.7"  stopColor="#080d16" stopOpacity="0.15" />
+                <stop offset="1"    stopColor="#080d16" stopOpacity="0.7" />
+              </linearGradient>
             </defs>
 
             {/* ciel dégradé */}
-            <rect width="800" height="400" fill="url(#ttlSky)" />
+            <rect width="800" height="450" fill="url(#ttlSky)" />
 
             {/* soleil chaud haut-droit */}
-            <circle cx="620" cy="120" r="130" fill="url(#ttlSun)" />
-            <circle cx="620" cy="120" r="34" fill="#fff2c8" opacity="0.95" />
-
-            {/* montagnes lointaines derriere la pyramide */}
-            <path d="M0 260 L110 210 L200 245 L310 205 L420 240 L520 220 L640 250 L760 215 L800 240 L800 275 L0 275 Z"
-              fill="#7d5a3a" opacity="0.55" />
-            <path d="M0 275 L120 250 L240 268 L360 245 L480 265 L620 250 L780 265 L800 275 Z"
-              fill="#5a4020" opacity="0.35" />
+            <circle cx="660" cy="130" r="170" fill="url(#ttlSun)" />
+            <circle cx="660" cy="130" r="40" fill="#fff2c8" opacity="0.95" />
 
             {/* dune arriere-plan */}
-            <path d="M0 300 Q200 270 420 295 Q560 310 800 285 L800 400 L0 400 Z"
-              fill="url(#ttlSand)" opacity="0.85" />
+            <path d="M0 320 Q200 285 400 315 Q560 335 800 300 L800 450 L0 450 Z"
+              fill="url(#ttlSand)" opacity="0.9" />
 
-            {/* petite caravane (3 chameaux) au loin */}
-            {[520, 555, 588].map((cx, i) => (
-              <g key={`cm${i}`} transform={`translate(${cx} 288) scale(${0.8 + i * 0.05})`}>
-                <path d="M-6 -3 Q-2 -7 2 -3 L6 -1 L6 3 L4 3 L4 5 L2 5 L2 3 L-4 3 L-4 5 L-6 5 L-6 3 Z"
-                  fill="#3a2410" opacity="0.7" />
-                <path d="M-6 -3 Q-8 -5 -7 -8 L-6 -6" stroke="#3a2410" strokeWidth="1" opacity="0.7" fill="none" />
-              </g>
-            ))}
-
-            {/* --- PYRAMIDE ISO A GAUCHE --- */}
-            {/* base ombre au sol */}
-            <ellipse cx="220" cy="358" rx="180" ry="18" fill="#3a2410" opacity="0.35" />
-            {/* face droite (ombre) */}
-            <polygon points="220,120 355,345 220,345" fill="url(#ttlPyrDark)" />
-            {/* face gauche (lumiere) */}
-            <polygon points="220,120 85,345 220,345" fill="url(#ttlPyrLit)" />
-            {/* arete centrale */}
-            <line x1="220" y1="120" x2="220" y2="345" stroke="#3a2410" strokeWidth="0.8" opacity="0.55" />
-            {/* pierres apparentes : lignes horizontales */}
-            {[0.18, 0.34, 0.5, 0.66, 0.82].map((t, i) => {
-              const yL = 120 + (345 - 120) * t;
-              const xLl = 220 - (220 - 85) * t;
-              const xLr = 220 + (355 - 220) * t;
+            {/* --- GRANDE PYRAMIDE 3/4 (vue de face-gauche) --- */}
+            {/* ombre au sol elargie */}
+            <ellipse cx="380" cy="410" rx="330" ry="26" fill="#3a2410" opacity="0.45" />
+            {/* face droite (ombre) : apex -> front-bas -> right-bas */}
+            <polygon points="400,40 400,400 700,370" fill="url(#ttlPyrDark)" />
+            {/* face gauche (lumiere) : apex -> left-bas -> front-bas */}
+            <polygon points="400,40 100,370 400,400" fill="url(#ttlPyrLit)" />
+            {/* aretes principales */}
+            <line x1="400" y1="40" x2="400" y2="400" stroke="#3a2410" strokeWidth="1" opacity="0.6" />
+            <line x1="400" y1="40" x2="100" y2="370" stroke="#3a2410" strokeWidth="1.2" opacity="0.55" />
+            <line x1="400" y1="40" x2="700" y2="370" stroke="#3a2410" strokeWidth="1.2" opacity="0.55" />
+            {/* pierres : lignes horizontales sur les 2 faces */}
+            {[0.14, 0.28, 0.42, 0.56, 0.7, 0.84].map((t, i) => {
+              const y = 40 + (400 - 40) * t;
+              const xL = 400 - (400 - 100) * t;
+              const yR = 40 + (370 - 40) * t;
+              const xR = 400 + (700 - 400) * t;
               return (
                 <g key={`sto${i}`}>
-                  <line x1={xLl} y1={yL} x2="220" y2={yL} stroke="#3a2410" strokeWidth="0.7" opacity="0.35" />
-                  <line x1="220" y1={yL} x2={xLr} y2={yL} stroke="#3a2410" strokeWidth="0.7" opacity="0.35" />
+                  <line x1={xL} y1={y} x2="400" y2={y} stroke="#3a2410" strokeWidth="0.8" opacity="0.28" />
+                  <line x1="400" y1={y} x2={xR} y2={yR} stroke="#3a2410" strokeWidth="0.8" opacity="0.28" />
                 </g>
               );
             })}
 
-            {/* HIEROGLYPHES sur la face lumineuse (colonne centrale) */}
-            <g fill="#3a2410" opacity="0.75">
-              {/* Ankh */}
-              <g transform="translate(160 205)">
-                <circle cx="0" cy="-3" r="4" fill="none" stroke="#3a2410" strokeWidth="1.4" />
-                <line x1="0" y1="1" x2="0" y2="12" stroke="#3a2410" strokeWidth="1.6" />
-                <line x1="-5" y1="4" x2="5" y2="4" stroke="#3a2410" strokeWidth="1.6" />
-              </g>
-              {/* Oeil d'Horus (simplifie) */}
-              <g transform="translate(160 240)">
-                <path d="M-7 0 Q0 -5 7 0 Q0 5 -7 0 Z" fill="none" stroke="#3a2410" strokeWidth="1.3" />
-                <circle cx="0" cy="0" r="1.8" fill="#3a2410" />
-                <path d="M7 0 L10 3" stroke="#3a2410" strokeWidth="1.2" />
-                <path d="M-4 3 L-6 6" stroke="#3a2410" strokeWidth="1.2" />
-              </g>
-              {/* Soleil aile */}
-              <g transform="translate(160 275)">
-                <circle cx="0" cy="0" r="3" fill="#3a2410" />
-                <path d="M-3 0 Q-9 -3 -11 0 M3 0 Q9 -3 11 0" stroke="#3a2410" strokeWidth="1.1" fill="none" />
-              </g>
-              {/* Oiseau (Horus) */}
-              <g transform="translate(160 308)">
-                <path d="M-6 0 L0 -3 L6 0 L4 2 L-4 2 Z" fill="#3a2410" />
-                <path d="M-6 0 L-9 -2" stroke="#3a2410" strokeWidth="1.2" />
-              </g>
+            {/* HIEROGLYPHES : sur la face lumineuse, clip pour ne pas deborder */}
+            <g clipPath="url(#ttlPyrLitClip)">
+              {/* Colonne verticale de glyphes le long de l'axe median de la face lumineuse.
+                  Axe apex(400,40) -> centroide base(250,385) : x = 400-150t, y = 40+345t. */}
+              {(() => {
+                const glyphs = [
+                  /* Ankh */
+                  (<g key="g1">
+                    <circle cx="0" cy="-7" r="7" fill="none" stroke="#3a2410" strokeWidth="2.4" />
+                    <line x1="0" y1="0" x2="0" y2="20" stroke="#3a2410" strokeWidth="2.8" strokeLinecap="round" />
+                    <line x1="-9" y1="5" x2="9" y2="5" stroke="#3a2410" strokeWidth="2.8" strokeLinecap="round" />
+                  </g>),
+                  /* Oeil d'Horus */
+                  (<g key="g2">
+                    <path d="M-14 0 Q0 -10 14 0 Q0 10 -14 0 Z" fill="none" stroke="#3a2410" strokeWidth="2.4" />
+                    <circle cx="0" cy="0" r="3.6" fill="#3a2410" />
+                    <path d="M14 0 L20 5" stroke="#3a2410" strokeWidth="2.2" strokeLinecap="round" />
+                    <path d="M-8 5 L-12 11" stroke="#3a2410" strokeWidth="2.2" strokeLinecap="round" />
+                  </g>),
+                  /* Soleil aile */
+                  (<g key="g3">
+                    <circle cx="0" cy="0" r="6" fill="#3a2410" />
+                    <path d="M-6 0 Q-16 -6 -22 0" stroke="#3a2410" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+                    <path d="M6 0 Q16 -6 22 0" stroke="#3a2410" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+                    <path d="M-6 0 Q-14 3 -18 5" stroke="#3a2410" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+                    <path d="M6 0 Q14 3 18 5" stroke="#3a2410" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+                  </g>),
+                  /* Oiseau (silhouette Horus) */
+                  (<g key="g4">
+                    <path d="M-12 0 L0 -6 L12 0 L8 4 L-8 4 Z" fill="#3a2410" />
+                    <line x1="-12" y1="0" x2="-18" y2="-4" stroke="#3a2410" strokeWidth="2.2" strokeLinecap="round" />
+                    <circle cx="-14" cy="-4" r="1.6" fill="#3a2410" />
+                  </g>),
+                ];
+                return glyphs.map((g, i) => {
+                  const t = 0.22 + i * 0.19;
+                  const x = 400 - 150 * t;
+                  const y = 40 + 345 * t;
+                  return <g key={i} transform={`translate(${x} ${y})`} opacity="0.85">{g}</g>;
+                });
+              })()}
+              {/* Bandeaux fins entre les rangees pour appuyer l'idee d'inscription */}
+              {[0.15, 0.34, 0.53, 0.72, 0.91].map((t, i) => {
+                const y = 40 + 345 * t;
+                const xL = 400 - (400 - 100) * ((y - 40) / 330);
+                return (
+                  <line key={`bd${i}`} x1={xL + 6} y1={y} x2={400 - 4} y2={y}
+                    stroke="#3a2410" strokeWidth="0.7" opacity="0.35" />
+                );
+              })}
             </g>
 
-            {/* --- SABLE QUI VOLE (particules horizontales) --- */}
-            {Array.from({ length: 30 }).map((_, i) => {
-              const y = 150 + (i * 47) % 220;
+            {/* --- SABLE QUI VOLE (particules horizontales de droite a gauche) --- */}
+            {Array.from({ length: 36 }).map((_, i) => {
+              const y = 160 + (i * 43) % 260;
               const dur = 4 + (i % 5);
-              const size = 1 + (i % 3) * 0.6;
+              const size = 1 + (i % 3) * 0.7;
               return (
                 <circle key={`sd${i}`} cx="820" cy={y} r={size} fill="#e8c47a" opacity={0.5 + (i % 3) * 0.15}>
                   <animate attributeName="cx" from="820" to="-40" dur={`${dur}s`} begin={`${(i * 0.3) % 5}s`} repeatCount="indefinite" />
-                  <animate attributeName="cy" values={`${y};${y - 6};${y + 4};${y}`} dur={`${dur}s`} begin={`${(i * 0.3) % 5}s`} repeatCount="indefinite" />
+                  <animate attributeName="cy" values={`${y};${y - 7};${y + 5};${y}`} dur={`${dur}s`} begin={`${(i * 0.3) % 5}s`} repeatCount="indefinite" />
                   <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.1;0.85;1" dur={`${dur}s`} begin={`${(i * 0.3) % 5}s`} repeatCount="indefinite" />
                 </circle>
               );
             })}
 
             {/* petites bandes de sable soufflees au sol */}
-            {[320, 340, 360, 380].map((y, i) => (
+            {[340, 360, 380, 405].map((y, i) => (
               <path key={`bd${i}`} d={`M 0 ${y} Q 200 ${y - 3} 400 ${y} T 800 ${y}`}
-                fill="none" stroke="#e8c47a" strokeWidth="1" opacity="0.5">
-                <animate attributeName="opacity" values="0.15;0.55;0.15" dur={`${3 + i * 0.4}s`} repeatCount="indefinite" />
+                fill="none" stroke="#e8c47a" strokeWidth="1.2" opacity="0.55">
+                <animate attributeName="opacity" values="0.15;0.6;0.15" dur={`${3 + i * 0.4}s`} repeatCount="indefinite" />
               </path>
             ))}
 
+            {/* scrim vertical pour lisibilite du titre / boutons superposes */}
+            <rect width="800" height="450" fill="url(#ttlScrim)" />
           </svg>
+
+          {/* Contenu superpose (titre en haut, boutons en bas), plein ecran */}
+          <div style={{ position: "relative", zIndex: 2, minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-between", padding: "32px 20px 40px", textAlign: "center" }}>
           <h1 style={{ fontFamily: TITRE_FONT, fontSize: "clamp(38px,9.5vw,72px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", margin: "4px 0 0", lineHeight: 1.08, background: "linear-gradient(100deg, #e8a24a 0%, #ffd166 40%, #e86a4a 80%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", textShadow: "0 2px 22px rgba(232,150,74,0.3)" }}>
             Les fils du temps
           </h1>
@@ -1429,7 +1455,6 @@ export default function App() {
               </button>
             </div>
           </div>
-
         </div>
 
         {/* menu réglages (export / import de la sauvegarde) */}
