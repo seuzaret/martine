@@ -230,21 +230,31 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         const pr = iso(wx, wy);
         pts.push(`${pr.sx.toFixed(1)},${pr.sy.toFixed(1)}`);
       }
-      const el = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-      el.setAttribute("points", pts.join(" "));
-      el.setAttribute("fill", "none");
-      el.setAttribute("stroke", "#7fffb0");
-      el.setAttribute("stroke-width", "3");
-      el.setAttribute("stroke-linecap", "round");
-      el.setAttribute("opacity", "0.85");
+      /* Groupe halo + trait net, taille en px ecran (non-scaling-stroke)
+         pour que la trainee reste bien visible malgre le zoom camera. */
+      const grp = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      const mkPoly = (stroke, w, opacity) => {
+        const el = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        el.setAttribute("points", pts.join(" "));
+        el.setAttribute("fill", "none");
+        el.setAttribute("stroke", stroke);
+        el.setAttribute("stroke-width", String(w));
+        el.setAttribute("stroke-linecap", "round");
+        el.setAttribute("stroke-linejoin", "round");
+        el.setAttribute("vector-effect", "non-scaling-stroke");
+        el.setAttribute("opacity", String(opacity));
+        return el;
+      };
+      grp.appendChild(mkPoly("#7fffb0", 12, 0.35));  // halo diffus
+      grp.appendChild(mkPoly("#c8ffdc", 4,  1));     // ame lumineuse
       const an = document.createElementNS("http://www.w3.org/2000/svg", "animate");
       an.setAttribute("attributeName", "opacity");
-      an.setAttribute("values", "0.85;0");
-      an.setAttribute("dur", "1500ms");
+      an.setAttribute("values", "1;0");
+      an.setAttribute("dur", "1800ms");
       an.setAttribute("fill", "freeze");
-      el.appendChild(an);
-      playerTrailGroupRef.current.appendChild(el);
-      setTimeout(() => el.remove(), 1600);
+      grp.appendChild(an);
+      playerTrailGroupRef.current.appendChild(grp);
+      setTimeout(() => grp.remove(), 1900);
     };
 
     const tachyonChooseDir = (curCx, curCy) => {
@@ -700,11 +710,12 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         <svg viewBox={`0 0 ${VW} ${VH}`} preserveAspectRatio="xMidYMid meet" width="100%" height="100%">
           <g ref={cameraRef} transform={`translate(${VW / 2} ${VH / 2}) scale(${ZOOM})`}>
             {worldStatic}
-            {/* Trainee verte du joueur (segments fondants) */}
-            <g ref={playerTrailGroupRef} />
-
             {/* Trainee rouge du tachyon (les segments sont ajoutes en direct) */}
             <g ref={trailGroupRef} />
+
+            {/* Trainee verte du joueur (segments fondants), rendue au-dessus
+                pour rester visible malgre la trainee rouge et la grille. */}
+            <g ref={playerTrailGroupRef} />
 
             {/* Faux noeuds temporels : apparaissent et disparaissent */}
             {decoys.map((d) => {
