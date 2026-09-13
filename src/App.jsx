@@ -1280,9 +1280,9 @@ export default function App() {
             {/* ciel dégradé */}
             <rect width="800" height="450" fill="url(#ttlSky)" />
 
-            {/* soleil chaud haut-droit + halo brumeux */}
-            <circle cx="670" cy="115" r="200" fill="url(#ttlSun)" opacity="0.9" />
-            <circle cx="670" cy="115" r="46" fill="#fff2c8" />
+            {/* soleil chaud haut-droit + halo brumeux (plus petit) */}
+            <circle cx="670" cy="105" r="130" fill="url(#ttlSun)" opacity="0.85" />
+            <circle cx="670" cy="105" r="28" fill="#fff2c8" />
 
             {/* --- DESERT ARRIERE-PLAN : plusieurs couches de dunes --- */}
             {/* dunes les plus lointaines (bleu/violet chaud) */}
@@ -1358,18 +1358,24 @@ export default function App() {
               );
             })}
 
-            {/* --- ANKH grave sur la face lumineuse, au tiers superieur --- */}
-            <g transform="translate(178 195)" opacity="0.88">
+            {/* --- ANKH grave sur la face lumineuse, en perspective de la face ---
+                 La face lumineuse (apex 260,20 - left -90,388 - front 260,438)
+                 a deux axes propres sur l'ecran :
+                   u (horizontal de la face) ≈ (0.989, 0.141)   [de left vers front]
+                   v (vertical de la face, apex -> centre base) ≈ (-0.407, 0.914)
+                 On scale 0.9 pour la taille finale ; matrix(u.x*s, u.y*s, v.x*s, v.y*s).
+                 Origine placee au tiers superieur de la face. */}
+            <g transform="translate(180 205) matrix(0.89 0.127 -0.366 0.823 0 0)" opacity="0.88">
               {/* halo doré subtil derriere l'ankh */}
-              <ellipse cx="0" cy="6" rx="42" ry="52" fill="#ffd166" opacity="0.14" />
+              <ellipse cx="0" cy="6" rx="34" ry="46" fill="#ffd166" opacity="0.16" />
               {/* boucle superieure */}
-              <ellipse cx="0" cy="-22" rx="16" ry="18" fill="none" stroke="#3a2410" strokeWidth="4.5" />
+              <ellipse cx="0" cy="-22" rx="14" ry="17" fill="none" stroke="#3a2410" strokeWidth="4.2" />
               {/* tige verticale */}
-              <line x1="0" y1="-4" x2="0" y2="42" stroke="#3a2410" strokeWidth="5.5" strokeLinecap="round" />
+              <line x1="0" y1="-5" x2="0" y2="40" stroke="#3a2410" strokeWidth="5" strokeLinecap="round" />
               {/* barre transversale */}
-              <line x1="-22" y1="6" x2="22" y2="6" stroke="#3a2410" strokeWidth="5.5" strokeLinecap="round" />
-              {/* petit trait de lumiere sur l'ankh (soleil) */}
-              <path d="M-14 -22 A 14 16 0 0 1 14 -22" stroke="#f0c574" strokeWidth="1.4" fill="none" opacity="0.6" />
+              <line x1="-20" y1="5" x2="20" y2="5" stroke="#3a2410" strokeWidth="5" strokeLinecap="round" />
+              {/* petit lissage clair (chanfrein) sur la boucle */}
+              <path d="M-12 -22 A 12 14 0 0 1 12 -22" stroke="#f0c574" strokeWidth="1.4" fill="none" opacity="0.55" />
             </g>
 
             {/* --- SABLE QUI VOLE (particules horizontales de droite a gauche) --- */}

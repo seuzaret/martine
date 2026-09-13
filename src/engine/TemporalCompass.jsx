@@ -165,6 +165,9 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
     let lock = 0, isDone = false, isCaught = false;
     /* Etat de deplacement */
     let fromX = 0, fromY = 0, toX = 0, toY = 0, prog = 1;
+    /* Suit la case precedente pour dessiner la trainee du segment
+       QUE L'ON VIENT DE TERMINER (derriere le joueur, pas devant). */
+    let prevCellX = 0, prevCellY = 0, hasPrev = false;
     /* Inertie : quand on relache la touche, le joueur continue encore
        MOMENTUM_STEPS cases dans la meme direction avant de s'arreter.
        Barre espace = frein immediat (momentum remis a 0). */
@@ -369,7 +372,14 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
             toX = ncx * STEP; toY = ncy * STEP;
             p.x = fromX; p.y = fromY;
             prog = 0;
-            addPlayerTrail(cx, cy, ncx, ncy);
+            /* La trainee visible est celle du segment que l'on VIENT
+               DE TERMINER : de la case precedente jusqu'a la case
+               actuelle (cx, cy). Elle reste derriere le joueur. */
+            if (hasPrev && (prevCellX !== cx || prevCellY !== cy)) {
+              addPlayerTrail(prevCellX, prevCellY, cx, cy);
+            }
+            prevCellX = cx; prevCellY = cy;
+            hasPrev = true;
           } else {
             /* on est bloque au bord : coupe court a l'inertie */
             momentum = 0;
