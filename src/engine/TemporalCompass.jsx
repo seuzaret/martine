@@ -245,16 +245,15 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         el.setAttribute("opacity", String(opacity));
         return el;
       };
-      grp.appendChild(mkPoly("#7fffb0", 6, 0.35)); // halo diffus, discret
-      grp.appendChild(mkPoly("#c8ffdc", 2, 0.95)); // ame lumineuse fine
-      const an = document.createElementNS("http://www.w3.org/2000/svg", "animate");
-      an.setAttribute("attributeName", "opacity");
-      an.setAttribute("values", "1;0");
-      an.setAttribute("dur", "700ms");
-      an.setAttribute("fill", "freeze");
-      grp.appendChild(an);
+      grp.appendChild(mkPoly("#7fffb0", 10, 0.55)); // halo diffus vert
+      grp.appendChild(mkPoly("#eaffef", 4,  1));    // ame quasi blanche
+      /* CSS transition (plus fiable que SMIL sur elements ajoutes dynamiquement)
+         + une petite animation de "traine" comme le rouge, mais courte. */
+      grp.style.opacity = "1";
+      grp.style.transition = "opacity 900ms linear";
       playerTrailGroupRef.current.appendChild(grp);
-      setTimeout(() => grp.remove(), 800);
+      requestAnimationFrame(() => { grp.style.opacity = "0"; });
+      setTimeout(() => grp.remove(), 1000);
     };
 
     const tachyonChooseDir = (curCx, curCy) => {
