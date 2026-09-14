@@ -218,6 +218,270 @@ function MaterializePhase({ onEnter }) {
   );
 }
 
+/* ---------- PHASE COCKPIT : paysage teinté + console demi-cercle ---------- */
+function CockpitPhase({ onGo, onCancel }) {
+  return (
+    <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", background: "#050810" }}>
+      {/* ---- HAUT : paysage vu depuis le cockpit, teinté jaunâtre ---- */}
+      <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
+        {backdropScene}
+        {/* teinte jaunâtre du verre du cockpit */}
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(180deg, rgba(255,205,110,0.28) 0%, rgba(255,175,80,0.22) 60%, rgba(200,130,50,0.35) 100%)",
+          mixBlendMode: "multiply",
+          pointerEvents: "none",
+        }} />
+        {/* léger reflet en haut du verre */}
+        <div style={{
+          position: "absolute", top: 0, left: 0, right: 0, height: "18%",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 100%)",
+          pointerEvents: "none",
+        }} />
+        {/* petits reflets diagonaux sur le verre */}
+        <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+          viewBox="0 0 800 500" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M 60 20 L 200 30 L 220 100 L 80 90 Z" fill="rgba(255,255,255,0.06)" />
+          <path d="M 620 20 L 720 40 L 700 80 L 600 60 Z" fill="rgba(255,255,255,0.05)" />
+        </svg>
+      </div>
+
+      {/* ---- BAS : console demi-cercle métal avec cadrans et boutons ---- */}
+      <div style={{ position: "relative", height: "42%", minHeight: 280, overflow: "visible" }}>
+        <svg viewBox="0 0 1000 420" preserveAspectRatio="xMidYMax slice"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }}
+          aria-hidden="true">
+          <defs>
+            <linearGradient id="ckMetal" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0"    stopColor="#3a4552" />
+              <stop offset="0.4"  stopColor="#5a6874" />
+              <stop offset="0.7"  stopColor="#2a3542" />
+              <stop offset="1"    stopColor="#141c26" />
+            </linearGradient>
+            <linearGradient id="ckMetalHi" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0"    stopColor="#8a98a8" />
+              <stop offset="1"    stopColor="#3a4552" />
+            </linearGradient>
+            <linearGradient id="ckScreen" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0"    stopColor="#0a2a1a" />
+              <stop offset="1"    stopColor="#062010" />
+            </linearGradient>
+            <radialGradient id="ckKnobG" cx="0.35" cy="0.35" r="0.7">
+              <stop offset="0"    stopColor="#b0bcc8" />
+              <stop offset="0.6"  stopColor="#4a5460" />
+              <stop offset="1"    stopColor="#1a2028" />
+            </radialGradient>
+            <radialGradient id="ckLedR" cx="0.4" cy="0.4" r="0.7">
+              <stop offset="0" stopColor="#ffdcdc" /><stop offset="0.4" stopColor="#ff5030" /><stop offset="1" stopColor="#6a1010" />
+            </radialGradient>
+            <radialGradient id="ckLedG" cx="0.4" cy="0.4" r="0.7">
+              <stop offset="0" stopColor="#e8ffdc" /><stop offset="0.4" stopColor="#5eff9e" /><stop offset="1" stopColor="#0a4020" />
+            </radialGradient>
+            <radialGradient id="ckLedY" cx="0.4" cy="0.4" r="0.7">
+              <stop offset="0" stopColor="#fff4c0" /><stop offset="0.4" stopColor="#ffd166" /><stop offset="1" stopColor="#6a4a10" />
+            </radialGradient>
+            <radialGradient id="ckLedB" cx="0.4" cy="0.4" r="0.7">
+              <stop offset="0" stopColor="#dcf0ff" /><stop offset="0.4" stopColor="#7fd8ff" /><stop offset="1" stopColor="#103a5a" />
+            </radialGradient>
+          </defs>
+
+          {/* Demi-cercle métallique — la console épouse la courbe du cockpit */}
+          <path d="M 0 420 L 0 60 Q 500 -140 1000 60 L 1000 420 Z" fill="url(#ckMetal)" />
+          {/* Bord supérieur brillant */}
+          <path d="M 0 60 Q 500 -140 1000 60" stroke="url(#ckMetalHi)" strokeWidth="6" fill="none" />
+          <path d="M 0 68 Q 500 -132 1000 68" stroke="rgba(255,255,255,0.15)" strokeWidth="2" fill="none" />
+          {/* Rivets le long du bord supérieur */}
+          {Array.from({ length: 16 }).map((_, i) => {
+            const t = i / 15;
+            const x = t * 1000;
+            const y = 60 - 200 * (4 * t * (1 - t));
+            return <circle key={i} cx={x} cy={y + 10} r="3.5" fill="#141c26" stroke="#6a7a88" strokeWidth="1" />;
+          })}
+
+          {/* --- Rangée de CADRANS ANALOGIQUES --- */}
+          {[
+            { cx: 120, cy: 170, hue: "#ffd166" },
+            { cx: 260, cy: 130, hue: "#7fd8ff" },
+            { cx: 400, cy: 95,  hue: "#5eff9e" },
+            { cx: 600, cy: 95,  hue: "#ff9060" },
+            { cx: 740, cy: 130, hue: "#c8a8f0" },
+            { cx: 880, cy: 170, hue: "#ffd166" },
+          ].map((d, i) => (
+            <g key={i}>
+              {/* cerclage métallique */}
+              <circle cx={d.cx} cy={d.cy} r="46" fill="#0a1018" stroke="#8a98a8" strokeWidth="3" />
+              <circle cx={d.cx} cy={d.cy} r="42" fill="#0e1a24" stroke="#2a3542" strokeWidth="1" />
+              {/* graduations */}
+              {Array.from({ length: 11 }).map((_, k) => {
+                const a = -Math.PI * 0.75 + (k / 10) * Math.PI * 1.5;
+                const x1 = d.cx + Math.cos(a) * 32, y1 = d.cy + Math.sin(a) * 32;
+                const x2 = d.cx + Math.cos(a) * 38, y2 = d.cy + Math.sin(a) * 38;
+                return <line key={k} x1={x1} y1={y1} x2={x2} y2={y2} stroke={k > 7 ? "#ff5030" : d.hue} strokeWidth={k % 5 === 0 ? 2 : 1.2} />;
+              })}
+              {/* aiguille animée */}
+              <g style={{ transformOrigin: `${d.cx}px ${d.cy}px` }}>
+                <animateTransform attributeName="transform" type="rotate"
+                  values={`${-60 + i * 8};${30 + i * 4};${-60 + i * 8}`}
+                  dur={`${3.5 + i * 0.3}s`} repeatCount="indefinite" />
+                <line x1={d.cx} y1={d.cy} x2={d.cx} y2={d.cy - 30} stroke={d.hue} strokeWidth="2.5" strokeLinecap="round" />
+                <circle cx={d.cx} cy={d.cy} r="4" fill={d.hue} />
+              </g>
+              {/* pas de vis */}
+              <circle cx={d.cx - 40} cy={d.cy - 40} r="2" fill="#141c26" />
+              <circle cx={d.cx + 40} cy={d.cy - 40} r="2" fill="#141c26" />
+              <circle cx={d.cx - 40} cy={d.cy + 40} r="2" fill="#141c26" />
+              <circle cx={d.cx + 40} cy={d.cy + 40} r="2" fill="#141c26" />
+            </g>
+          ))}
+
+          {/* --- ECRAN CENTRAL (oscilloscope) --- */}
+          <rect x="420" y="170" width="160" height="80" rx="6" fill="url(#ckScreen)" stroke="#8a98a8" strokeWidth="2.5" />
+          <rect x="424" y="174" width="152" height="72" rx="4" fill="none" stroke="#0e2818" strokeWidth="1" />
+          {/* grille */}
+          {[440, 460, 480, 500, 520, 540, 560].map((x) => (
+            <line key={x} x1={x} y1="176" x2={x} y2="244" stroke="#144030" strokeWidth="0.5" />
+          ))}
+          {[190, 210, 230].map((y) => (
+            <line key={y} x1="424" y1={y} x2="576" y2={y} stroke="#144030" strokeWidth="0.5" />
+          ))}
+          {/* onde sinusoïdale animée */}
+          <path fill="none" stroke="#5eff9e" strokeWidth="2" strokeLinecap="round"
+            d="M 424 210 Q 445 180 465 210 T 505 210 T 545 210 T 585 210">
+            <animate attributeName="d" dur="2.4s" repeatCount="indefinite"
+              values="M 424 210 Q 445 180 465 210 T 505 210 T 545 210 T 585 210;
+                      M 424 210 Q 445 240 465 210 T 505 210 T 545 210 T 585 210;
+                      M 424 210 Q 445 180 465 210 T 505 210 T 545 210 T 585 210" />
+          </path>
+          {/* texte "SIGNAL" */}
+          <text x="500" y="240" textAnchor="middle" fontSize="8" fill="#5eff9e" fontFamily="ui-monospace,monospace" letterSpacing="2">SIGNAL LOCK</text>
+
+          {/* --- BOUTONS-POUSSOIRS colorés (grille sous les cadrans) --- */}
+          {[
+            [80, 260, "ckLedR"], [130, 260, "ckLedY"], [180, 260, "ckLedG"], [230, 260, "ckLedB"],
+            [80, 310, "ckLedG"], [130, 310, "ckLedR"], [180, 310, "ckLedY"], [230, 310, "ckLedB"],
+            [770, 260, "ckLedB"], [820, 260, "ckLedG"], [870, 260, "ckLedR"], [920, 260, "ckLedY"],
+            [770, 310, "ckLedY"], [820, 310, "ckLedR"], [870, 310, "ckLedG"], [920, 310, "ckLedB"],
+          ].map(([x, y, g], i) => (
+            <g key={i}>
+              <circle cx={x} cy={y} r="16" fill="#141c26" stroke="#4a5460" strokeWidth="2" />
+              <circle cx={x} cy={y} r="11" fill={`url(#${g})`}>
+                <animate attributeName="opacity" values="0.6;1;0.6" dur={`${1.2 + (i % 5) * 0.3}s`} begin={`${(i * 0.13) % 2}s`} repeatCount="indefinite" />
+              </circle>
+              <circle cx={x - 3} cy={y - 3} r="3" fill="#ffffff" opacity="0.35" />
+            </g>
+          ))}
+
+          {/* --- Grands BOUTONS-ROTATIFS (potentiomètres) --- */}
+          {[
+            [340, 300, 0], [380, 320, 90], [660, 320, 45], [700, 300, -45],
+          ].map(([x, y, rot], i) => (
+            <g key={i} transform={`translate(${x} ${y}) rotate(${rot})`}>
+              <circle r="22" fill="url(#ckKnobG)" stroke="#141c26" strokeWidth="2" />
+              <rect x="-2.5" y="-20" width="5" height="12" rx="1" fill="#141c26" />
+              {/* graduations autour */}
+              {Array.from({ length: 8 }).map((_, k) => {
+                const a = (k / 8) * Math.PI * 2;
+                return <line key={k} x1={Math.cos(a) * 26} y1={Math.sin(a) * 26} x2={Math.cos(a) * 30} y2={Math.sin(a) * 30} stroke="#3a4552" strokeWidth="1.5" />;
+              })}
+            </g>
+          ))}
+
+          {/* --- Interrupteurs à bascule --- */}
+          {[[300, 250], [720, 250]].map(([x, y], i) => (
+            <g key={i}>
+              <rect x={x - 20} y={y - 8} width="40" height="16" rx="3" fill="#141c26" stroke="#4a5460" strokeWidth="1.5" />
+              <rect x={x - 2} y={y - 20} width="4" height="16" rx="1" fill="url(#ckMetalHi)" stroke="#141c26" strokeWidth="0.6" />
+              <circle cx={x} cy={y - 22} r="3.5" fill="url(#ckKnobG)" />
+            </g>
+          ))}
+
+          {/* --- Petit écran texte à droite --- */}
+          <rect x="620" y="255" width="120" height="30" rx="4" fill="#0a1a10" stroke="#4a5460" strokeWidth="1.5" />
+          <text x="630" y="275" fontSize="11" fill="#5eff9e" fontFamily="ui-monospace,monospace" letterSpacing="1.5">
+            <tspan>T-FLUX: </tspan>
+            <tspan fill="#ffd166">
+              <animate attributeName="opacity" values="0.5;1;0.5" dur="1s" repeatCount="indefinite" />
+              READY
+            </tspan>
+          </text>
+          {/* Petit écran texte à gauche */}
+          <rect x="260" y="255" width="120" height="30" rx="4" fill="#0a1a10" stroke="#4a5460" strokeWidth="1.5" />
+          <text x="270" y="275" fontSize="11" fill="#7fd8ff" fontFamily="ui-monospace,monospace" letterSpacing="1.5">
+            NODE: <tspan fill="#ffd166">NEXT ERA</tspan>
+          </text>
+
+          {/* --- Volant/manche central (esthétique) --- */}
+          <g transform="translate(500 340)">
+            <circle r="34" fill="none" stroke="url(#ckMetalHi)" strokeWidth="6" />
+            <circle r="30" fill="none" stroke="#141c26" strokeWidth="2" />
+            <line x1="-34" y1="0" x2="34" y2="0" stroke="url(#ckMetalHi)" strokeWidth="4" />
+            <line x1="0" y1="-34" x2="0" y2="34" stroke="url(#ckMetalHi)" strokeWidth="4" />
+            <circle r="9" fill="url(#ckKnobG)" stroke="#141c26" strokeWidth="1.5" />
+            <circle r="3" fill="#ff5030">
+              <animate attributeName="opacity" values="0.4;1;0.4" dur="1.4s" repeatCount="indefinite" />
+            </circle>
+          </g>
+        </svg>
+
+        {/* Interface interactive HTML positionnée par-dessus la console */}
+        <div style={{
+          position: "absolute", inset: 0,
+          display: "flex", flexDirection: "column", alignItems: "center",
+          justifyContent: "flex-start", paddingTop: "3%", gap: 8,
+          pointerEvents: "none",
+        }}>
+          <div style={{
+            fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 4,
+            color: "#ffd166", textShadow: "0 0 10px rgba(255,209,102,0.7)",
+            background: "rgba(4,8,14,0.55)", padding: "5px 14px", borderRadius: 4,
+            border: "1px solid rgba(255,209,102,0.4)",
+          }}>
+            ▶ COCKPIT — MACHINE TEMPORELLE
+          </div>
+          <p style={{
+            margin: "6px 20px 0", maxWidth: 640, textAlign: "center",
+            color: "#e8eef5", fontSize: 14, lineHeight: 1.45,
+            fontFamily: "Palatino, Georgia, serif",
+            background: "rgba(4,8,14,0.55)", padding: "8px 14px", borderRadius: 8,
+          }}>
+            « Plonge dans le <strong style={{ color: "#7fd8ff" }}>flux temporel</strong>
+            {" "}et verrouille le prochain <strong style={{ color: "#ffd166" }}>nœud de communication</strong>. »
+          </p>
+        </div>
+
+        {/* Bouton GO — grand, positionné juste au-dessus du volant */}
+        <button onClick={onGo} autoFocus
+          style={{
+            position: "absolute", left: "50%", bottom: "18%", transform: "translateX(-50%)",
+            background: "linear-gradient(180deg,#ff8a3a,#c0501a)",
+            color: "#fff", border: "3px solid #ffd166",
+            borderRadius: 999, width: 96, height: 96,
+            fontSize: 22, fontWeight: 900, cursor: "pointer",
+            fontFamily: "ui-monospace,monospace", letterSpacing: 3,
+            boxShadow: "0 0 32px rgba(255,140,60,0.7), inset 0 -6px 12px rgba(0,0,0,0.35), inset 0 6px 12px rgba(255,255,255,0.3)",
+            animation: "tvGoPulse 1.6s ease-in-out infinite",
+          }} title="Lancer la boussole temporelle">GO</button>
+
+        <button onClick={onCancel}
+          style={{
+            position: "absolute", right: 14, bottom: 8,
+            background: "rgba(0,0,0,0.45)", color: "#8fa3bd",
+            border: "1px solid #2a3542",
+            borderRadius: 6, padding: "5px 10px", fontSize: 11,
+            cursor: "pointer", fontFamily: "ui-monospace,monospace",
+          }}>← retour</button>
+
+        <style>{`
+          @keyframes tvGoPulse {
+            0%,100% { transform: translateX(-50%) scale(1); box-shadow: 0 0 32px rgba(255,140,60,0.7), inset 0 -6px 12px rgba(0,0,0,0.35), inset 0 6px 12px rgba(255,255,255,0.3); }
+            50%     { transform: translateX(-50%) scale(1.06); box-shadow: 0 0 48px rgba(255,140,60,0.9), inset 0 -6px 12px rgba(0,0,0,0.35), inset 0 6px 12px rgba(255,255,255,0.3); }
+          }
+        `}</style>
+      </div>
+    </div>
+  );
+}
+
 /* ============================================================
    COMPOSANT PRINCIPAL
    ============================================================ */
@@ -377,65 +641,10 @@ export function TimeVessel({ nextLabel, onDone, onCancel }) {
 
       {/* ---------- 3. COCKPIT ---------- */}
       {phase === "cockpit" && (
-        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column" }}>
-          <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
-            {backdropScene}
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(4,20,10,0.15) 0%, rgba(4,20,10,0.35) 100%)" }} />
-            <svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice"
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} aria-hidden="true">
-              <path d="M 0 0 L 0 450 L 60 380 Q 400 340 740 380 L 800 450 L 800 0 Z"
-                fill="#0e1a30" />
-              {[80, 170, 260, 350, 440, 530, 620, 720].map((x, i) => (
-                <circle key={i} cx={x} cy="365" r="3" fill="#5eff9e" opacity="0.6" />
-              ))}
-              <path d="M 60 380 Q 400 340 740 380" stroke="#5eff9e" strokeWidth="2" fill="none" opacity="0.7" />
-            </svg>
-          </div>
-          <div style={{
-            background: "linear-gradient(180deg, #14202c 0%, #0a1420 100%)",
-            borderTop: "3px solid #2a4058",
-            padding: "20px 20px 26px",
-            display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
-          }}>
-            <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3, color: "#5eff9e" }}>
-              ▶ COCKPIT — MACHINE TEMPORELLE
-            </div>
-            <p style={{ margin: 0, maxWidth: 640, textAlign: "center", color: "#c8d4e2", fontSize: 15, lineHeight: 1.5 }}>
-              « Pour avancer dans l'histoire, il faut <strong style={{ color: "#7fd8ff" }}>plonger dans le flux temporel</strong>
-              {" "}et trouver le prochain <strong style={{ color: "#ffd166" }}>nœud de communication</strong> à verrouiller. »
-            </p>
-            <div style={{ display: "flex", alignItems: "center", gap: 18, marginTop: 4 }}>
-              {["#5eff9e", "#ffd166", "#7fd8ff"].map((c, i) => (
-                <div key={i} style={{
-                  width: 14, height: 14, borderRadius: "50%", background: c,
-                  boxShadow: `0 0 12px ${c}`,
-                  animation: `tvLed 1.3s ease-in-out ${i * 0.3}s infinite`,
-                }} />
-              ))}
-              <button onClick={() => setPhase("compass")}
-                autoFocus
-                style={{
-                  background: "#5eff9e", color: "#06110b", border: "none",
-                  borderRadius: 12, padding: "16px 44px", fontSize: 18, fontWeight: 800, cursor: "pointer",
-                  fontFamily: "ui-monospace,monospace", letterSpacing: 4,
-                  boxShadow: "0 0 24px rgba(94,255,158,0.55)",
-                }}>▶ GO</button>
-              {["#7fd8ff", "#ffd166", "#5eff9e"].map((c, i) => (
-                <div key={`r${i}`} style={{
-                  width: 14, height: 14, borderRadius: "50%", background: c,
-                  boxShadow: `0 0 12px ${c}`,
-                  animation: `tvLed 1.3s ease-in-out ${0.5 + i * 0.3}s infinite`,
-                }} />
-              ))}
-            </div>
-            <button onClick={onCancel}
-              style={{
-                marginTop: 4, background: "transparent", color: "#8fa3bd", border: "none",
-                fontSize: 12, cursor: "pointer", fontFamily: "ui-monospace,monospace",
-              }}>← Retourner à l'époque</button>
-          </div>
-          <style>{`@keyframes tvLed { 0%,100% { opacity: 0.35; } 50% { opacity: 1; } }`}</style>
-        </div>
+        <CockpitPhase
+          onGo={() => setPhase("compass")}
+          onCancel={onCancel}
+        />
       )}
     </div>
   );
