@@ -341,6 +341,29 @@ export default function App() {
   /* la bulle d'un personnage disparaît quand on change de tableau */
   useEffect(() => { setBubble(null); }, [tab]);
 
+  /* Animation JS-piloté des lettres du titre (utile même quand le CSS
+     `prefers-reduced-motion: reduce` désactive les animations CSS, ou
+     quand un `<style>` inline n'est pas honoré). */
+  const titleLetterRefs = useRef([]);
+  useEffect(() => {
+    if (screen !== "title") return;
+    let raf;
+    const t0 = performance.now();
+    const step = (t) => {
+      const dt = (t - t0) / 1000;
+      titleLetterRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const y = Math.sin(dt * 1.85 + i * 0.55) * 6;
+        const glow = 0.5 + 0.4 * (Math.sin(dt * 1.5 + i * 0.4) * 0.5 + 0.5);
+        el.style.transform = `translateY(${y.toFixed(2)}px)`;
+        el.style.textShadow = `0 0 ${(6 + 12 * glow).toFixed(1)}px rgba(255,209,102,${(0.35 + 0.55 * glow).toFixed(2)}), 0 2px 22px rgba(232,150,74,${(0.35 + 0.3 * glow).toFixed(2)})`;
+      });
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [screen]);
+
   /* le bouton SOS en attente se ferme dès qu'on change de tableau ou de
      chapitre (on n'accumule pas les SOS non émis entre deux scènes). */
   useEffect(() => { setSosPending(null); setSosOpen(false); }, [tab, chapterIndex]);
@@ -1284,13 +1307,19 @@ export default function App() {
             <circle cx="670" cy="105" r="130" fill="url(#ttlSun)" opacity="0.85" />
             <circle cx="670" cy="105" r="28" fill="#fff2c8" />
 
-            {/* --- DESERT ARRIERE-PLAN : plusieurs couches de dunes --- */}
-            {/* dunes les plus lointaines (bleu/violet chaud) */}
-            <path d="M 0 300 Q 120 275 240 292 Q 340 305 460 285 Q 580 268 700 288 Q 760 297 800 292 L 800 305 L 0 305 Z"
-              fill="#a58aa8" opacity="0.35" />
-            {/* dunes moyenne distance (chaud) */}
-            <path d="M 0 320 Q 140 300 300 315 Q 420 328 540 310 Q 660 298 800 320 L 800 340 L 0 340 Z"
-              fill="#c99060" opacity="0.55" />
+            {/* --- DESERT ARRIERE-PLAN ---
+                 D'abord un aplat de sable solide qui monte jusqu'a la
+                 ligne d'horizon (comme la pyramide, sans transparence),
+                 puis les couches de dunes floues et transparentes
+                 par-dessus pour la profondeur. */}
+            <path d="M 0 285 Q 200 275 400 285 Q 600 295 800 285 L 800 450 L 0 450 Z"
+              fill="url(#ttlSand)" opacity="1" />
+            {/* dunes les plus lointaines (bleu/violet, floues) */}
+            <path d="M 0 300 Q 120 275 240 292 Q 340 305 460 285 Q 580 268 700 288 Q 760 297 800 292 L 800 315 L 0 315 Z"
+              fill="#a58aa8" opacity="0.35" style={{ filter: "blur(2px)" }} />
+            {/* dunes moyenne distance (chaud, un peu floues) */}
+            <path d="M 0 320 Q 140 300 300 315 Q 420 328 540 310 Q 660 298 800 320 L 800 345 L 0 345 Z"
+              fill="#c99060" opacity="0.55" style={{ filter: "blur(1.2px)" }} />
 
             {/* --- PYRAMIDE (recule, POV plus haut) : apex 310,180 - base autour --- */}
             {/* face droite (ombre) : apex -> front-bas -> right-bas */}
@@ -1384,28 +1413,17 @@ export default function App() {
 
           {/* Contenu superpose (titre en haut, boutons en bas), plein ecran */}
           <div style={{ position: "relative", zIndex: 2, minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-between", padding: "32px 20px 40px", textAlign: "center" }}>
-          <style>{`
-            @keyframes ttlLetterFloat {
-              0%, 100% { transform: translateY(0); }
-              50%      { transform: translateY(-7px); }
-            }
-            @keyframes ttlLetterGlow {
-              0%, 100% { text-shadow: 0 0 6px rgba(255,209,102,0.35), 0 2px 12px rgba(232,150,74,0.35); }
-              50%      { text-shadow: 0 0 16px rgba(255,209,102,0.9),  0 2px 24px rgba(232,150,74,0.7); }
-            }
-          `}</style>
           <h1 style={{ fontFamily: TITRE_FONT, fontSize: "clamp(38px,9.5vw,72px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", margin: "4px 0 0", lineHeight: 1.08, display: "inline-block" }}>
             {"Les fils du temps".split("").map((ch, i) => (
-              <span key={i} style={{
-                display: "inline-block",
-                whiteSpace: "pre",
-                color: i % 2 === 0 ? "#ffd166" : "#e8a24a",
-                animationName: "ttlLetterFloat, ttlLetterGlow",
-                animationDuration: "3.4s, 4.2s",
-                animationTimingFunction: "ease-in-out",
-                animationIterationCount: "infinite",
-                animationDelay: `${(i * 0.09).toFixed(2)}s, ${(i * 0.11).toFixed(2)}s`,
-              }}>
+              <span key={i}
+                ref={(el) => { titleLetterRefs.current[i] = el; }}
+                style={{
+                  display: "inline-block",
+                  whiteSpace: "pre",
+                  color: i % 2 === 0 ? "#ffd166" : "#e8a24a",
+                  transition: "none",
+                  willChange: "transform, text-shadow",
+                }}>
                 {ch === " " ? " " : ch}
               </span>
             ))}
