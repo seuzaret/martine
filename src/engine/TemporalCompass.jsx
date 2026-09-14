@@ -270,18 +270,9 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
           if (dx !== 0) candidates.push({ dx: Math.sign(dx), dy: 0 });
         }
       }
-      for (const c of candidates) {
-        const nx = curCx + c.dx, ny = curCy + c.dy;
-        if (nx >= -CELL_MAX && nx <= CELL_MAX && ny >= -CELL_MAX && ny <= CELL_MAX) return c;
-      }
-      /* Filet de secours : essaie n'importe laquelle des 4 directions
-         qui reste valide (evite un tachyon fige a un coin). */
-      const fallback = [{dx:1,dy:0},{dx:-1,dy:0},{dx:0,dy:1},{dx:0,dy:-1}];
-      for (const c of fallback) {
-        const nx = curCx + c.dx, ny = curCy + c.dy;
-        if (nx >= -CELL_MAX && nx <= CELL_MAX && ny >= -CELL_MAX && ny <= CELL_MAX) return c;
-      }
-      return null;
+      /* Toutes les directions sont valides : le wrap circulaire du
+         plateau empeche de sortir. Il suffit de retourner la 1ere. */
+      return candidates[0] || { dx: 1, dy: 0 };
     };
     /* Correspondance fleche ECRAN -> direction monde (une ligne de la grille).
        Convention : les 4 fleches forment une croix tournee de 45 deg qui
@@ -354,21 +345,33 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         }
 
         if (d) {
-          const ncx = Math.max(-CELL_MAX, Math.min(CELL_MAX, cx + d.dx));
-          const ncy = Math.max(-CELL_MAX, Math.min(CELL_MAX, cy + d.dy));
+          /* Temps circulaire : quand on sort d'un bord, on rentre par
+             l'autre. Teleport instantane (style Pac-Man). */
+          let ncx = cx + d.dx, ncy = cy + d.dy;
+          let wrapped = false;
+          if (ncx > CELL_MAX)  { ncx = -CELL_MAX; wrapped = true; }
+          if (ncx < -CELL_MAX) { ncx =  CELL_MAX; wrapped = true; }
+          if (ncy > CELL_MAX)  { ncy = -CELL_MAX; wrapped = true; }
+          if (ncy < -CELL_MAX) { ncy =  CELL_MAX; wrapped = true; }
           if (ncx !== cx || ncy !== cy) {
-            /* Traverser une arete rouge = attrape. */
-            if (trail.has(edgeKey(cx, cy, ncx, ncy)) && !isCaught) {
+            /* Traverser une arete rouge = attrape (les wraps ne comptent pas
+               car il n'y a pas d'arete continue "traversee"). */
+            if (!wrapped && trail.has(edgeKey(cx, cy, ncx, ncy)) && !isCaught) {
               isCaught = true; setCaught(true);
               setTimeout(() => onClose?.(), 1500);
             }
-            fromX = cx * STEP; fromY = cy * STEP;
-            toX = ncx * STEP; toY = ncy * STEP;
-            p.x = fromX; p.y = fromY;
-            prog = 0;
-          } else {
-            /* on est bloque au bord : coupe court a l'inertie */
-            momentum = 0;
+            if (wrapped) {
+              /* Saut instantane : on arrive deja sur la case cible. */
+              fromX = ncx * STEP; fromY = ncy * STEP;
+              toX = ncx * STEP;   toY = ncy * STEP;
+              p.x = fromX; p.y = fromY;
+              prog = 1;
+            } else {
+              fromX = cx * STEP; fromY = cy * STEP;
+              toX = ncx * STEP; toY = ncy * STEP;
+              p.x = fromX; p.y = fromY;
+              prog = 0;
+            }
           }
         }
       }
@@ -386,12 +389,18 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
             const ccx = Math.round(T.curX / STEP), ccy = Math.round(T.curY / STEP);
             const d = tachyonChooseDir(ccx, ccy);
             if (d) {
-              const nx = ccx + d.dx, ny = ccy + d.dy;
-              addTrailSegment(ccx, ccy, nx, ny);
-              T.fromX = ccx * STEP; T.fromY = ccy * STEP;
+              let nx = ccx + d.dx, ny = ccy + d.dy;
+              let wrapped = false;
+              if (nx > CELL_MAX)  { nx = -CELL_MAX; wrapped = true; }
+              if (nx < -CELL_MAX) { nx =  CELL_MAX; wrapped = true; }
+              if (ny > CELL_MAX)  { ny = -CELL_MAX; wrapped = true; }
+              if (ny < -CELL_MAX) { ny =  CELL_MAX; wrapped = true; }
+              if (!wrapped) addTrailSegment(ccx, ccy, nx, ny);
+              T.fromX = wrapped ? nx * STEP : ccx * STEP;
+              T.fromY = wrapped ? ny * STEP : ccy * STEP;
               T.toX = nx * STEP;    T.toY = ny * STEP;
               T.curX = T.fromX;     T.curY = T.fromY;
-              T.prog = 0;
+              T.prog = wrapped ? 1 : 0;
             }
           }
           /* Render tachyon (warped iso). */
@@ -558,53 +567,88 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
        item pulse en opacite pour un effet evanescent, comme si on
        "traversait le temps". Rendu au meme warp+iso que le reste. */
     const BG_ATLAS = [
-      // Prehistoire (x tres negatif)
-      { x: -0.94, y: -0.55, glyph: "🖐", size: 88, kind: "icon" },
-      { x: -0.86, y:  0.30, glyph: "🔥",  size: 84, kind: "icon" },
-      { x: -0.90, y:  0.72, text: "Lascaux",     size: 30, kind: "place" },
-      { x: -0.78, y: -0.14, text: "-30 000",     size: 32, kind: "date" },
-      // Antiquite
-      { x: -0.66, y: -0.42, glyph: "🏛",  size: 90, kind: "icon" },
-      { x: -0.58, y:  0.32, glyph: "⚱",  size: 78, kind: "icon" },
-      { x: -0.60, y: -0.72, text: "Cléopâtre",   size: 30, kind: "name" },
-      { x: -0.52, y:  0.70, text: "Alexandrie",  size: 28, kind: "place" },
-      // Moyen Age
-      { x: -0.38, y: -0.20, glyph: "⚔",  size: 82, kind: "icon" },
-      { x: -0.30, y:  0.55, glyph: "🏰",  size: 90, kind: "icon" },
-      { x: -0.42, y:  0.15, text: "Charlemagne", size: 30, kind: "name" },
-      { x: -0.26, y: -0.65, text: "Bagdad",      size: 28, kind: "place" },
-      { x: -0.34, y: -0.48, text: "800",          size: 32, kind: "date" },
-      // Renaissance
-      { x: -0.18, y: -0.36, glyph: "📜",  size: 82, kind: "icon" },
-      { x: -0.08, y:  0.40, glyph: "🎨",  size: 84, kind: "icon" },
-      { x: -0.12, y:  0.72, text: "Gutenberg",   size: 30, kind: "name" },
-      { x: -0.02, y: -0.62, text: "Florence",    size: 28, kind: "place" },
-      { x:  0.03, y:  0.10, text: "1450",         size: 32, kind: "date" },
-      // Moderne
-      { x:  0.10, y: -0.28, glyph: "🔭",  size: 84, kind: "icon" },
-      { x:  0.20, y:  0.30, glyph: "⚗",  size: 80, kind: "icon" },
-      { x:  0.14, y:  0.62, text: "Newton",      size: 30, kind: "name" },
-      { x:  0.24, y: -0.60, text: "1789",         size: 32, kind: "date" },
-      // XIXe
-      { x:  0.30, y: -0.08, glyph: "🚂",  size: 86, kind: "icon" },
-      { x:  0.40, y:  0.50, glyph: "💡",  size: 84, kind: "icon" },
-      { x:  0.34, y: -0.44, text: "Édison",      size: 30, kind: "name" },
-      { x:  0.44, y:  0.05, text: "Londres",     size: 28, kind: "place" },
-      // XXe guerres
-      { x:  0.52, y: -0.60, glyph: "📻",  size: 84, kind: "icon" },
-      { x:  0.60, y:  0.32, glyph: "✈",  size: 82, kind: "icon" },
-      { x:  0.50, y:  0.02, text: "Einstein",    size: 30, kind: "name" },
-      { x:  0.58, y: -0.30, text: "1944",         size: 32, kind: "date" },
-      // Medias masse
-      { x:  0.68, y: -0.20, glyph: "📺",  size: 86, kind: "icon" },
-      { x:  0.76, y:  0.45, glyph: "🕹",  size: 82, kind: "icon" },
-      { x:  0.70, y:  0.72, text: "Kennedy",     size: 30, kind: "name" },
-      { x:  0.78, y: -0.54, text: "1969",         size: 32, kind: "date" },
-      // XXIe
-      { x:  0.86, y:  0.10, glyph: "📱",  size: 82, kind: "icon" },
-      { x:  0.92, y: -0.40, glyph: "🛰",  size: 88, kind: "icon" },
-      { x:  0.90, y:  0.55, text: "Silicon Valley", size: 26, kind: "place" },
-      { x:  0.82, y: -0.72, text: "2024",         size: 32, kind: "date" },
+      // ==== Prehistoire ====
+      { x: -0.96, y: -0.66, glyph: "🖐", size: 150, kind: "icon" },
+      { x: -0.82, y:  0.10, glyph: "🔥", size: 96,  kind: "icon" },
+      { x: -0.72, y:  0.62, glyph: "🐾", size: 82,  kind: "icon" },
+      { x: -0.90, y:  0.72, text: "Lascaux",     size: 32, kind: "place" },
+      { x: -0.78, y: -0.14, text: "-30 000",     size: 34, kind: "date" },
+      { x: -0.66, y: -0.78, text: "Homo sapiens", size: 26, kind: "name" },
+      { x: -0.70, y:  0.30, text: "Néolithique", size: 24, kind: "name" },
+
+      // ==== Antiquite ====
+      { x: -0.62, y: -0.42, glyph: "🏛", size: 140, kind: "icon" },
+      { x: -0.54, y:  0.44, glyph: "⚱", size: 92,  kind: "icon" },
+      { x: -0.48, y: -0.10, glyph: "📐", size: 78,  kind: "icon" },
+      { x: -0.60, y: -0.72, text: "Cléopâtre",   size: 32, kind: "name" },
+      { x: -0.50, y:  0.72, text: "Alexandrie",  size: 30, kind: "place" },
+      { x: -0.44, y: -0.55, text: "-30",          size: 34, kind: "date" },
+      { x: -0.42, y:  0.20, text: "Rome",         size: 28, kind: "place" },
+      { x: -0.55, y:  0.02, text: "Aristote",    size: 24, kind: "name" },
+
+      // ==== Moyen Age ====
+      { x: -0.36, y: -0.28, glyph: "⚔", size: 96,  kind: "icon" },
+      { x: -0.28, y:  0.50, glyph: "🏰", size: 140, kind: "icon" },
+      { x: -0.22, y: -0.66, glyph: "⛪", size: 90,  kind: "icon" },
+      { x: -0.40, y:  0.18, text: "Charlemagne", size: 32, kind: "name" },
+      { x: -0.24, y: -0.10, text: "Bagdad",      size: 30, kind: "place" },
+      { x: -0.34, y: -0.48, text: "800",          size: 34, kind: "date" },
+      { x: -0.20, y:  0.72, text: "Constantinople", size: 24, kind: "place" },
+      { x: -0.30, y:  0.05, text: "1096 Croisade", size: 22, kind: "date" },
+
+      // ==== Renaissance ====
+      { x: -0.16, y: -0.44, glyph: "📜", size: 100, kind: "icon" },
+      { x: -0.08, y:  0.32, glyph: "🎨", size: 140, kind: "icon" },
+      { x:  0.00, y: -0.72, glyph: "⚙", size: 82,  kind: "icon" },
+      { x: -0.14, y:  0.72, text: "Gutenberg",   size: 32, kind: "name" },
+      { x: -0.02, y: -0.28, text: "Florence",    size: 30, kind: "place" },
+      { x:  0.05, y:  0.05, text: "1450",         size: 34, kind: "date" },
+      { x: -0.05, y: -0.55, text: "Léonard",     size: 26, kind: "name" },
+      { x:  0.02, y:  0.55, text: "1492 Amériques", size: 22, kind: "date" },
+
+      // ==== Moderne ====
+      { x:  0.08, y: -0.30, glyph: "🔭", size: 96,  kind: "icon" },
+      { x:  0.18, y:  0.28, glyph: "⚗",  size: 88,  kind: "icon" },
+      { x:  0.24, y: -0.68, glyph: "🎼", size: 82,  kind: "icon" },
+      { x:  0.14, y:  0.62, text: "Newton",      size: 32, kind: "name" },
+      { x:  0.24, y: -0.48, text: "1789",         size: 34, kind: "date" },
+      { x:  0.10, y:  0.02, text: "Paris",        size: 28, kind: "place" },
+      { x:  0.20, y:  0.72, text: "Mozart",      size: 26, kind: "name" },
+
+      // ==== XIXe ====
+      { x:  0.30, y: -0.10, glyph: "🚂", size: 140, kind: "icon" },
+      { x:  0.40, y:  0.42, glyph: "💡", size: 100, kind: "icon" },
+      { x:  0.34, y: -0.62, glyph: "📷", size: 84,  kind: "icon" },
+      { x:  0.30, y:  0.18, text: "Édison",      size: 32, kind: "name" },
+      { x:  0.44, y: -0.02, text: "Londres",     size: 30, kind: "place" },
+      { x:  0.36, y:  0.72, text: "1889",         size: 34, kind: "date" },
+      { x:  0.44, y: -0.30, text: "Marie Curie", size: 26, kind: "name" },
+
+      // ==== XXe guerres ====
+      { x:  0.50, y: -0.55, glyph: "📻", size: 96,  kind: "icon" },
+      { x:  0.60, y:  0.28, glyph: "✈",  size: 140, kind: "icon" },
+      { x:  0.56, y: -0.10, text: "Einstein",    size: 32, kind: "name" },
+      { x:  0.58, y: -0.30, text: "1944",         size: 34, kind: "date" },
+      { x:  0.48, y:  0.62, text: "Verdun",      size: 30, kind: "place" },
+      { x:  0.62, y:  0.72, text: "Turing",      size: 26, kind: "name" },
+
+      // ==== Medias masse ====
+      { x:  0.68, y: -0.28, glyph: "📺", size: 140, kind: "icon" },
+      { x:  0.76, y:  0.42, glyph: "🕹", size: 96,  kind: "icon" },
+      { x:  0.72, y: -0.72, glyph: "🎬", size: 82,  kind: "icon" },
+      { x:  0.70, y:  0.02, text: "Kennedy",     size: 32, kind: "name" },
+      { x:  0.78, y: -0.44, text: "1969",         size: 34, kind: "date" },
+      { x:  0.66, y:  0.72, text: "Woodstock",   size: 26, kind: "place" },
+      { x:  0.80, y:  0.18, text: "Neil Armstrong", size: 22, kind: "name" },
+
+      // ==== XXIe ====
+      { x:  0.86, y:  0.10, glyph: "📱", size: 110, kind: "icon" },
+      { x:  0.94, y: -0.42, glyph: "🛰", size: 140, kind: "icon" },
+      { x:  0.90, y:  0.60, glyph: "💻", size: 86,  kind: "icon" },
+      { x:  0.86, y: -0.70, text: "Silicon Valley", size: 24, kind: "place" },
+      { x:  0.82, y: -0.15, text: "2024",         size: 34, kind: "date" },
+      { x:  0.94, y:  0.32, text: "Berners-Lee", size: 24, kind: "name" },
+      { x:  0.80, y:  0.30, text: "Internet",    size: 26, kind: "place" },
     ];
 
     /* Points d'intersection de la grille (deformes par la warp). Rendent
