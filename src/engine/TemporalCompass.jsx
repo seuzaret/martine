@@ -74,7 +74,7 @@ const DATE_MARKERS = [
   { x:  WORLD * 0.94, y:  WORLD * 0.50, text: "2024",    tick: true  },
 ];
 
-export function TemporalCompass({ onClose, onLock, nextLabel }) {
+export function TemporalCompass({ onClose, onLock, onCaught, nextLabel }) {
   const posRef = useRef({ x: 0, y: 0 });
   const heldRef = useRef({ up: false, down: false, left: false, right: false });
   const cameraRef = useRef(null);
@@ -374,7 +374,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
                car il n'y a pas d'arete continue "traversee"). */
             if (!wrapped && trail.has(edgeKey(cx, cy, ncx, ncy)) && !isCaught) {
               isCaught = true; setCaught(true);
-              setTimeout(() => onClose?.(), 1500);
+              setTimeout(() => (onCaught || onClose)?.(), 1500);
             }
             if (wrapped) {
               /* Saut instantane : on arrive deja sur la case cible. */
@@ -434,7 +434,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
           /* Collision directe joueur / tachyon */
           if (Math.hypot(p.x - T.curX, p.y - T.curY) < STEP * 0.5) {
             isCaught = true; setCaught(true);
-            setTimeout(() => onClose?.(), 1500);
+            setTimeout(() => (onCaught || onClose)?.(), 1500);
             break;
           }
         }
