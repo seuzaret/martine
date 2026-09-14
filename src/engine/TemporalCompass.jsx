@@ -552,33 +552,60 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       grid.push(...buildColoredLine(-WORLD, t, WORLD, t, `h${i}`));
     }
 
-    /* Carte du monde stylisee en fond : quelques masses continentales
-       en forme de blobs organiques, iso-projetees + warpees, avec une
-       ombre decalee vers le bas pour l'effet de plateau 3D. */
-    /* Continents definis pour WORLD=2400 puis mis a l'echelle du plateau. */
-    const CS = WORLD / 2400;
-    const CONTINENTS = [
-      { cx: -1650 * CS, cy: -750 * CS, rx: 550 * CS, ry: 380 * CS, seed: 0.4 },
-      { cx: -1350 * CS, cy:  650 * CS, rx: 320 * CS, ry: 460 * CS, seed: 1.2 },
-      { cx:  -100 * CS, cy: -350 * CS, rx: 260 * CS, ry: 220 * CS, seed: 2.1 },
-      { cx:   150 * CS, cy:  550 * CS, rx: 340 * CS, ry: 470 * CS, seed: 3.0 },
-      { cx:   950 * CS, cy: -450 * CS, rx: 620 * CS, ry: 420 * CS, seed: 4.4 },
-      { cx:  1500 * CS, cy:  800 * CS, rx: 340 * CS, ry: 200 * CS, seed: 5.7 },
+    /* --- ATLAS TEMPOREL EN FOND ---
+       Grandes icones / dates / noms / lieux epars sur le plateau,
+       positionnes selon leur epoque (x monde ~ bande d'epoque). Chaque
+       item pulse en opacite pour un effet evanescent, comme si on
+       "traversait le temps". Rendu au meme warp+iso que le reste. */
+    const BG_ATLAS = [
+      // Prehistoire (x tres negatif)
+      { x: -0.94, y: -0.55, glyph: "🖐", size: 88, kind: "icon" },
+      { x: -0.86, y:  0.30, glyph: "🔥",  size: 84, kind: "icon" },
+      { x: -0.90, y:  0.72, text: "Lascaux",     size: 30, kind: "place" },
+      { x: -0.78, y: -0.14, text: "-30 000",     size: 32, kind: "date" },
+      // Antiquite
+      { x: -0.66, y: -0.42, glyph: "🏛",  size: 90, kind: "icon" },
+      { x: -0.58, y:  0.32, glyph: "⚱",  size: 78, kind: "icon" },
+      { x: -0.60, y: -0.72, text: "Cléopâtre",   size: 30, kind: "name" },
+      { x: -0.52, y:  0.70, text: "Alexandrie",  size: 28, kind: "place" },
+      // Moyen Age
+      { x: -0.38, y: -0.20, glyph: "⚔",  size: 82, kind: "icon" },
+      { x: -0.30, y:  0.55, glyph: "🏰",  size: 90, kind: "icon" },
+      { x: -0.42, y:  0.15, text: "Charlemagne", size: 30, kind: "name" },
+      { x: -0.26, y: -0.65, text: "Bagdad",      size: 28, kind: "place" },
+      { x: -0.34, y: -0.48, text: "800",          size: 32, kind: "date" },
+      // Renaissance
+      { x: -0.18, y: -0.36, glyph: "📜",  size: 82, kind: "icon" },
+      { x: -0.08, y:  0.40, glyph: "🎨",  size: 84, kind: "icon" },
+      { x: -0.12, y:  0.72, text: "Gutenberg",   size: 30, kind: "name" },
+      { x: -0.02, y: -0.62, text: "Florence",    size: 28, kind: "place" },
+      { x:  0.03, y:  0.10, text: "1450",         size: 32, kind: "date" },
+      // Moderne
+      { x:  0.10, y: -0.28, glyph: "🔭",  size: 84, kind: "icon" },
+      { x:  0.20, y:  0.30, glyph: "⚗",  size: 80, kind: "icon" },
+      { x:  0.14, y:  0.62, text: "Newton",      size: 30, kind: "name" },
+      { x:  0.24, y: -0.60, text: "1789",         size: 32, kind: "date" },
+      // XIXe
+      { x:  0.30, y: -0.08, glyph: "🚂",  size: 86, kind: "icon" },
+      { x:  0.40, y:  0.50, glyph: "💡",  size: 84, kind: "icon" },
+      { x:  0.34, y: -0.44, text: "Édison",      size: 30, kind: "name" },
+      { x:  0.44, y:  0.05, text: "Londres",     size: 28, kind: "place" },
+      // XXe guerres
+      { x:  0.52, y: -0.60, glyph: "📻",  size: 84, kind: "icon" },
+      { x:  0.60, y:  0.32, glyph: "✈",  size: 82, kind: "icon" },
+      { x:  0.50, y:  0.02, text: "Einstein",    size: 30, kind: "name" },
+      { x:  0.58, y: -0.30, text: "1944",         size: 32, kind: "date" },
+      // Medias masse
+      { x:  0.68, y: -0.20, glyph: "📺",  size: 86, kind: "icon" },
+      { x:  0.76, y:  0.45, glyph: "🕹",  size: 82, kind: "icon" },
+      { x:  0.70, y:  0.72, text: "Kennedy",     size: 30, kind: "name" },
+      { x:  0.78, y: -0.54, text: "1969",         size: 32, kind: "date" },
+      // XXIe
+      { x:  0.86, y:  0.10, glyph: "📱",  size: 82, kind: "icon" },
+      { x:  0.92, y: -0.40, glyph: "🛰",  size: 88, kind: "icon" },
+      { x:  0.90, y:  0.55, text: "Silicon Valley", size: 26, kind: "place" },
+      { x:  0.82, y: -0.72, text: "2024",         size: 32, kind: "date" },
     ];
-    const blobPath = (c, dyLift = 0) => {
-      const N = 28;
-      const pts = [];
-      for (let i = 0; i <= N; i++) {
-        const a = (i / N) * Math.PI * 2;
-        const w = 0.72 + 0.32 * Math.sin(a * 3 + c.seed) + 0.15 * Math.sin(a * 5 + c.seed * 1.3);
-        const wx = c.cx + Math.cos(a) * c.rx * w;
-        const wy = c.cy + Math.sin(a) * c.ry * w;
-        const [xw, yw] = warp(wx, wy);
-        const p = iso(xw, yw);
-        pts.push(`${p.sx.toFixed(1)},${(p.sy - dyLift).toFixed(1)}`);
-      }
-      return "M" + pts.join(" L") + " Z";
-    };
 
     /* Points d'intersection de la grille (deformes par la warp). Rendent
        les noeuds visuellement solidaires des lignes apparentes. */
@@ -600,14 +627,43 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       <>
         <path d={diamond} fill="#1a2a48" opacity="0.55" />
 
-        {/* Carte du monde (fond) : ombre + facette du dessus */}
-        <g opacity="0.55">
-          {CONTINENTS.map((c, i) => (
-            <path key={`sh${i}`} d={blobPath(c, 0)} fill="#0a1830" opacity="0.9" />
-          ))}
-          {CONTINENTS.map((c, i) => (
-            <path key={`cn${i}`} d={blobPath(c, 8)} fill="#25436a" stroke="#3a6494" strokeWidth="1.2" />
-          ))}
+        {/* Atlas temporel de fond : icones + dates + noms + lieux
+            evanescents, sous la grille. */}
+        <g>
+          {BG_ATLAS.map((item, i) => {
+            const wx0 = item.x * WORLD, wy0 = item.y * WORLD;
+            const [wx, wy] = warp(wx0, wy0);
+            const p = iso(wx, wy);
+            const dur = 7 + (i % 6) * 1.3;         // 7 - 13.5s
+            const begin = -((i * 0.73) % dur);      // decalage negatif = demarre deja avance
+            const peak = item.kind === "icon" ? 0.28 : 0.32;
+            const isText = item.kind !== "icon";
+            const fill = isText
+              ? (item.kind === "date" ? ERAS[eraIndexForX(wx0)].color : "#a8c8ff")
+              : "#a8c8ff";
+            return (
+              <g key={`bg${i}`} transform={`translate(${p.sx.toFixed(1)} ${p.sy.toFixed(1)})`} opacity="0">
+                <animate attributeName="opacity"
+                  values={`0;${peak};${peak};0`} keyTimes="0;0.25;0.75;1"
+                  dur={`${dur}s`} begin={`${begin}s`} repeatCount="indefinite" />
+                {item.kind === "icon" ? (
+                  <text textAnchor="middle" dominantBaseline="middle"
+                    fontSize={item.size} fill="#e8eef5"
+                    style={{ filter: "grayscale(0.35)" }}>
+                    {item.glyph}
+                  </text>
+                ) : (
+                  <text textAnchor="middle" dominantBaseline="middle"
+                    fontSize={item.size} fontWeight={item.kind === "date" ? 700 : 500}
+                    letterSpacing={item.kind === "date" ? "3" : "1.5"}
+                    fill={fill} fontFamily={item.kind === "date" ? "ui-monospace,monospace" : "Palatino, Georgia, serif"}
+                    style={{ paintOrder: "stroke", stroke: "#0a1224", strokeWidth: 3.5, strokeLinejoin: "round" }}>
+                    {item.text}
+                  </text>
+                )}
+              </g>
+            );
+          })}
         </g>
 
         <g fill="none">{grid}</g>
