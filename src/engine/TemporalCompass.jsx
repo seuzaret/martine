@@ -90,7 +90,6 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
   const trailGroupRef = useRef(null);       // <g> ou on append les segments rouges
   const playerTrailGroupRef = useRef(null); // <g> ou on append la trainee verte du joueur
   const tachyonMiniRefs = useRef([]);       // points rouges sur la mini-carte
-  const windGroupRef = useRef(null);        // groupe du vent temporel (pivote avec le joueur)
   const [done, setDone] = useState(false);
   const [caught, setCaught] = useState(false);
   const [decoys, setDecoys] = useState([]); // faux noeuds temporels ephemeres
@@ -170,11 +169,6 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
        depuis la position courante du joueur. */
     let lastEmitAt = 0;
     const TRAIL_EMIT_MS = 45;
-    /* Angle du vent temporel : suit (avec lissage) la direction courante
-       de deplacement du joueur, projetee en iso. 0 rad = balayage
-       classique droite -> gauche. */
-    let windAngle = 0;
-    let windTargetAngle = 0;
     /* Inertie : quand on relache la touche, le joueur continue encore
        MOMENTUM_STEPS cases dans la meme direction avant de s'arreter.
        Barre espace = frein immediat (momentum remis a 0). */
@@ -446,28 +440,6 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
         lastEmitAt = t;
       }
       updatePlayerTrail(t);
-
-      /* Vent temporel : la cible est la direction ecran opposee au
-         mouvement (les trainees fuient DERRIERE le joueur). */
-      if (lastDir && prog < 1) {
-        const isoDx = (lastDir.dx - lastDir.dy) * ISO_X;
-        const isoDy = (lastDir.dx + lastDir.dy) * ISO_Y;
-        /* streaks vont dans le sens oppose */
-        windTargetAngle = Math.atan2(-isoDy, -isoDx);
-        /* on tourne le groupe pour que "x=+" (direction naturelle des
-           streaks R -> L, soit dir=180°) coincide avec l'angle cible.
-           Donc rotation = targetAngle + PI (car les streaks de base vont
-           vers -x, i.e. angle=PI). */
-      }
-      const targetRotDeg = ((windTargetAngle + Math.PI) * 180) / Math.PI;
-      let curRotDeg = (windAngle * 180) / Math.PI;
-      /* interpolation courte-voie (modulo 360). */
-      let diff = ((targetRotDeg - curRotDeg + 540) % 360) - 180;
-      curRotDeg += diff * 0.06;
-      windAngle = (curRotDeg * Math.PI) / 180;
-      if (windGroupRef.current) {
-        windGroupRef.current.setAttribute("transform", `rotate(${curRotDeg.toFixed(1)} ${VW/2} ${VH/2})`);
-      }
       if (minimapPlayerRef.current) {
         minimapPlayerRef.current.setAttribute("cx", (p.x / WORLD) * 60);
         minimapPlayerRef.current.setAttribute("cy", (p.y / WORLD) * 60);
@@ -886,33 +858,6 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
                 <animate attributeName="opacity" values="0.6;0;0.6" dur="1.8s" repeatCount="indefinite" />
               </ellipse>
             </g>
-          </g>
-
-          {/* --- VENT TEMPOREL ---
-              Fines traînées translucides balayant l'écran, en léger biais.
-              Le GROUPE PIVOTE selon la direction de deplacement du joueur
-              (via windGroupRef, mis a jour dans la boucle RAF). */}
-          <g ref={windGroupRef} pointerEvents="none" opacity="0.55" transform={`rotate(0 ${VW/2} ${VH/2})`}>
-            {Array.from({ length: 14 }).map((_, i) => {
-              const y = 40 + (i * 71) % (VH - 80);
-              const dur = 5.5 + (i % 5) * 1.1;                 // 5.5 – 10s
-              const delay = -(((i * 1.37) % dur).toFixed(2));  // desync
-              const len = 90 + (i % 4) * 40;                   // 90 – 210 px
-              const slope = -8 + (i % 3) * 6;                  // -8 / -2 / +4 px
-              const col = i % 3 === 0 ? "#a8d8ff" : (i % 3 === 1 ? "#c8e5ff" : "#dfeaff");
-              /* On elargit la trajectoire (de -800 a VW+300) pour que meme
-                 apres rotation le vent balaye tout l'ecran. */
-              return (
-                <g key={`wind${i}`} transform={`translate(${VW + 100} ${y})`}>
-                  <animateTransform attributeName="transform" type="translate"
-                    values={`${VW + 300} ${y}; ${-len - 300} ${y + slope}`}
-                    dur={`${dur}s`} begin={`${delay}s`} repeatCount="indefinite" />
-                  <line x1="0" y1="0" x2={len} y2={slope * 0.5}
-                    stroke={col} strokeWidth="1.2" strokeLinecap="round"
-                    opacity={0.18 + (i % 3) * 0.05} />
-                </g>
-              );
-            })}
           </g>
 
           {/* HUD boussole : 5 arcs concentriques orientes vers la cible */}
