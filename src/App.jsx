@@ -1292,90 +1292,68 @@ export default function App() {
             <path d="M 0 320 Q 140 300 300 315 Q 420 328 540 310 Q 660 298 800 320 L 800 340 L 0 340 Z"
               fill="#c99060" opacity="0.55" />
 
-            {/* --- LE NIL, plus bas, entre les dunes lointaines et la dune de premier plan --- */}
-            <path d="M 800 355 C 700 350 640 370 570 366 C 490 362 430 380 360 375 C 300 371 250 385 190 380 L 190 388 C 250 393 300 380 360 384 C 430 390 490 372 570 375 C 640 379 700 360 800 365 Z"
-              fill="url(#ttlNile)" opacity="0.92" />
-            {/* reflets clairs sur le fleuve */}
-            <path d="M 780 358 C 700 355 640 372 560 369 M 480 380 C 420 384 380 378 320 382"
-              fill="none" stroke="#a8d8f0" strokeWidth="1.2" opacity="0.6" strokeLinecap="round" />
-            {/* berges vegetales : petits touffes verdatres le long du Nil */}
-            {[220, 260, 310, 390, 460, 520, 580, 650, 720].map((x, i) => (
-              <g key={`bank${i}`} transform={`translate(${x} ${389 + (i%2)*2})`}>
-                <path d="M0 0 L-2 -4 L0 -1 L2 -4 L0 0" stroke="#4a6b3a" strokeWidth="1" fill="none" opacity="0.65" />
-              </g>
-            ))}
-
-            {/* dune tres proche (premier plan), plus texturee */}
-            <path d="M 0 395 Q 180 375 380 393 Q 540 410 800 388 L 800 450 L 0 450 Z"
-              fill="url(#ttlSand)" opacity="0.98" />
-            {/* motifs de sable (rides du desert) sur la dune proche */}
-            {[
-              "M 60 415 Q 130 411 200 415",
-              "M 240 421 Q 320 417 400 421",
-              "M 440 415 Q 520 412 600 415",
-              "M 60 432 Q 140 429 220 432",
-              "M 260 438 Q 340 435 420 438",
-              "M 480 432 Q 560 430 640 432",
-              "M 660 425 Q 720 422 790 425",
-            ].map((d, i) => (
-              <path key={`rp${i}`} d={d} fill="none" stroke="#8a5822" strokeWidth="0.8" opacity="0.35" strokeLinecap="round" />
-            ))}
-            {/* petits cailloux epars */}
-            {[[95, 425, 2], [175, 435, 1.4], [280, 428, 1.8], [410, 442, 2.2],
-              [520, 430, 1.6], [615, 438, 2], [700, 428, 1.4], [760, 442, 1.8]].map(([cx, cy, r], i) => (
-              <ellipse key={`rk${i}`} cx={cx} cy={cy} rx={r} ry={r * 0.55} fill="#5a3a14" opacity="0.55" />
-            ))}
-            {/* touffe d'herbe seche isolee (rare) */}
-            <g transform="translate(465 405)" opacity="0.7">
-              <path d="M0 4 L-2 -3 M0 4 L0 -4 M0 4 L2 -3" stroke="#8a7040" strokeWidth="1" fill="none" strokeLinecap="round" />
-            </g>
-            <g transform="translate(720 415)" opacity="0.6">
-              <path d="M0 3 L-2 -3 M0 3 L0 -4 M0 3 L2 -3" stroke="#8a7040" strokeWidth="1" fill="none" strokeLinecap="round" />
-            </g>
-
-            {/* --- GRANDE PYRAMIDE 3/4 A GAUCHE (plus proche, plus grande) --- */}
-            {/* ombre au sol elargie */}
-            <ellipse cx="230" cy="435" rx="360" ry="26" fill="#3a2410" opacity="0.5" />
+            {/* --- PYRAMIDE (recule, POV plus haut) : apex 310,180 - base autour --- */}
             {/* face droite (ombre) : apex -> front-bas -> right-bas */}
-            <polygon points="260,20 260,438 570,388" fill="url(#ttlPyrDark)" />
+            <polygon points="310,180 310,395 500,352" fill="url(#ttlPyrDark)" opacity="0.95" />
             {/* face gauche (lumiere) : apex -> left-bas -> front-bas */}
-            <polygon points="260,20 -90,388 260,438" fill="url(#ttlPyrLit)" />
+            <polygon points="310,180 120,352 310,395" fill="url(#ttlPyrLit)" opacity="0.95" />
             {/* aretes principales */}
-            <line x1="260" y1="20"  x2="260" y2="438" stroke="#3a2410" strokeWidth="1.1" opacity="0.65" />
-            <line x1="260" y1="20"  x2="-90" y2="388" stroke="#3a2410" strokeWidth="1.3" opacity="0.6" />
-            <line x1="260" y1="20"  x2="570" y2="388" stroke="#3a2410" strokeWidth="1.3" opacity="0.6" />
+            <line x1="310" y1="180" x2="310" y2="395" stroke="#3a2410" strokeWidth="1"   opacity="0.55" />
+            <line x1="310" y1="180" x2="120" y2="352" stroke="#3a2410" strokeWidth="1.2" opacity="0.55" />
+            <line x1="310" y1="180" x2="500" y2="352" stroke="#3a2410" strokeWidth="1.2" opacity="0.55" />
             {/* pierres : lignes horizontales sur les 2 faces */}
-            {[0.12, 0.24, 0.36, 0.48, 0.6, 0.72, 0.85].map((t, i) => {
-              const y  = 20 + (438 - 20) * t;
-              const xL = 260 - (260 - (-90)) * t;
-              const yR = 20 + (388 - 20) * t;
-              const xR = 260 + (570 - 260) * t;
+            {[0.15, 0.32, 0.5, 0.68, 0.85].map((t, i) => {
+              const y  = 180 + (395 - 180) * t;
+              const xL = 310 - (310 - 120) * t;
+              const yR = 180 + (352 - 180) * t;
+              const xR = 310 + (500 - 310) * t;
               return (
                 <g key={`sto${i}`}>
-                  <line x1={xL} y1={y}  x2="260" y2={y}  stroke="#3a2410" strokeWidth="0.8" opacity="0.28" />
-                  <line x1="260" y1={y} x2={xR} y2={yR} stroke="#3a2410" strokeWidth="0.8" opacity="0.28" />
+                  <line x1={xL} y1={y}  x2="310" y2={y}  stroke="#3a2410" strokeWidth="0.7" opacity="0.25" />
+                  <line x1="310" y1={y} x2={xR} y2={yR} stroke="#3a2410" strokeWidth="0.7" opacity="0.25" />
                 </g>
               );
             })}
 
-            {/* --- ANKH grave sur la face lumineuse, en perspective de la face ---
-                 La face lumineuse (apex 260,20 - left -90,388 - front 260,438)
-                 a deux axes propres sur l'ecran :
-                   u (horizontal de la face) ≈ (0.989, 0.141)   [de left vers front]
-                   v (vertical de la face, apex -> centre base) ≈ (-0.407, 0.914)
-                 On scale 0.9 pour la taille finale ; matrix(u.x*s, u.y*s, v.x*s, v.y*s).
-                 Origine placee au tiers superieur de la face. */}
-            <g transform="translate(180 205) matrix(0.89 0.127 -0.366 0.823 0 0)" opacity="0.88">
-              {/* halo doré subtil derriere l'ankh */}
-              <ellipse cx="0" cy="6" rx="34" ry="46" fill="#ffd166" opacity="0.16" />
-              {/* boucle superieure */}
-              <ellipse cx="0" cy="-22" rx="14" ry="17" fill="none" stroke="#3a2410" strokeWidth="4.2" />
-              {/* tige verticale */}
-              <line x1="0" y1="-5" x2="0" y2="40" stroke="#3a2410" strokeWidth="5" strokeLinecap="round" />
-              {/* barre transversale */}
-              <line x1="-20" y1="5" x2="20" y2="5" stroke="#3a2410" strokeWidth="5" strokeLinecap="round" />
-              {/* petit lissage clair (chanfrein) sur la boucle */}
-              <path d="M-12 -22 A 12 14 0 0 1 12 -22" stroke="#f0c574" strokeWidth="1.4" fill="none" opacity="0.55" />
+            {/* --- PYRAMIDE INVERSEE (transparent), effet sablier --- */}
+            {/* Meme apex partage (310,180), base ouverte vers le HAUT.
+                Faces tres transparentes pour un effet cristal / temps. */}
+            <polygon points="310,180 310,-35 500,10" fill="url(#ttlPyrDark)" opacity="0.16" />
+            <polygon points="310,180 120,10 310,-35" fill="url(#ttlPyrLit)" opacity="0.20" />
+            <line x1="310" y1="180" x2="310" y2="-35" stroke="#f5e0a8" strokeWidth="0.9" opacity="0.35" />
+            <line x1="310" y1="180" x2="120" y2="10"  stroke="#f5e0a8" strokeWidth="1"   opacity="0.32" />
+            <line x1="310" y1="180" x2="500" y2="10"  stroke="#f5e0a8" strokeWidth="1"   opacity="0.32" />
+            {/* petit "sable" qui tombe entre les deux pyramides */}
+            <line x1="310" y1="120" x2="310" y2="200" stroke="#ffe08a" strokeWidth="1.6" strokeLinecap="round" opacity="0.7">
+              <animate attributeName="opacity" values="0.3;0.85;0.3" dur="2.6s" repeatCount="indefinite" />
+            </line>
+
+            {/* dune tres proche (premier plan) — dessinée APRES la pyramide pour la placer derriere */}
+            <path d="M 0 380 Q 180 358 380 378 Q 540 396 800 372 L 800 450 L 0 450 Z"
+              fill="url(#ttlSand)" opacity="0.98" />
+            {/* motifs de sable (rides du desert) sur la dune proche */}
+            {[
+              "M 60 405 Q 130 401 200 405",
+              "M 240 411 Q 320 407 400 411",
+              "M 440 405 Q 520 402 600 405",
+              "M 60 424 Q 140 421 220 424",
+              "M 260 430 Q 340 427 420 430",
+              "M 480 424 Q 560 422 640 424",
+              "M 660 417 Q 720 414 790 417",
+            ].map((d, i) => (
+              <path key={`rp${i}`} d={d} fill="none" stroke="#8a5822" strokeWidth="0.8" opacity="0.35" strokeLinecap="round" />
+            ))}
+            {/* petits cailloux epars sur le premier plan */}
+            {[[95, 418, 2], [175, 428, 1.4], [280, 421, 1.8], [410, 435, 2.2],
+              [520, 423, 1.6], [615, 431, 2], [700, 421, 1.4], [760, 435, 1.8]].map(([cx, cy, r], i) => (
+              <ellipse key={`rk${i}`} cx={cx} cy={cy} rx={r} ry={r * 0.55} fill="#5a3a14" opacity="0.55" />
+            ))}
+            {/* touffes d'herbe seche isolees */}
+            <g transform="translate(465 398)" opacity="0.7">
+              <path d="M0 4 L-2 -3 M0 4 L0 -4 M0 4 L2 -3" stroke="#8a7040" strokeWidth="1" fill="none" strokeLinecap="round" />
+            </g>
+            <g transform="translate(720 408)" opacity="0.6">
+              <path d="M0 3 L-2 -3 M0 3 L0 -4 M0 3 L2 -3" stroke="#8a7040" strokeWidth="1" fill="none" strokeLinecap="round" />
             </g>
 
             {/* --- SABLE QUI VOLE (particules horizontales de droite a gauche) --- */}
@@ -1407,24 +1385,26 @@ export default function App() {
           {/* Contenu superpose (titre en haut, boutons en bas), plein ecran */}
           <div style={{ position: "relative", zIndex: 2, minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-between", padding: "32px 20px 40px", textAlign: "center" }}>
           <style>{`
-            @keyframes titleFloat {
+            @keyframes ttlLetterFloat {
               0%, 100% { transform: translateY(0); }
-              50%      { transform: translateY(-5px); }
+              50%      { transform: translateY(-7px); }
             }
-            @keyframes titleShimmer {
-              0%, 100% { filter: brightness(1); }
-              50%      { filter: brightness(1.25); }
+            @keyframes ttlLetterGlow {
+              0%, 100% { text-shadow: 0 0 6px rgba(255,209,102,0.35), 0 2px 12px rgba(232,150,74,0.35); }
+              50%      { text-shadow: 0 0 16px rgba(255,209,102,0.9),  0 2px 24px rgba(232,150,74,0.7); }
             }
           `}</style>
-          <h1 style={{ fontFamily: TITRE_FONT, fontSize: "clamp(38px,9.5vw,72px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", margin: "4px 0 0", lineHeight: 1.08, background: "linear-gradient(100deg, #e8a24a 0%, #ffd166 40%, #e86a4a 80%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", textShadow: "0 2px 22px rgba(232,150,74,0.3)", display: "inline-block" }}>
+          <h1 style={{ fontFamily: TITRE_FONT, fontSize: "clamp(38px,9.5vw,72px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", margin: "4px 0 0", lineHeight: 1.08, display: "inline-block" }}>
             {"Les fils du temps".split("").map((ch, i) => (
               <span key={i} style={{
                 display: "inline-block",
                 whiteSpace: "pre",
-                background: "inherit",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                animation: `titleFloat 3.4s ease-in-out infinite ${i * 0.09}s, titleShimmer 4.2s ease-in-out infinite ${i * 0.11}s`,
+                color: i % 2 === 0 ? "#ffd166" : "#e8a24a",
+                animationName: "ttlLetterFloat, ttlLetterGlow",
+                animationDuration: "3.4s, 4.2s",
+                animationTimingFunction: "ease-in-out",
+                animationIterationCount: "infinite",
+                animationDelay: `${(i * 0.09).toFixed(2)}s, ${(i * 0.11).toFixed(2)}s`,
               }}>
                 {ch === " " ? " " : ch}
               </span>
