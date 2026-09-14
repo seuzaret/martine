@@ -47,6 +47,7 @@ function playHit(good) {
 export function TailleSilexGame({ onClose, onWin, onFail }) {
   const [phase, setPhase] = useState('play'); // play → won | fail
   const failedNotifiedRef = useRef(false);
+  const wonNotifiedRef = useRef(false);
   const [good, setGood] = useState(0);
   const [tries, setTries] = useState(0);
   const [feedback, setFeedback] = useState(null); // {ok, key}
@@ -66,7 +67,10 @@ export function TailleSilexGame({ onClose, onWin, onFail }) {
   }, [phase]);
 
   useEffect(() => {
-    if (phase === 'won') onWin?.();
+    if (phase === 'won' && !wonNotifiedRef.current) {
+      wonNotifiedRef.current = true;
+      onWin?.();
+    }
   }, [phase, onWin]);
 
   const strike = () => {
