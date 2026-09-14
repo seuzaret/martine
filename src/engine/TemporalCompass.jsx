@@ -860,6 +860,31 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
             </g>
           </g>
 
+          {/* --- VENT TEMPOREL ---
+              Fines traînées translucides balayant l'écran de droite à gauche,
+              en léger biais, indépendantes de la caméra. Très basse opacité
+              pour l'atmosphère sans gêner la lisibilité de la grille. */}
+          <g pointerEvents="none" opacity="0.55">
+            {Array.from({ length: 14 }).map((_, i) => {
+              const y = 40 + (i * 71) % (VH - 80);
+              const dur = 5.5 + (i % 5) * 1.1;                 // 5.5 – 10s
+              const delay = -(((i * 1.37) % dur).toFixed(2));  // desync
+              const len = 90 + (i % 4) * 40;                   // 90 – 210 px
+              const slope = -8 + (i % 3) * 6;                  // -8 / -2 / +4 px
+              const col = i % 3 === 0 ? "#a8d8ff" : (i % 3 === 1 ? "#c8e5ff" : "#dfeaff");
+              return (
+                <g key={`wind${i}`} transform={`translate(${VW + 100} ${y})`}>
+                  <animateTransform attributeName="transform" type="translate"
+                    values={`${VW + 100} ${y}; ${-len - 40} ${y + slope}`}
+                    dur={`${dur}s`} begin={`${delay}s`} repeatCount="indefinite" />
+                  <line x1="0" y1="0" x2={len} y2={slope * 0.5}
+                    stroke={col} strokeWidth="1.2" strokeLinecap="round"
+                    opacity={0.18 + (i % 3) * 0.05} />
+                </g>
+              );
+            })}
+          </g>
+
           {/* HUD boussole : 5 arcs concentriques orientes vers la cible */}
           <g transform={`translate(${VW - 140} 140)`}>
             <circle r="96" fill="#0e1a30" stroke="#7fb0e0" strokeWidth="1.6" opacity="0.9" />
