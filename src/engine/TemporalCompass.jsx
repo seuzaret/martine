@@ -221,24 +221,36 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       el.setAttribute("opacity", "0.9");
       trailGroupRef.current.appendChild(el);
     };
-    /* Trainee verte du joueur : petites gouttes emises en continu
-       depuis le cercle du joueur, chacune fondant en ~700ms. Vraiment
-       "a partir du joueur", pas un segment fixe entre 2 cases. */
-    const emitPlayerTrail = (sx, sy) => {
+    /* Trainee verte du joueur : petites gouttes emises depuis le
+       cercle du joueur. Le fondu est piloté par la boucle RAF
+       (setAttribute r et opacity chaque frame) plutot que par CSS
+       transitions ou SMIL, dont l'activation sur elements SVG
+       ajoutes dynamiquement est fragile selon les navigateurs. */
+    const TRAIL_LIFE = 700;
+    const activeTrail = [];
+    const emitPlayerTrail = (sx, sy, born) => {
       if (!playerTrailGroupRef.current) return;
-      const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      dot.setAttribute("cx", sx.toFixed(1));
-      dot.setAttribute("cy", sy.toFixed(1));
-      dot.setAttribute("r", "5");
-      dot.setAttribute("fill", "#7fffb0");
-      dot.style.opacity = "0.85";
-      dot.style.transition = "opacity 700ms linear, r 700ms linear";
-      playerTrailGroupRef.current.appendChild(dot);
-      requestAnimationFrame(() => {
-        dot.style.opacity = "0";
-        dot.setAttribute("r", "1.5");
-      });
-      setTimeout(() => dot.remove(), 800);
+      const el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      el.setAttribute("cx", sx.toFixed(1));
+      el.setAttribute("cy", sy.toFixed(1));
+      el.setAttribute("r", "7");
+      el.setAttribute("fill", "#7fffb0");
+      el.setAttribute("opacity", "0.95");
+      playerTrailGroupRef.current.appendChild(el);
+      activeTrail.push({ el, born });
+    };
+    const updatePlayerTrail = (t) => {
+      for (let i = activeTrail.length - 1; i >= 0; i--) {
+        const age = t - activeTrail[i].born;
+        if (age >= TRAIL_LIFE) {
+          activeTrail[i].el.remove();
+          activeTrail.splice(i, 1);
+        } else {
+          const a = 1 - age / TRAIL_LIFE;
+          activeTrail[i].el.setAttribute("opacity", (0.95 * a).toFixed(3));
+          activeTrail[i].el.setAttribute("r", (7 * a + 1.5 * (1 - a)).toFixed(2));
+        }
+      }
     };
 
     const tachyonChooseDir = (curCx, curCy) => {
@@ -412,11 +424,13 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       if (playerRef.current) playerRef.current.setAttribute("transform", `translate(${psx} ${psy})`);
 
       /* Trainee : emet une petite goutte a la position ecran (iso+warp)
-         du joueur toutes les TRAIL_EMIT_MS, seulement pendant qu'il bouge. */
+         du joueur toutes les TRAIL_EMIT_MS pendant qu'il bouge, et
+         fait fondre toutes les gouttes actives cette frame. */
       if (!isCaught && prog < 1 && t - lastEmitAt >= TRAIL_EMIT_MS) {
-        emitPlayerTrail(psx, psy);
+        emitPlayerTrail(psx, psy, t);
         lastEmitAt = t;
       }
+      updatePlayerTrail(t);
       if (minimapPlayerRef.current) {
         minimapPlayerRef.current.setAttribute("cx", (p.x / WORLD) * 60);
         minimapPlayerRef.current.setAttribute("cy", (p.y / WORLD) * 60);
