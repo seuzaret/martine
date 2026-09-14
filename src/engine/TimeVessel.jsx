@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TemporalCompass } from "./TemporalCompass.jsx";
 import { Avatar } from "./Martine.jsx";
 import SceneExterieur from "../chapters/01-paleolithique/scenes/SceneExterieur.jsx";
@@ -138,6 +138,23 @@ function TimeMachine({ landed = false }) {
    ============================================================ */
 export function TimeVessel({ nextLabel, onDone, onCancel }) {
   const [phase, setPhase] = useState("martine");
+  const [flux, setFlux] = useState(0);
+  const rafRef = useRef(null);
+
+  /* Anime la jauge de flux temporel : 0 → 100 % en ~3.2 s */
+  useEffect(() => {
+    if (phase !== "martine") return;
+    const start = performance.now();
+    const dur = 3200;
+    const tick = (t) => {
+      const p = Math.min(1, (t - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 2);
+      setFlux(Math.round(eased * 100));
+      if (p < 1) rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [phase]);
 
   /* ---------- PHASE COMPASS : le mini-jeu ---------- */
   if (phase === "compass") {
@@ -199,7 +216,44 @@ export function TimeVessel({ nextLabel, onDone, onCancel }) {
                 « J'ai emmagasiné assez de <strong style={{ color: "#ffd166" }}>flux temporel</strong>
                 {" "}pour matérialiser la <strong style={{ color: "#5eff9e" }}>machine temporelle</strong>. »
               </p>
-              <p style={{ margin: "10px 0 0", fontSize: 15, lineHeight: 1.5, color: "#c8d4e2" }}>
+
+              {/* JAUGE de flux temporel : bleu → vert qui se remplit avec le texte */}
+              <div style={{
+                display: "flex", alignItems: "center", gap: 12,
+                margin: "16px auto 0", maxWidth: 520,
+              }}>
+                <div style={{
+                  fontFamily: "ui-monospace,monospace", fontSize: 11,
+                  letterSpacing: 2, color: "#7fd8ff", whiteSpace: "nowrap",
+                }}>FLUX TEMPOREL</div>
+                <div style={{
+                  flex: 1, height: 18, borderRadius: 10,
+                  background: "linear-gradient(90deg, #0e2a4a 0%, #123a5c 100%)",
+                  border: "1.5px solid #2a5078", overflow: "hidden",
+                  boxShadow: "inset 0 0 8px rgba(0,0,0,0.5)", position: "relative",
+                }}>
+                  <div style={{
+                    height: "100%", width: `${flux}%`,
+                    background: "linear-gradient(90deg, #3aa07a 0%, #5eff9e 60%, #b0ffdc 100%)",
+                    boxShadow: "0 0 12px rgba(94,255,158,0.7)",
+                    transition: "width 60ms linear",
+                  }} />
+                  {/* reflet qui glisse par-dessus */}
+                  <div style={{
+                    position: "absolute", top: 2, left: 0, height: 4, width: "100%",
+                    background: "linear-gradient(90deg, transparent 20%, rgba(255,255,255,0.4) 50%, transparent 80%)",
+                    animation: "tvGaugeShine 2s linear infinite",
+                    opacity: 0.8, pointerEvents: "none",
+                  }} />
+                </div>
+                <div style={{
+                  fontFamily: "ui-monospace,monospace", fontSize: 12, fontWeight: 800,
+                  color: flux >= 100 ? "#b0ffdc" : "#5eff9e", minWidth: 44, textAlign: "right",
+                  textShadow: flux >= 100 ? "0 0 8px rgba(94,255,158,0.9)" : "none",
+                }}>{flux}%</div>
+              </div>
+
+              <p style={{ margin: "12px 0 0", fontSize: 15, lineHeight: 1.5, color: "#c8d4e2" }}>
                 Regarde — elle apparaît sous nos yeux.
               </p>
               <button onClick={() => setPhase("materialize")}
@@ -213,7 +267,10 @@ export function TimeVessel({ nextLabel, onDone, onCancel }) {
             </div>
           </div>
 
-          <style>{`@keyframes tvMartineGlow { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }`}</style>
+          <style>{`
+            @keyframes tvMartineGlow { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+            @keyframes tvGaugeShine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+          `}</style>
         </>
       )}
 
