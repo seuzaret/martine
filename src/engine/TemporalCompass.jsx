@@ -93,6 +93,21 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
   const [done, setDone] = useState(false);
   const [caught, setCaught] = useState(false);
   const [decoys, setDecoys] = useState([]); // faux noeuds temporels ephemeres
+  /* phase : brief -> countdown -> play (puis done/caught) */
+  const [phase, setPhase] = useState("brief");
+  const [countdown, setCountdown] = useState(3);
+  const phaseRef = useRef("brief");
+  useEffect(() => { phaseRef.current = phase; }, [phase]);
+
+  /* Decompte 3 -> 2 -> 1 -> play (une seule fois par phase countdown). */
+  useEffect(() => {
+    if (phase !== "countdown") return;
+    setCountdown(3);
+    const t2 = setTimeout(() => setCountdown(2), 1000);
+    const t1 = setTimeout(() => setCountdown(1), 2000);
+    const tGo = setTimeout(() => setPhase("play"), 3000);
+    return () => { clearTimeout(t2); clearTimeout(t1); clearTimeout(tGo); };
+  }, [phase]);
 
   const { target, whirls } = useMemo(() => {
     const snap = (v) => Math.round(v / STEP) * STEP;
@@ -287,10 +302,11 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
     const step = (t) => {
       const dt = Math.min(50, t - last); last = t;
       const p = posRef.current, held = heldRef.current;
+      const isPlaying = phaseRef.current === "play";
 
       /* Progression sur la case en cours.
          Si le frein est tenu, la traversee se ralentit (BRAKE_FACTOR). */
-      if (prog < 1) {
+      if (isPlaying && prog < 1) {
         const factor = held.brake ? BRAKE_FACTOR : 1;
         prog = Math.min(1, prog + (dt * factor) / CELL_MS);
         p.x = fromX + (toX - fromX) * prog;
@@ -298,7 +314,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       }
       /* Arrive : demarrer la case suivante.
          Les tourbillons peuvent detourner (voire imposer) la direction. */
-      if (prog >= 1) {
+      if (isPlaying && prog >= 1) {
         const cx = Math.round(p.x / STEP), cy = Math.round(p.y / STEP);
 
         /* Cherche le tourbillon dont le nœud actuel est le plus enfonce. */
@@ -377,7 +393,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       }
 
       /* --- Tachyons rouges : chacun avance sur la grille, laisse un trait --- */
-      if (!isCaught) {
+      if (isPlaying && !isCaught) {
         for (let ti = 0; ti < tachyons.length; ti++) {
           const T = tachyons[ti];
           if (T.prog < 1) {
@@ -466,7 +482,7 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
       if (targetGroupRef.current) targetGroupRef.current.setAttribute("opacity", Math.max(0, 1 - distT / 900));
 
       /* verrouillage */
-      if (distT < LOCK_RADIUS) {
+      if (isPlaying && distT < LOCK_RADIUS) {
         lock = Math.min(1, lock + dt / LOCK_MS);
         if (lockBarRef.current) lockBarRef.current.setAttribute("width", 312 * lock);
         if (lockGroupRef.current) lockGroupRef.current.setAttribute("opacity", "1");
@@ -952,6 +968,80 @@ export function TemporalCompass({ onClose, onLock, nextLabel }) {
             </g>
           </g>
         </svg>
+
+        {/* --- BRIEF DE MARTINE : mission + explication + bouton GO --- */}
+        {phase === "brief" && (
+          <div onClick={(e) => e.stopPropagation()} style={{
+            position: "absolute", inset: 0, display: "flex",
+            alignItems: "center", justifyContent: "center",
+            background: "rgba(4, 8, 18, 0.72)", zIndex: 20,
+          }}>
+            <div style={{
+              maxWidth: 620, background: "#0e1a30",
+              border: "2px solid #5eff9e", borderRadius: 16,
+              padding: "26px 28px 22px", boxShadow: "0 0 40px rgba(94,255,158,0.35)",
+              fontFamily: "Palatino, Georgia, serif", color: "#e8eef5", textAlign: "center",
+            }}>
+              <div style={{
+                fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3,
+                color: "#5eff9e", marginBottom: 6,
+              }}>▶ MARTINE — CANAL PRIORITAIRE</div>
+              <h2 style={{
+                margin: "6px 0 14px", fontSize: 26, letterSpacing: 2, color: "#ffd166",
+                textTransform: "uppercase",
+              }}>Mission prioritaire</h2>
+              <p style={{ fontSize: 16.5, lineHeight: 1.55, margin: "0 0 14px" }}>
+                Nous sommes dans le <strong>flux du temps</strong>. Grâce à la
+                boussole temporelle, trouve un <strong>nœud dans le temps</strong>
+                {" "}et voyage jusqu'à son époque.
+              </p>
+              <p style={{ fontSize: 15, lineHeight: 1.5, margin: "0 0 12px", color: "#c8d4e2" }}>
+                Utilise les <strong style={{ color: "#7fffb0" }}>flèches</strong> pour
+                te déplacer le long des lignes ; la <strong style={{ color: "#7fffb0" }}>barre espace</strong>
+                {" "}freine.
+              </p>
+              <p style={{
+                fontSize: 15, lineHeight: 1.5, margin: "0 0 20px",
+                color: "#ff8a94", fontWeight: 700,
+              }}>
+                ⚠ Attention aux <span style={{ color: "#ff2a4a" }}>protecteurs du temps</span>,
+                les <span style={{ color: "#ff2a4a" }}>tachyons rouges</span> qui veulent te stopper.
+              </p>
+              <button onClick={() => setPhase("countdown")}
+                autoFocus
+                style={{
+                  background: "#5eff9e", color: "#06110b", border: "none",
+                  borderRadius: 12, padding: "14px 44px", fontSize: 18, fontWeight: 800,
+                  cursor: "pointer", fontFamily: "ui-monospace,monospace",
+                  letterSpacing: 3, boxShadow: "0 0 20px rgba(94,255,158,0.5)",
+                }}>▶ GO</button>
+            </div>
+          </div>
+        )}
+
+        {/* --- DECOMPTE 3 - 2 - 1 --- */}
+        {phase === "countdown" && (
+          <div style={{
+            position: "absolute", inset: 0, display: "flex",
+            alignItems: "center", justifyContent: "center",
+            background: "rgba(4, 8, 18, 0.45)", zIndex: 20, pointerEvents: "none",
+          }}>
+            <div key={countdown} style={{
+              fontFamily: "ui-monospace,monospace", fontSize: "clamp(180px, 30vw, 320px)",
+              fontWeight: 800, color: "#ffd166", letterSpacing: 8,
+              textShadow: "0 0 40px rgba(255,209,102,0.7), 0 0 80px rgba(232,150,74,0.5)",
+              animation: "compassCountdown 1s ease-out forwards",
+            }}>{countdown}</div>
+            <style>{`
+              @keyframes compassCountdown {
+                0% { transform: scale(0.5); opacity: 0; }
+                20% { transform: scale(1.2); opacity: 1; }
+                80% { transform: scale(1); opacity: 1; }
+                100% { transform: scale(1.35); opacity: 0; }
+              }
+            `}</style>
+          </div>
+        )}
       </div>
     </div>
   );
