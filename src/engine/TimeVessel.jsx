@@ -133,6 +133,91 @@ function TimeMachine({ landed = false }) {
   );
 }
 
+/* ---------- PHASE MATERIALIZE : machine + zone cliquable large ---------- */
+function MaterializePhase({ onEnter }) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setReady(true), 2000);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div style={{ position: "absolute", inset: 0 }}>
+      {/* La machine — SVG en fond, NON cliquable (pointer-events:none) */}
+      <svg viewBox="0 0 600 500" preserveAspectRatio="xMidYMax meet"
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+        aria-hidden="true">
+        <defs>
+          <radialGradient id="tvHaloBig" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0"    stopColor="#b0ffdc" stopOpacity="0.9" />
+            <stop offset="0.45" stopColor="#5eff9e" stopOpacity="0.5" />
+            <stop offset="1"    stopColor="#5eff9e" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="300" cy="300" r="320" fill="url(#tvHaloBig)">
+          <animate attributeName="r" values="20;380;340" keyTimes="0;0.65;1" dur="2s" repeatCount="1" fill="freeze" />
+          <animate attributeName="opacity" values="0;1;0.7" keyTimes="0;0.55;1" dur="2s" repeatCount="1" fill="freeze" />
+        </circle>
+        <g transform="translate(300 330)" opacity="0">
+          <animate attributeName="opacity" values="0;1" dur="0.8s" begin="1.2s" fill="freeze" />
+          <TimeMachine landed={true} />
+        </g>
+      </svg>
+
+      {/* Grande zone cliquable invisible qui couvre la MACHINE et sa PORTE.
+          Une fois la machine matérialisée (ready), tout clic dessus fait entrer. */}
+      {ready && (
+        <button onClick={onEnter}
+          title="Entrer dans la machine"
+          style={{
+            position: "absolute", left: "50%", top: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "min(52%, 420px)", aspectRatio: "0.9",
+            background: "transparent", border: "none", cursor: "pointer",
+            padding: 0, margin: 0, outline: "none",
+            animation: "tvHintPulse 1.8s ease-in-out infinite",
+          }}
+          aria-label="Entrer dans la machine temporelle" />
+      )}
+
+      {/* Bouton ENTRER — visible dès que la machine est prête */}
+      {ready && (
+        <button onClick={onEnter}
+          autoFocus
+          style={{
+            position: "absolute", left: "50%", bottom: "5%", transform: "translateX(-50%)",
+            background: "#5eff9e", color: "#06110b", border: "none",
+            borderRadius: 12, padding: "14px 40px", fontSize: 17, fontWeight: 800,
+            cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 4,
+            boxShadow: "0 0 22px rgba(94,255,158,0.5)",
+            animation: "tvBtnAppear 0.4s ease-out",
+          }}>▶ ENTRER DANS LA MACHINE</button>
+      )}
+
+      {/* Indice "clique sur la porte" */}
+      {ready && (
+        <div style={{
+          position: "absolute", left: "50%", top: "12%", transform: "translateX(-50%)",
+          fontFamily: "ui-monospace,monospace", fontSize: 13, letterSpacing: 2,
+          color: "#5eff9e", background: "rgba(4,8,14,0.7)",
+          padding: "8px 16px", borderRadius: 8,
+          border: "1px solid rgba(94,255,158,0.4)",
+          animation: "tvBtnAppear 0.4s ease-out",
+          pointerEvents: "none",
+        }}>Clique sur la porte de la machine ↓</div>
+      )}
+
+      <style>{`
+        @keyframes tvBtnAppear { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes tvHintPulse {
+          0%,100% { box-shadow: 0 0 0 0 rgba(94,255,158,0); }
+          50%     { box-shadow: 0 0 0 8px rgba(94,255,158,0.15); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 /* ============================================================
    COMPOSANT PRINCIPAL
    ============================================================ */
@@ -201,12 +286,15 @@ export function TimeVessel({ nextLabel, onDone, onCancel }) {
             }}>▶ MARTINE</div>
           </div>
 
-          {/* Bulle de dialogue : CENTREE EN BAS */}
+          {/* Bulle de dialogue + JAUGE VERTICALE à droite */}
           <div style={{
             position: "absolute", left: "50%", bottom: "6%", transform: "translateX(-50%)",
-            maxWidth: 720, width: "min(90%, 720px)",
+            display: "flex", alignItems: "stretch", gap: 14,
+            maxWidth: 820, width: "min(94%, 820px)",
           }}>
+            {/* Bulle */}
             <div style={{
+              flex: 1,
               background: "#0e1a30", border: "2px solid #5eff9e", borderRadius: 14,
               padding: "20px 26px", color: "#e8eef5",
               boxShadow: "0 0 30px rgba(94,255,158,0.35)",
@@ -216,43 +304,6 @@ export function TimeVessel({ nextLabel, onDone, onCancel }) {
                 « J'ai emmagasiné assez de <strong style={{ color: "#ffd166" }}>flux temporel</strong>
                 {" "}pour matérialiser la <strong style={{ color: "#5eff9e" }}>machine temporelle</strong>. »
               </p>
-
-              {/* JAUGE de flux temporel : bleu → vert qui se remplit avec le texte */}
-              <div style={{
-                display: "flex", alignItems: "center", gap: 12,
-                margin: "16px auto 0", maxWidth: 520,
-              }}>
-                <div style={{
-                  fontFamily: "ui-monospace,monospace", fontSize: 11,
-                  letterSpacing: 2, color: "#7fd8ff", whiteSpace: "nowrap",
-                }}>FLUX TEMPOREL</div>
-                <div style={{
-                  flex: 1, height: 18, borderRadius: 10,
-                  background: "linear-gradient(90deg, #0e2a4a 0%, #123a5c 100%)",
-                  border: "1.5px solid #2a5078", overflow: "hidden",
-                  boxShadow: "inset 0 0 8px rgba(0,0,0,0.5)", position: "relative",
-                }}>
-                  <div style={{
-                    height: "100%", width: `${flux}%`,
-                    background: "linear-gradient(90deg, #3aa07a 0%, #5eff9e 60%, #b0ffdc 100%)",
-                    boxShadow: "0 0 12px rgba(94,255,158,0.7)",
-                    transition: "width 60ms linear",
-                  }} />
-                  {/* reflet qui glisse par-dessus */}
-                  <div style={{
-                    position: "absolute", top: 2, left: 0, height: 4, width: "100%",
-                    background: "linear-gradient(90deg, transparent 20%, rgba(255,255,255,0.4) 50%, transparent 80%)",
-                    animation: "tvGaugeShine 2s linear infinite",
-                    opacity: 0.8, pointerEvents: "none",
-                  }} />
-                </div>
-                <div style={{
-                  fontFamily: "ui-monospace,monospace", fontSize: 12, fontWeight: 800,
-                  color: flux >= 100 ? "#b0ffdc" : "#5eff9e", minWidth: 44, textAlign: "right",
-                  textShadow: flux >= 100 ? "0 0 8px rgba(94,255,158,0.9)" : "none",
-                }}>{flux}%</div>
-              </div>
-
               <p style={{ margin: "12px 0 0", fontSize: 15, lineHeight: 1.5, color: "#c8d4e2" }}>
                 Regarde — elle apparaît sous nos yeux.
               </p>
@@ -265,6 +316,51 @@ export function TimeVessel({ nextLabel, onDone, onCancel }) {
                   boxShadow: "0 0 18px rgba(94,255,158,0.45)",
                 }}>▶ CONTINUER</button>
             </div>
+
+            {/* JAUGE VERTICALE : reprend le look de JaugeTemporelle (colonne jaune) */}
+            <div style={{
+              width: 92, flex: "0 0 auto",
+              display: "flex", flexDirection: "column", alignItems: "center",
+              background: "linear-gradient(180deg,#141b28,#0c1220)",
+              border: "1px solid #26324a", borderRadius: 12,
+              padding: "10px 8px", gap: 8,
+              boxShadow: "0 0 24px rgba(255,209,102,0.25)",
+            }}>
+              <div style={{
+                fontFamily: "ui-monospace,monospace", fontSize: 9, letterSpacing: 1.5,
+                color: "#ffd166", textAlign: "center", lineHeight: 1.35,
+              }}>⚡ FLUX<br />TEMPOREL</div>
+
+              {/* La colonne qui se remplit de bas en haut */}
+              <div style={{
+                flex: "1 1 auto", width: 30, minHeight: 120,
+                background: "#0a1119", border: "1px solid #26324a", borderRadius: 8,
+                position: "relative", overflow: "hidden",
+                display: "flex", flexDirection: "column-reverse",
+              }}>
+                <div style={{
+                  height: `${flux}%`,
+                  background: flux >= 100
+                    ? "linear-gradient(0deg,#e8934a,#ffd166)"
+                    : "linear-gradient(0deg,#2f5a76,#7fd8ff)",
+                  boxShadow: flux >= 100 ? "0 0 16px #ffd166" : "none",
+                  transition: "height 60ms linear",
+                }} />
+                {/* graduations : tous les 20 % */}
+                {[20, 40, 60, 80].map((y) => (
+                  <div key={y} style={{
+                    position: "absolute", left: 0, right: 0, bottom: `${y}%`,
+                    height: 1, background: "#0a1119",
+                  }} />
+                ))}
+              </div>
+
+              <div style={{
+                fontFamily: "ui-monospace,monospace", fontSize: 12, fontWeight: 700,
+                color: flux >= 100 ? "#ffd166" : "#8fa3bd",
+                textShadow: flux >= 100 ? "0 0 8px rgba(255,209,102,0.7)" : "none",
+              }}>{flux}%</div>
+            </div>
           </div>
 
           <style>{`
@@ -276,46 +372,7 @@ export function TimeVessel({ nextLabel, onDone, onCancel }) {
 
       {/* ---------- 2. MATERIALISATION DE LA MACHINE (centrée, posée) ---------- */}
       {phase === "materialize" && (
-        <div style={{ position: "absolute", inset: 0 }}>
-          {/* La machine — centrée horizontalement, semelles au sol */}
-          <svg viewBox="0 0 600 500" preserveAspectRatio="xMidYMax meet"
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-            aria-hidden="true">
-            {/* halo vert croissant, centré */}
-            <defs>
-              <radialGradient id="tvHaloBig" cx="0.5" cy="0.5" r="0.5">
-                <stop offset="0"    stopColor="#b0ffdc" stopOpacity="0.9" />
-                <stop offset="0.45" stopColor="#5eff9e" stopOpacity="0.5" />
-                <stop offset="1"    stopColor="#5eff9e" stopOpacity="0" />
-              </radialGradient>
-            </defs>
-            <circle cx="300" cy="300" r="320" fill="url(#tvHaloBig)">
-              <animate attributeName="r" values="20;380;340" keyTimes="0;0.65;1" dur="2s" repeatCount="1" fill="freeze" />
-              <animate attributeName="opacity" values="0;1;0.7" keyTimes="0;0.55;1" dur="2s" repeatCount="1" fill="freeze" />
-            </circle>
-
-            {/* Machine dessinée à (300, 330) — les pieds (y=150 local) touchent y=480 ≈ sol */}
-            <g transform="translate(300 330)" opacity="0">
-              <animate attributeName="opacity" values="0;1" dur="0.8s" begin="1.2s" fill="freeze" />
-              <TimeMachine landed={true} />
-            </g>
-          </svg>
-
-          {/* Bouton ENTRER — au-dessus en HTML pour être toujours cliquable */}
-          <button onClick={() => setPhase("cockpit")}
-            autoFocus
-            style={{
-              position: "absolute", left: "50%", bottom: "5%", transform: "translateX(-50%)",
-              opacity: 0, animation: "tvBtnAppear 0.6s ease-out 2.2s forwards",
-              background: "#5eff9e", color: "#06110b", border: "none",
-              borderRadius: 12, padding: "14px 40px", fontSize: 17, fontWeight: 800,
-              cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 4,
-              boxShadow: "0 0 22px rgba(94,255,158,0.5)",
-            }}>▶ ENTRER</button>
-          <style>{`
-            @keyframes tvBtnAppear { to { opacity: 1; } }
-          `}</style>
-        </div>
+        <MaterializePhase onEnter={() => setPhase("cockpit")} />
       )}
 
       {/* ---------- 3. COCKPIT ---------- */}
