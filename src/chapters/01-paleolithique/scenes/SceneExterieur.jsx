@@ -13,7 +13,7 @@ import { GrassTuft, Birds } from "./decor.jsx";
    Les zones cliquables n'ont pas bougé.
    ============================================================ */
 
-export default function SceneExterieur({ collect, action, reveal, made = [], queteQui }) {
+export default function SceneExterieur({ collect, action, reveal, made = [], queteQui, bare = false }) {
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -261,6 +261,7 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
       <PLayer depth={3}>
       {/* LA TRACE DU CRASH : MARTINE a rebondi deux fois puis labouré
           le sol en glissant jusqu'à sa position actuelle */}
+      {!bare && (
       <g>
         {/* les deux premiers rebonds (petits cratères espacés) */}
         {[[498, 512, 13], [552, 516, 17]].map(([x, y, r], i) => (
@@ -285,7 +286,9 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
         {/* poussière qui retombe encore le long de la trace */}
         <ellipse cx="700" cy="502" rx="80" ry="8" fill="#d8b884" opacity="0.14" filter="url(#x2blur)" />
       </g>
+      )}
       {/* MARTINE : une noix spatiale échouée (fidèle au dessin de l'auteur) */}
+      {!bare && (
       <g transform="translate(840,486) rotate(12)">
         <ellipse cx="-6" cy="21" rx="52" ry="10" fill="#140b06" opacity="0.65" />
         {/* coque de noix à demi enfoncée dans le sillon */}
@@ -309,6 +312,7 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
         {/* fumée */}
         <path d="M-20 -30 q-6 -14 4 -22 q-8 4 -12 -8" stroke="#8a94a8" strokeWidth="3" fill="none" opacity="0.5" style={{ animation: "drift 4s ease-in-out infinite" }} />
       </g>
+      )}
       {/* herbes sombres qui cadrent le bas de l'image */}
       <g opacity="0.9">
         <path d="M-4 560 q10 -34 4 -52 M14 560 q2 -28 14 -44 M34 560 q-6 -24 2 -40 M60 560 q8 -26 0 -38" stroke="#241a10" strokeWidth="4" fill="none" />
@@ -322,6 +326,7 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
 
       {/* ANA — l'accueillante du clan, les paumes rouges d'ocre. C'est elle
           qui ouvre les portes du clan… et qui aime les belles soirées. */}
+      {!bare && (
       <g transform="translate(252,494)">
         <ellipse cx="0" cy="16" rx="20" ry="5" fill="#241a10" opacity="0.6" />
         {/* le petit corps, une peau nouée sur l'épaule */}
@@ -340,6 +345,7 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
         <path d="M-26 -26 l-2 -4 M-23 -27 l0 -4 M-20 -26 l2 -4" stroke="#b5451f" strokeWidth="1.4" strokeLinecap="round" />
         <path d="M20 -26 l-2 -4 M23 -27 l0 -4 M26 -26 l2 -4" stroke="#b5451f" strokeWidth="1.4" strokeLinecap="round" />
       </g>
+      )}
       {/* le « ? » doré : c'est au tour d'Ana dans la quête */}
       {queteQui === "ana" && (
         <g transform="translate(236,398)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
@@ -353,11 +359,13 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
       <rect width="1000" height="560" fill="#1a1410" opacity="0.1" filter="url(#x2grain)" style={{ pointerEvents: "none" }} />
 
       {/* zones cliquables — hors couches (décalage max « rayon) */}
-      <Hotspot cx={118} cy={486} r={44} label="ocre" item="ocre" reveal={reveal} onClick={() => collect("ocre")} />
-      <Hotspot cx={297} cy={360} r={48} label="liane" item="liane" reveal={reveal} onClick={() => collect("liane")} />
-      <Hotspot cx={168} cy={380} r={60} label="grotte" reveal={reveal} onClick={() => action("cave")} />
-      <Hotspot cx={840} cy={486} r={60} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
-      <Hotspot cx={252} cy={476} r={40} label="Ana" reveal={reveal} onClick={(p) => action("ana", p)} />
+      {!bare && <>
+        <Hotspot cx={118} cy={486} r={44} label="ocre" item="ocre" reveal={reveal} onClick={() => collect("ocre")} />
+        <Hotspot cx={297} cy={360} r={48} label="liane" item="liane" reveal={reveal} onClick={() => collect("liane")} />
+        <Hotspot cx={168} cy={380} r={60} label="grotte" reveal={reveal} onClick={() => action("cave")} />
+        <Hotspot cx={840} cy={486} r={60} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
+        <Hotspot cx={252} cy={476} r={40} label="Ana" reveal={reveal} onClick={(p) => action("ana", p)} />
+      </>}
     </svg>
   );
 }
