@@ -343,12 +343,26 @@ export default function App() {
 
   /* Animation JS-piloté des lettres du titre (utile même quand le CSS
      `prefers-reduced-motion: reduce` désactive les animations CSS, ou
-     quand un `<style>` inline n'est pas honoré). */
+     quand un `<style>` inline n'est pas honoré).
+     La boucle centre aussi le "I" de "Fils" sur l'apex de la pyramide
+     de l'illustration de fond (viewBox 800×450, apex à x=310). */
   const titleLetterRefs = useRef([]);
+  const titleH1Ref = useRef(null);
   useEffect(() => {
     if (screen !== "title") return;
     let raf;
     const t0 = performance.now();
+    /* Position en pixels ecran de l'apex, en tenant compte de
+       preserveAspectRatio="slice" sur le SVG. */
+    const apexScreenX = () => {
+      const vpW = window.innerWidth, vpH = window.innerHeight;
+      const svgAspect = 800 / 450;
+      if (vpW / vpH > svgAspect) {
+        const svgWpx = vpH * svgAspect;
+        return (vpW - svgWpx) / 2 + 310 * (vpH / 450);
+      }
+      return 310 * (vpW / 800);
+    };
     const step = (t) => {
       const dt = (t - t0) / 1000;
       titleLetterRefs.current.forEach((el, i) => {
@@ -358,6 +372,16 @@ export default function App() {
         el.style.transform = `translateY(${y.toFixed(2)}px)`;
         el.style.textShadow = `0 0 ${(6 + 12 * glow).toFixed(1)}px rgba(255,209,102,${(0.35 + 0.55 * glow).toFixed(2)}), 0 2px 22px rgba(232,150,74,${(0.35 + 0.3 * glow).toFixed(2)})`;
       });
+      /* Alignement horizontal : le "I" de "Fils" (index 5) doit se
+         retrouver a la meme abscisse ecran que l'apex de la pyramide. */
+      const iLetter = titleLetterRefs.current[5];
+      const h1 = titleH1Ref.current;
+      if (iLetter && h1) {
+        const iRect = iLetter.getBoundingClientRect();
+        const iCenter = iRect.left + iRect.width / 2;
+        const delta = apexScreenX() - iCenter;
+        h1.style.transform = `translateX(${delta.toFixed(1)}px)`;
+      }
       raf = requestAnimationFrame(step);
     };
     raf = requestAnimationFrame(step);
@@ -1413,7 +1437,7 @@ export default function App() {
 
           {/* Contenu superpose (titre en haut, boutons en bas), plein ecran */}
           <div style={{ position: "relative", zIndex: 2, minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-between", padding: "32px 20px 40px", textAlign: "center" }}>
-          <h1 style={{ fontFamily: TITRE_FONT, fontSize: "clamp(38px,9.5vw,72px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", margin: "4px 0 0", lineHeight: 1.08, display: "inline-block" }}>
+          <h1 ref={titleH1Ref} style={{ fontFamily: TITRE_FONT, fontSize: "clamp(38px,9.5vw,72px)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", margin: "4px 0 0", lineHeight: 1.08, display: "inline-block", willChange: "transform" }}>
             {"Les fils du temps".split("").map((ch, i) => (
               <span key={i}
                 ref={(el) => { titleLetterRefs.current[i] = el; }}
