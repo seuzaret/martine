@@ -30,6 +30,7 @@ import { TailleSilexGame } from "./chapters/paleo-taille-silex.jsx";
 import Mediadex from "./engine/Mediadex.jsx";
 import MediaCard from "./engine/MediaCard.jsx";
 import { TemporalCompass } from "./engine/TemporalCompass.jsx";
+import { TimeVessel } from "./engine/TimeVessel.jsx";
 import { getCardMeta, playCardSound } from "./engine/mediadex.js";
 import { SosButton, SosOverlay } from "./engine/SosSignal.jsx";
 import IntroStory from "./engine/IntroStory.jsx";
@@ -258,6 +259,7 @@ export default function App() {
   const [bonusChapters, setBonusChapters] = useState([]);// indices des chapitres où le bonus a été debloqué (flux à ≥ target+10)
   const [fluxBubble, setFluxBubble] = useState(null);    // {delta, key} — anim +N/-N flottante
   const [sosChooserOpen, setSosChooserOpen] = useState(false); // choix du support SOS fin de chapitre
+  const [vesselOpen, setVesselOpen] = useState(false);          // Vaisseau temporel (fin de chapitre)
   const [anachronismLearned, setAnachronismLearned] = useState(false); // MARTINE a-t-elle déjà expliqué les déchets temporels ?
   const [anachronismesJetesCount, setAnachronismesJetesCount] = useState(0); // combien de déchets ont déjà été jetés (pour éviter que Martine ré-explique)
   /* Confort de lecture (accessibilité) — mémorisé sur l'appareil, à part
@@ -2494,15 +2496,34 @@ export default function App() {
         </div>
       )}
 
-      {/* ANIMATION SOS Morse ··· −−− ··· jouée après le choix en fin de chapitre */}
+      {/* ANIMATION SOS Morse ··· −−− ··· jouée après le choix en fin de chapitre.
+          Puis on ouvre le VAISSEAU TEMPOREL (sauf apres le dernier chapitre). */}
       {sosOpen && (
         <SosOverlay muted={muted} onDone={() => {
           setSosOpen(false);
-          // le vrai saut temporel se fait après l'animation
           if (isLastChapter) { setEpiChoice(null); setScreen("chronautes"); }
-          else { setTransitionTo(chapterIndex + 1); setScreen("transition"); }
+          else { setVesselOpen(true); }
         }} />
       )}
+
+      {/* VAISSEAU TEMPOREL : Martine annonce -> materialisation -> cockpit -> boussole.
+          - Succes : on enchaine sur la transition classique vers le chapitre suivant.
+          - Echec (tachyons) : geré en interne (retour au cockpit) par TimeVessel. */}
+      {vesselOpen && (() => {
+        const nextChap = CHAPTERS[chapterIndex + 1];
+        const label = nextChap?.epoque || nextChap?.scenes?.[0]?.name || "Chapitre suivant";
+        return (
+          <TimeVessel
+            nextLabel={label}
+            onDone={() => {
+              setVesselOpen(false);
+              setTransitionTo(chapterIndex + 1);
+              setScreen("transition");
+            }}
+            onCancel={() => setVesselOpen(false)}
+          />
+        );
+      })()}
 
       {/* ─── CHOIX du support SOS en fin de chapitre ─── */}
       {sosChooserOpen && (() => {
