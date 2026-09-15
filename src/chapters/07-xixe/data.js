@@ -157,6 +157,12 @@ const HINTS = [
 const NEAR_MISS = [
   { pair: ["cable", "micro"], line: "Un câble et un microphone, ce n'est pas le téléphone : Bell utilise déjà des fils tirés d'un continent à l'autre. Cherche l'écouteur pour compléter le circuit." },
   { pair: ["pile", "ocean"], line: "Jeter ta précieuse pile à l'océan ? Malheureux ! Garde-la pour le télégraphe." },
+  { pair: ["iodure", "plaque"], line: "Verser l'iodure directement sur la plaque, à l'air libre ? Les vapeurs se dissipent en un instant. Charge d'abord la plaque dans la chambre, PUIS sensibilise." },
+  { pair: ["plaque", "code_morse"], line: "Le manipulateur Morse ne veut rien d'une plaque photo : il attend du COURANT. Va chercher ta pile de Volta." },
+  { pair: ["cable", "station_marconi"], line: "Marconi se passe justement de câble : ses ondes traversent l'air ! Trouve plutôt une antenne pour son mât." },
+  { pair: ["antenne", "ocean"], line: "Une antenne au fond de l'eau ? Absurde. C'est le CÂBLE (dans son navire câblier) qu'on pose au fond de l'océan." },
+  { pair: ["ecouteur", "code_morse"], line: "L'écouteur du téléphone Bell n'a rien à faire sur le manipulateur Morse : ce sont deux inventions différentes. Reste sur le combiné du téléphone à colonne." },
+  { pair: ["chambre", "ocean"], line: "Emmener la chambre photo en mer ouvrirait de jolies vues, mais aucun message ne partira. C'est le câblier qu'il faut lancer sur l'océan." },
 ];
 
 const FAIL_LINES = [
