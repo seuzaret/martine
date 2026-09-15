@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
+import { useWinOnce } from "../engine/useWinOnce.js";
 
 /* ============================================================
    MINI-JEU : « Le télégraphe Morse » — MESSAGE LIBRE
@@ -45,9 +46,9 @@ export function MorseGame({ onClose, onWin }) {
   const [press, setPress] = useState(false);
   const [flash, setFlash] = useState(null);
   const [won, setWon] = useState(false);
+  useWinOnce(won, onWin);
   const downAt = useRef(0);
 
-  useEffect(() => { if (won) onWin?.(); }, [won]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const addSym = (sym) => {
     if (won) return;

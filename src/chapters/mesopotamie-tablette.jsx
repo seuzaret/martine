@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useWinOnce } from "../engine/useWinOnce.js";
 
 /* ============================================================
    MINI-JEU : « Le registre de Narâm-Sîn »
@@ -61,8 +62,8 @@ export function TabletteGame({ onClose, onWin }) {
   const [reg, setReg] = useState({ boeuf: 0, ble: 0 }); // ce qui est inscrit
   const [flash, setFlash] = useState(null);   // message d'erreur passager
   const [won, setWon] = useState(false);
+  useWinOnce(won, onWin);
 
-  useEffect(() => { if (won) onWin?.(); }, [won]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const presser = (p) => {
     if (won) return;

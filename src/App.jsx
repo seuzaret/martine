@@ -29,7 +29,6 @@ import { EniacDebugGame } from "./chapters/xxe-eniac-debug.jsx";
 import { TailleSilexGame } from "./chapters/paleo-taille-silex.jsx";
 import Mediadex from "./engine/Mediadex.jsx";
 import MediaCard from "./engine/MediaCard.jsx";
-import { TemporalCompass } from "./engine/TemporalCompass.jsx";
 import { TimeVessel } from "./engine/TimeVessel.jsx";
 import { getCardMeta, playCardSound } from "./engine/mediadex.js";
 import { SosButton, SosOverlay } from "./engine/SosSignal.jsx";
@@ -250,7 +249,6 @@ export default function App() {
   const [mediadex, setMediadex] = useState([]);  // msg_ids des cartes-inventions découvertes
   const [cardShowing, setCardShowing] = useState(null); // {card, message} pendant l'apparition
   const [showMediadex, setShowMediadex] = useState(false); // l'écran Mediadex plein écran est-il ouvert ?
-  const [showCompass, setShowCompass] = useState(false);   // PROTOTYPE : boussole temporelle plein écran
   const [sosPending, setSosPending] = useState(null);   // msg_id dont on peut encore émettre le SOS
   const [sosOpen, setSosOpen] = useState(false);         // l'animation Morse est-elle en cours ?
   const [sosSent, setSosSent] = useState([]);            // msg_ids pour lesquels le SOS a été émis
@@ -1954,7 +1952,6 @@ export default function App() {
           {/* deux boutons seulement dans le bandeau — Mediadex et Réglages.
               Le son, l'indice, la révélation, le carnet sont dans Réglages. */}
           <button onClick={() => setShowMediadex(true)} title={`Mediadex (${mediadex.length} cartes)`} style={headBtn}>🃏</button>
-          <button onClick={() => setShowCompass(true)} title="Boussole temporelle (prototype)" style={headBtn}>🧭</button>
           <button onClick={() => setModal({ type: "settings" })} title="Réglages, son, indice, carnet…" style={headBtn}>⚙</button>
           {/* Sur écran étroit uniquement, le bouton compact de SAUT reste
               dans le bandeau (sinon on l'a dans la jauge temporelle à droite). */}
@@ -2397,25 +2394,6 @@ export default function App() {
         <Mediadex unlocked={mediadex} onClose={() => setShowMediadex(false)}
           fluxTotal={fluxTotal} bonusChapters={bonusChapters} />
       )}
-
-      {/* PROTOTYPE : BOUSSOLE TEMPORELLE plein ecran (bouton 🧭).
-          Le nom du prochain tableau est passé au composant : soit la
-          scene suivante du chapitre courant, soit la premiere scene du
-          chapitre suivant. */}
-      {showCompass && (() => {
-        const nextInChap = chapter.scenes[tab + 1];
-        const nextChap = CHAPTERS[chapterIndex + 1]?.scenes?.[0];
-        const nextScene = nextInChap || nextChap;
-        const doWarp = () => {
-          flash();
-          if (nextInChap) setTab(tab + 1);
-          else if (nextChap) { setChapterIndex(chapterIndex + 1); setTab(0); }
-        };
-        return (
-          <TemporalCompass onClose={() => setShowCompass(false)} onLock={doWarp}
-            nextLabel={nextScene ? nextScene.name : "Fin de la ligne temporelle"} />
-        );
-      })()}
 
       {/* POUBELLE TEMPORELLE — apparaît quand l'élève ramasse son
           PREMIER déchet anachronique (via `anachronismLearned`). Elle
