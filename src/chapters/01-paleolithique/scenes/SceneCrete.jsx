@@ -10,7 +10,6 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    qui passe. Lieu d'observation calme, sans action complexe.
    ============================================================ */
 
-<<<<<<< HEAD
 export default function SceneCrete({ collect, action, reveal, made = [], inv = [], flags = {} }) {
   /* TARDIS caché dans la plaine — clin d'œil à Dr Who. Une fois cliqué,
      un drapeau global "tardis_gone" est posé (via l'action `tardis` qui
@@ -24,16 +23,6 @@ export default function SceneCrete({ collect, action, reveal, made = [], inv = [
     /* mémorise le clic côté App (drapeau global + made) */
     action("tardis");
     setTimeout(() => setPhase("gone"), 1600);
-=======
-export default function SceneCrete({ collect, action, reveal, made = [], inv = [] }) {
-  /* TARDIS caché dans la plaine — clin d'œil à Dr Who. Clic → l'animation
-     de dématérialisation joue (pulsation + fondu), puis disparaît pour de bon. */
-  const [tardisState, setTardisState] = useState("here"); // here | leaving | gone
-  const dematerialize = () => {
-    if (tardisState !== "here") return;
-    setTardisState("leaving");
-    setTimeout(() => setTardisState("gone"), 1600);
->>>>>>> origin/main
   };
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
@@ -121,7 +110,6 @@ export default function SceneCrete({ collect, action, reveal, made = [], inv = [
         {/* TARDIS — petite cabine de police bleue posée dans la plaine,
              clin d'œil au Docteur. Clic → dématérialisation (fondu + pulsation),
              puis disparaît. */}
-<<<<<<< HEAD
         {phase !== "gone" && (
           <g transform="translate(720,400) scale(0.55)"
              onClick={dematerialize}
@@ -130,16 +118,6 @@ export default function SceneCrete({ collect, action, reveal, made = [], inv = [
             <g style={{
               transformOrigin: "0px 25px",
               animation: phase === "leaving"
-=======
-        {tardisState !== "gone" && (
-          <g transform="translate(720,400) scale(0.55)"
-             onClick={dematerialize}
-             style={{ cursor: tardisState === "here" ? "pointer" : "default" }}>
-            <title>Une petite cabine de police bleue…</title>
-            <g style={{
-              transformOrigin: "0px 25px",
-              animation: tardisState === "leaving"
->>>>>>> origin/main
                 ? "tardisFade 1.6s ease-out forwards"
                 : "tardisPulse 2.2s ease-in-out infinite",
             }}>
@@ -183,11 +161,7 @@ export default function SceneCrete({ collect, action, reveal, made = [], inv = [
             </g>
           </g>
         )}
-<<<<<<< HEAD
         {phase === "leaving" && (
-=======
-        {tardisState === "leaving" && (
->>>>>>> origin/main
           <style>{`
             @keyframes tardisFade {
               0%   { opacity: 1; transform: scale(0.55); filter: none; }
