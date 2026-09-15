@@ -298,129 +298,156 @@ function CockpitPhase({ onGo, onCancel }) {
             return <circle key={i} cx={x} cy={y + 10} r="3.5" fill="#141c26" stroke="#6a7a88" strokeWidth="1" />;
           })}
 
-          {/* --- Rangée de CADRANS ANALOGIQUES --- */}
-          {[
-            { cx: 120, cy: 170, hue: "#ffd166" },
-            { cx: 260, cy: 130, hue: "#7fd8ff" },
-            { cx: 400, cy: 95,  hue: "#5eff9e" },
-            { cx: 600, cy: 95,  hue: "#ff9060" },
-            { cx: 740, cy: 130, hue: "#c8a8f0" },
-            { cx: 880, cy: 170, hue: "#ffd166" },
-          ].map((d, i) => (
-            <g key={i}>
-              {/* cerclage métallique */}
-              <circle cx={d.cx} cy={d.cy} r="46" fill="#0a1018" stroke="#8a98a8" strokeWidth="3" />
-              <circle cx={d.cx} cy={d.cy} r="42" fill="#0e1a24" stroke="#2a3542" strokeWidth="1" />
-              {/* graduations */}
-              {Array.from({ length: 11 }).map((_, k) => {
-                const a = -Math.PI * 0.75 + (k / 10) * Math.PI * 1.5;
-                const x1 = d.cx + Math.cos(a) * 32, y1 = d.cy + Math.sin(a) * 32;
-                const x2 = d.cx + Math.cos(a) * 38, y2 = d.cy + Math.sin(a) * 38;
-                return <line key={k} x1={x1} y1={y1} x2={x2} y2={y2} stroke={k > 7 ? "#ff5030" : d.hue} strokeWidth={k % 5 === 0 ? 2 : 1.2} />;
-              })}
-              {/* aiguille animée */}
-              <g style={{ transformOrigin: `${d.cx}px ${d.cy}px` }}>
-                <animateTransform attributeName="transform" type="rotate"
-                  values={`${-60 + i * 8};${30 + i * 4};${-60 + i * 8}`}
-                  dur={`${3.5 + i * 0.3}s`} repeatCount="indefinite" />
-                <line x1={d.cx} y1={d.cy} x2={d.cx} y2={d.cy - 30} stroke={d.hue} strokeWidth="2.5" strokeLinecap="round" />
-                <circle cx={d.cx} cy={d.cy} r="4" fill={d.hue} />
-              </g>
-              {/* pas de vis */}
-              <circle cx={d.cx - 40} cy={d.cy - 40} r="2" fill="#141c26" />
-              <circle cx={d.cx + 40} cy={d.cy - 40} r="2" fill="#141c26" />
-              <circle cx={d.cx - 40} cy={d.cy + 40} r="2" fill="#141c26" />
-              <circle cx={d.cx + 40} cy={d.cy + 40} r="2" fill="#141c26" />
-            </g>
-          ))}
+          {/* Helper : y le long de la courbe du cockpit à l'abscisse x */}
+          {(() => {
+            const arcY = (x) => 60 - 400 * (x / 1000) * (1 - x / 1000);
+            const DIAL_R = 28;      // plus petit qu'avant (46 → 28)
+            const BTN_R = 8;        // plus petit qu'avant (16 → 8)
+            const dials = [
+              { x: 90,  hue: "#ffd166" },
+              { x: 220, hue: "#7fd8ff" },
+              { x: 350, hue: "#5eff9e" },
+              { x: 650, hue: "#ff9060" },
+              { x: 780, hue: "#c8a8f0" },
+              { x: 910, hue: "#ffd166" },
+            ];
+            /* deux lignes de boutons LED qui suivent la courbe (12 par ligne) */
+            const ledColors = ["ckLedR", "ckLedY", "ckLedG", "ckLedB"];
+            const btnRow1 = Array.from({ length: 12 }).map((_, i) => ({
+              x: 60 + i * 80,
+              g: ledColors[i % 4],
+              i,
+            }));
+            const btnRow2 = Array.from({ length: 12 }).map((_, i) => ({
+              x: 60 + i * 80,
+              g: ledColors[(i + 2) % 4],
+              i: i + 12,
+            }));
+            return (
+              <>
+                {/* --- CADRANS analogiques (r=28), suivant la courbe --- */}
+                {dials.map((d, i) => {
+                  const cy = arcY(d.x) + DIAL_R + 20;
+                  return (
+                    <g key={i}>
+                      <circle cx={d.x} cy={cy} r={DIAL_R} fill="#0a1018" stroke="#8a98a8" strokeWidth="2" />
+                      <circle cx={d.x} cy={cy} r={DIAL_R - 3} fill="#0e1a24" stroke="#2a3542" strokeWidth="0.8" />
+                      {Array.from({ length: 11 }).map((_, k) => {
+                        const a = -Math.PI * 0.75 + (k / 10) * Math.PI * 1.5;
+                        const x1 = d.x + Math.cos(a) * (DIAL_R - 8), y1 = cy + Math.sin(a) * (DIAL_R - 8);
+                        const x2 = d.x + Math.cos(a) * (DIAL_R - 3), y2 = cy + Math.sin(a) * (DIAL_R - 3);
+                        return <line key={k} x1={x1} y1={y1} x2={x2} y2={y2} stroke={k > 7 ? "#ff5030" : d.hue} strokeWidth={k % 5 === 0 ? 1.4 : 0.8} />;
+                      })}
+                      <g style={{ transformOrigin: `${d.x}px ${cy}px` }}>
+                        <animateTransform attributeName="transform" type="rotate"
+                          values={`${-60 + i * 8};${30 + i * 4};${-60 + i * 8}`}
+                          dur={`${3.5 + i * 0.3}s`} repeatCount="indefinite" />
+                        <line x1={d.x} y1={cy} x2={d.x} y2={cy - (DIAL_R - 8)} stroke={d.hue} strokeWidth="1.8" strokeLinecap="round" />
+                        <circle cx={d.x} cy={cy} r="2.6" fill={d.hue} />
+                      </g>
+                    </g>
+                  );
+                })}
 
-          {/* --- ECRAN CENTRAL (oscilloscope) --- */}
-          <rect x="420" y="170" width="160" height="80" rx="6" fill="url(#ckScreen)" stroke="#8a98a8" strokeWidth="2.5" />
-          <rect x="424" y="174" width="152" height="72" rx="4" fill="none" stroke="#0e2818" strokeWidth="1" />
-          {/* grille */}
-          {[440, 460, 480, 500, 520, 540, 560].map((x) => (
-            <line key={x} x1={x} y1="176" x2={x} y2="244" stroke="#144030" strokeWidth="0.5" />
-          ))}
-          {[190, 210, 230].map((y) => (
-            <line key={y} x1="424" y1={y} x2="576" y2={y} stroke="#144030" strokeWidth="0.5" />
-          ))}
-          {/* onde sinusoïdale animée */}
-          <path fill="none" stroke="#5eff9e" strokeWidth="2" strokeLinecap="round"
-            d="M 424 210 Q 445 180 465 210 T 505 210 T 545 210 T 585 210">
-            <animate attributeName="d" dur="2.4s" repeatCount="indefinite"
-              values="M 424 210 Q 445 180 465 210 T 505 210 T 545 210 T 585 210;
-                      M 424 210 Q 445 240 465 210 T 505 210 T 545 210 T 585 210;
-                      M 424 210 Q 445 180 465 210 T 505 210 T 545 210 T 585 210" />
-          </path>
-          {/* texte "SIGNAL" */}
-          <text x="500" y="240" textAnchor="middle" fontSize="8" fill="#5eff9e" fontFamily="ui-monospace,monospace" letterSpacing="2">SIGNAL LOCK</text>
+                {/* --- ECRAN CENTRAL (oscilloscope) --- */}
+                {(() => {
+                  const cyCenter = arcY(500) + 50;
+                  return (
+                    <g>
+                      <rect x="420" y={cyCenter - 30} width="160" height="60" rx="6" fill="url(#ckScreen)" stroke="#8a98a8" strokeWidth="2" />
+                      <rect x="424" y={cyCenter - 26} width="152" height="52" rx="4" fill="none" stroke="#0e2818" strokeWidth="0.8" />
+                      {[440, 460, 480, 500, 520, 540, 560].map((x) => (
+                        <line key={x} x1={x} y1={cyCenter - 26} x2={x} y2={cyCenter + 22} stroke="#144030" strokeWidth="0.5" />
+                      ))}
+                      {[cyCenter - 15, cyCenter, cyCenter + 15].map((y, k) => (
+                        <line key={k} x1="424" y1={y} x2="576" y2={y} stroke="#144030" strokeWidth="0.5" />
+                      ))}
+                      <path fill="none" stroke="#5eff9e" strokeWidth="1.6" strokeLinecap="round"
+                        d={`M 424 ${cyCenter} Q 445 ${cyCenter - 22} 465 ${cyCenter} T 505 ${cyCenter} T 545 ${cyCenter} T 585 ${cyCenter}`}>
+                        <animate attributeName="d" dur="2.4s" repeatCount="indefinite"
+                          values={`M 424 ${cyCenter} Q 445 ${cyCenter - 22} 465 ${cyCenter} T 505 ${cyCenter} T 545 ${cyCenter} T 585 ${cyCenter};
+                                   M 424 ${cyCenter} Q 445 ${cyCenter + 22} 465 ${cyCenter} T 505 ${cyCenter} T 545 ${cyCenter} T 585 ${cyCenter};
+                                   M 424 ${cyCenter} Q 445 ${cyCenter - 22} 465 ${cyCenter} T 505 ${cyCenter} T 545 ${cyCenter} T 585 ${cyCenter}`} />
+                      </path>
+                      <text x="500" y={cyCenter + 20} textAnchor="middle" fontSize="7" fill="#5eff9e" fontFamily="ui-monospace,monospace" letterSpacing="2">SIGNAL LOCK</text>
+                    </g>
+                  );
+                })()}
 
-          {/* --- BOUTONS-POUSSOIRS colorés (grille sous les cadrans) --- */}
-          {[
-            [80, 260, "ckLedR"], [130, 260, "ckLedY"], [180, 260, "ckLedG"], [230, 260, "ckLedB"],
-            [80, 310, "ckLedG"], [130, 310, "ckLedR"], [180, 310, "ckLedY"], [230, 310, "ckLedB"],
-            [770, 260, "ckLedB"], [820, 260, "ckLedG"], [870, 260, "ckLedR"], [920, 260, "ckLedY"],
-            [770, 310, "ckLedY"], [820, 310, "ckLedR"], [870, 310, "ckLedG"], [920, 310, "ckLedB"],
-          ].map(([x, y, g], i) => (
-            <g key={i}>
-              <circle cx={x} cy={y} r="16" fill="#141c26" stroke="#4a5460" strokeWidth="2" />
-              <circle cx={x} cy={y} r="11" fill={`url(#${g})`}>
-                <animate attributeName="opacity" values="0.6;1;0.6" dur={`${1.2 + (i % 5) * 0.3}s`} begin={`${(i * 0.13) % 2}s`} repeatCount="indefinite" />
-              </circle>
-              <circle cx={x - 3} cy={y - 3} r="3" fill="#ffffff" opacity="0.35" />
-            </g>
-          ))}
+                {/* --- BOUTONS LED : deux rangées le long de la courbe --- */}
+                {btnRow1.map((b) => {
+                  const y = arcY(b.x) + DIAL_R * 2 + 45;
+                  return (
+                    <g key={`r1-${b.i}`}>
+                      <circle cx={b.x} cy={y} r={BTN_R + 2} fill="#141c26" stroke="#4a5460" strokeWidth="1" />
+                      <circle cx={b.x} cy={y} r={BTN_R} fill={`url(#${b.g})`}>
+                        <animate attributeName="opacity" values="0.55;1;0.55" dur={`${1.2 + (b.i % 5) * 0.3}s`} begin={`${(b.i * 0.13) % 2}s`} repeatCount="indefinite" />
+                      </circle>
+                      <circle cx={b.x - 2} cy={y - 2} r="1.6" fill="#ffffff" opacity="0.4" />
+                    </g>
+                  );
+                })}
+                {btnRow2.map((b) => {
+                  const y = arcY(b.x) + DIAL_R * 2 + 70;
+                  return (
+                    <g key={`r2-${b.i}`}>
+                      <circle cx={b.x} cy={y} r={BTN_R + 2} fill="#141c26" stroke="#4a5460" strokeWidth="1" />
+                      <circle cx={b.x} cy={y} r={BTN_R} fill={`url(#${b.g})`}>
+                        <animate attributeName="opacity" values="0.55;1;0.55" dur={`${1.4 + (b.i % 4) * 0.3}s`} begin={`${(b.i * 0.17) % 2}s`} repeatCount="indefinite" />
+                      </circle>
+                      <circle cx={b.x - 2} cy={y - 2} r="1.6" fill="#ffffff" opacity="0.4" />
+                    </g>
+                  );
+                })}
 
-          {/* --- Grands BOUTONS-ROTATIFS (potentiomètres) --- */}
-          {[
-            [340, 300, 0], [380, 320, 90], [660, 320, 45], [700, 300, -45],
-          ].map(([x, y, rot], i) => (
-            <g key={i} transform={`translate(${x} ${y}) rotate(${rot})`}>
-              <circle r="22" fill="url(#ckKnobG)" stroke="#141c26" strokeWidth="2" />
-              <rect x="-2.5" y="-20" width="5" height="12" rx="1" fill="#141c26" />
-              {/* graduations autour */}
-              {Array.from({ length: 8 }).map((_, k) => {
-                const a = (k / 8) * Math.PI * 2;
-                return <line key={k} x1={Math.cos(a) * 26} y1={Math.sin(a) * 26} x2={Math.cos(a) * 30} y2={Math.sin(a) * 30} stroke="#3a4552" strokeWidth="1.5" />;
-              })}
-            </g>
-          ))}
+                {/* --- Interrupteurs à bascule (2) --- */}
+                {[220, 780].map((x, i) => {
+                  const y = arcY(x) + DIAL_R * 2 + 100;
+                  return (
+                    <g key={i}>
+                      <rect x={x - 14} y={y - 6} width="28" height="12" rx="2" fill="#141c26" stroke="#4a5460" strokeWidth="1" />
+                      <rect x={x - 1.5} y={y - 16} width="3" height="12" rx="0.8" fill="url(#ckMetalHi)" stroke="#141c26" strokeWidth="0.5" />
+                      <circle cx={x} cy={y - 18} r="2.5" fill="url(#ckKnobG)" />
+                    </g>
+                  );
+                })}
 
-          {/* --- Interrupteurs à bascule --- */}
-          {[[300, 250], [720, 250]].map(([x, y], i) => (
-            <g key={i}>
-              <rect x={x - 20} y={y - 8} width="40" height="16" rx="3" fill="#141c26" stroke="#4a5460" strokeWidth="1.5" />
-              <rect x={x - 2} y={y - 20} width="4" height="16" rx="1" fill="url(#ckMetalHi)" stroke="#141c26" strokeWidth="0.6" />
-              <circle cx={x} cy={y - 22} r="3.5" fill="url(#ckKnobG)" />
-            </g>
-          ))}
+                {/* --- Petits écrans texte --- */}
+                {[
+                  { x: 350, txt1: "NODE:", txt2: "NEXT ERA", c1: "#7fd8ff", c2: "#ffd166" },
+                  { x: 650, txt1: "T-FLUX:", txt2: "READY", c1: "#5eff9e", c2: "#ffd166" },
+                ].map((s, i) => {
+                  const y = arcY(s.x) + DIAL_R * 2 + 95;
+                  return (
+                    <g key={i}>
+                      <rect x={s.x - 45} y={y - 10} width="90" height="22" rx="3" fill="#0a1a10" stroke="#4a5460" strokeWidth="1" />
+                      <text x={s.x - 40} y={y + 4} fontSize="9" fill={s.c1} fontFamily="ui-monospace,monospace" letterSpacing="1">
+                        {s.txt1} <tspan fill={s.c2}>{s.txt2}</tspan>
+                      </text>
+                    </g>
+                  );
+                })}
 
-          {/* --- Petit écran texte à droite --- */}
-          <rect x="620" y="255" width="120" height="30" rx="4" fill="#0a1a10" stroke="#4a5460" strokeWidth="1.5" />
-          <text x="630" y="275" fontSize="11" fill="#5eff9e" fontFamily="ui-monospace,monospace" letterSpacing="1.5">
-            <tspan>T-FLUX: </tspan>
-            <tspan fill="#ffd166">
-              <animate attributeName="opacity" values="0.5;1;0.5" dur="1s" repeatCount="indefinite" />
-              READY
-            </tspan>
-          </text>
-          {/* Petit écran texte à gauche */}
-          <rect x="260" y="255" width="120" height="30" rx="4" fill="#0a1a10" stroke="#4a5460" strokeWidth="1.5" />
-          <text x="270" y="275" fontSize="11" fill="#7fd8ff" fontFamily="ui-monospace,monospace" letterSpacing="1.5">
-            NODE: <tspan fill="#ffd166">NEXT ERA</tspan>
-          </text>
-
-          {/* --- Volant/manche central (esthétique) --- */}
-          <g transform="translate(500 340)">
-            <circle r="34" fill="none" stroke="url(#ckMetalHi)" strokeWidth="6" />
-            <circle r="30" fill="none" stroke="#141c26" strokeWidth="2" />
-            <line x1="-34" y1="0" x2="34" y2="0" stroke="url(#ckMetalHi)" strokeWidth="4" />
-            <line x1="0" y1="-34" x2="0" y2="34" stroke="url(#ckMetalHi)" strokeWidth="4" />
-            <circle r="9" fill="url(#ckKnobG)" stroke="#141c26" strokeWidth="1.5" />
-            <circle r="3" fill="#ff5030">
-              <animate attributeName="opacity" values="0.4;1;0.4" dur="1.4s" repeatCount="indefinite" />
-            </circle>
-          </g>
+                {/* --- Volant central chromé --- */}
+                {(() => {
+                  const cx = 500;
+                  const cy = arcY(cx) + DIAL_R * 2 + 130;
+                  return (
+                    <g transform={`translate(${cx} ${cy})`}>
+                      <circle r="26" fill="none" stroke="url(#ckMetalHi)" strokeWidth="5" />
+                      <circle r="22" fill="none" stroke="#141c26" strokeWidth="1.5" />
+                      <line x1="-26" y1="0" x2="26" y2="0" stroke="url(#ckMetalHi)" strokeWidth="3" />
+                      <line x1="0" y1="-26" x2="0" y2="26" stroke="url(#ckMetalHi)" strokeWidth="3" />
+                      <circle r="7" fill="url(#ckKnobG)" stroke="#141c26" strokeWidth="1" />
+                      <circle r="2.4" fill="#ff5030">
+                        <animate attributeName="opacity" values="0.4;1;0.4" dur="1.4s" repeatCount="indefinite" />
+                      </circle>
+                    </g>
+                  );
+                })()}
+              </>
+            );
+          })()}
         </svg>
 
         {/* Interface interactive HTML positionnée par-dessus la console */}
@@ -550,23 +577,20 @@ export function TimeVessel({ nextLabel, onDone, onCancel }) {
             }}>▶ MARTINE</div>
           </div>
 
-          {/* Bulle de dialogue + JAUGE VERTICALE à droite */}
+          {/* Bulle de dialogue centrée en bas */}
           <div style={{
             position: "absolute", left: "50%", bottom: "6%", transform: "translateX(-50%)",
-            display: "flex", alignItems: "stretch", gap: 14,
-            maxWidth: 820, width: "min(94%, 820px)",
+            maxWidth: 720, width: "min(94%, 720px)",
           }}>
-            {/* Bulle */}
             <div style={{
-              flex: 1,
               background: "#0e1a30", border: "2px solid #5eff9e", borderRadius: 14,
               padding: "20px 26px", color: "#e8eef5",
               boxShadow: "0 0 30px rgba(94,255,158,0.35)",
               textAlign: "center",
             }}>
               <p style={{ margin: 0, fontSize: 18, lineHeight: 1.55 }}>
-                « J'ai emmagasiné assez de <strong style={{ color: "#ffd166" }}>flux temporel</strong>
-                {" "}pour matérialiser la <strong style={{ color: "#5eff9e" }}>machine temporelle</strong>. »
+                « Le SOS a rechargé mon <strong style={{ color: "#ffd166" }}>flux temporel</strong> —
+                {" "}je peux matérialiser la <strong style={{ color: "#5eff9e" }}>machine temporelle</strong>. »
               </p>
               <p style={{ margin: "12px 0 0", fontSize: 15, lineHeight: 1.5, color: "#c8d4e2" }}>
                 Regarde — elle apparaît sous nos yeux.
@@ -579,51 +603,6 @@ export function TimeVessel({ nextLabel, onDone, onCancel }) {
                   cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 3,
                   boxShadow: "0 0 18px rgba(94,255,158,0.45)",
                 }}>▶ CONTINUER</button>
-            </div>
-
-            {/* JAUGE VERTICALE : reprend le look de JaugeTemporelle (colonne jaune) */}
-            <div style={{
-              width: 92, flex: "0 0 auto",
-              display: "flex", flexDirection: "column", alignItems: "center",
-              background: "linear-gradient(180deg,#141b28,#0c1220)",
-              border: "1px solid #26324a", borderRadius: 12,
-              padding: "10px 8px", gap: 8,
-              boxShadow: "0 0 24px rgba(255,209,102,0.25)",
-            }}>
-              <div style={{
-                fontFamily: "ui-monospace,monospace", fontSize: 9, letterSpacing: 1.5,
-                color: "#ffd166", textAlign: "center", lineHeight: 1.35,
-              }}>⚡ FLUX<br />TEMPOREL</div>
-
-              {/* La colonne qui se remplit de bas en haut */}
-              <div style={{
-                flex: "1 1 auto", width: 30, minHeight: 120,
-                background: "#0a1119", border: "1px solid #26324a", borderRadius: 8,
-                position: "relative", overflow: "hidden",
-                display: "flex", flexDirection: "column-reverse",
-              }}>
-                <div style={{
-                  height: `${flux}%`,
-                  background: flux >= 100
-                    ? "linear-gradient(0deg,#e8934a,#ffd166)"
-                    : "linear-gradient(0deg,#2f5a76,#7fd8ff)",
-                  boxShadow: flux >= 100 ? "0 0 16px #ffd166" : "none",
-                  transition: "height 60ms linear",
-                }} />
-                {/* graduations : tous les 20 % */}
-                {[20, 40, 60, 80].map((y) => (
-                  <div key={y} style={{
-                    position: "absolute", left: 0, right: 0, bottom: `${y}%`,
-                    height: 1, background: "#0a1119",
-                  }} />
-                ))}
-              </div>
-
-              <div style={{
-                fontFamily: "ui-monospace,monospace", fontSize: 12, fontWeight: 700,
-                color: flux >= 100 ? "#ffd166" : "#8fa3bd",
-                textShadow: flux >= 100 ? "0 0 8px rgba(255,209,102,0.7)" : "none",
-              }}>{flux}%</div>
             </div>
           </div>
 
