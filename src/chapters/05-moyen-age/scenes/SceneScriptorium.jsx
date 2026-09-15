@@ -219,19 +219,27 @@ export default function SceneMonastere({ collect, action, reveal, made = [], fla
           </g>
         )}
 
-        {/* ANACHRONISME : clé USB bleu vif posée sur le sol dallé du scriptorium */}
-        {!made.includes("cle_usb") && mode !== "jeu2" && (
+        {/* ANACHRONISME : TOURNEVIS SONIQUE (clin d'œil à Dr Who) posé sur
+             le sol dalé du scriptorium — tube argenté à pointe verte pulsée. */}
+        {!made.includes("tournevis_sonique") && mode !== "jeu2" && (
           <g transform="translate(140,520) rotate(22)">
-            <rect x={-18} y={-6} width={22} height={12} rx={1.5} fill="#2a68b0" stroke="#0a2038" strokeWidth="1" />
-            <rect x={-18} y={-6} width={22} height={4} fill="#3a80c8" />
-            {/* connecteur USB argenté */}
-            <rect x={4} y={-4} width={14} height={8} fill="#c8c8c8" stroke="#5a5a5a" strokeWidth="0.6" />
-            <rect x={7} y={-2} width={8} height={4} fill="#5a5a5a" />
-            {/* attache */}
-            <path d="M-18 -6 h-4 v12 h4" fill="none" stroke="#2a68b0" strokeWidth="1.2" />
-            <circle cx={-22} cy={0} r={2} fill="none" stroke="#c8c8c8" strokeWidth="1" />
-            {/* LED verte */}
-            <circle cx={-6} cy={0} r={1.2} fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
+            {/* ombre au sol */}
+            <ellipse cx={0} cy={4} rx={22} ry={2.5} fill="#0a0604" opacity="0.55" />
+            {/* corps argenté cannelé, gros bout à droite (poignée) */}
+            <rect x={-20} y={-3} width={26} height={6} rx={1.5} fill="#8a94a4" stroke="#2a2f38" strokeWidth="0.6" />
+            <rect x={-20} y={-3} width={26} height={2} fill="#c8d0d8" />
+            {/* stries de la poignée */}
+            <path d="M-16 -3 v6 M-12 -3 v6 M-8 -3 v6 M-4 -3 v6" stroke="#3a4048" strokeWidth="0.4" opacity="0.7" />
+            {/* bague noire de commande */}
+            <rect x={-1} y={-3.5} width={4} height={7} fill="#1a1a20" stroke="#0a0a10" strokeWidth="0.4" />
+            <rect x={-0.5} y={-3.2} width={3} height={0.8} fill="#5eff9e" opacity="0.85" />
+            {/* pointe métallique effilée */}
+            <path d={"M6 -2 L14 -1 L14 1 L6 2 Z"} fill="#c8d0d8" stroke="#3a4048" strokeWidth="0.4" />
+            {/* cristal vert pulsé au bout — le fameux tip du tournevis */}
+            <circle cx={16} cy={0} r={2.2} fill="#5eff9e" style={{ animation: "pulse 1.4s infinite" }} />
+            <circle cx={16} cy={0} r={4} fill="#5eff9e" opacity="0.35" style={{ animation: "pulse 1.4s infinite" }} />
+            {/* anneau de fixation au bout de la poignée */}
+            <circle cx={-22} cy={0} r={2.2} fill="none" stroke="#c8d0d8" strokeWidth="1" />
           </g>
         )}
         {/* CHAT du scriptorium qui traverse lentement le premier plan, au
@@ -290,7 +298,7 @@ export default function SceneMonastere({ collect, action, reveal, made = [], fla
       <Hotspot cx={900} cy={502} r={32} label="MARTINE" reveal={reveal} onClick={() => action("wreck")} />
 
       {mode !== "jeu2" && (
-        <Hotspot cx={140} cy={520} r={24} label="… quelque chose ne va pas ici" item="cle_usb" reveal={reveal} onClick={() => collect("cle_usb")} />
+        <Hotspot cx={140} cy={520} r={24} label="… quelque chose ne va pas ici" item="tournevis_sonique" reveal={reveal} onClick={() => collect("tournevis_sonique")} />
       )}
     </svg>
   );
