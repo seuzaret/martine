@@ -191,6 +191,8 @@ export default function SceneMuraille({ collect, action, reveal, queteQui }) {
       {/* zones cliquables */}
       <Hotspot cx={392} cy={414} r={42} label="Guna, le garde" reveal={reveal} onClick={(p) => action("guna", p)} />
       <Hotspot cx={140} cy={480} r={34} label="coquillage" item="coquillage" reveal={reveal} onClick={() => collect("coquillage")} />
+      {/* la porte elle-même : clic → salle du trône */}
+      <Hotspot cx={649} cy={333} r={90} label="entrer dans la cité" reveal={reveal} onClick={() => action("porte_cite")} />
           {/* AMBIANCE : petit vol d'oiseaux qui traverse le ciel */}
       <g opacity="0.75">
         <animateTransform attributeName="transform" type="translate"

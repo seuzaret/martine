@@ -195,6 +195,9 @@ const ACTIONS = {
   guna: { mood: "neutre",
     bubble: "Je garde cette porte jour et nuit. Personne n'entre sans l'accord du roi.",
     say: "Guna, le garde. Peu causant, mais c'est lui qui ouvre la porte de la cité." },
+  /* La porte elle-même : clic direct vers la salle du trône (scène 1). */
+  porte_cite: { mood: "content", goto: 1,
+    say: "Les battants s'écartent en grinçant. La cité de Tannis s'ouvre à nous." },
   tannis: { mood: "neutre",
     bubble: "Une cité, ça se mérite : du grain engrangé, des impôts, des murs. Rends-toi utile, étranger.",
     say: "Le roi Tannis. Un chef, des impôts, une cité fortifiée : au Néolithique, l'humanité s'organise pour de bon." },
