@@ -167,9 +167,6 @@ export default function SceneParis({ collect, action, reveal, made = [], mode })
             <path d="M-4 18 v40" stroke="#3a2410" strokeWidth="1" />
           </g>
 
-          {/* « ? » d'accueil au-dessus du marchand */}
-          {!acheteFait && (
-          )}
         </g>
       </PLayer>
 
