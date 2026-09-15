@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useWinOnce } from "../engine/useWinOnce.js";
 
 /* ============================================================
    MINI-JEU : « La note du copiste » (le prix fou d'un livre)
@@ -18,9 +19,9 @@ export function FactureGame({ facture, onClose, onWin }) {
   const [purse, setPurse] = useState([]);            // pièces posées
   const [flash, setFlash] = useState(null);
   const [won, setWon] = useState(false);
+  useWinOnce(won, onWin);
   const somme = purse.reduce((s, v) => s + v, 0);
 
-  useEffect(() => { if (won) onWin?.(); }, [won]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const eur = (lt) => (lt * facture.euroParLt).toLocaleString("fr-FR");
 

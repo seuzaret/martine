@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useWinOnce } from "../engine/useWinOnce.js";
 
 /* ============================================================
    MINI-JEU : « Le cartouche de Snéfrou »
@@ -76,6 +77,7 @@ export function CartoucheGame({ onClose, onWin }) {
   const [places, setPlaces] = useState([]);   // index de NOM déjà écrits, dans l'ordre
   const [flash, setFlash] = useState(null);
   const [won, setWon] = useState(false);
+  useWinOnce(won, onWin);
   /* la palette est MÉLANGÉE une fois au démarrage (bons signes + pièges) */
   const [palette] = useState(() => {
     const a = [...NOM, ...PIEGES];
@@ -83,7 +85,6 @@ export function CartoucheGame({ onClose, onWin }) {
     return a;
   });
 
-  useEffect(() => { if (won) onWin?.(); }, [won]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const taper = (p) => {
     if (won) return;

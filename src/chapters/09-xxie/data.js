@@ -14,6 +14,7 @@
 
 import SceneChambre from "./scenes/SceneChambre.jsx";
 import SceneDatacenter from "./scenes/SceneDatacenter.jsx";
+import CarteXXIe from "./scenes/CarteXXIe.jsx";
 
 /* ------------------------------------------------------------
    LES ÉLÉMENTS
@@ -166,7 +167,7 @@ const chapter = {
 
   titre: "MARTINE",
   sousTitre: "Machine À Remonter le Temps Intelligente Néanmoins Excellente",
-  presentationTitre: "Chapitre 9 — Ton époque.",
+  presentationTitre: "Chapitre 10 — Ton époque.",
   presentation: "Tout converge : l'appareil photo, le téléphone, la télé, la radio, le journal, la bibliothèque… tout tient désormais dans un seul objet, dans ta poche. Et le support semble avoir disparu — streaming, cloud, « le nuage ». Sauf qu'il n'a pas disparu du tout : il est chez quelqu'un d'autre. Deux lieux : ta chambre, et le hangar où dorment vraiment tes souvenirs.",
   accroche: "La clé USB 🔌 · le smartphone 📱 · le cloud ☁️ · et deux messages qui se perdent…",
 
@@ -179,6 +180,7 @@ const chapter = {
 
   items: ITEMS,
   scenes: SCENES,
+  carte: CarteXXIe,
   where: WHERE,
   hiddenByFlag: HIDDEN_BY_FLAG,
   recipes: RECIPES,

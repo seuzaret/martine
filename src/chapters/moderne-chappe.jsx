@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useWinOnce } from "../engine/useWinOnce.js";
 
 /* ============================================================
    MINI-JEU : « Le télégraphe de Chappe » (placer les bras selon le code)
@@ -58,10 +59,10 @@ export function ChappeGame({ onClose, onWin }) {
   const [left, setLeft] = useState(2);
   const [right, setRight] = useState(1);
   const [won, setWon] = useState(false);
+  useWinOnce(won, onWin);
 
   const ok = reg === TARGET.reg && left === TARGET.left && right === TARGET.right;
   useEffect(() => { if (ok && !won) { const t = setTimeout(() => setWon(true), 550); return () => clearTimeout(t); } }, [ok, won]);
-  useEffect(() => { if (won) onWin?.(); }, [won]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const cyc = (setter) => () => { if (!won) setter((v) => (v + 1) % 4); };
 

@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
+import { useWinOnce } from "../engine/useWinOnce.js";
 
 /* ============================================================
    MINI-JEU : « Choisir l'antenne »
@@ -51,8 +52,8 @@ export function TsfGame({ onClose, onWin }) {
   const [verdict, setVerdict] = useState(null);
   const [wrongIds, setWrongIds] = useState([]);
   const [won, setWon] = useState(false);
+  useWinOnce(won, onWin);
   const shuffled = useMemo(() => [...OUTILS].sort(() => Math.random() - 0.5), []);
-  useEffect(() => { if (won) onWin?.(); }, [won]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const tenter = (o) => {
     if (won) return;
