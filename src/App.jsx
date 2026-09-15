@@ -10,10 +10,7 @@ import { playSfx, isMuted, setMuted, startAmbience, stopAmbience } from "./engin
 import { loadSave, writeSave, clearSave, hasSave, exportSaveString, importSaveString } from "./engine/save.js";
 import { computeBadge } from "./engine/badge.js";
 import JaugeTemporelle from "./engine/JaugeTemporelle.jsx";
-<<<<<<< HEAD
 import CheatPanel from "./engine/CheatPanel.jsx";
-=======
->>>>>>> origin/main
 import { findRecipe, findNearMiss, randomLine } from "./engine/Crafting.js";
 import { lastHotspotClick } from "./engine/Hotspot.jsx";
 import { CHAPTERS } from "./chapters/index.js";
