@@ -23,6 +23,17 @@ export default function SceneBBC({ collect, action, reveal, made = [], flags = [
         <linearGradient id="bbc-desk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#7a5636" /><stop offset="100%" stopColor="#432c18" /></linearGradient>
         <radialGradient id="bbc-lamp" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ffcf78" stopOpacity="0.5" /><stop offset="100%" stopColor="#ff9540" stopOpacity="0" /></radialGradient>
         <radialGradient id="bbc-red" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ff3820" stopOpacity="0.75" /><stop offset="100%" stopColor="#ff3820" stopOpacity="0" /></radialGradient>
+        {/* ciel de Londres, nuit du 5 juin 44 — bleu-nuit qui vire un peu au violet à l'horizon */}
+        <linearGradient id="bbc-sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor="#0a1428" />
+          <stop offset="55%"  stopColor="#12203a" />
+          <stop offset="100%" stopColor="#2c1e2a" />
+        </linearGradient>
+        {/* faisceau de projecteur DCA (défense anti-aérienne) */}
+        <linearGradient id="bbc-searchlight" x1="0" y1="1" x2="0.5" y2="0">
+          <stop offset="0%"   stopColor="#e8e0b0" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#e8e0b0" stopOpacity="0" />
+        </linearGradient>
       </defs>
 
       {/* ═══ FOND — mur du studio, panneaux acoustiques ═══ */}
@@ -34,14 +45,85 @@ export default function SceneBBC({ collect, action, reveal, made = [], flags = [
         )))}
         {/* halo de la lampe ON AIR quand active */}
         {enOnde && <circle cx="830" cy="150" r="120" fill="url(#bbc-red)" />}
+
+        {/* FENÊTRE avec vue sur Londres, nuit du 5 juin 1944 (blackout).
+             Positionnée entre la pendule (490) et le panneau ON AIR (770-890) :
+             au-dessus du speaker, dans l'axe des ondes qui vont partir. */}
+        <g transform="translate(560,60)">
+          {/* embrasure — dormant en bois épais */}
+          <rect x="-6" y="-6" width="192" height="192" fill="#1a1006" />
+          <rect x="0" y="0" width="180" height="180" fill="url(#bbc-sky)" />
+          {/* halo lunaire */}
+          <circle cx="130" cy="46" r="22" fill="#e8e0b0" opacity="0.28" />
+          <circle cx="130" cy="46" r="10" fill="#f8f0d0" opacity="0.85" />
+          <circle cx="128" cy="44" r="3" fill="#c8c0a0" opacity="0.4" />
+          {/* faisceau de projecteur DCA qui balaie le ciel — cône blanchâtre */}
+          <g style={{ transformOrigin: "20px 178px" }}>
+            <animateTransform attributeName="transform" type="rotate"
+              values="-25;10;-25" dur="9s" repeatCount="indefinite" />
+            <path d="M18 178 L64 20 L84 20 L40 178 Z" fill="url(#bbc-searchlight)" opacity="0.55" />
+          </g>
+          {/* étoiles */}
+          {[[24, 22, 1], [56, 30, 0.8], [80, 14, 1.1], [166, 20, 0.9], [174, 60, 0.8]].map(([x, y, r], i) => (
+            <circle key={i} cx={x} cy={y} r={r} fill="#f8f0d8" opacity="0.75">
+              <animate attributeName="opacity" values="0.4;0.9;0.4" dur={`${2 + i * 0.4}s`} repeatCount="indefinite" />
+            </circle>
+          ))}
+          {/* silhouette de LONDRES : Big Ben à gauche, Parliament, toits, dôme St-Paul à droite */}
+          {/* toits + terrasses en fond */}
+          <path d="M0 148 L20 128 L40 130 L60 118 L80 122 L90 108 L100 118 L114 116 L128 106 L140 118 L156 114 L168 122 L180 122 L180 180 L0 180 Z"
+            fill="#0a0e1c" />
+          {/* Big Ben (tour de l'horloge) à gauche */}
+          <g transform="translate(24,120)">
+            <rect x="-8" y="0" width="16" height="60" fill="#12162a" />
+            {/* horloge éclairée */}
+            <rect x="-6" y="6" width="12" height="10" fill="#f0d888" opacity="0.9" />
+            <path d="M0 8 L0 13 M0 11 L4 11" stroke="#3a2810" strokeWidth="0.6" />
+            {/* balustrade + toit pointu */}
+            <rect x="-9" y="-3" width="18" height="3" fill="#12162a" />
+            <path d="M-8 -3 L0 -20 L8 -3 Z" fill="#12162a" />
+            <path d="M0 -20 L0 -30" stroke="#12162a" strokeWidth="2" />
+            <circle cx="0" cy="-30" r="1.5" fill="#12162a" />
+          </g>
+          {/* Parliament à côté (crénelures) */}
+          <path d="M40 130 L40 108 L44 108 L44 112 L48 112 L48 108 L52 108 L52 112 L56 112 L56 108 L60 108 L60 130 Z"
+            fill="#12162a" />
+          {/* dôme St-Paul à droite */}
+          <g transform="translate(140,118)">
+            <ellipse cx="0" cy="0" rx="14" ry="10" fill="#12162a" />
+            <path d="M-14 0 L14 0 L14 12 L-14 12 Z" fill="#12162a" />
+            <path d="M0 -10 L0 -16" stroke="#12162a" strokeWidth="1.6" />
+            <circle cx="0" cy="-16" r="1.6" fill="#12162a" />
+          </g>
+          {/* ballon de barrage flottant, argenté */}
+          <g transform="translate(88,60)">
+            <ellipse cx="0" cy="0" rx="8" ry="5" fill="#5a6474" opacity="0.85" />
+            <path d="M-5 4 L-2 8 L2 8 L5 4" fill="none" stroke="#3a4454" strokeWidth="0.6" />
+            <path d="M-2 8 L0 40 L4 40" stroke="#3a4454" strokeWidth="0.5" fill="none" />
+          </g>
+          {/* menuiserie : croisillons de la fenêtre (double vertical + horizontal médian) */}
+          <path d="M60 0 v180 M120 0 v180 M0 90 h180" stroke="#3a2418" strokeWidth="4" />
+          <path d="M60 90 h60" stroke="#3a2418" strokeWidth="4.5" />
+          {/* rebord intérieur en bois clair */}
+          <rect x="-6" y="180" width="192" height="10" fill="#5a3818" stroke="#2a1408" strokeWidth="1" />
+          <path d="M-6 184 L186 184" stroke="#8a5828" strokeWidth="0.5" opacity="0.7" />
+          {/* rideau de blackout à moitié tiré à droite */}
+          <rect x="152" y="0" width="34" height="180" fill="#1a0e08" opacity="0.9" />
+          <path d="M156 0 v180 M164 0 v180 M172 0 v180 M180 0 v180" stroke="#0a0402" strokeWidth="0.6" opacity="0.5" />
+          {/* petit reflet lumineux sur la vitre (frontière du blackout) */}
+          <path d="M152 0 L152 180" stroke="#4a4028" strokeWidth="0.6" opacity="0.55" />
+          {/* étiquette réglementaire en bas */}
+          <rect x="4" y="192" width="86" height="8" fill="#e8dfc8" stroke="#3a2418" strokeWidth="0.4" />
+          <text x="47" y="199" textAnchor="middle" fontSize="5" fontFamily="ui-monospace,monospace" fill="#3a2418">BLACKOUT — 21:12</text>
+        </g>
       </PLayer>
 
       {/* ═══ ondes qui partent par la fenêtre — visible seulement quand émission ═══ */}
       {enOnde && (
         <PLayer depth={3}>
-          {[30, 60, 90, 120].map((r, i) => (
-            <path key={i} d={`M870 150 a${r} ${r * 0.7} 0 0 1 ${r * 1.5} 0`} fill="none"
-              stroke="#ffd166" strokeWidth="2" opacity={0.85 - i * 0.18}
+          {[30, 60, 90, 120, 160].map((r, i) => (
+            <path key={i} d={`M650 150 a${r} ${r * 0.7} 0 0 1 ${r * 1.5} 0`} fill="none"
+              stroke="#ffd166" strokeWidth="2" opacity={0.85 - i * 0.16}
               style={{ animation: "pulse 1.6s ease-in-out infinite" }} />
           ))}
         </PLayer>
