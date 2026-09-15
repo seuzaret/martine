@@ -222,7 +222,7 @@ function MaterializePhase({ onEnter }) {
 }
 
 /* ---------- PHASE COCKPIT : paysage teinté + console demi-cercle ---------- */
-function CockpitPhase({ onGo, onCancel }) {
+function CockpitPhase({ onGo, onCancel, backdropScene }) {
   return (
     <div style={{ position: "absolute", inset: 0, background: "#050810" }}>
       {/* ---- PAYSAGE plein écran, vu depuis le cockpit (teinté jaunâtre) ---- */}
@@ -634,6 +634,7 @@ export function TimeVessel({ nextLabel, onDone, onCancel, backdrop: backdropProp
         <CockpitPhase
           onGo={() => setPhase("compass")}
           onCancel={onCancel}
+          backdropScene={backdropScene}
         />
       )}
     </div>
