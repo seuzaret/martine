@@ -11,6 +11,8 @@ import { loadSave, writeSave, clearSave, hasSave, exportSaveString, importSaveSt
 import { computeBadge } from "./engine/badge.js";
 import JaugeTemporelle from "./engine/JaugeTemporelle.jsx";
 import CheatPanel from "./engine/CheatPanel.jsx";
+import TransitionScreen from "./engine/TransitionScreen.jsx";
+import EndScreen from "./engine/EndScreen.jsx";
 import { findRecipe, findNearMiss, randomLine } from "./engine/Crafting.js";
 import { lastHotspotClick } from "./engine/Hotspot.jsx";
 import { CHAPTERS } from "./chapters/index.js";
@@ -1489,26 +1491,15 @@ export default function App() {
 
   /* ---------- écran de transition entre deux époques ---------- */
   if (screen === "transition") {
-    const target = CHAPTERS[transitionTo];
     return (
-      <div style={{ minHeight: "100vh", background: "radial-gradient(ellipse at 50% 40%, #1a2f4a 0%, #060a12 75%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, fontFamily: "Palatino, Georgia, serif", color: "#e8eef5" }}>
+      <>
         {cheatPanel}
-        <div style={{ maxWidth: 520, textAlign: "center" }}>
-          <div style={{ fontSize: 96, animation: "spinGrow 1.2s ease-out" }}>🌀</div>
-          <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, letterSpacing: 4, color: "#5eff9e", marginTop: 10 }}>SAUT TEMPOREL EN COURS</div>
-          <h1 style={{ fontFamily: "ui-monospace,monospace", color: "#e8934a", fontSize: "clamp(26px,6vw,40px)", letterSpacing: 2, margin: "10px 0 2px" }}>
-            {target.epoque}
-          </h1>
-          <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 15, color: "#8fa3bd" }}>{target.emoji} Chapitre {transitionTo + 1} · {target.date}</div>
-          <p style={{ fontFamily: "ui-monospace,monospace", fontSize: 14, color: "#c8ffdd", lineHeight: 1.6, marginTop: 22, textShadow: "0 0 6px rgba(94,255,158,0.3)" }}>
-            « Direction {target.epoque}. Accroche-toi — l'atterrissage, ce n'est toujours pas ma spécialité. »
-          </p>
-          <button onClick={() => goToChapter(transitionTo)}
-            style={{ marginTop: 24, background: "#5eff9e", color: "#06110b", border: "none", borderRadius: 12, padding: "13px 30px", fontSize: 15, fontWeight: 800, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 2, boxShadow: "0 0 24px rgba(94,255,158,0.4)" }}>
-            ATTERRIR →
-          </button>
-        </div>
-      </div>
+        <TransitionScreen
+          target={CHAPTERS[transitionTo]}
+          transitionTo={transitionTo}
+          onLand={goToChapter}
+        />
+      </>
     );
   }
 
@@ -1666,102 +1657,22 @@ export default function App() {
 
   /* ---------- écran fin ---------- */
   if (screen === "end") {
-    /* Calcul du BADGE + du score global du voyage. Le total-cible est la
-       somme des cibles chapitre (required × 5). */
-    const totalTarget = CHAPTERS.reduce((s, c) => s + (c.required || 3) * 5, 0);
-    const badge = computeBadge(fluxTotal, totalTarget);
-    const scorePct = Math.round((fluxTotal / totalTarget) * 100);
     return (
-      <div style={{ minHeight: "100vh", background: "radial-gradient(ellipse at 50% 20%, #1a2f4a 0%, #080d16 70%)", padding: 20, fontFamily: "Palatino, Georgia, serif", color: "#e8eef5" }}>
+      <>
         {cheatPanel}
-        <div style={{ maxWidth: 620, margin: "0 auto", textAlign: "center" }}>
-          <div style={{ fontSize: 58, marginTop: 18 }}>🌀</div>
-          <h1 style={{ fontFamily: "ui-monospace,monospace", color: "#5eff9e", letterSpacing: 3, fontSize: 26 }}>{chapter.finTitre}</h1>
-          <p style={{ fontSize: 16.5, lineHeight: 1.65, color: "#c8d4e2" }}>
-            {chapter.finTexte.replace("{pct}", Math.round((msgs.length / ALL_MSGS.length) * 100))}
-          </p>
-          <p style={{ fontFamily: "ui-monospace,monospace", color: "#5eff9e", fontSize: 18, marginTop: 14 }}>
-            ◆ {msgs.length} / {ALL_MSGS.length} messages découverts
-          </p>
-
-          {/* BADGE DE FIN — n'apparaît qu'au bout du voyage (dernier chapitre) */}
-          {isLastChapter && (
-            <div style={{ background: "#0e1420", border: `2px solid ${badge.color}`, borderRadius: 16, padding: "16px 20px", marginTop: 16, boxShadow: `0 0 24px ${badge.color}55` }}>
-              <div style={{ fontSize: 42, lineHeight: 1 }}>{badge.emoji}</div>
-              <div style={{ fontFamily: "ui-monospace,monospace", color: badge.color, fontSize: 20, fontWeight: 800, letterSpacing: 1.5, marginTop: 6 }}>{badge.name.toUpperCase()}</div>
-              <div style={{ fontFamily: "ui-monospace,monospace", color: badge.color, fontSize: 13, opacity: 0.85, marginTop: 2 }}>⚡ {fluxTotal} flux · {scorePct}% du voyage</div>
-              <p style={{ fontSize: 13.5, color: "#c8d4e2", lineHeight: 1.6, margin: "8px 0 0", fontStyle: "italic" }}>{badge.desc}</p>
-              {bonusChapters.length > 0 && (
-                <p style={{ fontSize: 12, color: "#ffd166", marginTop: 8, fontFamily: "ui-monospace,monospace" }}>
-                  ✨ Cartes bonus débloquées ({bonusChapters.length}) : {bonusChapters.map((i) => CHAPTERS[i]?.epoque).join(" · ")}
-                </p>
-              )}
-            </div>
-          )}
-          {/* la frise du voyage + la leçon calculée à partir des jauges */}
-          <div style={{ textAlign: "left", background: "#0e1420", border: "1px solid #2a3648", borderRadius: 12, padding: "10px 14px" }}>
-            <Frise collection={collection} />
-            {trendSentence(collection) && (
-              <p style={{ fontSize: 13.5, fontStyle: "italic", color: "#ffd166", lineHeight: 1.6, margin: "4px 0 2px" }}>
-                📈 « {trendSentence(collection)} » — MARTINE
-              </p>
-            )}
-          </div>
-
-          {/* NB : la CONCLUSION de MARTINE + la QUESTION DE DÉBAT étaient
-              affichées ici au bout du voyage — retirées car ça faisait beaucoup
-              de texte à lire d'un coup (l'élève vient de finir l'épilogue et
-              a déjà lu la conclusion argumentée de son support choisi). */}
-          {isLastChapter && (
-            <>
-              {/* Teaser du JEU 2 : LA PIONNIÈRE — s'affiche après la fin du voyage.
-                  Bouton "PARTIR MAINTENANT" pour lancer jeu 2 DIRECTEMENT
-                  sans repasser par le menu titre. */}
-              <div style={{ border: "2px dashed #7fd8ff", borderRadius: 12, padding: "18px 20px", marginTop: 16, background: "radial-gradient(ellipse at 50% 50%, rgba(127,216,255,0.08), transparent)", textAlign: "center" }}>
-                <div style={{ fontSize: 38, marginBottom: 8 }}>🌀</div>
-                <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3, color: "#7fd8ff", marginBottom: 6 }}>MISSION EN ATTENTE</div>
-                <div style={{ fontFamily: TITRE_FONT, fontSize: 26, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", background: "linear-gradient(100deg, #7fd8ff 0%, #ffd166 60%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", lineHeight: 1.15 }}>
-                  Retrouver Al3x1A
-                </div>
-                <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#c8d4e2", margin: "10px auto 14px", maxWidth: 460, fontStyle: "italic" }}>
-                  La pionnière est bloquée quelque part dans les époques que tu viens de traverser. Grâce au TEMPOSCOPE que MARTINE t'a remis, tu peux voyager librement et recouper les indices pour la retrouver.
-                </p>
-                <button onClick={newGameJeu2}
-                  style={{ background: "#7fd8ff", color: "#06110b", border: "none", borderRadius: 12, padding: "12px 26px", fontSize: 15, fontWeight: 900, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 2, boxShadow: "0 0 22px rgba(127,216,255,0.55)" }}>
-                  ▶ PARTIR MAINTENANT
-                </button>
-                <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, color: "#7a879e", marginTop: 8 }}>ou reviens plus tard depuis le menu titre</div>
-              </div>
-            </>
-          )}
-
-          {/* Récap des messages du chapitre : fiches trouvées + cases grises
-              pour les non-découverts. UTILE en fin de chapitre intermédiaire
-              (l'élève voit ce qu'il peut aller chercher en rejouant), mais
-              CACHÉ au bout du voyage : le bilan global (frise + badge +
-              teaser jeu 2) suffit largement. */}
-          {!isLastChapter && (
-            <div style={{ textAlign: "left", marginTop: 18 }}>
-              {ALL_MSGS.map((id) =>
-                msgs.includes(id) ? (
-                  <div key={id} style={{ background: "#101827", border: "1px solid #2a3648", borderRadius: 12, padding: "10px 14px", marginBottom: 8 }}>
-                    <strong>{chapter.messages[id].emoji} {chapter.messages[id].title}</strong>
-                    <p style={{ fontSize: 13, color: "#b8c4d4", margin: "4px 0 0", lineHeight: 1.5 }}>{chapter.messages[id].fact}</p>
-                  </div>
-                ) : (
-                  <div key={id} style={{ background: "#0d1320", border: "1px dashed #2a3648", borderRadius: 12, padding: "10px 14px", marginBottom: 8, color: "#7a879e" }}>
-                    ❓ Message non découvert — rejoue pour le trouver !
-                  </div>
-                )
-              )}
-            </div>
-          )}
-          <button onClick={restart}
-            style={{ margin: "18px 0 40px", background: "transparent", color: "#5eff9e", border: "2px solid #5eff9e", borderRadius: 12, padding: "12px 26px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "ui-monospace,monospace" }}>
-            ↺ REJOUER LE CHAPITRE
-          </button>
-        </div>
-      </div>
+        <EndScreen
+          chapter={chapter}
+          isLastChapter={isLastChapter}
+          msgs={msgs}
+          ALL_MSGS={ALL_MSGS}
+          fluxTotal={fluxTotal}
+          bonusChapters={bonusChapters}
+          collection={collection}
+          chapters={CHAPTERS}
+          onRestart={restart}
+          onStartJeu2={newGameJeu2}
+        />
+      </>
     );
   }
 
