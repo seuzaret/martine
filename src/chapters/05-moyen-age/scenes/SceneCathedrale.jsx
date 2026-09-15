@@ -264,11 +264,6 @@ export default function SceneCathedrale({ collect, action, reveal, inv = [] }) {
             <rect key={`c2${i}`} x={x + 2} y="21" width="18" height="17" fill={i === 0 ? "url(#ca-vit-j)" : i === 1 ? "url(#ca-vit-r)" : "url(#ca-vit-b)"} stroke="#1a1408" strokeWidth="0.6" />
           ))}
         </g>
-        <g transform="translate(320,430)" style={{ animation: "float 2s ease-in-out infinite" }}>
-          <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
-          <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
-        </g>
-
         {/* Ephemere : morceau de verre coloré + copeau de pierre (disparaissent) */}
         {!inv.includes("verre_colore") && (
         <g transform="translate(160,542) rotate(15)">

@@ -206,11 +206,6 @@ export default function SceneCrete({ collect, action, reveal, made = [], inv = [
           {/* petit tissu au sommet du bâton */}
           <path d="M20 -22 q-6 -2 -8 4 q-2 4 4 4 z" fill="#c85028" stroke="#5a1810" strokeWidth="0.4" />
         </g>
-        <g transform="translate(800,432)" style={{ animation: "float 2s ease-in-out infinite" }}>
-          <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
-          <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
-        </g>
-
         {/* Objets ephemere : disparaissent une fois ramassés */}
         {!inv.includes("plume") && (
         <g transform="translate(440,506) rotate(20)">

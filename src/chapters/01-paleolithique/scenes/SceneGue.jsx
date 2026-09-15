@@ -235,12 +235,6 @@ export default function SceneGue({ collect, action, reveal, made = [], inv = [] 
           {/* petit flotteur */}
           <circle cx="158" cy="18" r="2" fill="#c85028" stroke="#3a1010" strokeWidth="0.4" />
         </g>
-        {/* « ? » de dialogue */}
-        <g transform="translate(120,420)" style={{ animation: "float 2s ease-in-out infinite" }}>
-          <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
-          <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
-        </g>
-
         {/* Objets ephemere : disparaissent une fois ramassés */}
         {!inv.includes("escargot") && (
         <g transform="translate(680,528)">

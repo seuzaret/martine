@@ -136,12 +136,6 @@ export default function SceneEcoleScribe({ collect, action, reveal, inv = [] }) 
           <path d="M22 -8 L46 22" stroke="#c8946a" strokeWidth="4" strokeLinecap="round" />
           <path d="M46 22 L54 44" stroke="#3a2418" strokeWidth="3" strokeLinecap="round" />
         </g>
-        {/* « ? » de dialogue au-dessus du maître */}
-        <g transform="translate(680,412)" style={{ animation: "float 2s ease-in-out infinite" }}>
-          <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
-          <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
-        </g>
-
         {/* 2 APPRENTIS courbés sur leur tablette (à gauche) */}
         {[[260, 480], [360, 484]].map(([x, y], i) => (
           <g key={i} transform={`translate(${x},${y})`}>

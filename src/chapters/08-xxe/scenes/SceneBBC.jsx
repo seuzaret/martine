@@ -165,10 +165,6 @@ export default function SceneBBC({ collect, action, reveal, made = [], flags = [
 
         {/* « ? » Q&A d'accueil au-dessus d'Arthur (tant que le message n'est pas transmis) */}
         {!enOnde && (
-          <g transform="translate(700,240)" style={{ animation: "float 2s ease-in-out infinite" }}>
-            <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
-            <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
-          </g>
         )}
       </PLayer>
 

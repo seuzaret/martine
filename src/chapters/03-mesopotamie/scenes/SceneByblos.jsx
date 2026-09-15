@@ -170,11 +170,6 @@ export default function SceneByblos({ collect, action, reveal, inv = [] }) {
           {/* boucle d'oreille en or */}
           <circle cx="-12" cy="-28" r="1.4" fill="#f0c848" stroke="#5a3010" strokeWidth="0.3" />
         </g>
-        <g transform="translate(390,436)" style={{ animation: "float 2s ease-in-out infinite" }}>
-          <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
-          <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
-        </g>
-
         {/* Amphores de pourpre à droite (le fameux commerce phénicien) */}
         <g transform="translate(560,510)">
           <ellipse cx="0" cy="34" rx="28" ry="4" fill="#0a0604" opacity="0.55" />

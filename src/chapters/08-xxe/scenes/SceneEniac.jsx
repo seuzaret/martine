@@ -224,10 +224,6 @@ export default function SceneEniac({ collect, action, reveal, made = [], flags =
 
         {/* « ? » de quête au-dessus de Kay (tant que l'ENIAC n'est pas allumé) */}
         {!allume && (
-          <g transform="translate(830,300)" style={{ animation: "float 2s ease-in-out infinite" }}>
-            <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
-            <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
-          </g>
         )}
 
         {/* bandeau de résultat quand allumé : imprimante qui crache */}
