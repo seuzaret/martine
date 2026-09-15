@@ -241,6 +241,10 @@ const INTRO = [
    mood : expression de l'avatar ("neutre", "content", "vexe") */
 const ACTIONS = {
   wreck: { mood: "vexe", say: "Oui, c'est moi, là, plantée dans le sol. Un seul commentaire sur ma ressemblance avec une noix, UN SEUL, et je te laisse au Paléolithique." },
+  /* Le TARDIS caché dans la plaine du point de vue : clin d'œil au Docteur.
+     `grant: "tardis_gone"` mémorise le clic pour qu'il ne revienne pas. */
+  tardis: { mood: "content", grant: "tardis_gone",
+    say: "Attends… une petite cabine bleue qui pulse et disparaît en gémissant. Un Docteur me doit un café." },
   cave:  { goto: 0, say: "Tu entres dans la grotte. Il y fait sombre… mais la lumière du matin éclaire une paroi magnifique, au fond." },
 
   /* LE CLAN — quatre personnages, une histoire (voir QUETE plus bas).

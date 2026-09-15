@@ -696,6 +696,9 @@ export default function App() {
       setModal({ type: act.modal }); return;
     }
     if (act.goto !== undefined) setTab(act.goto);
+    /* Une action peut octroyer un drapeau (ex. un easter egg cliqué se
+       souvient qu'il a été activé et ne revient pas). */
+    if (act.grant) grantFlag(act.grant);
     /* LA QUÊTE (si le chapitre en a une) : quand on clique le personnage
        de l'étape en cours, il dit SA réplique d'étape (pas sa réplique
        par défaut). Une étape sans tâche (`attend`) passe aussitôt à la
@@ -2519,9 +2522,17 @@ export default function App() {
       {vesselOpen && (() => {
         const nextChap = CHAPTERS[chapterIndex + 1];
         const label = nextChap?.epoque || nextChap?.scenes?.[0]?.name || "Chapitre suivant";
+        /* Fond du cockpit = premier tableau du chapitre COURANT (celui qu'on
+           vient de finir), rendu en mode décoratif (handlers no-op). */
+        const FirstScene = chapter.scenes?.[0]?.Component;
+        const cockpitBackdrop = FirstScene ? (
+          <FirstScene collect={() => {}} action={() => {}} reveal={null}
+            made={[]} inv={[]} flags={{}} queteQui={null} mode="jeu1" bare />
+        ) : null;
         return (
           <TimeVessel
             nextLabel={label}
+            backdrop={cockpitBackdrop}
             onDone={() => {
               setVesselOpen(false);
               setTransitionTo(chapterIndex + 1);

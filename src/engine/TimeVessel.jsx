@@ -15,7 +15,8 @@ import { playMaterialize } from "./sfx.js";
    ============================================================ */
 
 const noop = () => {};
-const backdropScene = (
+/* Fond par défaut si l'appelant n'en passe pas — la scène préhistorique nue. */
+const defaultBackdropScene = (
   <SceneExterieur bare collect={noop} action={noop} reveal={null} made={[]} queteQui={null} />
 );
 
@@ -519,8 +520,11 @@ function CockpitPhase({ onGo, onCancel }) {
 /* ============================================================
    COMPOSANT PRINCIPAL
    ============================================================ */
-export function TimeVessel({ nextLabel, onDone, onCancel }) {
-  const [phase, setPhase] = useState("martine");
+export function TimeVessel({ nextLabel, onDone, onCancel, backdrop: backdropProp }) {
+  /* Départ direct dans le COCKPIT : la scène MARTINE/matérialisation n'est
+     jouée qu'au tout premier chapitre (elle est skippée par défaut ici). */
+  const [phase, setPhase] = useState("cockpit");
+  const backdropScene = backdropProp || defaultBackdropScene;
   const [flux, setFlux] = useState(0);
   const rafRef = useRef(null);
 
