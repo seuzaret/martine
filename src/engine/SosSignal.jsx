@@ -73,16 +73,28 @@ export function SosOverlay({ muted, onDone }) {
   const [step, setStep] = useState(-1);       // -1 avant le début, 0..8 pendant
   const [litNow, setLitNow] = useState(false);
   const [done, setDone] = useState(false);
+  const [flux, setFlux] = useState(0);        // 0 → 100 % pendant l'émission
   const cancelled = useRef(false);
 
   useEffect(() => {
     cancelled.current = false;
     let i = 0;
     let symbolIdx = -1;
+    /* durée totale de la séquence pour caler la jauge dessus */
+    const totalMs = SEQ.reduce((s, seg) => s + seg.d, 0);
+    const start0 = performance.now();
+    let rafId = 0;
+    const animateFlux = () => {
+      if (cancelled.current) return;
+      const p = Math.min(1, (performance.now() - start0 - 350) / totalMs);
+      setFlux(Math.max(0, Math.round(p * 100)));
+      if (p < 1) rafId = requestAnimationFrame(animateFlux);
+    };
     const tick = () => {
       if (cancelled.current || i >= SEQ.length) {
         if (!cancelled.current) {
           setDone(true);
+          setFlux(100);
           setTimeout(() => onDone?.(), 1400);
         }
         return;
@@ -99,7 +111,8 @@ export function SosOverlay({ muted, onDone }) {
     };
     // petit délai avant le premier bip
     const start = setTimeout(tick, 350);
-    return () => { cancelled.current = true; clearTimeout(start); };
+    rafId = requestAnimationFrame(animateFlux);
+    return () => { cancelled.current = true; clearTimeout(start); cancelAnimationFrame(rafId); };
   }, [muted]); // eslint-disable-line
 
   return (
@@ -117,16 +130,59 @@ export function SosOverlay({ muted, onDone }) {
         S · O · S
       </div>
 
-      {/* La grande lampe qui clignote au rythme du Morse */}
-      <div style={{
-        width: 200, height: 200, borderRadius: '50%',
-        background: litNow ? 'radial-gradient(circle, #ffe870 0%, #ff9040 60%, #6a1810 100%)' : '#2a1a10',
-        border: `4px solid ${litNow ? '#ffe870' : '#5a3818'}`,
-        boxShadow: litNow ? '0 0 80px 20px #ffb050, inset 0 0 40px #fff8c0' : 'inset 0 0 20px rgba(0,0,0,0.6)',
-        transition: 'background 0.05s, box-shadow 0.05s, border-color 0.05s',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        <div style={{ fontSize: 64, color: litNow ? '#3a0a0a' : '#5a3818', fontWeight: 900 }}>🆘</div>
+      {/* La grande lampe + la jauge flux temporel côte à côte */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+        <div style={{
+          width: 200, height: 200, borderRadius: '50%',
+          background: litNow ? 'radial-gradient(circle, #ffe870 0%, #ff9040 60%, #6a1810 100%)' : '#2a1a10',
+          border: `4px solid ${litNow ? '#ffe870' : '#5a3818'}`,
+          boxShadow: litNow ? '0 0 80px 20px #ffb050, inset 0 0 40px #fff8c0' : 'inset 0 0 20px rgba(0,0,0,0.6)',
+          transition: 'background 0.05s, box-shadow 0.05s, border-color 0.05s',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <div style={{ fontSize: 64, color: litNow ? '#3a0a0a' : '#5a3818', fontWeight: 900 }}>🆘</div>
+        </div>
+
+        {/* JAUGE FLUX TEMPOREL — se remplit pendant l'émission du SOS */}
+        <div style={{
+          width: 92, height: 200,
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          background: 'linear-gradient(180deg,#141b28,#0c1220)',
+          border: '1px solid #26324a', borderRadius: 12,
+          padding: '10px 8px', gap: 8,
+          boxShadow: '0 0 24px rgba(255,209,102,0.25)',
+        }}>
+          <div style={{
+            fontFamily: 'ui-monospace,monospace', fontSize: 9, letterSpacing: 1.5,
+            color: '#ffd166', textAlign: 'center', lineHeight: 1.35,
+          }}>⚡ FLUX<br />TEMPOREL</div>
+          <div style={{
+            flex: '1 1 auto', width: 30,
+            background: '#0a1119', border: '1px solid #26324a', borderRadius: 8,
+            position: 'relative', overflow: 'hidden',
+            display: 'flex', flexDirection: 'column-reverse',
+          }}>
+            <div style={{
+              height: `${flux}%`,
+              background: flux >= 100
+                ? 'linear-gradient(0deg,#e8934a,#ffd166)'
+                : 'linear-gradient(0deg,#2f5a76,#7fd8ff)',
+              boxShadow: flux >= 100 ? '0 0 16px #ffd166' : 'none',
+              transition: 'height 60ms linear',
+            }} />
+            {[20, 40, 60, 80].map((y) => (
+              <div key={y} style={{
+                position: 'absolute', left: 0, right: 0, bottom: `${y}%`,
+                height: 1, background: '#0a1119',
+              }} />
+            ))}
+          </div>
+          <div style={{
+            fontFamily: 'ui-monospace,monospace', fontSize: 12, fontWeight: 700,
+            color: flux >= 100 ? '#ffd166' : '#8fa3bd',
+            textShadow: flux >= 100 ? '0 0 8px rgba(255,209,102,0.7)' : 'none',
+          }}>{flux}%</div>
+        </div>
       </div>
 
       {/* La séquence des 9 symboles apparaît au fur et à mesure */}
