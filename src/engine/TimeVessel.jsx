@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { TemporalCompass } from "./TemporalCompass.jsx";
 import { Avatar } from "./Martine.jsx";
 import SceneExterieur from "../chapters/01-paleolithique/scenes/SceneExterieur.jsx";
+import { playMaterialize } from "./sfx.js";
 
 /* ============================================================
    VAISSEAU TEMPOREL — cadre narratif du saut de chapitre.
@@ -137,6 +138,7 @@ function TimeMachine({ landed = false }) {
 function MaterializePhase({ onEnter }) {
   const [ready, setReady] = useState(false);
   useEffect(() => {
+    playMaterialize();
     const t = setTimeout(() => setReady(true), 2000);
     return () => clearTimeout(t);
   }, []);

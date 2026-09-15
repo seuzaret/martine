@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { playFluxCharge } from './sfx.js';
 
 /* ============================================================
    SOS SIGNAL — bouton flottant + animation Morse ··· −−− ···
@@ -84,6 +85,8 @@ export function SosOverlay({ muted, onDone }) {
     const totalMs = SEQ.reduce((s, seg) => s + seg.d, 0);
     const start0 = performance.now();
     let rafId = 0;
+    /* son de la charge du flux : rampe montante calée sur la même durée */
+    const fluxSound = muted ? { stop() {} } : playFluxCharge(totalMs);
     const animateFlux = () => {
       if (cancelled.current) return;
       const p = Math.min(1, (performance.now() - start0 - 350) / totalMs);
@@ -112,7 +115,7 @@ export function SosOverlay({ muted, onDone }) {
     // petit délai avant le premier bip
     const start = setTimeout(tick, 350);
     rafId = requestAnimationFrame(animateFlux);
-    return () => { cancelled.current = true; clearTimeout(start); cancelAnimationFrame(rafId); };
+    return () => { cancelled.current = true; clearTimeout(start); cancelAnimationFrame(rafId); fluxSound.stop(); };
   }, [muted]); // eslint-disable-line
 
   return (
