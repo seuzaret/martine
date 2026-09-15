@@ -221,9 +221,9 @@ function MaterializePhase({ onEnter }) {
 /* ---------- PHASE COCKPIT : paysage teinté + console demi-cercle ---------- */
 function CockpitPhase({ onGo, onCancel }) {
   return (
-    <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", background: "#050810" }}>
-      {/* ---- HAUT : paysage vu depuis le cockpit, teinté jaunâtre ---- */}
-      <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
+    <div style={{ position: "absolute", inset: 0, background: "#050810" }}>
+      {/* ---- PAYSAGE plein écran, vu depuis le cockpit (teinté jaunâtre) ---- */}
+      <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
         {backdropScene}
         {/* teinte jaunâtre du verre du cockpit */}
         <div style={{
@@ -246,8 +246,9 @@ function CockpitPhase({ onGo, onCancel }) {
         </svg>
       </div>
 
-      {/* ---- BAS : console demi-cercle métal avec cadrans et boutons ---- */}
-      <div style={{ position: "relative", height: "42%", minHeight: 280, overflow: "visible" }}>
+      {/* ---- CONSOLE demi-cercle métal — POSÉE PAR-DESSUS le paysage
+             (le paysage descend jusqu'à la courbe convexe, plus de bande noire) ---- */}
+      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: "50%", minHeight: 300, overflow: "visible" }}>
         <svg viewBox="0 0 1000 420" preserveAspectRatio="none"
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }}
           aria-hidden="true">
