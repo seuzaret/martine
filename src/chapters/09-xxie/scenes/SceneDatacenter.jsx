@@ -29,20 +29,53 @@ export default function SceneDatacenter({ collect, action, reveal, made = [], mo
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
-        <linearGradient id="dc-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#161c28" /><stop offset="100%" stopColor="#0a0e16" /></linearGradient>
-        <linearGradient id="dc-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#2a3040" /><stop offset="100%" stopColor="#12161e" /></linearGradient>
-        <linearGradient id="dc-baie" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#39404e" /><stop offset="50%" stopColor="#272d38" /><stop offset="100%" stopColor="#1a1f28" /></linearGradient>
-        <radialGradient id="dc-far" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#7fd8ff" stopOpacity="0.32" /><stop offset="100%" stopColor="#7fd8ff" stopOpacity="0" /></radialGradient>
-        <radialGradient id="dc-glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#5eff9e" stopOpacity="0.45" /><stop offset="100%" stopColor="#5eff9e" stopOpacity="0" /></radialGradient>
+        <linearGradient id="dc-bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor="#161c28" />
+          <stop offset="55%"  stopColor="#0f141e" />
+          <stop offset="100%" stopColor="#080c14" />
+        </linearGradient>
+        <linearGradient id="dc-floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor="#2a3040" />
+          <stop offset="55%"  stopColor="#1a2030" />
+          <stop offset="100%" stopColor="#0a1018" />
+        </linearGradient>
+        <linearGradient id="dc-baie" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"   stopColor="#39404e" />
+          <stop offset="50%"  stopColor="#272d38" />
+          <stop offset="100%" stopColor="#1a1f28" />
+        </linearGradient>
+        <radialGradient id="dc-far" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stopColor="#7fd8ff" stopOpacity="0.32" />
+          <stop offset="100%" stopColor="#7fd8ff" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="dc-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stopColor="#5eff9e" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="#5eff9e" stopOpacity="0" />
+        </radialGradient>
         <filter id="dc-grain" x="0%" y="0%" width="100%" height="100%">
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" />
           <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0" result="a" />
+          <feComposite in="a" in2="SourceGraphic" operator="in" />
+        </filter>
+        {/* brume atmosphérique près du fond de l'allée */}
+        <filter id="dc-blur" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="10" />
+        </filter>
+        {/* grosses taches de moquette technique */}
+        <filter id="dc-mottle" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="2" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.4 0" result="a" />
           <feComposite in="a" in2="SourceGraphic" operator="in" />
         </filter>
       </defs>
 
       {/* ═══ le hangar ═══ */}
       <rect width="1000" height="560" fill="url(#dc-bg)" />
+      {/* grain général du hangar (ambiance salle blanche) */}
+      <rect width="1000" height="560" fill="#0a1018" opacity="0.35" filter="url(#dc-grain)" />
+      {/* brume froide de la clim qui traîne à mi-hauteur */}
+      <ellipse cx="500" cy="260" rx="360" ry="24" fill="#7fd8ff" opacity="0.06" filter="url(#dc-blur)" />
+      <ellipse cx="500" cy="360" rx="380" ry="14" fill="#7fd8ff" opacity="0.05" filter="url(#dc-blur)" />
       {/* la lueur froide du fond de l'allée */}
       <ellipse cx="500" cy="290" rx="200" ry="150" fill="url(#dc-far)" style={{ animation: "glow 5s ease-in-out infinite" }} />
 
@@ -130,9 +163,29 @@ export default function SceneDatacenter({ collect, action, reveal, made = [], mo
       {/* ═══ premier plan : l'allée, la technicienne, les pièces ═══ */}
       <PLayer depth={3}>
         <path d="M0 560 L0 460 L1000 460 L1000 560 Z" fill="url(#dc-floor)" />
+        {/* texture de dalles techniques */}
+        <path d="M0 560 L0 460 L1000 460 L1000 560 Z" fill="#0a1018" opacity="0.3" filter="url(#dc-mottle)" />
         {/* le sol technique, en perspective vers le fond */}
         <path d="M420 400 L120 560 M580 400 L880 560 M420 400 L580 400" stroke="#2a3244" strokeWidth="2" opacity="0.7" fill="none" />
         {[440, 480, 530].map((y, i) => <path key={i} d={`M${330 - i * 90} ${y} H${670 + i * 90}`} stroke="#2a3244" strokeWidth="1.6" opacity="0.5" />)}
+        {/* petits reflets de LED sur le sol (vert/bleu) devant chaque baie */}
+        <ellipse cx="140" cy="466" rx="46" ry="4" fill="#5eff9e" opacity="0.12" filter="url(#dc-blur)" />
+        <ellipse cx="856" cy="466" rx="46" ry="4" fill="#7fd8ff" opacity="0.12" filter="url(#dc-blur)" />
+        <ellipse cx="244" cy="470" rx="34" ry="3" fill="#5eff9e" opacity="0.10" filter="url(#dc-blur)" />
+        <ellipse cx="752" cy="470" rx="34" ry="3" fill={compte ? "#8a1010" : "#7fd8ff"} opacity="0.10" filter="url(#dc-blur)" />
+        {/* fils/câbles qui courent au plafond au-dessus des baies */}
+        <path d="M60 96 L940 96" stroke="#3a4456" strokeWidth="1.2" opacity="0.7" />
+        <path d="M60 108 L940 108" stroke="#5a3a20" strokeWidth="1" opacity="0.55" />
+        <path d="M60 116 L940 116" stroke="#3a3a5a" strokeWidth="1" opacity="0.55" />
+        {/* petites lampes de secours rouges au plafond */}
+        {[180, 500, 820].map((x, i) => (
+          <g key={i}>
+            <rect x={x - 4} y="94" width="8" height="4" fill="#3a1a1a" />
+            <circle cx={x} cy="94" r="1.6" fill="#ff5030">
+              <animate attributeName="opacity" values="0.4;1;0.4" dur="2.4s" begin={`${i * 0.6}s`} repeatCount="indefinite" />
+            </circle>
+          </g>
+        ))}
 
         {/* « ? » tant que le flux n'est pas trouvé — cache en jeu 2 */}
         {!stream && mode !== "jeu2" && (
