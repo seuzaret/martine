@@ -11,8 +11,11 @@ import { loadSave, writeSave, clearSave, hasSave, exportSaveString, importSaveSt
 import { computeBadge } from "./engine/badge.js";
 import JaugeTemporelle from "./engine/JaugeTemporelle.jsx";
 import CheatPanel from "./engine/CheatPanel.jsx";
+<<<<<<< HEAD
 import TransitionScreen from "./engine/TransitionScreen.jsx";
 import EndScreen from "./engine/EndScreen.jsx";
+=======
+>>>>>>> origin/main
 import { findRecipe, findNearMiss, randomLine } from "./engine/Crafting.js";
 import { lastHotspotClick } from "./engine/Hotspot.jsx";
 import { CHAPTERS } from "./chapters/index.js";
