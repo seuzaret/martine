@@ -1856,7 +1856,14 @@ export default function App() {
   const effectiveInv = mode === "jeu2"
     ? Object.keys(chapter.items || {}).filter((id) => chapter.items[id]?.anachronic)
     : inv;
-  const sceneProps = { collect, action, reveal, flags, made, inv: effectiveInv, mode, queteQui: mode === "jeu2" ? null : (chapter.quete?.[quete]?.perso ?? null) };
+  /* Le "?" doré au-dessus des personnages est masqué partout sauf dans les
+     scènes où la quête est vraiment chronologique (château de Bannister au
+     Moyen Âge). Ailleurs le joueur explore librement. */
+  const CHRONO_SCENES = new Set(["chateau", "retour"]);
+  const queteQuiVal = mode === "jeu2"
+    ? null
+    : (CHRONO_SCENES.has(tab) ? (chapter.quete?.[quete]?.perso ?? null) : null);
+  const sceneProps = { collect, action, reveal, flags, made, inv: effectiveInv, mode, queteQui: queteQuiVal };
 
   /* ---- le carnet imprimable : découvertes regroupées par époque ----
      Les jauges sont dessinées en ■/□ : ça reste lisible en noir et blanc,
