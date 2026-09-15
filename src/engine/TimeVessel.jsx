@@ -285,24 +285,28 @@ function CockpitPhase({ onGo, onCancel }) {
             </radialGradient>
           </defs>
 
-          {/* Demi-cercle métallique — la console épouse la courbe du cockpit */}
-          <path d="M 0 420 L 0 60 Q 500 -140 1000 60 L 1000 420 Z" fill="url(#ckMetal)" />
-          {/* Bord supérieur brillant */}
-          <path d="M 0 60 Q 500 -140 1000 60" stroke="url(#ckMetalHi)" strokeWidth="6" fill="none" />
-          <path d="M 0 68 Q 500 -132 1000 68" stroke="rgba(255,255,255,0.15)" strokeWidth="2" fill="none" />
+          {/* Console : dashboard qui s'incurve en demi-lune (concave, s'ouvre
+             vers le pilote au centre) — le bord supérieur DESCEND au centre. */}
+          <path d="M 0 420 L 0 30 Q 500 260 1000 30 L 1000 420 Z" fill="url(#ckMetal)" />
+          {/* Bord supérieur brillant : la vraie courbe visible du cockpit */}
+          <path d="M 0 30 Q 500 260 1000 30" stroke="url(#ckMetalHi)" strokeWidth="6" fill="none" />
+          <path d="M 0 38 Q 500 268 1000 38" stroke="rgba(255,255,255,0.18)" strokeWidth="2" fill="none" />
+          {/* Deuxième arc parallèle (double liseré chromé, effet cerclage) */}
+          <path d="M 0 60 Q 500 280 1000 60" stroke="#8a98a8" strokeWidth="2" fill="none" opacity="0.5" />
           {/* Rivets le long du bord supérieur */}
-          {Array.from({ length: 16 }).map((_, i) => {
-            const t = i / 15;
+          {Array.from({ length: 18 }).map((_, i) => {
+            const t = i / 17;
             const x = t * 1000;
-            const y = 60 - 200 * (4 * t * (1 - t));
-            return <circle key={i} cx={x} cy={y + 10} r="3.5" fill="#141c26" stroke="#6a7a88" strokeWidth="1" />;
+            const y = 30 * (1 - t) * (1 - t) + 2 * 260 * (1 - t) * t + 30 * t * t;
+            return <circle key={i} cx={x} cy={y + 12} r="3" fill="#141c26" stroke="#6a7a88" strokeWidth="0.8" />;
           })}
 
-          {/* Helper : y le long de la courbe du cockpit à l'abscisse x */}
+          {/* Helper : y le long de la courbe du bord haut du cockpit (dashboard).
+             Correspond à Q 500 260 1000 30 → y(t) = 30 + 460·t·(1-t). */}
           {(() => {
-            const arcY = (x) => 60 - 400 * (x / 1000) * (1 - x / 1000);
-            const DIAL_R = 28;      // plus petit qu'avant (46 → 28)
-            const BTN_R = 8;        // plus petit qu'avant (16 → 8)
+            const arcY = (x) => 30 + 460 * (x / 1000) * (1 - x / 1000);
+            const DIAL_R = 26;
+            const BTN_R = 8;
             const dials = [
               { x: 90,  hue: "#ffd166" },
               { x: 220, hue: "#7fd8ff" },
