@@ -167,13 +167,6 @@ export default function SceneParis({ collect, action, reveal, made = [], mode })
             <path d="M-4 18 v40" stroke="#3a2410" strokeWidth="1" />
           </g>
 
-          {/* « ? » d'accueil au-dessus du marchand */}
-          {!acheteFait && (
-            <g transform="translate(-18,32)" style={{ animation: "float 2s ease-in-out infinite" }}>
-              <circle r="12" fill="#ffd166" stroke="#8a5a20" strokeWidth="1.8" />
-              <text y="4" textAnchor="middle" fontSize="16" fontWeight="800" fill="#3a2410">?</text>
-            </g>
-          )}
         </g>
       </PLayer>
 

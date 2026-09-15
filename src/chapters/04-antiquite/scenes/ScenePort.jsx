@@ -186,11 +186,6 @@ export default function ScenePort({ collect, action, reveal, inv = [] }) {
           {/* petite barbe soignée */}
           <path d="M-4 -20 q4 3 8 0" stroke="#3a2418" strokeWidth="1.2" fill="none" />
         </g>
-        <g transform="translate(560,436)" style={{ animation: "float 2s ease-in-out infinite" }}>
-          <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
-          <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
-        </g>
-
         {/* Débardeur qui porte une amphore sur l'épaule */}
         <g transform="translate(400,510)">
           <ellipse cx="0" cy="30" rx="20" ry="4" fill="#0a0604" opacity="0.5" />

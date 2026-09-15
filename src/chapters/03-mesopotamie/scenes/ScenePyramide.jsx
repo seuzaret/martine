@@ -203,11 +203,6 @@ export default function ScenePyramide({ collect, action, reveal, inv = [] }) {
           {/* barbiche postiche pharaonique (petite) */}
           <path d="M-1 -20 L0 -14 L1 -20 L1 -14 L-1 -14 Z" fill="#3a2818" />
         </g>
-        <g transform="translate(500,420)" style={{ animation: "float 2s ease-in-out infinite" }}>
-          <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
-          <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
-        </g>
-
         {/* Ouvrier au sol qui pousse un bloc (au premier plan gauche) */}
         <g transform="translate(340,510)">
           <ellipse cx="0" cy="14" rx="20" ry="4" fill="#0a0604" opacity="0.5" />

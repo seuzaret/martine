@@ -201,12 +201,6 @@ export default function SceneSalon({ collect, action, reveal, made = [], flags =
           <path d="M-4 8 q4 2 8 0" stroke="#8a5040" strokeWidth="1.2" fill="none" strokeLinecap="round" />
         </g>
 
-        {!capte && (
-          <g transform="translate(870,300)" style={{ animation: "float 2s ease-in-out infinite" }}>
-            <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
-            <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
-          </g>
-        )}
       </PLayer>
 
       {/* ═══ zones cliquables ═══ */}

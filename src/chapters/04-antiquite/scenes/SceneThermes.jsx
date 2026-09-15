@@ -163,11 +163,6 @@ export default function SceneThermes({ collect, action, reveal, inv = [] }) {
           <circle cx="-3" cy="-30" r="1.2" fill="#0a0806" />
           <circle cx="3" cy="-30" r="1.2" fill="#0a0806" />
         </g>
-        <g transform="translate(720,428)" style={{ animation: "float 2s ease-in-out infinite" }}>
-          <circle r="14" fill="#ffd166" stroke="#8a5a20" strokeWidth="2" />
-          <text y="5" textAnchor="middle" fontSize="18" fontWeight="800" fill="#3a2410">?</text>
-        </g>
-
         {/* Petits objets thermaux : strigile + fiole d'huile posés (collectable action) */}
         <g transform="translate(280,510)">
           <ellipse cx="0" cy="14" rx="24" ry="3" fill="#0a0604" opacity="0.5" />
