@@ -125,6 +125,11 @@ const HINTS = [
 const NEAR_MISS = [
   { pair: ["poeme", "tsf"], line: "Le poème est à LIRE depuis Londres, pas à mettre sur le poste de Paris ! Retourne au studio BBC." },
   { pair: ["couverture", "micro"], line: "Une couverture sur un micro ? Étouffer sa propre émission serait ballot ! La couverture est pour PARIS, pas Londres." },
+  { pair: ["antenne", "micro"], line: "Un fil d'antenne branché sur le micro du studio ? Le micro capte déjà la voix, il n'a pas besoin d'une antenne. L'antenne est pour la RÉCEPTION à Paris, pas pour l'émission." },
+  { pair: ["poeme", "antenne"], line: "Coller le poème à l'antenne ne l'aidera pas à voyager plus loin. Il doit être LU à voix haute, devant le micro branché sur le pupitre." },
+  { pair: ["fiches_calcul", "eniac_machine"], line: "Les fiches ne s'enfoncent pas n'importe où dans l'ENIAC : c'est la FENTE À CARTES, sur la baie de gauche, qui les lit. Cherche bien." },
+  { pair: ["cables", "eniac_fente"], line: "Les câbles ne se glissent pas dans la fente à cartes : ils se BRANCHENT sur le plugboard de l'ENIAC. Cherche la machine elle-même." },
+  { pair: ["cables", "pupitre"], line: "Les câbles de programmation appartiennent à Philadelphie, pas à la BBC. Le pupitre du speaker n'attend qu'un micro." },
 ];
 
 const FAIL_LINES = [
