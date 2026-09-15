@@ -223,9 +223,6 @@ export default function SceneEniac({ collect, action, reveal, made = [], flags =
         </g>
 
         {/* « ? » de quête au-dessus de Kay (tant que l'ENIAC n'est pas allumé) */}
-        {!allume && (
-        )}
-
         {/* bandeau de résultat quand allumé : imprimante qui crache */}
         {allume && (
           <g transform="translate(500,470)">

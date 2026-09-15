@@ -291,8 +291,6 @@ export default function SceneBureau1990({ collect, action, reveal, made = [], fl
         </g>
 
         {/* « ? » de quête au-dessus de Céline */}
-        {!grave && (
-        )}
       </PLayer>
 
       {/* ═══ zones cliquables ═══ */}

@@ -164,8 +164,6 @@ export default function SceneBBC({ collect, action, reveal, made = [], flags = [
         )}
 
         {/* « ? » Q&A d'accueil au-dessus d'Arthur (tant que le message n'est pas transmis) */}
-        {!enOnde && (
-        )}
       </PLayer>
 
       {/* ═══ zones cliquables ═══ */}

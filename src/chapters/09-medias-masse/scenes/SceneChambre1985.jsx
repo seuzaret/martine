@@ -299,9 +299,6 @@ export default function SceneChambre1985({ collect, action, reveal, made = [], f
         </g>
 
         {/* « ? » de quête au-dessus de Julien */}
-        {!cassetteFaite && (
-        )}
-
         {/* ANACHRONISME : boîtier AirPods sur le parquet au premier plan */}
         {!made.includes("airpods") && mode !== "jeu2" && (
           <g transform="translate(240,520) rotate(-8)">

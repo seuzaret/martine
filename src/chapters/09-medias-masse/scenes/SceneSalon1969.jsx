@@ -401,8 +401,6 @@ export default function SceneSalon1969({ collect, action, reveal, made = [], fla
         </g>
 
         {/* « ? » de quête au-dessus de Nathalie */}
-        {!capte && (
-        )}
       </PLayer>
 
       {/* ═══ zones cliquables ═══ */}

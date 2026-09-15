@@ -201,8 +201,6 @@ export default function SceneSalon({ collect, action, reveal, made = [], flags =
           <path d="M-4 8 q4 2 8 0" stroke="#8a5040" strokeWidth="1.2" fill="none" strokeLinecap="round" />
         </g>
 
-        {!capte && (
-        )}
       </PLayer>
 
       {/* ═══ zones cliquables ═══ */}
