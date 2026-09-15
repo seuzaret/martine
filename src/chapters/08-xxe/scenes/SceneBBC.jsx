@@ -185,24 +185,9 @@ export default function SceneBBC({ collect, action, reveal, made = [], flags = [
 
       {/* ═══ AVANT-PLAN : ARTHUR au PUPITRE + micro branché (quand posé) ═══ */}
       <PLayer depth={1}>
-        {/* PUPITRE du speaker (support de dépôt) */}
-        <g>
-          <rect x="580" y="360" width="220" height="80" fill="url(#bbc-desk)" stroke="#2a1608" strokeWidth="3" />
-          <rect x="580" y="360" width="220" height="14" fill="#5a3818" />
-          {/* pied et fils */}
-          <rect x="590" y="440" width="14" height="60" fill="#3a2410" />
-          <rect x="776" y="440" width="14" height="60" fill="#3a2410" />
-          {/* boutons/potards */}
-          {[620, 660, 700, 740, 780].map((x, i) => (
-            <g key={i}><circle cx={x} cy="392" r="7" fill="#c8963e" stroke="#5a3818" strokeWidth="1.5" /><path d={`M${x} 388 L${x} 396`} stroke="#5a3818" strokeWidth="1.5" /></g>
-          ))}
-          {/* jack ouvert (à brancher) */}
-          <circle cx="820" cy="392" r="9" fill="#0a0604" stroke={microBranche ? "#5eff9e" : "#c8963e"} strokeWidth="2"
-            style={microBranche ? {} : { animation: "pulse 1.6s ease-in-out infinite" }} />
-        </g>
-
-        {/* silhouette d'ARTHUR derrière le pupitre (dessiné AVANT le micro pour que le
-            micro passe devant lui — sinon on ne voit pas la radio) */}
+        {/* silhouette d'ARTHUR — dessinée AVANT le pupitre pour qu'il passe DERRIÈRE
+            (bas du corps caché par le meuble) ; le micro sera dessiné APRÈS le pupitre
+            pour rester devant lui, sinon on ne verrait plus le micro. */}
         <g transform="translate(720,300)">
           {/* torse */}
           <path d="M-46 60 Q-40 20 0 14 Q40 20 46 60 L46 100 L-46 100 Z" fill="#1a2438" />
@@ -227,7 +212,25 @@ export default function SceneBBC({ collect, action, reveal, made = [], flags = [
           <ellipse cx="18" cy="15" rx="5" ry="6" fill="#3a3a3a" />
         </g>
 
-        {/* le MICRO EN PLACE (quand branché) — dessiné APRÈS Arthur pour passer DEVANT lui */}
+        {/* PUPITRE du speaker (support de dépôt) — dessiné APRÈS Arthur pour cacher
+            le bas de son corps. Sa tranche supérieure est à y=360 : la cravate
+            se coupe au niveau de la ceinture. */}
+        <g>
+          <rect x="580" y="360" width="220" height="80" fill="url(#bbc-desk)" stroke="#2a1608" strokeWidth="3" />
+          <rect x="580" y="360" width="220" height="14" fill="#5a3818" />
+          {/* pied et fils */}
+          <rect x="590" y="440" width="14" height="60" fill="#3a2410" />
+          <rect x="776" y="440" width="14" height="60" fill="#3a2410" />
+          {/* boutons/potards */}
+          {[620, 660, 700, 740, 780].map((x, i) => (
+            <g key={i}><circle cx={x} cy="392" r="7" fill="#c8963e" stroke="#5a3818" strokeWidth="1.5" /><path d={`M${x} 388 L${x} 396`} stroke="#5a3818" strokeWidth="1.5" /></g>
+          ))}
+          {/* jack ouvert (à brancher) */}
+          <circle cx="820" cy="392" r="9" fill="#0a0604" stroke={microBranche ? "#5eff9e" : "#c8963e"} strokeWidth="2"
+            style={microBranche ? {} : { animation: "pulse 1.6s ease-in-out infinite" }} />
+        </g>
+
+        {/* le MICRO EN PLACE (quand branché) — dessiné APRÈS le pupitre pour passer DEVANT lui */}
         {microBranche && (
           <g transform="translate(690,340)">
             {/* pied */}
