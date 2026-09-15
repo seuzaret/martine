@@ -248,7 +248,7 @@ function CockpitPhase({ onGo, onCancel }) {
 
       {/* ---- BAS : console demi-cercle métal avec cadrans et boutons ---- */}
       <div style={{ position: "relative", height: "42%", minHeight: 280, overflow: "visible" }}>
-        <svg viewBox="0 0 1000 420" preserveAspectRatio="xMidYMax slice"
+        <svg viewBox="0 0 1000 420" preserveAspectRatio="none"
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }}
           aria-hidden="true">
           <defs>
