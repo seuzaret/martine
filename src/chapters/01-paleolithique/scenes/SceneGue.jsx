@@ -74,9 +74,9 @@ export default function SceneGue({ collect, action, reveal, made = [], inv = [] 
         <path d="M0 240 L1000 240 L1000 280 L0 280 Z" fill="#2a3818" opacity="0.35" />
         <path d="M80 250 q40 8 80 0 q40 -6 80 4 M320 260 q40 6 80 -2 M580 254 q40 8 80 0 q40 -8 80 2" stroke="#1a2810" strokeWidth="2" fill="none" opacity="0.5" />
 
-        {/* remous, courants */}
+        {/* remous, courants — étalés jusqu'à la rive droite */}
         {[260, 300, 340, 380, 420].map((y, i) => (
-          <path key={i} d={`M0 ${y} q80 -${4 + i} 160 0 q80 ${4 + i} 160 0 q80 -${4 + i} 160 0 q80 ${4 + i} 160 0 q80 -${4 + i} 160 0`} stroke="#b0d0e8" strokeWidth="1.2" fill="none" opacity={0.4 + (i % 2) * 0.15} />
+          <path key={i} d={`M0 ${y} q80 -${4 + i} 160 0 q80 ${4 + i} 160 0 q80 -${4 + i} 160 0 q80 ${4 + i} 160 0 q80 -${4 + i} 160 0 q80 ${4 + i} 160 0 q40 -${4 + i} 80 0`} stroke="#b0d0e8" strokeWidth="1.2" fill="none" opacity={0.4 + (i % 2) * 0.15} />
         ))}
         {/* reflets brillants animés (soleil sur l'eau) */}
         {[[120, 320], [340, 300], [560, 340], [780, 310], [880, 360], [220, 350], [660, 380], [460, 370]].map(([x, y], i) => (
@@ -104,11 +104,23 @@ export default function SceneGue({ collect, action, reveal, made = [], inv = [] 
           </g>
         ))}
 
+        {/* Rochers isolés côté droit (hors du chemin du gué) —
+            purement décoratifs, plus petits, pour que la rivière ne s'arrête
+            pas visuellement à la 5e pierre. */}
+        {[[860, 350, 0.65], [920, 400, 0.55], [820, 415, 0.5]].map(([x, y, s], i) => (
+          <g key={`side-${i}`} transform={`translate(${x},${y}) scale(${s})`}>
+            <ellipse cx="0" cy="12" rx="46" ry="6" fill="#0a1420" opacity="0.5" />
+            <path d="M-32 0 Q-24 -18 0 -20 Q26 -18 32 0 L28 6 Q0 10 -30 6 Z" fill="url(#gu-stone)" stroke="#1a1408" strokeWidth="1.2" />
+            <ellipse cx="-6" cy="-10" rx="10" ry="4" fill="#c8b8a0" opacity="0.45" />
+            <path d="M-28 4 q3 -3 6 0 q-3 3 -6 0 Z" fill="#5a7030" opacity="0.75" />
+          </g>
+        ))}
+
         {/* Poissons dans l'eau — ils nagent horizontalement autour de
             leur position moyenne, avec un peu de derive verticale. Sens
             alterne pour la variete (certains vers la droite, d'autres
             vers la gauche via scale X). */}
-        {[[180, 400, 1], [360, 420, -1], [500, 400, 1], [660, 420, -1], [820, 400, 1]].map(([x, y, dir], i) => (
+        {[[180, 400, 1], [360, 420, -1], [500, 400, 1], [660, 420, -1], [820, 400, 1], [910, 385, -1]].map(([x, y, dir], i) => (
           <g key={i}>
             <animateTransform attributeName="transform" type="translate"
               values={dir === 1
@@ -260,7 +272,7 @@ export default function SceneGue({ collect, action, reveal, made = [], inv = [] 
       {/* ═══ zones cliquables ═══ */}
       <Hotspot cx={120} cy={450} r={40} label="le pêcheur" reveal={reveal} onClick={() => action("pecheur")} />
       <Hotspot cx={400} cy={370} r={80} label="traverser le gué (pierres)" reveal={reveal} onClick={() => action("traverser_gue")} />
-      {[[180, 400], [360, 420], [500, 400], [660, 420], [820, 400]].map(([x, y], i) => (
+      {[[180, 400], [360, 420], [500, 400], [660, 420], [820, 400], [910, 385]].map(([x, y], i) => (
         <Hotspot key={i} cx={x} cy={y} r={16} label="poisson dans l'eau" reveal={reveal} onClick={() => action("pecher")} />
       ))}
       <Hotspot cx={680} cy={528} r={18} label="escargot" item="escargot" reveal={reveal} onClick={() => collect("escargot")} />
