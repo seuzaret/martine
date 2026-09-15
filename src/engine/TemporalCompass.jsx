@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { playCountdown } from "./sfx.js";
 
 /* ============================================================
    PROTOTYPE v5 : Boussole temporelle
@@ -99,12 +100,14 @@ export function TemporalCompass({ onClose, onLock, onCaught, nextLabel }) {
   const phaseRef = useRef("brief");
   useEffect(() => { phaseRef.current = phase; }, [phase]);
 
-  /* Decompte 3 -> 2 -> 1 -> play (une seule fois par phase countdown). */
+  /* Decompte 3 -> 2 -> 1 -> play (une seule fois par phase countdown).
+     Chaque chiffre déclenche son bip ; le 1 sonne comme un GO plus dramatique. */
   useEffect(() => {
     if (phase !== "countdown") return;
     setCountdown(3);
-    const t2 = setTimeout(() => setCountdown(2), 1000);
-    const t1 = setTimeout(() => setCountdown(1), 2000);
+    playCountdown(3);
+    const t2 = setTimeout(() => { setCountdown(2); playCountdown(2); }, 1000);
+    const t1 = setTimeout(() => { setCountdown(1); playCountdown(1); }, 2000);
     const tGo = setTimeout(() => setPhase("play"), 3000);
     return () => { clearTimeout(t2); clearTimeout(t1); clearTimeout(tGo); };
   }, [phase]);
