@@ -23,8 +23,8 @@ import CarteMoyenAge from "./scenes/CarteMoyenAge.jsx";
    LES ÉLÉMENTS
    ------------------------------------------------------------ */
 const ITEMS = {
-  /* ANACHRONISME */
-  cle_usb: { name: "Clé USB", emoji: "💾", anachronic: true, desc: "Une petite clé USB en plastique bleu — l'USB, c'est 1996. Une clé au scriptorium serait bien pratique, mais il faudrait un ordinateur pour la lire !" },
+  /* ANACHRONISME — clin d'œil à Dr Who */
+  tournevis_sonique: { name: "Tournevis sonique", emoji: "🪛", anachronic: true, desc: "Un tube métallique argenté qui bourdonne, avec une pointe cristalline qui s'allume en vert. Il ressemble étrangement à l'outil d'un Docteur voyageur… Il n'ouvrira aucune serrure au scriptorium — laisse-le repartir avec son propriétaire." },
 
   /* Le château */
   fil_laine: { name: "Fil de laine coloré", emoji: "🧶", desc: "Teint de couleurs vives : rouge, ocre, bleu. De quoi broder tout un récit, image après image." },

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Hotspot from "../../../engine/Hotspot.jsx";
 import { PLayer } from "../../../engine/Parallax.jsx";
 
@@ -10,6 +11,14 @@ import { PLayer } from "../../../engine/Parallax.jsx";
    ============================================================ */
 
 export default function SceneCrete({ collect, action, reveal, made = [], inv = [] }) {
+  /* TARDIS caché dans la plaine — clin d'œil à Dr Who. Clic → l'animation
+     de dématérialisation joue (pulsation + fondu), puis disparaît pour de bon. */
+  const [tardisState, setTardisState] = useState("here"); // here | leaving | gone
+  const dematerialize = () => {
+    if (tardisState !== "here") return;
+    setTardisState("leaving");
+    setTimeout(() => setTardisState("gone"), 1600);
+  };
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -92,6 +101,77 @@ export default function SceneCrete({ collect, action, reveal, made = [], inv = [
             <ellipse cx="4" cy="-2" rx="5" ry="2.5" fill="#5a6a30" opacity="0.7" />
           </g>
         ))}
+
+        {/* TARDIS — petite cabine de police bleue posée dans la plaine,
+             clin d'œil au Docteur. Clic → dématérialisation (fondu + pulsation),
+             puis disparaît. */}
+        {tardisState !== "gone" && (
+          <g transform="translate(720,400) scale(0.55)"
+             onClick={dematerialize}
+             style={{ cursor: tardisState === "here" ? "pointer" : "default" }}>
+            <title>Une petite cabine de police bleue…</title>
+            <g style={{
+              transformOrigin: "0px 25px",
+              animation: tardisState === "leaving"
+                ? "tardisFade 1.6s ease-out forwards"
+                : "tardisPulse 2.2s ease-in-out infinite",
+            }}>
+              {/* halo au sol (lueur bleutée) */}
+              <ellipse cx="0" cy="30" rx="18" ry="3" fill="#3a80c8" opacity="0.55" />
+              {/* corps principal — 4 côtés de la boîte, bleu Doctor Who */}
+              <rect x="-14" y="-30" width="28" height="60" fill="#1c3a68" stroke="#0a1a30" strokeWidth="0.6" />
+              {/* montants d'angle plus foncés */}
+              <rect x="-15" y="-30" width="2" height="60" fill="#0e2242" />
+              <rect x="13"  y="-30" width="2" height="60" fill="#0e2242" />
+              {/* panneaux vitrés (fenêtres blanches sur les portes) */}
+              <rect x="-11" y="-24" width="9" height="8" fill="#e8f0ff" stroke="#0a1a30" strokeWidth="0.4" />
+              <rect x="2"   y="-24" width="9" height="8" fill="#e8f0ff" stroke="#0a1a30" strokeWidth="0.4" />
+              {/* barreaux des fenêtres */}
+              <path d="M-11 -20 h9 M2 -20 h9 M-6.5 -24 v8 M6.5 -24 v8" stroke="#0a1a30" strokeWidth="0.4" />
+              {/* enseigne "POLICE BOX" en haut */}
+              <rect x="-14" y="-38" width="28" height="8" fill="#0a1a30" stroke="#000" strokeWidth="0.4" />
+              <text x="0" y="-32" textAnchor="middle" fontSize="4" fill="#e8f0ff"
+                fontFamily="ui-monospace,monospace" fontWeight="700" letterSpacing="0.5">
+                POLICE BOX
+              </text>
+              {/* mini panneaux "Public Call" sur les portes */}
+              <rect x="-11" y="-13" width="9" height="4" fill="#0a1a30" />
+              <rect x="2"   y="-13" width="9" height="4" fill="#0a1a30" />
+              {/* poignée + serrure */}
+              <circle cx="-1" cy="0" r="0.9" fill="#c8b090" />
+              <rect x="-0.8" y="6" width="1.6" height="2" fill="#0a1a30" />
+              {/* toit à corniches */}
+              <rect x="-16" y="-42" width="32" height="4" fill="#0e2242" />
+              <rect x="-14" y="-46" width="28" height="4" fill="#1c3a68" />
+              {/* lanterne au sommet — pulse blanche */}
+              <rect x="-2" y="-52" width="4" height="6" fill="#0a1a30" />
+              <ellipse cx="0" cy="-52" rx="3" ry="3" fill="#fff8e0" opacity="0.9">
+                <animate attributeName="opacity" values="0.4;1;0.4" dur="1.6s" repeatCount="indefinite" />
+              </ellipse>
+              <ellipse cx="0" cy="-52" rx="6" ry="6" fill="#fff8e0" opacity="0.4">
+                <animate attributeName="opacity" values="0.15;0.55;0.15" dur="1.6s" repeatCount="indefinite" />
+              </ellipse>
+              {/* mini couvre-lanterne pyramide */}
+              <path d="M-3 -55 L3 -55 L0 -58 Z" fill="#0e2242" />
+            </g>
+          </g>
+        )}
+        {tardisState === "leaving" && (
+          <style>{`
+            @keyframes tardisFade {
+              0%   { opacity: 1; transform: scale(0.55); filter: none; }
+              30%  { opacity: 1; transform: scale(0.60); filter: brightness(1.4) blur(0.5px); }
+              60%  { opacity: 0.6; transform: scale(0.45); filter: brightness(1.6) blur(1px); }
+              100% { opacity: 0; transform: scale(0.30); filter: brightness(2) blur(2px); }
+            }
+          `}</style>
+        )}
+        <style>{`
+          @keyframes tardisPulse {
+            0%,100% { transform: scale(1); }
+            50%     { transform: scale(1.03); }
+          }
+        `}</style>
         {/* rivière qui serpente — plus détaillée */}
         <path d="M0 430 Q200 410 400 430 Q600 450 800 425 Q900 415 1000 425 L1000 445 Q900 435 800 445 Q600 470 400 450 Q200 430 0 450 Z" fill="#6a95b0" opacity="0.9" />
         {/* reflets sur la rivière */}
