@@ -13,6 +13,8 @@ import JaugeTemporelle from "./engine/JaugeTemporelle.jsx";
 import CheatPanel from "./engine/CheatPanel.jsx";
 import TransitionScreen from "./engine/TransitionScreen.jsx";
 import EndScreen from "./engine/EndScreen.jsx";
+import Jeu2Placeholder from "./engine/Jeu2Placeholder.jsx";
+import EpilogueScreen from "./engine/EpilogueScreen.jsx";
 import { findRecipe, findNearMiss, randomLine } from "./engine/Crafting.js";
 import { lastHotspotClick } from "./engine/Hotspot.jsx";
 import { CHAPTERS } from "./chapters/index.js";
@@ -1523,32 +1525,10 @@ export default function App() {
   /* ---------- écran PLACEHOLDER du JEU 2 (obsolète mais gardé pour compat) */
   if (screen === "jeu2Placeholder") {
     return (
-      <div style={{ minHeight: "100vh", background: "radial-gradient(ellipse at 50% 30%, #14233a 0%, #080d16 70%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, fontFamily: "Palatino, Georgia, serif", color: "#e8eef5" }}>
+      <>
         {cheatPanel}
-        <div style={{ maxWidth: 540, textAlign: "center" }}>
-          <div style={{ fontSize: 58 }}>🌀</div>
-          <div style={{ fontFamily: "ui-monospace,monospace", color: "#7fd8ff", letterSpacing: 3, fontSize: 12, marginTop: 6 }}>JEU 2 · AL3X1A</div>
-          <h1 style={{ fontFamily: TITRE_FONT, fontSize: 38, textTransform: "uppercase", letterSpacing: "0.09em", background: "linear-gradient(100deg, #7fd8ff 0%, #ffd166 60%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", margin: "8px 0 4px" }}>
-            En construction
-          </h1>
-          <p style={{ fontSize: 15, lineHeight: 1.65, color: "#c8d4e2", marginTop: 14 }}>
-            L'enquête pour retrouver Al3x1A n'est pas encore prête à jouer.
-            Ta partie de jeu 2 est déjà réservée dans un slot séparé — dès
-            que les notes, les époques et le remède seront branchés, tu
-            reprendras ici même sans rien perdre.
-          </p>
-          <p style={{ fontSize: 13, lineHeight: 1.6, color: "#8fa3bd", marginTop: 12, fontStyle: "italic" }}>
-            En attendant, tu peux rejouer le voyage principal pour explorer
-            les époques que tu n'as pas encore visitées.
-          </p>
-          <div style={{ marginTop: 24, display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
-            <button onClick={() => { setMode("jeu1"); setScreen("title"); }}
-              style={{ background: "#141b26", color: "#c8d4e2", border: "1px solid #2a3648", borderRadius: 10, padding: "10px 20px", fontWeight: 700, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
-              ← Retour au menu
-            </button>
-          </div>
-        </div>
-      </div>
+        <Jeu2Placeholder onRetourMenu={() => { setMode("jeu1"); setScreen("title"); }} />
+      </>
     );
   }
 
@@ -1573,85 +1553,18 @@ export default function App() {
     );
   }
 
-  /* ---------- écran ÉPILOGUE : « Ton message pour +20 000 ans » ----------
-     Pas de décor, pas de besace : une question, des supports, et une
-     réponse argumentée de MARTINE. Il n'y a pas de bonne réponse — le
-     but est de lancer le débat en classe. Tout le texte vient de
-     src/chapters/epilogue/data.js. */
+  /* ---------- écran ÉPILOGUE : « Ton message pour +20 000 ans » ---------- */
   if (screen === "epilogue") {
-    const choisi = EPILOGUE.SUPPORTS.find((s) => s.id === epiChoice);
     return (
-      <div style={{ minHeight: "100vh", background: "radial-gradient(ellipse at 50% 20%, #1a2f4a 0%, #080d16 70%)", padding: 20, fontFamily: "Palatino, Georgia, serif", color: "#e8eef5" }}>
+      <>
         {cheatPanel}
-        <div style={{ maxWidth: 660, margin: "0 auto", textAlign: "center" }}>
-          {/* Portrait : ELIAS pour la question (il vient de te la poser),
-              MARTINE pour la réponse (elle est l'experte des supports). */}
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 14 }}>
-            {choisi ? (
-              <Avatar mood="content" size={92} date="+20 000" />
-            ) : (
-              <div style={{ width: 92, height: 110, borderRadius: 12, overflow: "hidden", border: "2px solid #ffd166", boxShadow: "0 6px 18px rgba(0,0,0,0.5)" }}>
-                <PortraitElias mood="content" />
-              </div>
-            )}
-          </div>
-          <div style={{ fontFamily: "ui-monospace,monospace", color: choisi ? "#5eff9e" : "#ffd166", letterSpacing: 3, fontSize: 11, marginTop: 8 }}>
-            {choisi ? "MARTINE" : "ELIAS · ULTIME QUESTION"}
-          </div>
-
-          {!choisi ? (
-            <>
-              {EPILOGUE.QUESTION.map((l, i) => (
-                <p key={i} style={{ fontSize: 15.5, lineHeight: 1.65, color: "#c8d4e2", margin: "10px 0" }}>« {l} »</p>
-              ))}
-              <h1 style={{ fontFamily: "ui-monospace,monospace", color: "#ffd166", fontSize: 24, letterSpacing: 2, marginTop: 20 }}>
-                {EPILOGUE.QUESTION_TITRE}
-              </h1>
-              <p style={{ color: "#8fa3bd", fontSize: 12.5, fontStyle: "italic", marginTop: 2 }}>
-                Il n'y a pas de bonne réponse. Choisis, et écoute ce que MARTINE en pense.
-              </p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10, marginTop: 20, marginBottom: 40 }}>
-                {EPILOGUE.SUPPORTS.map((s) => (
-                  <button key={s.id} onClick={() => { playSfx("craft"); setEpiChoice(s.id); }}
-                    style={{ background: "#101827", border: "1px solid #2a3648", borderRadius: 12, padding: "14px 10px", cursor: "pointer", color: "#e8eef5", fontFamily: "Palatino, Georgia, serif", display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                    <span style={{ fontSize: 30 }}>{s.emoji}</span>
-                    <span style={{ fontSize: 14, fontWeight: 700 }}>{s.name}</span>
-                    <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, color: "#8fa3bd" }}>
-                      ⏳ durabilité {s.jauges.durabilite}/5
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </>
-          ) : (
-            <>
-              <div style={{ fontSize: 52, marginTop: 10 }}>{choisi.emoji}</div>
-              <h1 style={{ fontFamily: "ui-monospace,monospace", color: "#ffd166", fontSize: 22, letterSpacing: 1, margin: "4px 0 0" }}>
-                {choisi.name}
-              </h1>
-              {/* la réponse argumentée de MARTINE */}
-              <div style={{ background: "#101827", border: "1px solid #2a3648", borderRadius: 12, padding: "14px 18px", marginTop: 14, textAlign: "left" }}>
-                <p style={{ fontSize: 15, lineHeight: 1.7, color: "#e8eef5", margin: 0 }}>« {choisi.reponse} » — MARTINE</p>
-                <div style={{ marginTop: 12 }}><Gauges values={choisi.jauges} /></div>
-              </div>
-              {/* la chute : la même quel que soit le choix */}
-              <div style={{ background: "#0e1420", border: "1px solid #5a4a20", borderRadius: 12, padding: "14px 18px", marginTop: 12, textAlign: "left" }}>
-                <p style={{ fontSize: 14.5, lineHeight: 1.7, color: "#ffd166", fontStyle: "italic", margin: 0 }}>« {EPILOGUE.CHUTE} »</p>
-              </div>
-              <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", margin: "20px 0 40px" }}>
-                <button onClick={() => setEpiChoice(null)}
-                  style={{ background: "transparent", color: "#8fa3bd", border: "1px solid #2a3648", borderRadius: 12, padding: "11px 20px", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "ui-monospace,monospace" }}>
-                  ← Essayer un autre support
-                </button>
-                <button onClick={() => setScreen("end")}
-                  style={{ background: "#5eff9e", color: "#06110b", border: "none", borderRadius: 12, padding: "12px 26px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 1.5, boxShadow: "0 0 24px rgba(94,255,158,0.35)" }}>
-                  LE BILAN DU VOYAGE →
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+        <EpilogueScreen
+          epiChoice={epiChoice}
+          onChoose={setEpiChoice}
+          onReset={() => setEpiChoice(null)}
+          onEnd={() => setScreen("end")}
+        />
+      </>
     );
   }
 
