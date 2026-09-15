@@ -16,18 +16,60 @@ export default function SceneBureau1990({ collect, action, reveal, made = [], fl
   return (
     <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
       <defs>
-        <linearGradient id="b90-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#e0d8c8" /><stop offset="100%" stopColor="#8a8478" /></linearGradient>
-        <linearGradient id="b90-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#4a5060" /><stop offset="100%" stopColor="#1a1e28" /></linearGradient>
-        <linearGradient id="b90-desk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#c8b090" /><stop offset="100%" stopColor="#6a5030" /></linearGradient>
-        <linearGradient id="b90-pc" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#e0d0b0" /><stop offset="100%" stopColor="#a89878" /></linearGradient>
+        <linearGradient id="b90-wall" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor="#e8dccc" />
+          <stop offset="45%"  stopColor="#d0c4b0" />
+          <stop offset="100%" stopColor="#8a8478" />
+        </linearGradient>
+        <linearGradient id="b90-floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor="#4a5060" />
+          <stop offset="55%"  stopColor="#2c3240" />
+          <stop offset="100%" stopColor="#12161e" />
+        </linearGradient>
+        <linearGradient id="b90-desk" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor="#d8c098" />
+          <stop offset="55%"  stopColor="#a88a5c" />
+          <stop offset="100%" stopColor="#6a5030" />
+        </linearGradient>
+        <linearGradient id="b90-pc" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor="#efdfc0" />
+          <stop offset="45%"  stopColor="#d8c090" />
+          <stop offset="100%" stopColor="#a89878" />
+        </linearGradient>
+        {/* grain fin pour le mur et le sol */}
+        <filter id="b90-grain" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.4 0" result="a" />
+          <feComposite in="a" in2="SourceGraphic" operator="in" />
+        </filter>
+        {/* marbrures de la moquette */}
+        <filter id="b90-mottle" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="3" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0" result="a" />
+          <feComposite in="a" in2="SourceGraphic" operator="in" />
+        </filter>
+        {/* halo doux pour la lueur d'écran */}
+        <filter id="b90-blur" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="6" />
+        </filter>
+        {/* lueur bleutée du moniteur reflétée sur Céline */}
+        <radialGradient id="b90-screenGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stopColor="#7fd8ff" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#7fd8ff" stopOpacity="0" />
+        </radialGradient>
       </defs>
 
       {/* ═══ MUR beige + moquette gris-bleu (open-space années 90) ═══ */}
       <PLayer depth={4}>
         <rect width="1000" height="560" fill="url(#b90-wall)" />
+        {/* patine du mur : grain fin + halo doré près de la fenêtre */}
+        <rect width="1000" height="440" fill="#5a4028" opacity="0.14" filter="url(#b90-grain)" />
+        <ellipse cx="390" cy="140" rx="240" ry="120" fill="#f0dcb0" opacity="0.25" filter="url(#b90-blur)" />
         {/* frise horizontale */}
         <rect x="0" y="220" width="1000" height="2" fill="#8a7060" />
         <rect x="0" y="222" width="1000" height="6" fill="#6a5040" />
+        {/* petit reflet doré sous la frise (lumière rasante du matin par la fenêtre) */}
+        <rect x="0" y="228" width="1000" height="1" fill="#f0d8b0" opacity="0.35" />
 
         {/* FENETRE : vue open-space sur les tours de La Defense (ou tout
             quartier d'affaires 90s), ciel matin bleute + skyline dentelee. */}
@@ -109,6 +151,13 @@ export default function SceneBureau1990({ collect, action, reveal, made = [], fl
       {/* ═══ BUREAU + PC ═══ */}
       <PLayer depth={2}>
         <rect y="440" width="1000" height="120" fill="url(#b90-floor)" />
+        {/* moquette gris-bleu : mottling + grain */}
+        <rect y="440" width="1000" height="120" fill="#0a1420" opacity="0.35" filter="url(#b90-mottle)" />
+        <rect y="440" width="1000" height="120" fill="#1a2028" opacity="0.35" filter="url(#b90-grain)" />
+        {/* plinthe */}
+        <rect y="438" width="1000" height="4" fill="#5a4838" />
+        {/* halo bleuté sous l'écran (lueur cathodique sur la moquette) */}
+        <ellipse cx="560" cy="450" rx="200" ry="16" fill="#7fd8ff" opacity="0.14" filter="url(#b90-blur)" />
 
         {/* BUREAU */}
         <g>
@@ -258,6 +307,8 @@ export default function SceneBureau1990({ collect, action, reveal, made = [], fl
 
       {/* ═══ AVANT-PLAN : CÉLINE assise devant le bureau ═══ */}
       <PLayer depth={1}>
+        {/* Halo cathodique bleuté sur le visage de Céline — l'écran l'éclaire */}
+        <ellipse cx="560" cy="410" rx="80" ry="60" fill="url(#b90-screenGlow)" style={{ pointerEvents: "none" }} />
         <g transform="translate(560,470)">
           {/* fauteuil de bureau à roulettes */}
           <path d="M-40 -10 L40 -10 L34 40 L-34 40 Z" fill="#1a1a1a" />
