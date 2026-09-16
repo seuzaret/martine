@@ -16,6 +16,8 @@ import EndScreen from "./engine/EndScreen.jsx";
 import Jeu2Placeholder from "./engine/Jeu2Placeholder.jsx";
 import EpilogueScreen from "./engine/EpilogueScreen.jsx";
 import CarnetPrint from "./engine/CarnetPrint.jsx";
+import PortraitAl3x1AInScene from "./engine/PortraitAl3x1AInScene.jsx";
+import SosChooserOverlay from "./engine/SosChooserOverlay.jsx";
 import { findRecipe, findNearMiss, randomLine } from "./engine/Crafting.js";
 import { lastHotspotClick } from "./engine/Hotspot.jsx";
 import { CHAPTERS } from "./chapters/index.js";
@@ -86,30 +88,6 @@ class DecorErrorBoundary extends Component {
    au sein d'un <svg viewBox="0 0 1000 560"> (le viewBox partage du decor).
    Coordonnees relatives au groupe parent (translate deja applique). Taille
    totale : ~80 px de haut. */
-function PortraitAl3x1AInScene() {
-  return (
-    <g>
-      {/* halo bleute derriere la silhouette pour la reperer sans marqueur */}
-      <ellipse cx="0" cy="0" rx="42" ry="52" fill="rgba(127,216,255,0.22)" />
-      <ellipse cx="0" cy="0" rx="28" ry="38" fill="rgba(127,216,255,0.32)" />
-      {/* Corps : tunique de voyage grise */}
-      <path d="M-14 40 L-14 -6 Q-14 -14 -6 -14 L6 -14 Q14 -14 14 -6 L14 40 Z" fill="#606878" stroke="#3a4048" strokeWidth="1" />
-      {/* insigne chronaute doree */}
-      <circle cx="-8" cy="0" r="2.4" fill="#c8a848" stroke="#5a4020" strokeWidth="0.4" />
-      {/* cou + tete */}
-      <ellipse cx="0" cy="-18" rx="4" ry="3" fill="#d0a888" />
-      <ellipse cx="0" cy="-26" rx="9" ry="10" fill="#d0a888" stroke="#5a3818" strokeWidth="0.6" />
-      {/* cheveux mi-longs androgynes */}
-      <path d="M-9 -30 Q-9 -38 0 -38 Q9 -38 9 -30 L9 -22 Q6 -20 0 -22 Q-6 -20 -9 -22 Z" fill="#4a3828" />
-      {/* yeux (petits points visibles pour rendre le regard reperable) */}
-      <circle cx="-3" cy="-26" r="0.9" fill="#3a2818" />
-      <circle cx="3" cy="-26" r="0.9" fill="#3a2818" />
-      {/* petit sourire */}
-      <path d="M-2 -22 Q0 -21 2 -22" stroke="#5a2818" strokeWidth="0.6" fill="none" strokeLinecap="round" />
-    </g>
-  );
-}
-
 /* ============================================================
    MARTINE — Application principale
    Trois écrans : titre → jeu → fin.
@@ -2265,47 +2243,20 @@ export default function App() {
       })()}
 
       {/* ─── CHOIX du support SOS en fin de chapitre ─── */}
-      {sosChooserOpen && (() => {
-        const chapMsgs = msgs.filter((id) => chapter.messages?.[id]).map((id) => ({ id, ...chapter.messages[id] }));
-        const alreadyChosen = sosSent.find((id) => chapMsgs.some((m) => m.id === id));
-        return (
-          <div style={{ position: "fixed", inset: 0, background: "rgba(4,8,14,0.88)", zIndex: 85, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" }}>
-            <div style={{ maxWidth: 720, width: "100%", maxHeight: "94vh", overflowY: "auto", background: "#17110a", border: "2px solid #c8963e", borderRadius: 16, padding: 24, color: "#efe6d2", fontFamily: "Palatino, Georgia, serif" }}>
-              <div style={{ textAlign: "center", fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3, color: "#e0a848" }}>🆘 CHOIX DU SUPPORT SOS · CHAPITRE {chapterIndex + 1}</div>
-              <h2 style={{ textAlign: "center", margin: "8px 0 12px", color: "#ffd166", fontSize: 22 }}>Quel support portera ton SOS ?</h2>
-              <p style={{ textAlign: "center", fontSize: 13.5, color: "#c8b090", margin: "0 0 18px" }}>
-                Tu ne peux en choisir <strong>qu'un seul</strong> par chapitre. Plus la <strong>durabilité</strong> du support est haute, plus ton signal atteint l'équipe de sauvetage — donc plus de flux temporel gagné.
-              </p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
-                {chapMsgs.map((m) => {
-                  const dur = m.jauges?.durabilite ?? 1;
-                  return (
-                    <button key={m.id}
-                      onClick={() => {
-                        setSosSent((v) => v.includes(m.id) ? v : [...v, m.id]);
-                        bumpFlux(dur);
-                        setSosChooserOpen(false);
-                        setSosOpen(true); // lance l'animation Morse, qui enchaînera sur le saut
-                      }}
-                      style={{ background: "#2a1608", border: "2px solid #5a4028", borderRadius: 10, padding: "18px 14px", cursor: "pointer", color: "inherit", fontFamily: "inherit", textAlign: "center", transition: "transform .15s, border-color .15s, box-shadow .15s" }}
-                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#e0a848"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 22px rgba(200,150,62,0.35)"; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#5a4028"; e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}>
-                      <div style={{ fontSize: 40, marginBottom: 6 }}>{m.emoji}</div>
-                      <div style={{ fontWeight: 700, fontSize: 13, color: "#ffd166", lineHeight: 1.3 }}>{m.title}</div>
-                    </button>
-                  );
-                })}
-              </div>
-              {alreadyChosen && (
-                <p style={{ textAlign: "center", marginTop: 14, color: "#e08048", fontSize: 12 }}>⚠ Tu as déjà choisi un support pour ce chapitre. Le nouveau remplacera l'ancien.</p>
-              )}
-              <div style={{ marginTop: 16, textAlign: "center", fontSize: 11, color: "#7a6a4a", fontStyle: "italic" }}>
-                (Un vieux dessin pariétal dure plus longtemps qu'une cassette — c'est ça, la leçon.)
-              </div>
-            </div>
-          </div>
-        );
-      })()}
+      {sosChooserOpen && (
+        <SosChooserOverlay
+          chapterIndex={chapterIndex}
+          chapter={chapter}
+          msgs={msgs}
+          sosSent={sosSent}
+          onChoose={(msgId, dur) => {
+            setSosSent((v) => v.includes(msgId) ? v : [...v, msgId]);
+            bumpFlux(dur);
+            setSosChooserOpen(false);
+            setSosOpen(true); // lance l'animation Morse, qui enchaînera sur le saut
+          }}
+        />
+      )}
 
       {modal?.type === "carte" && (
         <WorldMap Carte={chapter.carte} tab={tab} titre={chapter.epoque} onClose={() => setModal(null)} />
