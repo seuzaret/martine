@@ -461,6 +461,20 @@ export default function App() {
     setFlux(0);
     setTab(CHAPTERS[i].startScene);
     setDialog({ lines: CHAPTERS[i].intro, idx: 0, mood: "neutre" });
+    /* SMS d'Al3x1a à l'arrivée : commentaire sur ce qu'on vient de faire
+       + intro de l'époque qu'on découvre. Poussé une seule fois par
+       chapitre (rescue via phoneHistory ci-dessous). */
+    if (i > 0 && mode === "jeu1") {
+      const msgId = `arrival_${i}`;
+      if (AL3X1A_MESSAGES[msgId]) {
+        const alreadyDelivered = phoneHistory.some((h) => h && h.id === msgId)
+          || phoneQueue.includes(msgId);
+        if (!alreadyDelivered) {
+          setPhoneQueue((q) => [...q, msgId]);
+          playPhonePing();
+        }
+      }
+    }
     setScreen("play");
   };
 

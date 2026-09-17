@@ -481,6 +481,11 @@ function SlideArrival({ onDone }) {
           <path d="M-4 0 Q-2 -8 2 -12 Q4 -6 2 0 Z" fill="#ff8030" />
         </g>
 
+<<<<<<< HEAD
+        {/* MARTINE posée proprement à droite */}
+        <g transform="translate(600,430) scale(0.65)">
+          <TimeMachine landed={true} />
+=======
         {/* JOUEUR — silhouette debout à côté de MARTINE (pas de crash) */}
         <g transform="translate(400,420)">
           {/* jambes */}
@@ -500,8 +505,15 @@ function SlideArrival({ onDone }) {
           <circle cx="-3" cy="-30" r="1.3" fill="#2a1808" />
           <circle cx="3" cy="-30" r="1.3" fill="#2a1808" />
           <path d="M-2 -25 Q0 -23 2 -25" stroke="#5a2818" strokeWidth="0.9" fill="none" strokeLinecap="round" />
+>>>>>>> origin/main
         </g>
+        {/* Zone cliquable invisible sur MARTINE pour avancer les dialogues */}
+        {!lastStep && (
+          <circle cx="600" cy="380" r="70" fill="transparent" onClick={clickMartine} style={{ cursor: 'pointer' }} />
+        )}
 
+<<<<<<< HEAD
+=======
         {/* MARTINE posée proprement à droite */}
         <g transform="translate(600,430) scale(0.65)">
           <TimeMachine landed={true} />
@@ -511,6 +523,7 @@ function SlideArrival({ onDone }) {
           <circle cx="600" cy="380" r="70" fill="transparent" onClick={clickMartine} style={{ cursor: 'pointer' }} />
         )}
 
+>>>>>>> origin/main
         {/* Bulle MARTINE */}
         <Bubble x={dialogs[step].pos.x} y={dialogs[step].pos.y} w={340}
           text={dialogs[step].lines}
