@@ -1,6 +1,7 @@
 import Hotspot from "../../../engine/Hotspot.jsx";
 import { PLayer } from "../../../engine/Parallax.jsx";
 import { GrassTuft, Birds } from "./decor.jsx";
+import TimeMachine from "../../../engine/TimeMachine.jsx";
 
 /* ============================================================
    CHAPITRE 1 — Tableau : devant la grotte (tableau de départ)
@@ -9,7 +10,8 @@ import { GrassTuft, Birds } from "./decor.jsx";
    roche et de sol (grain), lumière rasante du couchant,
    ombres longues, végétation détaillée, premier plan qui cadre.
    À trouver ici : l'ocre, la liane. On peut entrer dans la
-   grotte (action "cave") ou examiner l'épave (action "wreck").
+   grotte (action "cave") ou revenir à MARTINE (action "wreck",
+   nom conservé pour compat, mais elle est posée proprement).
    Les zones cliquables n'ont pas bougé.
    ============================================================ */
 
@@ -259,58 +261,13 @@ export default function SceneExterieur({ collect, action, reveal, made = [], que
 
       {/* ═══ premier plan (bouge le plus) ═══ */}
       <PLayer depth={3}>
-      {/* LA TRACE DU CRASH : MARTINE a rebondi deux fois puis labouré
-          le sol en glissant jusqu'à sa position actuelle */}
+      {/* MARTINE : le vaisseau, posé proprement sur ses tripodes.
+          Design partagé avec TimeVessel/IntroStory (composant TimeMachine).
+          Petite taille (0.35) pour rester discret dans le décor.
+          Cliquable via le Hotspot ci-dessous (label "MARTINE"). */}
       {!bare && (
-      <g>
-        {/* les deux premiers rebonds (petits cratères espacés) */}
-        {[[498, 512, 13], [552, 516, 17]].map(([x, y, r], i) => (
-          <g key={i}>
-            <ellipse cx={x} cy={y} rx={r} ry={r * 0.28} fill="#2c1a0e" />
-            <path d={`M${x - r} ${y} q${r} -${r * 0.45} ${r * 2} 0`} stroke="#b89264" strokeWidth="1.8" fill="none" opacity="0.5" />
-          </g>
-        ))}
-        {/* la tranchée, étroite au début, large près de l'épave */}
-        <path d="M596 517 Q700 505 800 498 L806 510 Q702 513 604 525 Z" fill="#2c1a0e" />
-        <path d="M640 517 Q720 509 792 503 L794 507 Q722 511 646 521 Z" fill="#1a0f08" />
-        {/* bourrelets de terre retournée, éclairés par le soleil levant */}
-        <path d="M592 513 Q698 501 802 494" stroke="#b89264" strokeWidth="3" fill="none" opacity="0.55" />
-        <path d="M604 529 Q706 517 808 512" stroke="#8a6a42" strokeWidth="3" fill="none" opacity="0.5" />
-        {/* mottes de terre projetées de part et d'autre */}
-        {[[614, 505, 4], [664, 498, 5], [716, 522, 4], [746, 492, 6], [782, 518, 4], [692, 528, 5]].map(([x, y, r], i) => (
-          <g key={i}>
-            <ellipse cx={x} cy={y} rx={r} ry={r * 0.55} fill="#4c3620" />
-            <path d={`M${x - r * 0.6} ${y - r * 0.3} q${r * 0.6} -${r * 0.4} ${r * 1.2} 0`} stroke="#b89264" strokeWidth="1.2" fill="none" opacity="0.6" />
-          </g>
-        ))}
-        {/* poussière qui retombe encore le long de la trace */}
-        <ellipse cx="700" cy="502" rx="80" ry="8" fill="#d8b884" opacity="0.14" filter="url(#x2blur)" />
-      </g>
-      )}
-      {/* MARTINE : une noix spatiale échouée (fidèle au dessin de l'auteur) */}
-      {!bare && (
-      <g transform="translate(840,486) rotate(12)">
-        <ellipse cx="-6" cy="21" rx="52" ry="10" fill="#140b06" opacity="0.65" />
-        {/* coque de noix à demi enfoncée dans le sillon */}
-        <path d="M0 -36 Q30 -34 34 -8 Q36 12 18 20 L-20 20 Q-36 10 -34 -8 Q-30 -34 0 -36 Z" fill="#8a6240" />
-        <path d="M0 -36 Q30 -34 34 -8 Q35 4 26 14 Q16 -6 18 -22 Q12 -32 0 -36 Z" fill="#6e4a2c" opacity="0.7" />
-        <path d="M-32 -10 Q0 -20 32 -10" stroke="#5c3a22" strokeWidth="3" fill="none" opacity="0.8" />
-        <path d="M-20 -28 q8 6 5 14 M14 -30 q-5 8 0 16 M-12 2 q8 5 17 2" stroke="#5c3a22" strokeWidth="2" fill="none" opacity="0.55" />
-        {/* lumière du matin sur la coque */}
-        <path d="M18 -30 Q30 -22 32 -8" stroke="#ffe0b0" strokeWidth="2.5" fill="none" opacity="0.55" />
-        {/* hublot-œil, sonné mais vivant */}
-        <circle cx="-2" cy="-8" r="9" fill="#cfeaff" stroke="#5c3a22" strokeWidth="2" />
-        <circle cx="-2" cy="-8" r="3.2" fill="#0c2233" />
-        {/* écran de bord : la date, qui clignote après le crash */}
-        <rect x="-19" y="4" width="34" height="11" rx="2.5" fill="#0c1410" stroke="#5c3a22" strokeWidth="1.2" />
-        <text x="-2" y="12.5" textAnchor="middle" fontSize="7.5" fill="#5eff9e" fontFamily="ui-monospace,monospace" style={{ animation: "pulse 2.2s infinite" }}>−18 000</text>
-        {/* antenne tordue par le crash */}
-        <path d="M4 -36 q7 -9 15 -6" stroke="#8a94a8" strokeWidth="3" fill="none" strokeLinecap="round" />
-        <circle cx="20" cy="-43" r="3" fill="#5eff9e" style={{ animation: "pulse 1.5s infinite" }} />
-        {/* propulseur arraché, tombé à côté */}
-        <rect x="-46" y="8" width="15" height="9" rx="4" fill="#6a7488" transform="rotate(-24 -38 12)" />
-        {/* fumée */}
-        <path d="M-20 -30 q-6 -14 4 -22 q-8 4 -12 -8" stroke="#8a94a8" strokeWidth="3" fill="none" opacity="0.5" style={{ animation: "drift 4s ease-in-out infinite" }} />
+      <g transform="translate(840,510) scale(0.35)">
+        <TimeMachine landed={true} />
       </g>
       )}
       {/* herbes sombres qui cadrent le bas de l'image */}

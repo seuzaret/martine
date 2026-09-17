@@ -231,8 +231,8 @@ const FAIL_LINES = [
 
 /* Introduction de MARTINE au lancement du chapitre */
 const INTRO = [
-  "⚠ IMPACT en −18 000. Mes circuits de retour sont grillés. Pour repartir, je carbure à une seule chose : les MESSAGES que les humains laissent au futur.",
-  "Et toi, tu as déjà un fan-club : tu as vu cet accueil ? Gagne la confiance du clan, aide chacun à laisser sa trace — elles remplissent ma jauge, à droite.",
+  "◈ Atterrissage en −18 000. Bienvenue au Paléolithique, chronaute. Tu es le premier humain de ton siècle à poser le pied ici.",
+  "Regarde autour de toi : ce clan te connaît déjà — Al3x1a est passée avant toi. Gagne leur confiance, aide chacun à laisser sa trace : elles remplissent ma jauge, à droite.",
   "Explore avec ‹ ›, touche ce qui t'intrigue, et va saluer Raya, le chef, au campement — c'est en parlant aux gens qu'on découvre qui attend quelque chose de toi.",
 ];
 
@@ -240,7 +240,7 @@ const INTRO = [
    say : réplique de MARTINE · goto : numéro du tableau où aller (0 = premier)
    mood : expression de l'avatar ("neutre", "content", "vexe") */
 const ACTIONS = {
-  wreck: { mood: "vexe", say: "Oui, c'est moi, là, plantée dans le sol. Un seul commentaire sur ma ressemblance avec une noix, UN SEUL, et je te laisse au Paléolithique." },
+  wreck: { mood: "content", say: "Je t'attends là, tranquille. Quand tu auras récupéré assez de flux temporel, on redécolle." },
   /* Le TARDIS caché dans la plaine du point de vue : clin d'œil au Docteur.
      `grant: "tardis_gone"` mémorise le clic pour qu'il ne revienne pas. */
   tardis: { mood: "content", grant: "tardis_gone",
