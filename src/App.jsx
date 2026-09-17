@@ -43,6 +43,8 @@ import { TimeVessel } from "./engine/TimeVessel.jsx";
 import { getCardMeta, playCardSound } from "./engine/mediadex.js";
 import { SosButton, SosOverlay } from "./engine/SosSignal.jsx";
 import IntroStory from "./engine/IntroStory.jsx";
+import DialogChoice from "./engine/DialogChoice.jsx";
+import { PortraitAl3x1AVivant } from "./chapters/epilogue/RetrouvaillesAl3x1A.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 import StationChronautes, { PortraitElias } from "./chapters/epilogue/StationChronautes.jsx";
@@ -174,6 +176,7 @@ export default function App() {
   const [debugNotes, setDebugNotes] = useState(false); // mode calage : voir les 3 emplacements de note du chapitre — tape « notes »
   const [epiChoice, setEpiChoice] = useState(null); // épilogue : le support choisi par le joueur
   const [prenom, setPrenom] = useState("");      // carnet imprimable : le prénom de l'élève
+  const [identification, setIdentification] = useState(null); // dialogue prologue : 0=ne se souvient pas, 1=un peu, 2=oui
   const [mediadex, setMediadex] = useState([]);  // msg_ids des cartes-inventions découvertes
   const [cardShowing, setCardShowing] = useState(null); // {card, message} pendant l'apparition
   const [showMediadex, setShowMediadex] = useState(false); // l'écran Mediadex plein écran est-il ouvert ?
@@ -245,9 +248,9 @@ export default function App() {
      partie existante avec un état vide). */
   useEffect(() => {
     if (screen === "play" || screen === "end") {
-      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, mode, jeu2Target, jeu2Notes, jeu2Found, jeu2NotePicks, jeu2AlxPick }, mode);
+      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, identification, mode, jeu2Target, jeu2Notes, jeu2Found, jeu2NotePicks, jeu2AlxPick }, mode);
     }
-  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, mode, jeu2Target, jeu2Notes, jeu2Found, jeu2NotePicks, jeu2AlxPick]);
+  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, identification, mode, jeu2Target, jeu2Notes, jeu2Found, jeu2NotePicks, jeu2AlxPick]);
 
   /* CONFORT DE LECTURE : applique les classes sur <html> (le CSS fait le
      reste, moteur compris) et mémorise le choix sur l'appareil. */
@@ -383,6 +386,7 @@ export default function App() {
     setChapterIndex(0); setMaxReached(0);
     setInv([]); setMsgs([]); setMade([]); setFlags({}); setCollection([]); setQuete(0);
     setMediadex([]); setSosSent([]); setFlux(0); setFluxTotal(0); setBonusChapters([]);
+    setIdentification(null);
     setTab(CHAPTERS[0].startScene); setDialog({ lines: CHAPTERS[0].intro, idx: 0, mood: "neutre" });
     setScreen("intro");
   };
@@ -531,6 +535,7 @@ export default function App() {
     setFluxTotal(s.fluxTotal || 0); setBonusChapters(s.bonusChapters || []);
     setAnachronismLearned(s.anachronismLearned || false);
     if (s.prenom) setPrenom(s.prenom);
+    if (typeof s.identification === "number") setIdentification(s.identification);
     /* état spécifique jeu 2 (silencieusement ignoré si absent) */
     setJeu2Target(s.jeu2Target ?? -1);
     setJeu2NotePicks(Array.isArray(s.jeu2NotePicks) && s.jeu2NotePicks.length === 10 ? s.jeu2NotePicks : Array(10).fill(0));
@@ -1467,7 +1472,33 @@ export default function App() {
 
   /* ---------- écran d'INTRODUCTION narrative (6 tableaux) ---------- */
   if (screen === "intro") {
-    return <IntroStory onDone={() => setScreen("play")} />;
+    return <IntroStory onDone={() => setScreen("prologueDialog")} />;
+  }
+
+  /* ---------- prologue : premier dialogue à choix avec Al3x1a ----------
+     Micro-échange pour installer le lien perso avant de plonger dans le
+     Paléolithique. Rien de mécanique — juste un choix de ton stocké dans
+     `identification` (0=ne se souvient pas, 1=un peu, 2=oui) qu'on
+     réutilisera plus tard pour colorer d'autres dialogues. */
+  if (screen === "prologueDialog") {
+    return (
+      <DialogChoice
+        speaker="AL3X1A"
+        portrait={PortraitAl3x1AVivant}
+        accent="#7fd8ff"
+        prenom={prenom}
+        prompt="Bonjour {prenom}. Ça fait si longtemps… Dis-moi — tu te souviens de moi ?"
+        choices={[
+          { id: 2, label: "Oui, bien sûr.", mood: "content",
+            response: "Alors ne dis rien à MARTINE, d'accord ? Elle non plus ne se souvient pas de tout. Va — j'attendrai que tu reviennes." },
+          { id: 1, label: "Un peu… c'est flou.", mood: "neutre",
+            response: "Ne force pas. Les souvenirs reviendront à leur rythme. Voyage d'abord — le reste suivra." },
+          { id: 0, label: "Non, je ne crois pas.", mood: "vexe",
+            response: "Ce n'est pas grave. Un jour tu te souviendras. En attendant, MARTINE va t'expliquer. Bon voyage, {prenom}." },
+        ]}
+        onDone={(choiceId) => { setIdentification(choiceId); setScreen("play"); }}
+      />
+    );
   }
 
   /* ---------- écran de transition entre deux époques ---------- */
