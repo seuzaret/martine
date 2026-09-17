@@ -4,6 +4,7 @@ import BunkerHub from "../chapters/jeu3/scenes/BunkerHub.jsx";
 import BunkerChambre from "../chapters/jeu3/scenes/BunkerChambre.jsx";
 import BunkerRumeurs from "../chapters/jeu3/scenes/BunkerRumeurs.jsx";
 import BunkerArchives from "../chapters/jeu3/scenes/BunkerArchives.jsx";
+import { MISSIONS_RUMEURS } from "../chapters/jeu3/missions.js";
 
 /* ============================================================
    MOTEUR — JEU 3 : « Le bunker 2087 » (squelette PR J3-A)
@@ -31,6 +32,15 @@ const ROOMS = {
 
 export default function Jeu3({ prenom, onExit }) {
   const [room, setRoom] = useState("awake");
+  /* État persistant partagé entre les pièces : flags de mission
+     accomplies (ex. mission_kova_done) + set des PNJ déjà entendus
+     pour la mission en cours. Ré-init au retour au titre. */
+  const [flags, setFlags] = useState({});
+  const [heardPnj, setHeardPnj] = useState({}); // { pnjId: true }
+  const setFlag = (k, v = true) => setFlags((f) => ({ ...f, [k]: v }));
+  const hear = (pnjId) => setHeardPnj((h) => ({ ...h, [pnjId]: true }));
+  const j3 = { flags, heardPnj, setFlag, hear, missions: MISSIONS_RUMEURS };
+
   const current = ROOMS[room] || ROOMS.hub;
   const Comp = current.Comp;
 
@@ -50,7 +60,7 @@ export default function Jeu3({ prenom, onExit }) {
       {/* Scène courante */}
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, minHeight: 0, overflow: "hidden" }}>
         <div style={{ width: "100%", maxWidth: 960 }}>
-          <Comp prenom={prenom} onGo={setRoom} />
+          <Comp prenom={prenom} onGo={setRoom} j3={j3} />
         </div>
       </div>
     </div>
