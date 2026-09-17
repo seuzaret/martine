@@ -1,89 +1,74 @@
 /* ============================================================
    JEU 3 — SCÈNE : « Couloir central » (hub)
    ------------------------------------------------------------
-   Le couloir principal du bunker : 3 portes cliquables qui
-   mènent aux pièces. Chaque porte est étiquetée. Position au
-   fond : silhouette floue d'un autre habitant qui passe (ambiance).
+   Le couloir principal du bunker : 7 portes cliquables réparties
+   sur deux rangées, chacune étiquetée avec son code et son nom.
+   Perspective vers le fond, néons au plafond, silhouette lointaine.
    ============================================================ */
+const DOORS = [
+  { id: "chambre",    code: "N-27", label: "Ma chambre",              color: "#5a4028" },
+  { id: "rumeurs",    code: "R-01", label: "Bureau des Rumeurs",      color: "#3a2818" },
+  { id: "archives",   code: "A-01", label: "Salle des Archives",      color: "#28303a" },
+  { id: "cantine",    code: "C-01", label: "Cantine commune",         color: "#3a3a2a" },
+  { id: "infirmerie", code: "I-01", label: "Infirmerie",              color: "#5a6270" },
+  { id: "atelier",    code: "T-01", label: "Atelier des Ingénieurs",  color: "#5a4028" },
+  { id: "chapelle",   code: "X-01", label: "Chapelle des Anciens",    color: "#3a2018" },
+];
+
 export default function BunkerHub({ onGo }) {
+  /* Portes réparties : 4 en rangée haute (y=90), 3 en rangée basse (y=310).
+     Largeur 120px, espacement uniforme. */
+  const doorPos = (i) => {
+    if (i < 4) return { x: 60 + i * 205, y: 90 };
+    return { x: 160 + (i - 4) * 205, y: 310 };
+  };
   return (
-    <svg viewBox="0 0 900 500" style={{ display: "block", width: "100%", height: "auto", maxHeight: "62vh" }}>
+    <svg viewBox="0 0 900 550" style={{ display: "block", width: "100%", height: "auto", maxHeight: "66vh" }}>
       <defs>
         <linearGradient id="bh-wall" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#2a2f38" />
           <stop offset="100%" stopColor="#0e1218" />
         </linearGradient>
-        <linearGradient id="bh-floor" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1a1e26" />
-          <stop offset="100%" stopColor="#050810" />
-        </linearGradient>
-        <radialGradient id="bh-endlight" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#7fd8ff" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="#7fd8ff" stopOpacity="0" />
-        </radialGradient>
       </defs>
-      {/* Murs + sol */}
-      <rect width="900" height="500" fill="url(#bh-wall)" />
-      <rect y="360" width="900" height="140" fill="url(#bh-floor)" />
-      {/* Perspective (couloir qui s'enfonce) */}
-      <path d="M0 0 L400 240 L500 240 L900 0 Z" fill="#050810" opacity="0.55" />
-      <path d="M400 240 L500 240 L500 320 L400 320 Z" fill="#0a0e14" />
-      <circle cx="450" cy="280" r="60" fill="url(#bh-endlight)" />
-      {/* Silhouette lointaine qui passe */}
-      <ellipse cx="450" cy="315" rx="8" ry="18" fill="#1a1e26" opacity="0.7" />
-      {/* Néons au plafond */}
-      {[80, 260, 640, 820].map((x, i) => (
-        <g key={i} transform={`translate(${x},0)`}>
-          <rect x="-6" y="10" width="12" height="60" fill="#1a1e26" />
-          <rect x="-4" y="14" width="8" height="52" fill="#e8eef5" opacity="0.75" />
+      {/* Fond mur + sol */}
+      <rect width="900" height="550" fill="url(#bh-wall)" />
+      <rect y="290" width="900" height="20" fill="#0a0e14" />
+      {/* Tuyauteries au plafond */}
+      <path d="M0 40 L900 40" stroke="#3a4048" strokeWidth="4" opacity="0.8" />
+      <path d="M0 50 L900 50" stroke="#5a4028" strokeWidth="2.5" opacity="0.7" />
+      {/* Néons entre les deux rangées */}
+      {[120, 320, 520, 720].map((x, i) => (
+        <g key={i}>
+          <rect x={x - 6} y="270" width="12" height="4" fill="#e8eef5" opacity="0.7" />
+          <rect x={x + 40} y="270" width="12" height="4" fill="#e8eef5" opacity="0.7" />
         </g>
       ))}
 
-      {/* Tuyauteries au plafond (ambiance industrielle) */}
-      <path d="M0 80 L900 80" stroke="#3a4048" strokeWidth="5" opacity="0.8" />
-      <path d="M0 90 L900 90" stroke="#5a4028" strokeWidth="3" opacity="0.7" />
-      {[100, 300, 500, 700].map((x) => (
-        <rect key={x} x={x - 4} y="80" width="8" height="8" fill="#8a5030" />
-      ))}
+      {/* Les 7 portes */}
+      {DOORS.map((door, i) => {
+        const { x, y } = doorPos(i);
+        return (
+          <g key={door.id} transform={`translate(${x},${y})`}
+            onClick={() => onGo(door.id)}
+            style={{ cursor: "pointer" }}
+            onMouseEnter={(e) => e.currentTarget.querySelector(".door-hover").setAttribute("opacity", "1")}
+            onMouseLeave={(e) => e.currentTarget.querySelector(".door-hover").setAttribute("opacity", "0")}>
+            <rect className="door-hover" x="-8" y="-8" width="136" height="196" fill="none" stroke="#7fd8ff" strokeWidth="2" opacity="0" />
+            <rect x="0" y="0" width="120" height="180" fill={door.color} stroke="#0a0806" strokeWidth="3" />
+            <rect x="4" y="4" width="112" height="172" fill={door.color} stroke="#0a0806" strokeWidth="1" opacity="0.6" />
+            <circle cx="100" cy="90" r="4" fill="#c8a848" />
+            <rect x="16" y="26" width="88" height="34" fill="#e8eef5" stroke="#3a2818" strokeWidth="1.5" />
+            <text x="60" y="41" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="12" fill="#0a0806" fontWeight="700">{door.code}</text>
+            <text x="60" y="54" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="6.5" fill="#5a4028">{door.label.toUpperCase()}</text>
+            <circle cx="60" cy="72" r="3" fill="#5eff9e">
+              <animate attributeName="opacity" values="0.4;1;0.4" dur="1.8s" repeatCount="indefinite" />
+            </circle>
+          </g>
+        );
+      })}
 
-      {/* Portes numérotées avec étiquettes cliquables */}
-      {[
-        { x: 100, id: "chambre",  code: "N-27",  label: "Ma chambre",           color: "#5a4028" },
-        { x: 380, id: "rumeurs",  code: "R-01",  label: "Bureau des Rumeurs",   color: "#3a2818" },
-        { x: 660, id: "archives", code: "A-01",  label: "Salle des Archives",   color: "#28303a" },
-      ].map((door) => (
-        <g key={door.id} transform={`translate(${door.x},170)`}
-          onClick={() => onGo(door.id)}
-          style={{ cursor: "pointer" }}
-          onMouseEnter={(e) => e.currentTarget.querySelector(".door-hover").setAttribute("opacity", "1")}
-          onMouseLeave={(e) => e.currentTarget.querySelector(".door-hover").setAttribute("opacity", "0")}>
-          {/* Cadre halo au survol */}
-          <rect className="door-hover" x="-8" y="-8" width="156" height="216" fill="none" stroke="#7fd8ff" strokeWidth="2" opacity="0" />
-          {/* La porte */}
-          <rect x="0" y="0" width="140" height="200" fill={door.color} stroke="#0a0806" strokeWidth="3" />
-          <rect x="4" y="4" width="132" height="192" fill={door.color} stroke="#0a0806" strokeWidth="1" opacity="0.6" />
-          {/* Poignée */}
-          <circle cx="118" cy="100" r="4" fill="#c8a848" />
-          {/* Plaque */}
-          <rect x="20" y="30" width="100" height="34" fill="#e8eef5" stroke="#3a2818" strokeWidth="1.5" />
-          <text x="70" y="45" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="12" fill="#0a0806" fontWeight="700">{door.code}</text>
-          <text x="70" y="58" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fill="#5a4028">{door.label.toUpperCase()}</text>
-          {/* Petit voyant sous la plaque */}
-          <circle cx="70" cy="76" r="3" fill="#5eff9e">
-            <animate attributeName="opacity" values="0.4;1;0.4" dur="1.8s" repeatCount="indefinite" />
-          </circle>
-        </g>
-      ))}
-
-      {/* Sol : joints de dalles vus en perspective */}
-      {[0, 200, 400, 500, 700, 900].map((x) => (
-        <path key={x} d={`M${x} 360 L${400 + (x - 400) * 0.15} 500`} stroke="#0a0806" strokeWidth="1" opacity="0.6" />
-      ))}
-      <path d="M0 400 L900 400" stroke="#0a0806" strokeWidth="1" opacity="0.5" />
-      <path d="M0 440 L900 440" stroke="#0a0806" strokeWidth="1" opacity="0.4" />
-
-      {/* Titre discret en bas */}
-      <text x="450" y="490" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="10" fill="#5a6678" letterSpacing="2">
+      {/* Sous-titre */}
+      <text x="450" y="535" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="10" fill="#5a6678" letterSpacing="2">
         NIVEAU 4 · SECTEUR HABITAT · CLIQUE UNE PORTE
       </text>
     </svg>
