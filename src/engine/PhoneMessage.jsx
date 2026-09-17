@@ -14,7 +14,9 @@ import { PortraitAl3x1AVivant } from "../chapters/epilogue/RetrouvaillesAl3x1A.j
    ============================================================ */
 export default function PhoneMessage({ message, prenom, onDone }) {
   const [picked, setPicked] = useState(null);
-  const chosen = picked !== null ? message.choices.find((c) => c.id === picked) : null;
+  const choices = message.choices || [];
+  const noChoice = choices.length === 0;
+  const chosen = picked !== null ? choices.find((c) => c.id === picked) : null;
   const fill = (s) => (s || "").replace(/\{prenom\}/g, prenom || "chronaute");
   const hhmm = useMemo(() => {
     const d = new Date();
@@ -66,10 +68,17 @@ export default function PhoneMessage({ message, prenom, onDone }) {
           )}
         </div>
 
-        {/* Zone de saisie / choix */}
-        {!chosen ? (
+        {/* Zone de saisie / choix — ou juste "Fermer" si aucun choix */}
+        {noChoice ? (
+          <div style={{ background: "#0a1020", padding: 10, borderTop: "1px solid #1a2536" }}>
+            <button onClick={() => onDone(null)}
+              style={{ width: "100%", background: "#7fd8ff", color: "#06110b", border: "none", borderRadius: 18, padding: "10px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
+              Fermer ✓
+            </button>
+          </div>
+        ) : !chosen ? (
           <div style={{ background: "#0a1020", padding: 10, display: "flex", flexDirection: "column", gap: 6, borderTop: "1px solid #1a2536" }}>
-            {message.choices.map((c) => (
+            {choices.map((c) => (
               <button key={c.id} onClick={() => setPicked(c.id)}
                 style={{ background: "#1a2536", color: "#e8eef5", border: "1px solid #2a3648", borderRadius: 18, padding: "8px 14px", fontSize: 13.5, textAlign: "left", cursor: "pointer", fontFamily: "inherit", transition: "background .15s, border-color .15s" }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = "#243046"; e.currentTarget.style.borderColor = "#7fd8ff"; }}

@@ -481,27 +481,6 @@ function SlideArrival({ onDone }) {
           <path d="M-4 0 Q-2 -8 2 -12 Q4 -6 2 0 Z" fill="#ff8030" />
         </g>
 
-        {/* JOUEUR — silhouette debout à côté de MARTINE (pas de crash) */}
-        <g transform="translate(400,420)">
-          {/* jambes */}
-          <path d="M-8 60 L-6 20 L-2 20 L-4 60 Z" fill="#3a5580" stroke="#243554" strokeWidth="1" />
-          <path d="M2 60 L4 20 L8 20 L6 60 Z" fill="#3a5580" stroke="#243554" strokeWidth="1" />
-          {/* baskets */}
-          <ellipse cx="-6" cy="60" rx="9" ry="4" fill="#f8f8f8" stroke="#2a2a2a" strokeWidth="0.8" />
-          <ellipse cx="6" cy="60" rx="9" ry="4" fill="#f8f8f8" stroke="#2a2a2a" strokeWidth="0.8" />
-          {/* torse t-shirt bleu */}
-          <path d="M-14 20 L-14 -14 Q-14 -20 -8 -20 L8 -20 Q14 -20 14 -14 L14 20 Z" fill="#5eaadd" stroke="#2a5478" strokeWidth="1" />
-          {/* bras */}
-          <path d="M-14 -14 L-24 10" stroke="#e8b088" strokeWidth="7" strokeLinecap="round" />
-          <path d="M14 -14 L24 10" stroke="#e8b088" strokeWidth="7" strokeLinecap="round" />
-          {/* tête */}
-          <ellipse cx="0" cy="-30" rx="10" ry="12" fill="#e8b088" stroke="#8a5030" strokeWidth="0.8" />
-          <path d="M-10 -34 q0 -8 5 -10 q5 2 6 -2 q3 4 6 -1 q5 3 6 10 z" fill="#5a3818" />
-          <circle cx="-3" cy="-30" r="1.3" fill="#2a1808" />
-          <circle cx="3" cy="-30" r="1.3" fill="#2a1808" />
-          <path d="M-2 -25 Q0 -23 2 -25" stroke="#5a2818" strokeWidth="0.9" fill="none" strokeLinecap="round" />
-        </g>
-
         {/* MARTINE posée proprement à droite */}
         <g transform="translate(600,430) scale(0.65)">
           <TimeMachine landed={true} />
