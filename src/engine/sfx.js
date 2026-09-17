@@ -94,6 +94,22 @@ export function playMaterialize() {
   });
 }
 
+/* Ping court d'un nouveau message dans le téléphone (deux notes descendantes). */
+export function playPhonePing() {
+  const a = ctx(); if (!a) return;
+  const t0 = a.currentTime;
+  [1320, 990].forEach((f, i) => {
+    const start = t0 + i * 0.12;
+    const o = a.createOscillator(); o.type = "sine"; o.frequency.value = f;
+    const g = a.createGain();
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.exponentialRampToValueAtTime(0.14, start + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + 0.28);
+    o.connect(g); g.connect(a.destination);
+    o.start(start); o.stop(start + 0.32);
+  });
+}
+
 /* Bip du décompte : n=3 ou 2 → bip aigu ; n=1 → bip plus grave et long (GO). */
 export function playCountdown(n) {
   const a = ctx(); if (!a) return;
