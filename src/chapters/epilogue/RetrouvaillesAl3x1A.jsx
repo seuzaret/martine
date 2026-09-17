@@ -9,7 +9,7 @@ import { useState } from "react";
    ============================================================ */
 
 /* Portrait proche du cadre-photo, mais plus expressif (Al3x1A vit). */
-function PortraitAl3x1AVivant({ mood = "content" }) {
+export function PortraitAl3x1AVivant({ mood = "content" }) {
   const eyes = mood === "content" ? -1 : mood === "vexe" ? 1 : 0;
   return (
     <svg viewBox="0 0 200 240" style={{ width: "100%", height: "100%", display: "block" }}>
