@@ -31,36 +31,36 @@ export default function PhoneMessage({ message, prenom, onDone }) {
           <span>▮▮▮▮ 100%</span>
         </div>
 
-        {/* En-tête WhatsApp */}
-        <div style={{ background: "#1a2536", padding: "10px 14px", display: "flex", alignItems: "center", gap: 10, borderBottom: "1px solid #0a1020" }}>
-          <div style={{ width: 40, height: 40, borderRadius: "50%", overflow: "hidden", border: "1px solid #7fd8ff", flex: "0 0 auto" }}>
+        {/* En-tête WhatsApp (vert teal) */}
+        <div style={{ background: "#075e54", padding: "10px 14px", display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 40, height: 40, borderRadius: "50%", overflow: "hidden", border: "1px solid rgba(255,255,255,0.3)", flex: "0 0 auto", background: "#fff" }}>
             <PortraitAl3x1AVivant mood={chosen?.mood || "neutre"} />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, color: "#e8eef5" }}>Al3x1a</div>
-            <div style={{ fontSize: 11, color: "#7fd8ff" }}>● en ligne</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>Al3x1a</div>
+            <div style={{ fontSize: 11, color: "#c8e6cf" }}>en ligne</div>
           </div>
         </div>
 
-        {/* Fil de conversation */}
-        <div style={{ flex: 1, padding: 14, background: "linear-gradient(180deg, #0b0f1a, #101827)", overflowY: "auto", display: "flex", flexDirection: "column", gap: 8, minHeight: 180 }}>
-          {/* Bulle Al3x1a (gauche) */}
-          <div style={{ alignSelf: "flex-start", maxWidth: "82%", background: "#1e2a3d", color: "#e8eef5", padding: "8px 12px", borderRadius: "14px 14px 14px 4px", fontSize: 14, lineHeight: 1.45 }}>
+        {/* Fil de conversation (fond crème type WhatsApp) */}
+        <div style={{ flex: 1, padding: 14, background: "#e5ddd5", overflowY: "auto", display: "flex", flexDirection: "column", gap: 8, minHeight: 180 }}>
+          {/* Bulle Al3x1a (gauche, blanche) */}
+          <div style={{ alignSelf: "flex-start", maxWidth: "82%", background: "#ffffff", color: "#111b21", padding: "6px 10px 6px 12px", borderRadius: "8px 8px 8px 2px", fontSize: 14, lineHeight: 1.4, boxShadow: "0 1px 0.5px rgba(0,0,0,0.13)" }}>
             {fill(message.prompt)}
-            <div style={{ fontSize: 9.5, color: "#7a879e", marginTop: 3, textAlign: "right" }}>{hhmm}</div>
+            <div style={{ fontSize: 10, color: "#8696a0", marginTop: 2, textAlign: "right" }}>{hhmm}</div>
           </div>
 
           {chosen && (
             <>
-              {/* Réponse joueur (droite) */}
-              <div style={{ alignSelf: "flex-end", maxWidth: "82%", background: "#0f5c3f", color: "#e8eef5", padding: "8px 12px", borderRadius: "14px 14px 4px 14px", fontSize: 14, lineHeight: 1.45 }}>
+              {/* Réponse joueur (droite, vert clair) */}
+              <div style={{ alignSelf: "flex-end", maxWidth: "82%", background: "#d9fdd3", color: "#111b21", padding: "6px 10px 6px 12px", borderRadius: "8px 8px 2px 8px", fontSize: 14, lineHeight: 1.4, boxShadow: "0 1px 0.5px rgba(0,0,0,0.13)" }}>
                 {fill(chosen.label)}
-                <div style={{ fontSize: 9.5, color: "#a8e6c5", marginTop: 3, textAlign: "right" }}>{hhmm} ✓✓</div>
+                <div style={{ fontSize: 10, color: "#667781", marginTop: 2, textAlign: "right" }}>{hhmm} <span style={{ color: "#53bdeb" }}>✓✓</span></div>
               </div>
-              {/* Bulle Al3x1a de retour */}
-              <div style={{ alignSelf: "flex-start", maxWidth: "82%", background: "#1e2a3d", color: "#e8eef5", padding: "8px 12px", borderRadius: "14px 14px 14px 4px", fontSize: 14, lineHeight: 1.45 }}>
+              {/* Bulle Al3x1a de retour (blanche) */}
+              <div style={{ alignSelf: "flex-start", maxWidth: "82%", background: "#ffffff", color: "#111b21", padding: "6px 10px 6px 12px", borderRadius: "8px 8px 8px 2px", fontSize: 14, lineHeight: 1.4, boxShadow: "0 1px 0.5px rgba(0,0,0,0.13)" }}>
                 {fill(chosen.response)}
-                <div style={{ fontSize: 9.5, color: "#7a879e", marginTop: 3, textAlign: "right" }}>{hhmm}</div>
+                <div style={{ fontSize: 10, color: "#8696a0", marginTop: 2, textAlign: "right" }}>{hhmm}</div>
               </div>
             </>
           )}
