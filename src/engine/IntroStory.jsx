@@ -314,7 +314,7 @@ function SlideOutside({ onNext }) {
             cursor: 'pointer', fontFamily: 'ui-monospace,monospace', letterSpacing: 3,
             boxShadow: '0 0 22px rgba(94,255,158,0.5)',
             animation: 'fadeIn 0.4s ease-out' }}>
-          ▶ ENTRER DANS MARTINE
+          ▶ ENTRE DANS LE VAISSEAU
         </button>
       )}
     </div>
@@ -378,18 +378,38 @@ function SlideCockpit({ onNext }) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   S5 — FLASH (auto-avance après 2s)
+   S5 — FLASH + décompte des années (2026 → −18 000)
    ═══════════════════════════════════════════════════════════════ */
 function SlideFlash({ onNext }) {
-  useEffect(() => { const t = setTimeout(() => onNext(), 2600); return () => clearTimeout(t); }, [onNext]);
+  const START = 2026;
+  const END = -18000;
+  const DUR = 3800; // ms
+  const [year, setYear] = useState(START);
+  const rafRef = useRef(null);
+  useEffect(() => {
+    const t0 = performance.now();
+    const tick = (t) => {
+      const p = Math.min(1, (t - t0) / DUR);
+      const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+      setYear(Math.round(START + (END - START) * eased));
+      if (p < 1) rafRef.current = requestAnimationFrame(tick);
+      else setTimeout(() => onNext(), 400);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [onNext]);
+  const fmt = (y) => (y < 0 ? `−${Math.abs(y).toLocaleString('fr-FR')}` : y.toLocaleString('fr-FR'));
+
   return (
-    <div style={{ animation: 'fadeIn 0.8s ease-out' }}>
+    <div style={{ animation: 'fadeIn 0.5s ease-out', position: 'relative' }}>
       <svg viewBox="0 0 800 500" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '62vh' }}>
         <defs>
           <radialGradient id="s5-flash" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#fff" stopOpacity="1" /><stop offset="30%" stopColor="#fff8c0" stopOpacity="0.85" /><stop offset="70%" stopColor="#f8b800" stopOpacity="0.35" /><stop offset="100%" stopColor="#e88030" stopOpacity="0" /></radialGradient>
+          <radialGradient id="s5-tunnel" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#0a0604" stopOpacity="0" /><stop offset="70%" stopColor="#3a1808" stopOpacity="0.65" /><stop offset="100%" stopColor="#0a0604" stopOpacity="1" /></radialGradient>
         </defs>
         <rect width="800" height="500" fill="#0a0604" />
-        <g style={{ transformOrigin: '400px 250px', animation: 'flashSpin 4s linear infinite' }}>
+        {/* Rayons qui tournent */}
+        <g style={{ transformOrigin: '400px 250px', animation: 'flashSpin 3s linear infinite' }}>
           {[...Array(24)].map((_, i) => {
             const a = (i * 15) * Math.PI / 180;
             const x2 = 400 + Math.cos(a) * 500;
@@ -397,12 +417,32 @@ function SlideFlash({ onNext }) {
             return <path key={i} d={`M400 250 L${x2} ${y2}`} stroke="#ffd870" strokeWidth={i % 2 ? 0.8 : 1.6} opacity={i % 2 ? 0.25 : 0.5} />;
           })}
         </g>
+        {/* Anneaux concentriques qui foncent vers le centre (tunnel temporel) */}
+        {[0, 0.2, 0.4, 0.6, 0.8].map((delay, i) => (
+          <circle key={i} cx="400" cy="250" r="80" fill="none" stroke="#7fd8ff" strokeWidth="1.5" opacity="0.65">
+            <animate attributeName="r" values="20;320" dur="1.4s" begin={`${delay}s`} repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.9;0" dur="1.4s" begin={`${delay}s`} repeatCount="indefinite" />
+          </circle>
+        ))}
         <circle cx="400" cy="250" r="280" fill="url(#s5-flash)" style={{ animation: 'flashPulse 1.2s ease-in-out infinite' }} />
+        <circle cx="400" cy="250" r="380" fill="url(#s5-tunnel)" pointerEvents="none" />
         <style>{`
           @keyframes flashSpin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
           @keyframes flashPulse { 0%, 100% { opacity: 0.75; transform: scale(1); } 50% { opacity: 0.95; transform: scale(1.05); } }
         `}</style>
       </svg>
+      {/* Décompte des années, superposé au flash */}
+      <div style={{ position: 'absolute', top: '38%', left: 0, right: 0, textAlign: 'center', pointerEvents: 'none' }}>
+        <div style={{ fontFamily: 'ui-monospace,monospace', fontSize: 12, letterSpacing: 4, color: '#ffd166',
+          textShadow: '0 0 12px rgba(0,0,0,0.9)' }}>
+          ⏳ SAUT TEMPOREL
+        </div>
+        <div style={{ fontFamily: 'ui-monospace,monospace', fontSize: 44, fontWeight: 900, color: '#fff',
+          textShadow: '0 0 18px #ffd870, 0 0 28px #ff8030',
+          letterSpacing: 2, marginTop: 8 }}>
+          {fmt(year)}
+        </div>
+      </div>
     </div>
   );
 }
@@ -481,14 +521,36 @@ function SlideArrival({ onDone }) {
           <path d="M-4 0 Q-2 -8 2 -12 Q4 -6 2 0 Z" fill="#ff8030" />
         </g>
 
-        {/* MARTINE posée proprement à droite */}
+        {/* Le VAISSEAU posé proprement à droite */}
         <g transform="translate(600,430) scale(0.65)">
           <TimeMachine landed={true} />
         </g>
-        {/* Zone cliquable invisible sur MARTINE pour avancer les dialogues */}
-        {!lastStep && (
-          <circle cx="600" cy="380" r="70" fill="transparent" onClick={clickMartine} style={{ cursor: 'pointer' }} />
-        )}
+        {/* MARTINE (avatar) qui flotte à côté du vaisseau. Elle est
+            l'avatar parlant du vaisseau — c'est elle qu'on clique pour
+            avancer les dialogues. Petit bob vertical pour signaler
+            qu'elle lévite (via animateTransform SVG). */}
+        <g onClick={!lastStep ? clickMartine : undefined}
+          style={{ cursor: !lastStep ? 'pointer' : 'default' }}>
+          <g transform="translate(480,340)">
+            <animateTransform attributeName="transform" type="translate"
+              values="480 340; 480 328; 480 340" dur="2.6s" repeatCount="indefinite" additive="replace" />
+            <circle r="46" fill="rgba(94,255,158,0.18)">
+              <animate attributeName="r" values="42;50;42" dur="2.6s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="0" cy="0" r="34" fill="#8a6240" stroke="#5c3a22" strokeWidth="2" />
+            <path d="M-28 -6 Q0 -14 28 -6" stroke="#5c3a22" strokeWidth="2.4" fill="none" opacity="0.8" />
+            <circle cx="0" cy="4" r="12" fill="#cfeaff" stroke="#5c3a22" strokeWidth="2.4" />
+            <path d="M-8 6 Q0 -3 8 6" stroke="#0c2233" strokeWidth="3.6" fill="none" strokeLinecap="round" />
+            <line x1="0" y1="-34" x2="0" y2="-48" stroke="#8a94a8" strokeWidth="3" strokeLinecap="round" />
+            <circle cx="0" cy="-50" r="3.6" fill="#5eff9e">
+              <animate attributeName="opacity" values="0.5;1;0.5" dur="1.6s" repeatCount="indefinite" />
+            </circle>
+            <rect x="-44" y="-4" width="12" height="9" rx="3" fill="#6a7488" />
+            <rect x="32" y="-4" width="12" height="9" rx="3" fill="#6a7488" />
+            <path d="M-44 0 l-8 3 l8 3 Z" fill="#7fd8ff" style={{ animation: 'flick .5s infinite' }} />
+            <path d="M44 0 l8 3 l-8 3 Z" fill="#7fd8ff" style={{ animation: 'flick .5s infinite' }} />
+          </g>
+        </g>
 
         {/* Bulle MARTINE */}
         <Bubble x={dialogs[step].pos.x} y={dialogs[step].pos.y} w={340}
