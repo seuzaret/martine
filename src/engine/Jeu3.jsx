@@ -4,6 +4,10 @@ import BunkerHub from "../chapters/jeu3/scenes/BunkerHub.jsx";
 import BunkerChambre from "../chapters/jeu3/scenes/BunkerChambre.jsx";
 import BunkerRumeurs from "../chapters/jeu3/scenes/BunkerRumeurs.jsx";
 import BunkerArchives from "../chapters/jeu3/scenes/BunkerArchives.jsx";
+import BunkerCantine from "../chapters/jeu3/scenes/BunkerCantine.jsx";
+import BunkerInfirmerie from "../chapters/jeu3/scenes/BunkerInfirmerie.jsx";
+import BunkerAtelier from "../chapters/jeu3/scenes/BunkerAtelier.jsx";
+import BunkerChapelle from "../chapters/jeu3/scenes/BunkerChapelle.jsx";
 import { MISSIONS_RUMEURS } from "../chapters/jeu3/missions.js";
 
 /* ============================================================
@@ -23,11 +27,15 @@ import { MISSIONS_RUMEURS } from "../chapters/jeu3/missions.js";
      archives — Salle des Archives (placeholder)
    ============================================================ */
 const ROOMS = {
-  awake:    { Comp: BunkerAwake,    label: "Réveil" },
-  hub:      { Comp: BunkerHub,      label: "Couloir central" },
-  chambre:  { Comp: BunkerChambre,  label: "Ma chambre" },
-  rumeurs:  { Comp: BunkerRumeurs,  label: "Bureau des Rumeurs" },
-  archives: { Comp: BunkerArchives, label: "Salle des Archives" },
+  awake:      { Comp: BunkerAwake,      label: "Réveil" },
+  hub:        { Comp: BunkerHub,        label: "Couloir central" },
+  chambre:    { Comp: BunkerChambre,    label: "Ma chambre" },
+  rumeurs:    { Comp: BunkerRumeurs,    label: "Bureau des Rumeurs" },
+  archives:   { Comp: BunkerArchives,   label: "Salle des Archives" },
+  cantine:    { Comp: BunkerCantine,    label: "Cantine commune" },
+  infirmerie: { Comp: BunkerInfirmerie, label: "Infirmerie" },
+  atelier:    { Comp: BunkerAtelier,    label: "Atelier des Ingénieurs" },
+  chapelle:   { Comp: BunkerChapelle,   label: "Chapelle des Anciens" },
 };
 
 export default function Jeu3({ prenom, onExit }) {
