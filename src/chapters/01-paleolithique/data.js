@@ -233,7 +233,7 @@ const FAIL_LINES = [
 const INTRO = [
   "⚠ IMPACT en −18 000. Mes circuits de retour sont grillés. Pour repartir, je carbure à une seule chose : les MESSAGES que les humains laissent au futur.",
   "Et toi, tu as déjà un fan-club : tu as vu cet accueil ? Gagne la confiance du clan, aide chacun à laisser sa trace — elles remplissent ma jauge, à droite.",
-  "Le « ? » doré te montre toujours QUI attend quelque chose de toi. Explore avec ‹ ›, touche ce qui t'intrigue… et va saluer Raya, le chef, au campement.",
+  "Explore avec ‹ ›, touche ce qui t'intrigue, et va saluer Raya, le chef, au campement — c'est en parlant aux gens qu'on découvre qui attend quelque chose de toi.",
 ];
 
 /* Actions spéciales des décors (zones cliquables qui ne ramassent rien).
@@ -251,7 +251,7 @@ const ACTIONS = {
      Ici : leur réplique « par défaut », quand ce n'est pas leur tour dans
      la quête. `bubble` = leurs paroles (phylactère), `say` = MARTINE. */
   ana: { mood: "content",
-    bubble: "Alors, comment trouves-tu le clan ? Prends ton temps, regarde tout… Et si tu es perdu, cherche le « ? » doré : il montre qui a besoin de toi.",
+    bubble: "Alors, comment trouves-tu le clan ? Prends ton temps, regarde tout… Et si tu es perdu, parle à chacun : quelqu'un a toujours besoin de toi quelque part.",
     say: "Ana. C'est elle qui t'a ouvert les portes du clan — reste poli, on est invités.",
     jeu2Variants: [
       { bubble: "Toi ? Encore ? Une autre comme toi est venue autrefois. Elle voulait entrer dans la grotte, tout au fond. Elle est ressortie les mains couvertes d'ocre.",
