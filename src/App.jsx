@@ -46,6 +46,7 @@ import IntroStory from "./engine/IntroStory.jsx";
 import PhoneMessage from "./engine/PhoneMessage.jsx";
 import { AL3X1A_MESSAGES } from "./data/messagesAl3x1a.js";
 import { playPhonePing } from "./engine/sfx.js";
+import Jeu3 from "./engine/Jeu3.jsx";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 import StationChronautes, { PortraitElias } from "./chapters/epilogue/StationChronautes.jsx";
@@ -144,7 +145,7 @@ export default function App() {
   const [screen, setScreen] = useState("title"); // title | play | transition | end
   const [transitionTo, setTransitionTo] = useState(null); // chapitre visé pendant la transition
   const [maxReached, setMaxReached] = useState(0); // plus haut chapitre débloqué (menu titre)
-  const [mode, setMode] = useState("jeu1");        // "jeu1" (voyage principal) | "jeu2" (enquête Al3x1A)
+  const [mode, setMode] = useState("jeu1");        // "jeu1" (voyage principal) | "jeu2" (enquête Al3x1A) | "jeu3" (bunker 2087)
   const [jeu2Target, setJeu2Target] = useState(-1); // index du chapitre où Al3x1A est bloqué·e
   const [jeu2Notes, setJeu2Notes] = useState([]);  // chapitres où la note a été lue (indices)
   const [jeu2Found, setJeu2Found] = useState(false); // Al3x1A a été trouvé·e ?
@@ -415,6 +416,16 @@ export default function App() {
      l'époque cible parmi les 9 chapitres du voyage principal, puis
      démarre au chapitre 0 (ex : la Préhistoire) pour laisser le joueur
      explorer. Notes vides, Al3x1A pas encore trouvé·e. */
+  /* JEU 3 — squelette PR J3-A : réveil dans le bunker + hub avec 3
+     pièces (chambre, Bureau des Rumeurs, Salle des Archives). Aucune
+     mission jouable pour l'instant. Le composant Jeu3 est autonome
+     (état interne de la pièce courante), on lui passe juste le prénom
+     et une callback de sortie qui remet le titre. */
+  const newGameJeu3 = () => {
+    setMode("jeu3");
+    setScreen("jeu3");
+  };
+
   const newGameJeu2 = () => {
     setMode("jeu2");
     const target = Math.floor(Math.random() * JEU2.length);
@@ -1429,6 +1440,12 @@ export default function App() {
                   🔒 À débloquer en terminant le voyage principal.
                 </div>
               )}
+              {/* JEU 3 — squelette PR J3-A : disponible sans conditions
+                  pour tester. À gater ultérieurement sur la fin du Jeu 2. */}
+              <button onClick={() => { setModal({ type: "askPrenom", after: newGameJeu3 }); }}
+                style={{ background: "transparent", color: "#c8a8f0", border: "1px solid #4a3a68", borderRadius: 10, padding: "9px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 2, marginTop: 6 }}>
+                ▶ JEU 3 — BUNKER 2087 (BETA)
+              </button>
             </div>
 
             <div style={{ display: "flex", gap: 20, marginTop: 4 }}>
@@ -1548,6 +1565,16 @@ export default function App() {
       <>
         {cheatPanel}
         <Jeu2Placeholder onRetourMenu={() => { setMode("jeu1"); setScreen("title"); }} />
+      </>
+    );
+  }
+
+  /* ---------- JEU 3 : bunker 2087 (PR J3-A, squelette) ---------- */
+  if (screen === "jeu3") {
+    return (
+      <>
+        {cheatPanel}
+        <Jeu3 prenom={prenom} onExit={() => { setMode("jeu1"); setScreen("title"); }} />
       </>
     );
   }
