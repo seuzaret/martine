@@ -43,8 +43,9 @@ import { TimeVessel } from "./engine/TimeVessel.jsx";
 import { getCardMeta, playCardSound } from "./engine/mediadex.js";
 import { SosButton, SosOverlay } from "./engine/SosSignal.jsx";
 import IntroStory from "./engine/IntroStory.jsx";
-import DialogChoice from "./engine/DialogChoice.jsx";
-import { PortraitAl3x1AVivant } from "./chapters/epilogue/RetrouvaillesAl3x1A.jsx";
+import PhoneMessage from "./engine/PhoneMessage.jsx";
+import { AL3X1A_MESSAGES } from "./data/messagesAl3x1a.js";
+import { playPhonePing } from "./engine/sfx.js";
 import { WorldMap, MiniMap } from "./engine/WorldMap.jsx";
 import * as EPILOGUE from "./chapters/epilogue/data.js";
 import StationChronautes, { PortraitElias } from "./chapters/epilogue/StationChronautes.jsx";
@@ -177,6 +178,9 @@ export default function App() {
   const [epiChoice, setEpiChoice] = useState(null); // épilogue : le support choisi par le joueur
   const [prenom, setPrenom] = useState("");      // carnet imprimable : le prénom de l'élève
   const [identification, setIdentification] = useState(null); // dialogue prologue : 0=ne se souvient pas, 1=un peu, 2=oui
+  const [phoneQueue, setPhoneQueue] = useState([]);   // ids des messages Al3x1a en attente de lecture
+  const [phoneHistory, setPhoneHistory] = useState([]); // [{id, choice}] messages déjà lus
+  const [phoneOpen, setPhoneOpen] = useState(false);  // le téléphone est-il actuellement ouvert ?
   const [mediadex, setMediadex] = useState([]);  // msg_ids des cartes-inventions découvertes
   const [cardShowing, setCardShowing] = useState(null); // {card, message} pendant l'apparition
   const [showMediadex, setShowMediadex] = useState(false); // l'écran Mediadex plein écran est-il ouvert ?
@@ -248,9 +252,24 @@ export default function App() {
      partie existante avec un état vide). */
   useEffect(() => {
     if (screen === "play" || screen === "end") {
-      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, identification, mode, jeu2Target, jeu2Notes, jeu2Found, jeu2NotePicks, jeu2AlxPick }, mode);
+      writeSave({ chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, identification, phoneQueue, phoneHistory, mode, jeu2Target, jeu2Notes, jeu2Found, jeu2NotePicks, jeu2AlxPick }, mode);
     }
-  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, identification, mode, jeu2Target, jeu2Notes, jeu2Found, jeu2NotePicks, jeu2AlxPick]);
+  }, [chapterIndex, maxReached, screen, tab, inv, msgs, made, flags, collection, quete, mediadex, sosSent, flux, fluxTotal, bonusChapters, anachronismLearned, prenom, identification, phoneQueue, phoneHistory, mode, jeu2Target, jeu2Notes, jeu2Found, jeu2NotePicks, jeu2AlxPick]);
+
+  /* TÉLÉPHONE : à l'arrivée sur l'écran de jeu, si l'ancien joueur n'a
+     pas encore reçu le prologue (save antérieure au système), on le
+     dépose dans la queue en secours. Et on joue le petit "ping" quand
+     il y a au moins un message en attente. */
+  useEffect(() => {
+    if (screen !== "play" || mode !== "jeu1") return;
+    const hasPrologue = phoneQueue.includes("prologue")
+      || phoneHistory.some((h) => h && h.id === "prologue");
+    if (identification === null && !hasPrologue) {
+      setPhoneQueue((q) => [...q, "prologue"]);
+    }
+    if (phoneQueue.length > 0) playPhonePing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [screen]);
 
   /* CONFORT DE LECTURE : applique les classes sur <html> (le CSS fait le
      reste, moteur compris) et mémorise le choix sur l'appareil. */
@@ -387,6 +406,7 @@ export default function App() {
     setInv([]); setMsgs([]); setMade([]); setFlags({}); setCollection([]); setQuete(0);
     setMediadex([]); setSosSent([]); setFlux(0); setFluxTotal(0); setBonusChapters([]);
     setIdentification(null);
+    setPhoneQueue(["prologue"]); setPhoneHistory([]); setPhoneOpen(false);
     setTab(CHAPTERS[0].startScene); setDialog({ lines: CHAPTERS[0].intro, idx: 0, mood: "neutre" });
     setScreen("intro");
   };
@@ -536,6 +556,8 @@ export default function App() {
     setAnachronismLearned(s.anachronismLearned || false);
     if (s.prenom) setPrenom(s.prenom);
     if (typeof s.identification === "number") setIdentification(s.identification);
+    if (Array.isArray(s.phoneQueue)) setPhoneQueue(s.phoneQueue);
+    if (Array.isArray(s.phoneHistory)) setPhoneHistory(s.phoneHistory);
     /* état spécifique jeu 2 (silencieusement ignoré si absent) */
     setJeu2Target(s.jeu2Target ?? -1);
     setJeu2NotePicks(Array.isArray(s.jeu2NotePicks) && s.jeu2NotePicks.length === 10 ? s.jeu2NotePicks : Array(10).fill(0));
@@ -1472,33 +1494,7 @@ export default function App() {
 
   /* ---------- écran d'INTRODUCTION narrative (6 tableaux) ---------- */
   if (screen === "intro") {
-    return <IntroStory onDone={() => setScreen("prologueDialog")} />;
-  }
-
-  /* ---------- prologue : premier dialogue à choix avec Al3x1a ----------
-     Micro-échange pour installer le lien perso avant de plonger dans le
-     Paléolithique. Rien de mécanique — juste un choix de ton stocké dans
-     `identification` (0=ne se souvient pas, 1=un peu, 2=oui) qu'on
-     réutilisera plus tard pour colorer d'autres dialogues. */
-  if (screen === "prologueDialog") {
-    return (
-      <DialogChoice
-        speaker="AL3X1A"
-        portrait={PortraitAl3x1AVivant}
-        accent="#7fd8ff"
-        prenom={prenom}
-        prompt="Bonjour {prenom}. Ça fait si longtemps… Dis-moi — tu te souviens de moi ?"
-        choices={[
-          { id: 2, label: "Oui, bien sûr.", mood: "content",
-            response: "Alors ne dis rien à MARTINE, d'accord ? Elle non plus ne se souvient pas de tout. Va — j'attendrai que tu reviennes." },
-          { id: 1, label: "Un peu… c'est flou.", mood: "neutre",
-            response: "Ne force pas. Les souvenirs reviendront à leur rythme. Voyage d'abord — le reste suivra." },
-          { id: 0, label: "Non, je ne crois pas.", mood: "vexe",
-            response: "Ce n'est pas grave. Un jour tu te souviendras. En attendant, MARTINE va t'expliquer. Bon voyage, {prenom}." },
-        ]}
-        onDone={(choiceId) => { setIdentification(choiceId); setScreen("play"); }}
-      />
-    );
+    return <IntroStory onDone={() => setScreen("play")} />;
   }
 
   /* ---------- écran de transition entre deux époques ---------- */
@@ -1790,7 +1786,8 @@ export default function App() {
             en jeu 2 (elle ne sert a rien pour l'enquete Al3x1A). */}
         {large && mode !== "jeu2" && (
           <div style={{ width: 104, flex: "0 0 auto", display: "flex", flexDirection: "column", minHeight: 0 }}>
-            <InventoryBar items={chapter.items} inv={inv} shake={shake} vertical mode={mode} />
+            <InventoryBar items={chapter.items} inv={inv} shake={shake} vertical mode={mode}
+              phoneCount={phoneQueue.length} onOpenPhone={() => setPhoneOpen(true)} />
             {/* mini-carte dockée sous la besace (si le chapitre a une carte) */}
             {chapter.carte && <MiniMap Carte={chapter.carte} tab={tab} label={chapter.scenes[tab].name} onOpen={() => setModal({ type: "carte" })} />}
           </div>
@@ -1918,7 +1915,8 @@ export default function App() {
       </div>
 
       {/* besace : en bas, seulement sur écran étroit / tablette */}
-      {!large && mode !== "jeu2" && <InventoryBar items={chapter.items} inv={inv} shake={shake} mode={mode} />}
+      {!large && mode !== "jeu2" && <InventoryBar items={chapter.items} inv={inv} shake={shake} mode={mode}
+        phoneCount={phoneQueue.length} onOpenPhone={() => setPhoneOpen(true)} />}
 
       {/* particules de réussite (au point de la combinaison) */}
       {fx && <Particles key={fx.key} x={fx.x} y={fx.y} big={fx.big} />}
@@ -2269,6 +2267,25 @@ export default function App() {
               setScreen("transition");
             }}
             onCancel={() => setVesselOpen(false)}
+          />
+        );
+      })()}
+
+      {/* ─── TÉLÉPHONE : message d'Al3x1a ─── */}
+      {phoneOpen && phoneQueue.length > 0 && (() => {
+        const msgId = phoneQueue[0];
+        const message = AL3X1A_MESSAGES[msgId];
+        if (!message) { setPhoneQueue((q) => q.slice(1)); setPhoneOpen(false); return null; }
+        return (
+          <PhoneMessage
+            message={message}
+            prenom={prenom}
+            onDone={(choiceId) => {
+              if (message.identification) setIdentification(choiceId);
+              setPhoneHistory((h) => [...h, { id: msgId, choice: choiceId }]);
+              setPhoneQueue((q) => q.slice(1));
+              setPhoneOpen(false);
+            }}
           />
         );
       })()}
