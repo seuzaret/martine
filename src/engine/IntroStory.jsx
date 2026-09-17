@@ -219,8 +219,8 @@ function SlideMessage({ onNext }) {
           <text x="-92" y="-155" textAnchor="middle" fontSize="14" fontWeight="800" fill="#075e54">A</text>
           <text x="-70" y="-165" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="12" fontWeight="700" fill="#fff">Al3x1a</text>
           <text x="-70" y="-149" fontFamily="ui-monospace,monospace" fontSize="9" fill="#c8e6cf">● en ligne</text>
-          {/* Bulle blanche du message */}
-          <g transform="translate(-100,-124)">
+          {/* Bulle blanche du message (largeur 216, centrée dans le tel) */}
+          <g transform="translate(-108,-124)">
             <rect x="0" y="0" width="216" height="264" rx="8" fill="#fff" stroke="#e0e0e0" strokeWidth="0.5" />
             <text x="108" y="24" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">« Je m'appelle Al3x1a.</text>
             <text x="108" y="42" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">Je viens du futur.</text>
