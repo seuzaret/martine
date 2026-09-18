@@ -61,6 +61,41 @@ export const MISSIONS_RUMEURS = {
    (mini-scène), y récupère le message d'origine, puis revient
    avec la vérité pour la restaurer.
    ============================================================ */
+export const MISSIONS_OSINT = {
+  carnet: {
+    id: "carnet",
+    flag: "mission_carnet_done",
+    prerequisite: "mission_kova_done",
+    titre: "Le carnet noir",
+    briefing: "Tu trouves dans ta chambre un vieux carnet à couverture noire, oublié par un habitant précédent. Trois affirmations y sont notées, sans source. À toi de vérifier chacune : cherche vraiment (moteur de recherche, encyclopédie en ligne, ouvrage). Puis reviens ici et coche Vrai ou Faux.",
+    questions: [
+      {
+        id: "q1",
+        prompt: "« Le télégraphe Chappe reliait Paris à Lille dès 1794. »",
+        indice: "Cherche : télégraphe Chappe, première ligne, date.",
+        vrai: true,
+        explication: "Vrai. La ligne Paris-Lille a été inaugurée en août 1794. C'est l'un des premiers grands réseaux de communication à distance.",
+      },
+      {
+        id: "q2",
+        prompt: "« Le mot “internet” a été inventé par Bill Gates en 1985. »",
+        indice: "Cherche : origine du mot internet, TCP/IP, ARPANET.",
+        vrai: false,
+        explication: "Faux. Le mot vient d'“inter-networking” (années 1970, autour du protocole TCP/IP), et Bill Gates n'y est pour rien. Il faisait des logiciels chez Microsoft à l'époque.",
+      },
+      {
+        id: "q3",
+        prompt: "« Gutenberg a mis au point sa presse à imprimer autour de 1450. »",
+        indice: "Cherche : Gutenberg, date invention imprimerie, Mayence.",
+        vrai: true,
+        explication: "Vrai. Vers 1450-1455, à Mayence. La Bible de Gutenberg est imprimée peu après.",
+      },
+    ],
+    succes: "Trois vérifications réussies. Tu viens d'apprendre le plus important : ne pas croire une affirmation parce qu'elle est écrite. Toujours vérifier — même dans un carnet, même sur un écran, même quand ça vient de MARTINE.",
+    echec: "Certaines réponses sont fausses. Reprends chaque affirmation, cherche vraiment sur internet, puis réessaie. Il n'y a pas de honte à revenir en arrière — c'est la méthode.",
+  },
+};
+
 export const MISSIONS_TEMPS = {
   appel: {
     id: "appel",
