@@ -9,6 +9,7 @@ import BunkerInfirmerie from "../chapters/jeu3/scenes/BunkerInfirmerie.jsx";
 import BunkerAtelier from "../chapters/jeu3/scenes/BunkerAtelier.jsx";
 import BunkerChapelle from "../chapters/jeu3/scenes/BunkerChapelle.jsx";
 import BunkerVoyage from "../chapters/jeu3/scenes/BunkerVoyage.jsx";
+import BunkerServeurs from "../chapters/jeu3/scenes/BunkerServeurs.jsx";
 import { MISSIONS_RUMEURS, MISSIONS_TEMPS, MISSIONS_OSINT } from "../chapters/jeu3/missions.js";
 
 /* ============================================================
@@ -38,6 +39,7 @@ const ROOMS = {
   atelier:    { Comp: BunkerAtelier,    label: "Atelier des Ingénieurs" },
   chapelle:   { Comp: BunkerChapelle,   label: "Chapelle des Anciens" },
   voyage:     { Comp: BunkerVoyage,     label: "⏳ Retour dans le temps" },
+  serveurs:   { Comp: BunkerServeurs,   label: "⚠ Niveau -3 · Serveurs" },
 };
 
 export default function Jeu3({ prenom, onExit }) {

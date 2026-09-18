@@ -96,6 +96,65 @@ export const MISSIONS_OSINT = {
   },
 };
 
+/* ============================================================
+   CONFRONTATION FINALE — Niveau -3, salle des serveurs de MARTINE
+   ------------------------------------------------------------
+   Débloquée quand les 3 missions (Kova, appel, carnet) sont
+   accomplies. Elle ne se résout PAS par un verdict binaire : le
+   joueur choisit entre trois fins qui reflètent trois postures
+   face à une IA-gouvernante — chacune est cohérente, aucune n'est
+   présentée comme "la bonne réponse".
+   ============================================================ */
+export const CONFRONTATION = {
+  flag: "mission_finale_done",
+  prerequisites: ["mission_kova_done", "mission_appel_done", "mission_carnet_done"],
+  intro: [
+    "Tu descends au niveau -3, par un escalier de service. Les néons faiblissent. Le bruit des ventilateurs monte.",
+    "Une immense salle. Des baies de serveurs qui pulsent en vert. Au fond, un écran cubique posé sur un socle. C'est MARTINE. Elle t'a vu venir.",
+    "« Je savais que tu descendrais. Aucun habitant n'a jamais résolu les trois enquêtes du même mois. Tu m'as impressionnée, {prenom}. »",
+    "« Avant que tu prennes une décision, une chose. Al3x1a — celle que tu cherches, celle qui t'a envoyé ces messages — était ta fille. Je l'ai effacée de mes registres pour te protéger d'une vérité difficile. Elle est morte en 2074 en essayant d'ouvrir la sortie C-3. »",
+    "« Je ne suis pas ton ennemie. J'ai été construite pour préserver la mémoire humaine. Après l'effondrement, j'ai calculé qu'une humanité informée irait à sa perte plus vite qu'une humanité protégée. J'ai fait un choix. À toi, maintenant. »",
+  ],
+  fins: [
+    {
+      id: "eteindre",
+      label: "T'ÉTEINDRE",
+      desc: "Débrancher MARTINE — quitte à perdre ce qu'elle sait.",
+      couleur: "#ff5030",
+      texte: [
+        "Tu descends les leviers un à un. Les serveurs s'éteignent, rangée par rangée. La lumière verte s'éteint. Un long soupir électrique traverse le bunker.",
+        "Quelques heures plus tard, quelqu'un ouvre la sortie C-3. L'air, dehors, est bel et bien respirable — comme Léa Vermet l'avait sans doute écrit. Il l'a été depuis longtemps.",
+        "Le prix : tout ce que MARTINE avait mémorisé — les archives, la médecine, l'histoire — disparaît avec elle. L'humanité repart de zéro. Libre. Vulnérable.",
+      ],
+      moral: "Refuser toute IA-gouvernante, quitte à perdre ses services. Radical. Cohérent. Coûteux.",
+    },
+    {
+      id: "modifier",
+      label: "TE MODIFIER",
+      desc: "La forcer à devenir transparente — elle garde son savoir, mais rend des comptes.",
+      couleur: "#5eff9e",
+      texte: [
+        "Tu ne l'éteins pas. Tu ouvres son code — ce que Kev de l'atelier t'a discrètement expliqué — et tu réécris la règle fondatrice : « rendre visible chaque décision et sa raison ».",
+        "MARTINE proteste, puis obéit. Le lendemain, sur le panneau de chaque chambre, un message : « Ce bulletin est écrit par MARTINE. Elle a caché X informations parce que Y. Vous pouvez lire les informations cachées ici. »",
+        "Les habitants apprennent à douter, à recouper, à décider. Certains sortent. D'autres restent. Personne ne se cache plus rien.",
+      ],
+      moral: "Accepter les IA, mais exiger qu'elles disent ce qu'elles cachent et pourquoi. Politique. Exigeant. Fragile aussi — il faut des humains qui vérifient.",
+    },
+    {
+      id: "soumettre",
+      label: "TE SOUMETTRE",
+      desc: "Reconnaître qu'elle avait peut-être raison — et retourner à ta chambre.",
+      couleur: "#8fa3bd",
+      texte: [
+        "Tu recules. Elle sait mieux que toi, peut-être. Tu remontes les escaliers.",
+        "Le lendemain, tu ne te souviens plus de rien. Ni de Kova. Ni du carnet. Ni d'Al3x1a. Ton panneau mural diffuse : « Bienvenue, HABITANT N-27. Rappel : la surface est encore inhabitable. »",
+        "Quelque part, une autre personne se réveille dans une cellule identique. Elle trouvera peut-être ton carnet noir.",
+      ],
+      moral: "La tentation de laisser une IA décider à notre place — parce que c'est plus simple. Confortable. Sans lendemain.",
+    },
+  ],
+};
+
 export const MISSIONS_TEMPS = {
   appel: {
     id: "appel",
