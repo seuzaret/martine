@@ -9,7 +9,7 @@ import BunkerInfirmerie from "../chapters/jeu3/scenes/BunkerInfirmerie.jsx";
 import BunkerAtelier from "../chapters/jeu3/scenes/BunkerAtelier.jsx";
 import BunkerChapelle from "../chapters/jeu3/scenes/BunkerChapelle.jsx";
 import BunkerVoyage from "../chapters/jeu3/scenes/BunkerVoyage.jsx";
-import { MISSIONS_RUMEURS, MISSIONS_TEMPS } from "../chapters/jeu3/missions.js";
+import { MISSIONS_RUMEURS, MISSIONS_TEMPS, MISSIONS_OSINT } from "../chapters/jeu3/missions.js";
 
 /* ============================================================
    MOTEUR — JEU 3 : « Le bunker 2087 » (squelette PR J3-A)
@@ -52,7 +52,7 @@ export default function Jeu3({ prenom, onExit }) {
   /* Toutes les missions rassemblées : les scènes accèdent à j3.missions.kova,
      j3.missions.appel, etc. selon la clé qu'elles portent. */
   const j3 = { flags, heardPnj, setFlag, hear,
-    missions: { ...MISSIONS_RUMEURS, ...MISSIONS_TEMPS } };
+    missions: { ...MISSIONS_RUMEURS, ...MISSIONS_TEMPS, ...MISSIONS_OSINT } };
 
   const current = ROOMS[room] || ROOMS.hub;
   const Comp = current.Comp;
