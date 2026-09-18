@@ -61,16 +61,6 @@ export const MISSIONS_RUMEURS = {
    (mini-scène), y récupère le message d'origine, puis revient
    avec la vérité pour la restaurer.
    ============================================================ */
-/* ============================================================
-   MISSIONS TYPE C — OSINT hors-jeu (vérifier sur internet réel)
-   ------------------------------------------------------------
-   Le joueur trouve un vieux carnet qui contient des affirmations
-   à vérifier. La méthode : sortir du jeu, aller chercher sur un
-   moteur de recherche ou Wikipédia, puis revenir répondre.
-   L'enseignant peut préparer les élèves à ces recherches (les
-   affirmations sont réelles et vérifiables). Chaque question
-   demande Vrai / Faux ; il faut TOUT bon pour valider la mission.
-   ============================================================ */
 export const MISSIONS_OSINT = {
   carnet: {
     id: "carnet",
