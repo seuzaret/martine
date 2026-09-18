@@ -8,7 +8,8 @@ import BunkerCantine from "../chapters/jeu3/scenes/BunkerCantine.jsx";
 import BunkerInfirmerie from "../chapters/jeu3/scenes/BunkerInfirmerie.jsx";
 import BunkerAtelier from "../chapters/jeu3/scenes/BunkerAtelier.jsx";
 import BunkerChapelle from "../chapters/jeu3/scenes/BunkerChapelle.jsx";
-import { MISSIONS_RUMEURS } from "../chapters/jeu3/missions.js";
+import BunkerVoyage from "../chapters/jeu3/scenes/BunkerVoyage.jsx";
+import { MISSIONS_RUMEURS, MISSIONS_TEMPS } from "../chapters/jeu3/missions.js";
 
 /* ============================================================
    MOTEUR — JEU 3 : « Le bunker 2087 » (squelette PR J3-A)
@@ -36,6 +37,7 @@ const ROOMS = {
   infirmerie: { Comp: BunkerInfirmerie, label: "Infirmerie" },
   atelier:    { Comp: BunkerAtelier,    label: "Atelier des Ingénieurs" },
   chapelle:   { Comp: BunkerChapelle,   label: "Chapelle des Anciens" },
+  voyage:     { Comp: BunkerVoyage,     label: "⏳ Retour dans le temps" },
 };
 
 export default function Jeu3({ prenom, onExit }) {
@@ -47,7 +49,10 @@ export default function Jeu3({ prenom, onExit }) {
   const [heardPnj, setHeardPnj] = useState({}); // { pnjId: true }
   const setFlag = (k, v = true) => setFlags((f) => ({ ...f, [k]: v }));
   const hear = (pnjId) => setHeardPnj((h) => ({ ...h, [pnjId]: true }));
-  const j3 = { flags, heardPnj, setFlag, hear, missions: MISSIONS_RUMEURS };
+  /* Toutes les missions rassemblées : les scènes accèdent à j3.missions.kova,
+     j3.missions.appel, etc. selon la clé qu'elles portent. */
+  const j3 = { flags, heardPnj, setFlag, hear,
+    missions: { ...MISSIONS_RUMEURS, ...MISSIONS_TEMPS } };
 
   const current = ROOMS[room] || ROOMS.hub;
   const Comp = current.Comp;

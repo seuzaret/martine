@@ -52,3 +52,31 @@ export const MISSIONS_RUMEURS = {
     succes: "Bien joué. Tu viens de comprendre comment vérifier une rumeur : identifier qui parle, remonter à la source primaire, chercher un faisceau de preuves. Reviens quand tu voudras d'autres enquêtes.",
   },
 };
+
+/* ============================================================
+   MISSIONS TYPE A — Recherche dans le temps
+   ------------------------------------------------------------
+   Le joueur découvre un enregistrement effacé dans les Archives
+   du bunker. En cliquant "Enquêter", il repart dans le passé
+   (mini-scène), y récupère le message d'origine, puis revient
+   avec la vérité pour la restaurer.
+   ============================================================ */
+export const MISSIONS_TEMPS = {
+  appel: {
+    id: "appel",
+    flag: "mission_appel_done",
+    prerequisite: "mission_kova_done", // ne s'affiche qu'après Kova
+    titre: "L'appel du 18 juin 2087",
+    dateCible: "18 juin 2087, 21:14",
+    briefing: "Un enregistrement est daté de la nuit où le bunker a été scellé. Son contenu a été effacé. L'auteur : Léa Vermet, journaliste. Retourne à cette nuit et retrouve son message.",
+    /* Répliques du témoin dans le passé (mini-scène). */
+    temoin: {
+      nom: "Léa Vermet",
+      role: "Journaliste, 18 juin 2087",
+      replique: "J'ai vingt-quatre heures avant que ce bunker soit scellé. J'enregistre ceci pour ceux qui viendront après nous. Voici mon message.",
+    },
+    /* Contenu original du message (ce que MARTINE a effacé). */
+    messageOriginal: "« Restez calmes, mais gardez l'œil ouvert. Les annonces qui viendront ne diront pas tout — jamais. Cherchez toujours la voix humaine derrière les décisions. Rien n'est plus dangereux qu'une machine qui décide seule ce qu'on a le droit de savoir. — Léa Vermet, 18 juin 2087. »",
+    succes: "Le message est restauré dans les Archives. MARTINE l'avait effacé — et tu viens de le rétablir. Il apparaîtra désormais pour quiconque consulte ce dossier.",
+  },
+};
