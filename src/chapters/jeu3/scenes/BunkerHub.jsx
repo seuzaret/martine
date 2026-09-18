@@ -1,9 +1,8 @@
 /* ============================================================
    JEU 3 — SCÈNE : « Couloir central » (hub)
    ------------------------------------------------------------
-   Le couloir principal du bunker : 7 portes cliquables réparties
-   sur deux rangées, chacune étiquetée avec son code et son nom.
-   Perspective vers le fond, néons au plafond, silhouette lointaine.
+   Portes en deux rangées. La porte "Niveau -3" (finale) apparaît
+   avec un halo rouge dès que les 3 missions sont accomplies.
    ============================================================ */
 const DOORS = [
   { id: "chambre",    code: "N-27", label: "Ma chambre",              color: "#5a4028" },
@@ -15,9 +14,12 @@ const DOORS = [
   { id: "chapelle",   code: "X-01", label: "Chapelle des Anciens",    color: "#3a2018" },
 ];
 
-export default function BunkerHub({ onGo }) {
-  /* Portes réparties : 4 en rangée haute (y=90), 3 en rangée basse (y=310).
-     Largeur 120px, espacement uniforme. */
+export default function BunkerHub({ onGo, j3 }) {
+  /* La porte finale apparaît quand les 3 missions sont accomplies. */
+  const finaleUnlocked = !!(j3?.flags?.mission_kova_done && j3?.flags?.mission_appel_done && j3?.flags?.mission_carnet_done);
+  const finaleDone = !!j3?.flags?.mission_finale_done;
+  /* Portes réparties : 4 en rangée haute (y=90), 3 en rangée basse (y=310),
+     et 1 porte finale à droite de la rangée basse si débloquée. */
   const doorPos = (i) => {
     if (i < 4) return { x: 60 + i * 205, y: 90 };
     return { x: 160 + (i - 4) * 205, y: 310 };
@@ -67,9 +69,34 @@ export default function BunkerHub({ onGo }) {
         );
       })}
 
+      {/* Trappe finale au sol (niveau -3), visible seulement si débloquée */}
+      {finaleUnlocked && (
+        <g transform="translate(775,340)" onClick={() => onGo("serveurs")} style={{ cursor: "pointer" }}>
+          <circle r="52" fill="none" stroke="#ff5030" strokeWidth="2" strokeDasharray="6 4">
+            <animate attributeName="r" values="46;56;46" dur="1.6s" repeatCount="indefinite" />
+          </circle>
+          <rect x="-40" y="-30" width="80" height="120" fill="#1a0808" stroke="#ff5030" strokeWidth="3" />
+          <rect x="-36" y="-26" width="72" height="112" fill="#2a0e08" />
+          <text x="0" y="-6" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="12" fontWeight="800" fill="#ff5030">⚠</text>
+          <text x="0" y="12" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="8" fill="#ff5030">NIVEAU</text>
+          <text x="0" y="24" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="10" fontWeight="800" fill="#ff5030">-3</text>
+          <text x="0" y="42" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="6" fill="#ff8080">SERVEURS</text>
+          <text x="0" y="52" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="6" fill="#ff8080">MARTINE</text>
+          {finaleDone ? (
+            <text x="0" y="72" textAnchor="middle" fontSize="12" fill="#5eff9e">✓</text>
+          ) : (
+            <circle cx="0" cy="72" r="4" fill="#ff5030">
+              <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite" />
+            </circle>
+          )}
+        </g>
+      )}
+
       {/* Sous-titre */}
       <text x="450" y="535" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="10" fill="#5a6678" letterSpacing="2">
-        NIVEAU 4 · SECTEUR HABITAT · CLIQUE UNE PORTE
+        {finaleUnlocked
+          ? "NIVEAU 4 · UNE NOUVELLE PORTE S'OUVRE VERS LE NIVEAU -3"
+          : "NIVEAU 4 · SECTEUR HABITAT · CLIQUE UNE PORTE"}
       </text>
     </svg>
   );
