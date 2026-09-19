@@ -106,6 +106,7 @@ export default function BunkerRumeurs({ onGo, j3 }) {
             x={p.pose.x} y={p.pose.y}
             color={p.color} pants={p.pants} hair={p.hair}
             facing={p.facing || "front"} accessory={p.accessory || null}
+            activity={p.activity || null}
             nom={p.nom} role={p.role}
             heard={!!j3.heardPnj[p.id]}
             active={selected === p.id}
@@ -177,7 +178,7 @@ export default function BunkerRumeurs({ onGo, j3 }) {
         </div>
       )}
 
-      <button onClick={() => onGo("hub")}
+      <button onClick={() => onGo(j3.hubRoom || "hub")}
         style={{ background: "#141b26", color: "#7fd8ff", border: "1px solid #3a80c8", borderRadius: 10, padding: "10px 22px", fontWeight: 700, cursor: "pointer", fontSize: 13, fontFamily: "ui-monospace,monospace", letterSpacing: 1, marginTop: 4 }}>
         ← Retour au couloir
       </button>
