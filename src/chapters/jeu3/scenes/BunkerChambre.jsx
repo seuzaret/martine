@@ -28,7 +28,7 @@ export default function BunkerChambre({ onGo, j3 }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-      <svg viewBox="0 0 800 380" style={{ display: "block", width: "100%", height: "auto", maxHeight: "46vh" }}>
+      <svg viewBox="0 0 800 380" style={{ display: "block", width: "100%", height: "auto", maxHeight: "70vh" }}>
         <defs>
           <linearGradient id="bc-wall" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#2a2f38" />

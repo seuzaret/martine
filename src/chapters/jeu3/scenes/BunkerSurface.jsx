@@ -11,7 +11,7 @@ export default function BunkerSurface({ onGo, j3 }) {
   const done = !!j3?.flags?.mission_finale_done;
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
-      <svg viewBox="0 0 900 500" style={{ display: "block", width: "100%", height: "auto", maxHeight: "58vh" }}>
+      <svg viewBox="0 0 900 500" style={{ display: "block", width: "100%", height: "auto", maxHeight: "68vh" }}>
         <defs>
           <linearGradient id="sf-wall" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#4a3020" />

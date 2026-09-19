@@ -30,7 +30,7 @@ export default function BunkerRumeurs({ onGo, j3 }) {
         </p>
       </div>
 
-      <svg viewBox="0 0 1000 520" style={{ display: "block", width: "100%", height: "auto", maxHeight: "50vh" }}>
+      <svg viewBox="0 0 1000 520" style={{ display: "block", width: "100%", height: "auto", maxHeight: "70vh" }}>
         <defs>
           <linearGradient id="br-wall" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#2a2418" />
