@@ -97,8 +97,13 @@ export default function Jeu3({ prenom, onExit }) {
       {/* Zone principale : mini-carte à gauche + scène à droite */}
       <div style={{ flex: 1, display: "flex", minHeight: 0 }}>
         {showMinimap && <BunkerMinimap room={room} flags={flags} onGo={goTo} />}
+<<<<<<< HEAD
         <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 6, minHeight: 0, overflow: "hidden" }}>
           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+=======
+        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 12, minHeight: 0, overflow: "hidden" }}>
+          <div style={{ width: "100%", maxWidth: 1500 }}>
+>>>>>>> origin/main
             <Comp prenom={prenom} onGo={goTo} j3={j3} />
           </div>
         </div>
