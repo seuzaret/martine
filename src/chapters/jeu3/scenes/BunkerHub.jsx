@@ -9,7 +9,7 @@
 export default function BunkerHub({ onGo, j3 }) {
   const finaleDone = !!j3?.flags?.mission_finale_done;
   return (
-    <svg viewBox="0 0 900 460" style={{ display: "block", width: "100%", height: "auto", maxHeight: "62vh" }}>
+    <svg viewBox="0 0 900 460" style={{ display: "block", width: "100%", height: "auto", maxHeight: "70vh" }}>
       <defs>
         <linearGradient id="hb0-wall" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#2a2f38" />

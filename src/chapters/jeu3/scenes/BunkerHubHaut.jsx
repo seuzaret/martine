@@ -11,7 +11,7 @@ const DOORS = [
 
 export default function BunkerHubHaut({ onGo }) {
   return (
-    <svg viewBox="0 0 900 460" style={{ display: "block", width: "100%", height: "auto", maxHeight: "62vh" }}>
+    <svg viewBox="0 0 900 460" style={{ display: "block", width: "100%", height: "auto", maxHeight: "70vh" }}>
       <defs>
         <linearGradient id="hh-wall" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#3a2f18" />

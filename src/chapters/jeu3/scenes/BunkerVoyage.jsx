@@ -43,7 +43,7 @@ export default function BunkerVoyage({ onGo, j3 }) {
   if (phase === "flash" || phase === "return") {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, position: "relative" }}>
-        <svg viewBox="0 0 800 400" style={{ display: "block", width: "100%", height: "auto", maxHeight: "56vh" }}>
+        <svg viewBox="0 0 800 400" style={{ display: "block", width: "100%", height: "auto", maxHeight: "66vh" }}>
           <defs>
             <radialGradient id="bv-flash" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#fff" stopOpacity="1" />

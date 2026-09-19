@@ -42,7 +42,7 @@ export default function BunkerElevator({ onGo, j3 }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
-      <svg viewBox="0 0 700 460" style={{ display: "block", width: "100%", height: "auto", maxHeight: "56vh" }}>
+      <svg viewBox="0 0 700 460" style={{ display: "block", width: "100%", height: "auto", maxHeight: "66vh" }}>
         <defs>
           <linearGradient id="ev-wall" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#28303a" />
