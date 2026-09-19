@@ -26,7 +26,7 @@ export default function PnjRoom({ titre, bg, pnjList, j3, onGo }) {
           {titre}
         </div>
       )}
-      <svg viewBox="0 0 800 400" style={{ display: "block", width: "100%", height: "auto", maxHeight: "48vh" }}>
+      <svg viewBox="0 0 1000 520" style={{ display: "block", width: "100%", height: "auto", maxHeight: "56vh" }}>
         {bg}
         {pnjList.map((p) => (
           <PnjSprite key={p.id}
