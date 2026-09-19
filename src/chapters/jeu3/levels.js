@@ -1,0 +1,54 @@
+/* ============================================================
+   JEU 3 — Architecture du bunker sur 5 niveaux
+   ------------------------------------------------------------
+   Chaque niveau a une couleur d'ambiance qui se propage à sa
+   mini-carte latérale et à ses décors (via une teinte discrète
+   plus tard). L'ascenseur (`elevator`) permet de passer de l'un
+   à l'autre — chaque niveau a son propre mini-hub.
+
+   ordre : de haut en bas (surface au sommet, serveurs tout en bas)
+   ============================================================ */
+export const LEVELS = [
+  { id: "+2", name: "Surface",  hubRoom: "surface",  color: "#e0a848",
+    rooms: [{ id: "surface", label: "Sortie scellée C-3" }] },
+  { id: "+1", name: "Communal", hubRoom: "hubHaut",  color: "#c88060",
+    rooms: [
+      { id: "cantine",  label: "Cantine commune" },
+      { id: "chapelle", label: "Chapelle des Anciens" },
+    ] },
+  { id: "0",  name: "Habitat",  hubRoom: "hub",      color: "#7fd8ff",
+    rooms: [
+      { id: "chambre", label: "Ma chambre (N-27)" },
+    ] },
+  { id: "-1", name: "Services", hubRoom: "hubBas",   color: "#5eff9e",
+    rooms: [
+      { id: "rumeurs",    label: "Bureau des Rumeurs" },
+      { id: "archives",   label: "Salle des Archives" },
+      { id: "infirmerie", label: "Infirmerie" },
+      { id: "atelier",    label: "Atelier des Ingénieurs" },
+    ] },
+  { id: "-3", name: "Serveurs", hubRoom: "serveurs", color: "#ff5030",
+    rooms: [{ id: "serveurs", label: "Salle MARTINE" }] },
+];
+
+/* Map inverse : d'une roomId → l'id du niveau où elle est. */
+export const ROOM_TO_LEVEL = (() => {
+  const m = {};
+  for (const lvl of LEVELS) {
+    m[lvl.hubRoom] = lvl.id;
+    for (const r of lvl.rooms) m[r.id] = lvl.id;
+  }
+  m.awake = "0";       // le réveil se fait dans la chambre → niveau 0
+  m.elevator = null;   // l'ascenseur n'a pas de niveau propre
+  m.voyage = null;     // hors-bunker (voyage dans le temps)
+  return m;
+})();
+
+/* Une pièce est-elle accessible à l'ascenseur ? Le niveau -3 (serveurs)
+   n'est débloqué qu'une fois les 3 missions résolues. */
+export function isLevelUnlocked(levelId, flags) {
+  if (levelId === "-3") {
+    return !!(flags?.mission_kova_done && flags?.mission_appel_done && flags?.mission_carnet_done);
+  }
+  return true;
+}
