@@ -31,7 +31,9 @@ export default function PnjRoom({ titre, bg, pnjList, j3, onGo }) {
         {pnjList.map((p) => (
           <PnjSprite key={p.id}
             x={p.pose.x} y={p.pose.y}
-            color={p.color} hair={p.hair}
+            color={p.color} hair={p.hair} pants={p.pants} skin={p.skin}
+            facing={p.facing || "front"} poseType={p.pose?.type}
+            pose={p.poseKind || "stand"} accessory={p.accessory || null}
             nom={p.nom} role={p.role}
             heard={!!j3.heardPnj[p.id]}
             active={selected === p.id}
