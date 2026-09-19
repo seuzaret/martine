@@ -16,6 +16,10 @@
      facing      — "front" | "left" | "right"   (défaut "front")
      pose        — "stand" | "sit"              (défaut "stand")
      accessory   — "apron" | "coat" | "toolbelt" | "robe" | "hardhat" | null
+     activity    — "wipe" | "stir" | "write" | "clipboard" | "wrench" |
+                   "hammer" | "torch" | "pray" | "crossed" | "cup" | null
+                   (Si présente : remplace les bras par-dessus la posture
+                    de base et ajoute l'outil + une petite animation.)
      nom, role   — étiquettes affichées sous le personnage
      heard       — pastille verte ✓ si vrai
      active      — halo doré pulsant si vrai
@@ -23,9 +27,10 @@
    ============================================================ */
 export default function PnjSprite({
   x, y, color = "#5a5060", pants = "#3a2818", hair = "#2a1808", skin = "#e0a878",
-  facing = "front", pose = "stand", accessory = null,
+  facing = "front", pose = "stand", accessory = null, activity = null,
   nom = "?", role = "", heard = false, active = false, onClick,
 }) {
+  const hasActivity = !!activity;
   return (
     <g transform={`translate(${x},${y})`} onClick={onClick} style={{ cursor: onClick ? "pointer" : "default" }}>
       {/* Halo actif */}
@@ -37,12 +42,16 @@ export default function PnjSprite({
       {/* Ombre au sol */}
       <ellipse cx="0" cy="0" rx="18" ry="4" fill="#000" opacity="0.35" />
 
-      {/* Corps selon la pose */}
-      {pose === "sit" ? <SitBody color={color} pants={pants} skin={skin} facing={facing} /> :
-                        <StandBody color={color} pants={pants} skin={skin} facing={facing} />}
+      {/* Corps selon la pose (les bras par défaut sont cachés si le PNJ
+          est en activité — l'activité dessinera ses propres bras). */}
+      {pose === "sit" ? <SitBody color={color} pants={pants} skin={skin} facing={facing} hideArms={hasActivity} /> :
+                        <StandBody color={color} pants={pants} skin={skin} facing={facing} hideArms={hasActivity} />}
 
       {/* Accessoire de métier (par-dessus la tunique) */}
       {accessory && <Accessory kind={accessory} facing={facing} pose={pose} />}
+
+      {/* Activité (bras + outil + animation) */}
+      {hasActivity && <Activity kind={activity} skin={skin} facing={facing} pose={pose} />}
 
       {/* Tête + cheveux + visage — orientation selon `facing` */}
       <Head hair={hair} skin={skin} facing={facing} />
@@ -63,21 +72,21 @@ export default function PnjSprite({
 }
 
 /* ═══ CORPS DEBOUT ═══ */
-function StandBody({ color, pants, skin, facing }) {
-  const armColor = skin;
+function StandBody({ color, pants, skin, facing, hideArms = false }) {
   if (facing === "left") {
     return (
       <g>
-        {/* Jambes */}
         <rect x="-8" y="-40" width="7" height="40" fill={pants} stroke="#0a0806" strokeWidth="0.6" />
         <rect x="1"  y="-40" width="7" height="40" fill={pants} stroke="#0a0806" strokeWidth="0.6" opacity="0.85" />
         <ellipse cx="-4" cy="-1" rx="6" ry="2" fill="#141c26" />
         <ellipse cx="4"  cy="-1" rx="6" ry="2" fill="#141c26" opacity="0.85" />
-        {/* Torse (buste tourné 3/4 gauche) */}
         <path d="M-14 -84 Q-18 -70 -16 -42 L 12 -42 Q 14 -70 10 -84 Z" fill={color} stroke="#0a0806" strokeWidth="0.8" />
-        {/* Bras qui va vers l'avant (vue gauche) */}
-        <path d="M-14 -80 Q-24 -70 -22 -56 Q-20 -50 -14 -50" stroke={armColor} strokeWidth="7" fill="none" strokeLinecap="round" />
-        <circle cx="-14" cy="-50" r="4" fill={skin} stroke="#8a5030" strokeWidth="0.6" />
+        {!hideArms && (
+          <>
+            <path d="M-14 -80 Q-24 -70 -22 -56 Q-20 -50 -14 -50" stroke={skin} strokeWidth="7" fill="none" strokeLinecap="round" />
+            <circle cx="-14" cy="-50" r="4" fill={skin} stroke="#8a5030" strokeWidth="0.6" />
+          </>
+        )}
       </g>
     );
   }
@@ -89,47 +98,47 @@ function StandBody({ color, pants, skin, facing }) {
         <ellipse cx="-4" cy="-1" rx="6" ry="2" fill="#141c26" opacity="0.85" />
         <ellipse cx="4"  cy="-1" rx="6" ry="2" fill="#141c26" />
         <path d="M-10 -84 Q-14 -70 -12 -42 L 16 -42 Q 18 -70 14 -84 Z" fill={color} stroke="#0a0806" strokeWidth="0.8" />
-        {/* Bras qui va vers l'avant (droite) */}
-        <path d="M14 -80 Q24 -70 22 -56 Q20 -50 14 -50" stroke={armColor} strokeWidth="7" fill="none" strokeLinecap="round" />
-        <circle cx="14" cy="-50" r="4" fill={skin} stroke="#8a5030" strokeWidth="0.6" />
+        {!hideArms && (
+          <>
+            <path d="M14 -80 Q24 -70 22 -56 Q20 -50 14 -50" stroke={skin} strokeWidth="7" fill="none" strokeLinecap="round" />
+            <circle cx="14" cy="-50" r="4" fill={skin} stroke="#8a5030" strokeWidth="0.6" />
+          </>
+        )}
       </g>
     );
   }
-  /* front (défaut) */
+  /* front */
   return (
     <g>
-      {/* Jambes */}
       <rect x="-9" y="-40" width="8" height="40" fill={pants} stroke="#0a0806" strokeWidth="0.6" />
       <rect x="1"  y="-40" width="8" height="40" fill={pants} stroke="#0a0806" strokeWidth="0.6" />
       <ellipse cx="-5" cy="-1" rx="6" ry="2" fill="#141c26" />
       <ellipse cx="5"  cy="-1" rx="6" ry="2" fill="#141c26" />
-      {/* Torse trapèzoïdal */}
       <path d="M-16 -84 Q-20 -68 -18 -42 L 18 -42 Q 20 -68 16 -84 Z" fill={color} stroke="#0a0806" strokeWidth="0.8" />
-      {/* Encolure */}
       <path d="M-8 -84 Q0 -80 8 -84" stroke="#0a0806" strokeWidth="0.6" fill="none" opacity="0.5" />
-      {/* Bras le long du corps */}
-      <path d="M-18 -80 Q-26 -66 -22 -50" stroke={skin} strokeWidth="7" fill="none" strokeLinecap="round" />
-      <path d="M 18 -80 Q 26 -66 22 -50" stroke={skin} strokeWidth="7" fill="none" strokeLinecap="round" />
-      {/* Mains */}
-      <circle cx="-22" cy="-50" r="4" fill={skin} stroke="#8a5030" strokeWidth="0.6" />
-      <circle cx=" 22" cy="-50" r="4" fill={skin} stroke="#8a5030" strokeWidth="0.6" />
+      {!hideArms && (
+        <>
+          <path d="M-18 -80 Q-26 -66 -22 -50" stroke={skin} strokeWidth="7" fill="none" strokeLinecap="round" />
+          <path d="M 18 -80 Q 26 -66 22 -50" stroke={skin} strokeWidth="7" fill="none" strokeLinecap="round" />
+          <circle cx="-22" cy="-50" r="4" fill={skin} stroke="#8a5030" strokeWidth="0.6" />
+          <circle cx=" 22" cy="-50" r="4" fill={skin} stroke="#8a5030" strokeWidth="0.6" />
+        </>
+      )}
     </g>
   );
 }
 
 /* ═══ CORPS ASSIS (sur un banc, jambes pendantes) ═══ */
-function SitBody({ color, pants, skin }) {
+function SitBody({ color, pants, skin, hideArms = false }) {
   return (
     <g>
-      {/* Jambes assises (repliées vers l'avant) */}
       <path d="M-10 -30 Q-14 -6 -6 0 L 6 0 Q 14 -6 10 -30 Z" fill={pants} stroke="#0a0806" strokeWidth="0.6" />
-      {/* Pieds */}
       <ellipse cx="-5" cy="0" rx="6" ry="2" fill="#141c26" />
       <ellipse cx="5"  cy="0" rx="6" ry="2" fill="#141c26" />
-      {/* Torse un peu penché en avant */}
       <path d="M-16 -74 Q-20 -60 -16 -32 L 16 -32 Q 20 -60 16 -74 Z" fill={color} stroke="#0a0806" strokeWidth="0.8" />
-      {/* Bras croisés sur les cuisses */}
-      <path d="M-16 -60 Q-8 -50 0 -46 Q 8 -50 16 -60" stroke={skin} strokeWidth="7" fill="none" strokeLinecap="round" />
+      {!hideArms && (
+        <path d="M-16 -60 Q-8 -50 0 -46 Q 8 -50 16 -60" stroke={skin} strokeWidth="7" fill="none" strokeLinecap="round" />
+      )}
     </g>
   );
 }
@@ -252,6 +261,191 @@ function Accessory({ kind, facing, pose }) {
           <rect x="-14" y="4" width="28" height="3" fill="#5a3818" />
           {/* Lampe frontale */}
           <circle cx="0" cy="-2" r="2.5" fill="#fff" stroke="#5a3818" strokeWidth="0.5" />
+        </g>
+      );
+    }
+    default:
+      return null;
+  }
+}
+
+/* ═══ ACTIVITÉ (bras + outil + animation en boucle) ═══
+   Rendue APRÈS le corps (donc devant). Dessine ses propres bras
+   dans une pose adaptée à l'activité, et anime l'outil discrètement.
+   L'ancre est y=0 (pieds) ; les mains typiques sont vers y=-55/-70. */
+function Activity({ kind, skin, facing, pose }) {
+  const isSit = pose === "sit";
+  const shoulderY = isSit ? -70 : -80;
+  const handY = isSit ? -50 : -55;
+  const arm = (fromX, fromY, toX, toY) => (
+    <path d={`M${fromX} ${fromY} Q${(fromX + toX) / 2} ${(fromY + toY) / 2 + 4} ${toX} ${toY}`}
+      stroke={skin} strokeWidth="7" fill="none" strokeLinecap="round" />
+  );
+  const hand = (x, y) => <circle cx={x} cy={y} r="4" fill={skin} stroke="#8a5030" strokeWidth="0.6" />;
+
+  switch (kind) {
+    case "wipe": {
+      /* Essuyage : bras droit tenant un chiffon, mouvement horizontal */
+      return (
+        <g>
+          {/* Bras gauche le long du corps */}
+          {arm(-18, shoulderY, -22, handY)}
+          {hand(-22, handY)}
+          {/* Bras droit + chiffon animé */}
+          <g style={{ transformOrigin: `18px ${shoulderY}px`, animation: "actWipe 1.4s ease-in-out infinite alternate" }}>
+            {arm(18, shoulderY, 26, handY)}
+            {hand(26, handY)}
+            {/* Chiffon */}
+            <rect x="22" y={handY - 2} width="14" height="8" fill="#f0f4ff" stroke="#3a4048" strokeWidth="0.5" transform="rotate(-8 30 -55)" />
+          </g>
+          <style>{`@keyframes actWipe { 0% { transform: translateX(-6px); } 100% { transform: translateX(6px); } }`}</style>
+        </g>
+      );
+    }
+    case "stir": {
+      /* Cuistot : bras droit qui remue une louche au-dessus d'une casserole invisible */
+      return (
+        <g>
+          {arm(-18, shoulderY, -22, handY)}
+          {hand(-22, handY)}
+          {arm(18, shoulderY, 8, handY - 8)}
+          {hand(8, handY - 8)}
+          {/* Manche de louche qui tourne */}
+          <g style={{ transformOrigin: `8px ${handY - 8}px`, animation: "actStir 1.6s linear infinite" }}>
+            <line x1="8" y1={handY - 8} x2="14" y2={handY - 24} stroke="#5a3818" strokeWidth="2" strokeLinecap="round" />
+            <ellipse cx="14" cy={handY - 26} rx="5" ry="3" fill="#8a9098" stroke="#3a4048" strokeWidth="0.5" />
+          </g>
+          {/* Petit "S" de vapeur qui monte */}
+          <path d="M4 -95 q-3 -6 0 -12 q 3 -6 0 -12" stroke="#c8d4e2" strokeWidth="0.8" fill="none" opacity="0.6">
+            <animate attributeName="opacity" values="0.15;0.55;0.15" dur="2s" repeatCount="indefinite" />
+          </path>
+          <style>{`@keyframes actStir { from { transform: rotate(0); } to { transform: rotate(360deg); } }`}</style>
+        </g>
+      );
+    }
+    case "write": {
+      /* Écrit : bras posé devant, main qui bouge en petites lignes */
+      return (
+        <g>
+          {arm(-18, shoulderY, -14, handY - 4)}
+          {hand(-14, handY - 4)}
+          <g style={{ transformOrigin: `14px ${handY - 4}px`, animation: "actWrite 1s linear infinite alternate" }}>
+            {arm(18, shoulderY, 14, handY - 4)}
+            {hand(14, handY - 4)}
+            {/* Plume/stylo */}
+            <line x1="14" y1={handY - 4} x2="20" y2={handY - 12} stroke="#3a2010" strokeWidth="1.6" strokeLinecap="round" />
+          </g>
+          {/* Petit carnet devant */}
+          <rect x="-4" y={handY - 2} width="20" height="10" fill="#e8dfc8" stroke="#3a2818" strokeWidth="0.5" />
+          <style>{`@keyframes actWrite { 0% { transform: translate(-3px,0); } 100% { transform: translate(3px,0); } }`}</style>
+        </g>
+      );
+    }
+    case "clipboard": {
+      /* Clipboard tenu à deux mains devant la poitrine */
+      return (
+        <g>
+          {arm(-18, shoulderY, -6, handY)}
+          {hand(-6, handY)}
+          {arm(18, shoulderY, 6, handY)}
+          {hand(6, handY)}
+          <rect x="-10" y={handY - 12} width="20" height="20" fill="#c8b090" stroke="#3a2818" strokeWidth="0.7" />
+          <rect x="-6" y={handY - 8} width="12" height="14" fill="#e8dfc8" stroke="#3a2818" strokeWidth="0.4" />
+          <line x1="-4" y1={handY - 4} x2="4" y2={handY - 4} stroke="#3a2818" strokeWidth="0.4" />
+          <line x1="-4" y1={handY} x2="4" y2={handY} stroke="#3a2818" strokeWidth="0.4" />
+          <line x1="-4" y1={handY + 4} x2="4" y2={handY + 4} stroke="#3a2818" strokeWidth="0.4" />
+        </g>
+      );
+    }
+    case "wrench": {
+      /* Clé à molette qui tourne (rotation continue) */
+      return (
+        <g>
+          {arm(-18, shoulderY, -10, handY)}
+          {hand(-10, handY)}
+          {arm(18, shoulderY, 10, handY)}
+          {hand(10, handY)}
+          <g style={{ transformOrigin: `0px ${handY}px`, animation: "actWrench 2s linear infinite" }}>
+            <rect x="-2" y={handY - 14} width="4" height="14" fill="#5a6270" stroke="#0a0806" strokeWidth="0.4" />
+            <path d="M-6 -74 L6 -74 L6 -68 L2 -68 L2 -62 L-2 -62 L-2 -68 L-6 -68 Z" fill="#5a6270" stroke="#0a0806" strokeWidth="0.4" />
+          </g>
+          <style>{`@keyframes actWrench { from { transform: rotate(-30deg); } to { transform: rotate(30deg); } }`}</style>
+        </g>
+      );
+    }
+    case "hammer": {
+      /* Marteau qui frappe : bras droit levé haut puis descend */
+      return (
+        <g>
+          {arm(-18, shoulderY, -6, handY - 2)}
+          {hand(-6, handY - 2)}
+          <g style={{ transformOrigin: `18px ${shoulderY}px`, animation: "actHammer 0.8s ease-in-out infinite alternate" }}>
+            {arm(18, shoulderY, 22, handY - 20)}
+            {hand(22, handY - 20)}
+            {/* Manche + tête */}
+            <line x1="22" y1={handY - 20} x2="22" y2={handY - 34} stroke="#5a3818" strokeWidth="2" />
+            <rect x="14" y={handY - 40} width="16" height="8" fill="#3a4048" stroke="#0a0806" strokeWidth="0.5" />
+          </g>
+          {/* Petit clou en cours */}
+          <rect x="-8" y={handY} width="2" height="6" fill="#5a6270" />
+          <style>{`@keyframes actHammer { 0% { transform: rotate(-20deg); } 100% { transform: rotate(10deg); } }`}</style>
+        </g>
+      );
+    }
+    case "torch": {
+      /* Lampe torche pointée avec faisceau */
+      return (
+        <g>
+          {arm(-18, shoulderY, -10, handY)}
+          {hand(-10, handY)}
+          {arm(18, shoulderY, 20, handY - 6)}
+          {hand(20, handY - 6)}
+          {/* Corps de la lampe */}
+          <rect x="20" y={handY - 10} width="14" height="6" fill="#3a4048" stroke="#0a0806" strokeWidth="0.5" />
+          <rect x="32" y={handY - 12} width="4" height="10" fill="#c8a848" />
+          {/* Faisceau lumineux */}
+          <path d="M36 -63 L64 -74 L64 -52 L36 -61 Z" fill="#ffd870" opacity="0.35">
+            <animate attributeName="opacity" values="0.2;0.5;0.2" dur="1.4s" repeatCount="indefinite" />
+          </path>
+        </g>
+      );
+    }
+    case "pray": {
+      /* Mains jointes devant la poitrine, immobiles */
+      const y = isSit ? -56 : -68;
+      return (
+        <g>
+          {arm(-18, shoulderY, -4, y)}
+          {arm(18, shoulderY, 4, y)}
+          <ellipse cx="0" cy={y} rx="6" ry="4" fill={skin} stroke="#8a5030" strokeWidth="0.6" />
+          <line x1="-3" y1={y - 2} x2="3" y2={y - 2} stroke="#8a5030" strokeWidth="0.5" />
+        </g>
+      );
+    }
+    case "crossed": {
+      /* Bras croisés sur la poitrine */
+      const y = handY + 6;
+      return (
+        <g>
+          <path d={`M-18 ${shoulderY} Q-6 ${y - 4} 12 ${y}`} stroke={skin} strokeWidth="7" fill="none" strokeLinecap="round" />
+          <path d={`M18 ${shoulderY} Q6 ${y - 4} -12 ${y}`} stroke={skin} strokeWidth="7" fill="none" strokeLinecap="round" />
+          <circle cx="12" cy={y} r="4" fill={skin} stroke="#8a5030" strokeWidth="0.6" />
+          <circle cx="-12" cy={y} r="4" fill={skin} stroke="#8a5030" strokeWidth="0.6" />
+        </g>
+      );
+    }
+    case "cup": {
+      /* Une main tient un gobelet à hauteur de la poitrine */
+      return (
+        <g>
+          {arm(-18, shoulderY, -22, handY)}
+          {hand(-22, handY)}
+          {arm(18, shoulderY, 12, handY - 4)}
+          {hand(12, handY - 4)}
+          <rect x="8" y={handY - 14} width="10" height="10" rx="1" fill="#c8b090" stroke="#3a2818" strokeWidth="0.5" />
+          <ellipse cx="13" cy={handY - 14} rx="5" ry="1.2" fill="#5a3818" opacity="0.7" />
+          {/* Petite anse */}
+          <path d="M18 -66 q4 -2 4 4 q0 4 -4 4" stroke="#3a2818" strokeWidth="0.8" fill="none" />
         </g>
       );
     }

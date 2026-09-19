@@ -16,7 +16,7 @@ import BunkerVoyage from "../chapters/jeu3/scenes/BunkerVoyage.jsx";
 import BunkerServeurs from "../chapters/jeu3/scenes/BunkerServeurs.jsx";
 import BunkerMinimap from "../chapters/jeu3/BunkerMinimap.jsx";
 import { MISSIONS_RUMEURS, MISSIONS_TEMPS, MISSIONS_OSINT } from "../chapters/jeu3/missions.js";
-import { LEVELS } from "../chapters/jeu3/levels.js";
+import { LEVELS, ROOM_TO_LEVEL } from "../chapters/jeu3/levels.js";
 
 /* ============================================================
    MOTEUR — JEU 3 : « Le bunker 2087 »
@@ -63,8 +63,15 @@ export default function Jeu3({ prenom, onExit }) {
 
   const setFlag = (k, v = true) => setFlags((f) => ({ ...f, [k]: v }));
   const hear = (pnjId) => setHeardPnj((h) => ({ ...h, [pnjId]: true }));
+  /* Le hub à rejoindre depuis la pièce courante : chaque pièce a un
+     niveau associé, et chaque niveau a son propre couloir. Ainsi
+     "Retour au couloir" depuis Cantine (niveau +1) renvoie à hubHaut,
+     depuis Rumeurs (niveau -1) à hubBas, etc. */
+  const levelHere = ROOM_TO_LEVEL[room];
+  const hubRoom = LEVELS.find((l) => l.id === levelHere)?.hubRoom || "hub";
   const j3 = { flags, heardPnj, setFlag, hear,
     previousRoom: prevRef.current,
+    hubRoom,
     missions: { ...MISSIONS_RUMEURS, ...MISSIONS_TEMPS, ...MISSIONS_OSINT } };
 
   const current = ROOMS[room] || ROOMS.hub;
@@ -90,8 +97,8 @@ export default function Jeu3({ prenom, onExit }) {
       {/* Zone principale : mini-carte à gauche + scène à droite */}
       <div style={{ flex: 1, display: "flex", minHeight: 0 }}>
         {showMinimap && <BunkerMinimap room={room} flags={flags} onGo={goTo} />}
-        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, minHeight: 0, overflow: "hidden" }}>
-          <div style={{ width: "100%", maxWidth: 960 }}>
+        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 12, minHeight: 0, overflow: "hidden" }}>
+          <div style={{ width: "100%", maxWidth: 1500 }}>
             <Comp prenom={prenom} onGo={goTo} j3={j3} />
           </div>
         </div>

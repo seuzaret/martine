@@ -26,14 +26,15 @@ export default function PnjRoom({ titre, bg, pnjList, j3, onGo }) {
           {titre}
         </div>
       )}
-      <svg viewBox="0 0 1000 520" style={{ display: "block", width: "100%", height: "auto", maxHeight: "56vh" }}>
+      <svg viewBox="0 0 1000 520" style={{ display: "block", width: "100%", height: "auto", maxHeight: "64vh" }}>
         {bg}
         {pnjList.map((p) => (
           <PnjSprite key={p.id}
             x={p.pose.x} y={p.pose.y}
             color={p.color} hair={p.hair} pants={p.pants} skin={p.skin}
-            facing={p.facing || "front"} poseType={p.pose?.type}
+            facing={p.facing || "front"}
             pose={p.poseKind || "stand"} accessory={p.accessory || null}
+            activity={p.activity || null}
             nom={p.nom} role={p.role}
             heard={!!j3.heardPnj[p.id]}
             active={selected === p.id}
@@ -58,7 +59,7 @@ export default function PnjRoom({ titre, bg, pnjList, j3, onGo }) {
           </div>
         )}
       </div>
-      <button onClick={() => onGo("hub")}
+      <button onClick={() => onGo(j3?.hubRoom || "hub")}
         style={{ background: "#141b26", color: "#7fd8ff", border: "1px solid #3a80c8", borderRadius: 10, padding: "9px 20px", fontWeight: 700, cursor: "pointer", fontSize: 12.5, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
         ← Retour au couloir
       </button>
