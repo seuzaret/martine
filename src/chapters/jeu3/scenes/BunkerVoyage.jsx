@@ -78,7 +78,7 @@ export default function BunkerVoyage({ onGo, j3 }) {
       <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3, color: "#e0a848" }}>
         📻 {mission.dateCible.toUpperCase()} — TOIT DE L'IMMEUBLE 12, RUE DES SIRÈNES
       </div>
-      <svg viewBox="0 0 1100 560" style={{ display: "block", width: "100%", height: "auto", maxHeight: "68vh" }}>
+      <svg viewBox="0 0 1100 560" style={{ display: "block", width: "100%", height: "auto", maxHeight: "78vh", flexShrink: 0 }}>
         <defs>
           <linearGradient id="bv-sky" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#1a1030" />
@@ -230,8 +230,9 @@ export default function BunkerVoyage({ onGo, j3 }) {
         <style>{`@keyframes bvReel { from { transform: rotate(0); } to { transform: rotate(360deg); } }`}</style>
       </svg>
 
-      {/* Zone dialogue + enregistrement */}
-      <div style={{ maxWidth: 800, width: "100%", minHeight: 78 }}>
+      {/* Zone dialogue + bouton — hauteur réservée fixe pour que le SVG
+          ne se redimensionne pas quand on clique sur la journaliste. */}
+      <div style={{ maxWidth: 800, width: "100%", minHeight: 78, flexShrink: 0 }}>
         {heard ? (
           <div style={{ background: "#141020", border: "1px solid #e0a848", borderRadius: 10, padding: "10px 14px" }}>
             <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 2, color: "#e0a848" }}>
@@ -250,12 +251,16 @@ export default function BunkerVoyage({ onGo, j3 }) {
         )}
       </div>
 
-      {heard && (
-        <button onClick={finish} autoFocus
-          style={{ background: "#5eff9e", color: "#06110b", border: "none", borderRadius: 10, padding: "12px 26px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 2, boxShadow: "0 0 18px rgba(94,255,158,0.4)" }}>
-          ⏵ ENREGISTRER LE MESSAGE
-        </button>
-      )}
+      {/* Bouton (avec placeholder invisible quand pas encore écouté, pour que
+          le layout ne bouge pas). */}
+      <div style={{ minHeight: 50, display: "flex", alignItems: "center", flexShrink: 0 }}>
+        {heard ? (
+          <button onClick={finish} autoFocus
+            style={{ background: "#5eff9e", color: "#06110b", border: "none", borderRadius: 10, padding: "12px 26px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 2, boxShadow: "0 0 18px rgba(94,255,158,0.4)" }}>
+            ⏵ ENREGISTRER LE MESSAGE
+          </button>
+        ) : null}
+      </div>
     </div>
   );
 }

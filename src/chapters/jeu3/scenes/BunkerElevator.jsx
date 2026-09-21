@@ -33,7 +33,7 @@ export default function BunkerElevator({ onGo, j3 }) {
 
   useEffect(() => {
     if (phase !== "arrived") return;
-    const t = setTimeout(() => onGo(target.hubRoom), 700);
+    const t = setTimeout(() => onGo(target.hubRoom), 1500);
     return () => { clearTimeout(t); cancelAnimationFrame(rafRef.current); };
   }, [phase, target, onGo]);
 
@@ -110,21 +110,34 @@ export default function BunkerElevator({ onGo, j3 }) {
           {/* HALO couleur d'étage en fond */}
           <ellipse cx="500" cy="320" rx="440" ry="220" fill="url(#ev-glow)" />
 
-          {/* PORTES CENTRALES fermées (mur du fond, au centre) */}
+          {/* PORTES CENTRALES : fermées, s'ouvrent quand phase === "arrived" */}
           <g>
             {/* Cadre en acier */}
             <rect x="376" y="200" width="248" height="336" fill="#28303a" stroke="#0a0e14" strokeWidth="4" />
-            {/* Panneaux gauche et droite */}
-            <rect x="384" y="208" width="116" height="320" fill="url(#ev-door)" stroke="#0a0e14" strokeWidth="1.5" />
-            <rect x="500" y="208" width="116" height="320" fill="url(#ev-door)" stroke="#0a0e14" strokeWidth="1.5" />
-            {/* Seam central */}
-            <line x1="500" y1="208" x2="500" y2="528" stroke="#0a0e14" strokeWidth="2" />
-            {/* Reflets verticaux sur les panneaux */}
-            <rect x="410" y="220" width="6" height="290" fill="#c8d4e2" opacity="0.25" />
-            <rect x="580" y="220" width="6" height="290" fill="#c8d4e2" opacity="0.25" />
-            {/* Petites poignées en laiton */}
-            <rect x="486" y="350" width="8" height="40" fill="#c8a848" stroke="#3a2010" strokeWidth="0.8" />
-            <rect x="506" y="350" width="8" height="40" fill="#c8a848" stroke="#3a2010" strokeWidth="0.8" />
+            {/* Cage sombre visible derrière les portes quand elles s'ouvrent */}
+            <rect x="384" y="208" width="232" height="320" fill="#0a0806" />
+            {/* Lueur verte au bout du couloir de sortie */}
+            {phase === "arrived" && (
+              <ellipse cx="500" cy="368" rx="60" ry="120" fill={target?.color || "#5eff9e"} opacity="0.35">
+                <animate attributeName="opacity" values="0;0.5;0.35" dur="0.7s" begin="0.2s" fill="freeze" />
+              </ellipse>
+            )}
+            {/* Panneau gauche — glisse vers la gauche à l'arrivée */}
+            <g style={phase === "arrived" ? { animation: "evDoorL 0.7s ease-out forwards" } : {}}>
+              <rect x="384" y="208" width="116" height="320" fill="url(#ev-door)" stroke="#0a0e14" strokeWidth="1.5" />
+              <rect x="410" y="220" width="6" height="290" fill="#c8d4e2" opacity="0.25" />
+              <rect x="486" y="350" width="8" height="40" fill="#c8a848" stroke="#3a2010" strokeWidth="0.8" />
+            </g>
+            {/* Panneau droit — glisse vers la droite à l'arrivée */}
+            <g style={phase === "arrived" ? { animation: "evDoorR 0.7s ease-out forwards" } : {}}>
+              <rect x="500" y="208" width="116" height="320" fill="url(#ev-door)" stroke="#0a0e14" strokeWidth="1.5" />
+              <rect x="580" y="220" width="6" height="290" fill="#c8d4e2" opacity="0.25" />
+              <rect x="506" y="350" width="8" height="40" fill="#c8a848" stroke="#3a2010" strokeWidth="0.8" />
+            </g>
+            {/* Seam central (visible seulement quand fermées) */}
+            {phase !== "arrived" && (
+              <line x1="500" y1="208" x2="500" y2="528" stroke="#0a0e14" strokeWidth="2" />
+            )}
           </g>
 
           {/* TICKER LED au-dessus des portes (indicateur d'étage) */}
@@ -264,7 +277,11 @@ export default function BunkerElevator({ onGo, j3 }) {
           </g>
         </g>
 
-        <style>{`@keyframes evShake { 0%,100% { transform: translate(0,0); } 50% { transform: translate(0,1.2px); } }`}</style>
+        <style>{`
+          @keyframes evShake { 0%,100% { transform: translate(0,0); } 50% { transform: translate(0,1.2px); } }
+          @keyframes evDoorL { from { transform: translate(0,0); } to { transform: translate(-116px,0); } }
+          @keyframes evDoorR { from { transform: translate(0,0); } to { transform: translate(116px,0); } }
+        `}</style>
       </svg>
 
       {phase === "arrived" && (
