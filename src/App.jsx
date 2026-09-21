@@ -1554,7 +1554,8 @@ export default function App() {
         <FinJeu2
           prenom={prenom}
           remede={jeu2Target >= 0 ? JEU2[jeu2Target]?.remede : null}
-          onRetour={() => { setMode("jeu1"); setScreen("title"); }} />
+          onRetour={() => { setMode("jeu1"); setScreen("title"); }}
+          onLancerJeu3={() => { setMode("jeu3"); setScreen("jeu3"); }} />
       </>
     );
   }
