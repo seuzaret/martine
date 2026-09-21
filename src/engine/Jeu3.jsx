@@ -76,7 +76,11 @@ export default function Jeu3({ prenom, onExit }) {
      "Retour au couloir" depuis Cantine (niveau +1) renvoie à hubHaut,
      depuis Rumeurs (niveau -1) à hubBas, etc. */
   const levelHere = ROOM_TO_LEVEL[room];
-  const hubRoom = LEVELS.find((l) => l.id === levelHere)?.hubRoom || "hub";
+  const lvlHubRoom = LEVELS.find((l) => l.id === levelHere)?.hubRoom;
+  /* Pour un niveau à une seule salle (Surface, Hydroponie, Serveurs), hubRoom
+     vaut la salle elle-même — auquel cas "Retour au couloir" doit renvoyer à
+     l'ascenseur plutôt que sur la salle courante. */
+  const hubRoom = lvlHubRoom && lvlHubRoom !== room ? lvlHubRoom : "elevator";
   const j3 = { flags, heardPnj, setFlag, hear,
     previousRoom: prevRef.current,
     hubRoom,

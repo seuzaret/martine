@@ -20,13 +20,13 @@ export default function PnjRoom({ titre, bg, pnjList, j3, onGo }) {
   const current = selected ? pnjList.find((p) => p.id === selected) : null;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, width: "100%", maxWidth: 1600 }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, width: "100%", maxWidth: 1900 }}>
       {titre && (
-        <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3, color: "#8fa3bd" }}>
+        <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 14, fontWeight: 700, letterSpacing: 3, color: "#e0a848", padding: "4px 14px", background: "#141020", border: "1px solid #3a2818", borderRadius: 8 }}>
           {titre}
         </div>
       )}
-      <svg viewBox="0 0 1000 520" style={{ display: "block", width: "100%", height: "auto", maxHeight: "72vh" }}>
+      <svg viewBox="0 0 1000 520" style={{ display: "block", width: "100%", height: "auto", maxHeight: "82vh" }}>
         {bg}
         {pnjList.map((p) => (
           <PnjSprite key={p.id}
