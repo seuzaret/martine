@@ -6,6 +6,9 @@ import BunkerHubBas from "../chapters/jeu3/scenes/BunkerHubBas.jsx";
 import BunkerSurface from "../chapters/jeu3/scenes/BunkerSurface.jsx";
 import BunkerElevator from "../chapters/jeu3/scenes/BunkerElevator.jsx";
 import BunkerChambre from "../chapters/jeu3/scenes/BunkerChambre.jsx";
+import BunkerChambre24 from "../chapters/jeu3/scenes/BunkerChambre24.jsx";
+import BunkerChambre30 from "../chapters/jeu3/scenes/BunkerChambre30.jsx";
+import BunkerChambre32 from "../chapters/jeu3/scenes/BunkerChambre32.jsx";
 import BunkerRumeurs from "../chapters/jeu3/scenes/BunkerRumeurs.jsx";
 import BunkerArchives from "../chapters/jeu3/scenes/BunkerArchives.jsx";
 import BunkerCantine from "../chapters/jeu3/scenes/BunkerCantine.jsx";
@@ -42,6 +45,9 @@ const ROOMS = {
   surface:    { Comp: BunkerSurface,    label: "Surface · Niveau +2" },
   elevator:   { Comp: BunkerElevator,   label: "Ascenseur" },
   chambre:    { Comp: BunkerChambre,    label: "Ma chambre" },
+  chambreN24: { Comp: BunkerChambre24,  label: "Chambre N-24 · Lior" },
+  chambreN30: { Comp: BunkerChambre30,  label: "Chambre N-30 · Yona" },
+  chambreN32: { Comp: BunkerChambre32,  label: "Chambre N-32 · Estev" },
   rumeurs:    { Comp: BunkerRumeurs,    label: "Bureau des Rumeurs" },
   archives:   { Comp: BunkerArchives,   label: "Salle des Archives" },
   cantine:    { Comp: BunkerCantine,    label: "Cantine commune" },

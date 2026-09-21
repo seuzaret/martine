@@ -18,7 +18,10 @@ export const LEVELS = [
     ] },
   { id: "0",  name: "Habitat",  hubRoom: "hub",      color: "#7fd8ff",
     rooms: [
-      { id: "chambre", label: "Ma chambre (N-27)" },
+      { id: "chambreN24", label: "Chambre N-24 · Lior" },
+      { id: "chambre",    label: "Ma chambre (N-27)" },
+      { id: "chambreN30", label: "Chambre N-30 · Yona" },
+      { id: "chambreN32", label: "Chambre N-32 · Estev" },
     ] },
   { id: "-1", name: "Services", hubRoom: "hubBas",   color: "#5eff9e",
     rooms: [
