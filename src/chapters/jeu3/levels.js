@@ -30,6 +30,8 @@ export const LEVELS = [
       { id: "infirmerie", label: "Infirmerie" },
       { id: "atelier",    label: "Atelier des Ingénieurs" },
     ] },
+  { id: "-2", name: "Hydroponie", hubRoom: "serres", color: "#8aff70",
+    rooms: [{ id: "serres", label: "Serres hydroponiques" }] },
   { id: "-3", name: "Serveurs", hubRoom: "serveurs", color: "#ff5030",
     rooms: [{ id: "serveurs", label: "Salle MARTINE" }] },
 ];

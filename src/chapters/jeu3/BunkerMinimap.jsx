@@ -21,11 +21,12 @@ export default function BunkerMinimap({ room, flags, onGo }) {
   const SURFACE_TOP = 34;
   const levelsPos = LEVELS.map((lvl, i) => {
     let y;
-    if (i === 0) y = SURFACE_TOP;                       // +2 Surface (au niveau du sol)
-    else if (i === 1) y = SURFACE_TOP + LEVEL_HEIGHT + GAP;                 // +1 juste dessous
+    if (i === 0) y = SURFACE_TOP;                                           // +2 Surface
+    else if (i === 1) y = SURFACE_TOP + (LEVEL_HEIGHT + GAP);               // +1
     else if (i === 2) y = SURFACE_TOP + 2 * (LEVEL_HEIGHT + GAP);           // 0
     else if (i === 3) y = SURFACE_TOP + 3 * (LEVEL_HEIGHT + GAP);           // -1
-    else y = SURFACE_TOP + 3 * (LEVEL_HEIGHT + GAP) + 2 * (LEVEL_HEIGHT + GAP); // -3 (gap plus grand)
+    else if (i === 4) y = SURFACE_TOP + 4 * (LEVEL_HEIGHT + GAP);           // -2 Hydroponie
+    else y = SURFACE_TOP + 4 * (LEVEL_HEIGHT + GAP) + 2 * (LEVEL_HEIGHT + GAP); // -3 (gap plus grand)
     return { lvl, y };
   });
   const SVG_H = levelsPos[levelsPos.length - 1].y + LEVEL_HEIGHT + 30;
@@ -47,6 +48,7 @@ export default function BunkerMinimap({ room, flags, onGo }) {
       case "archives":   return "📚";
       case "infirmerie": return "⚕";
       case "atelier":    return "🔧";
+      case "serres":     return "🌱";
       case "serveurs":   return "◈";
       default:           return "•";
     }
@@ -185,10 +187,10 @@ export default function BunkerMinimap({ room, flags, onGo }) {
           );
         })}
 
-        {/* GAP visuel entre -1 et -3 : petite section noire "roche compacte" avec quelques cailloux */}
+        {/* GAP visuel entre -2 et -3 : petite section noire "roche compacte" avec quelques cailloux */}
         {(() => {
-          const between = levelsPos[3].y + LEVEL_HEIGHT;
-          const nextY = levelsPos[4].y;
+          const between = levelsPos[4].y + LEVEL_HEIGHT;
+          const nextY = levelsPos[5].y;
           const cx = 40;
           return (
             <g>
