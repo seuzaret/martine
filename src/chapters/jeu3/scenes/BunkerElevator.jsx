@@ -2,13 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { LEVELS, ROOM_TO_LEVEL, isLevelUnlocked } from "../levels.js";
 
 /* ============================================================
-   JEU 3 — Ascenseur du bunker (v2 : plus grand, plus mécanique)
+   JEU 3 — Ascenseur du bunker (v3 : gros tableau intégré)
    ------------------------------------------------------------
-   ViewBox 1000×560. Cabine détaillée : parois lambris, deux
-   miroirs, néon plafond, panneau de bord avec ticker d'étage
-   et gros bouton d'appel, câbles et poulies visibles par une
-   trappe, ventilation d'appoint, poignée d'urgence rouge.
-   3 phases : idle → moving (shake) → arrived (ding).
+   Toute l'interface tient dans un unique grand tableau SVG :
+   - Ticker LED en haut (ÉTAGE + nom en gros)
+   - Grille de 6 boutons d'étage cliquables (au milieu)
+   - Poignée d'urgence STOP en bas
+   - Cabine réduite à un décor de fond
+   3 phases inchangées : idle → moving → arrived.
    ============================================================ */
 export default function BunkerElevator({ onGo, j3 }) {
   const currentLvl = ROOM_TO_LEVEL[j3?.previousRoom] || "0";
@@ -39,192 +40,174 @@ export default function BunkerElevator({ onGo, j3 }) {
   const isMoving = phase === "moving";
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
-      <svg viewBox="0 0 1000 560" style={{ display: "block", width: "100%", height: "auto", maxHeight: "70vh" }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+      <svg viewBox="0 0 1000 640" style={{ display: "block", width: "100%", height: "auto", maxHeight: "78vh" }}>
         <defs>
           <linearGradient id="ev-wall" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#28303a" />
             <stop offset="100%" stopColor="#0a0e14" />
           </linearGradient>
-          <linearGradient id="ev-floor" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#3a4048" />
-            <stop offset="100%" stopColor="#0a0e14" />
-          </linearGradient>
           <linearGradient id="ev-panel" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#5a6270" />
-            <stop offset="100%" stopColor="#2a303a" />
+            <stop offset="100%" stopColor="#28303a" />
           </linearGradient>
-          <radialGradient id="ev-neon" cx="50%" cy="0%" r="60%">
-            <stop offset="0%" stopColor="#e8eef5" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#e8eef5" stopOpacity="0" />
+          <linearGradient id="ev-inner" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#1a2028" />
+            <stop offset="100%" stopColor="#0a0e14" />
+          </linearGradient>
+          <radialGradient id="ev-glow" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor={displayLvl?.color || "#5eff9e"} stopOpacity="0.35" />
+            <stop offset="100%" stopColor={displayLvl?.color || "#5eff9e"} stopOpacity="0" />
           </radialGradient>
         </defs>
 
         <g style={isMoving ? { animation: "evShake 0.14s ease-in-out infinite" } : {}}>
-          {/* Murs + sol de la cabine */}
-          <rect width="1000" height="560" fill="url(#ev-wall)" />
-          <rect y="470" width="1000" height="90" fill="url(#ev-floor)" />
-          <path d="M0 470 L1000 470" stroke="#0a0e14" strokeWidth="2" />
-          {/* Sol dalles métalliques */}
-          {[120, 260, 400, 600, 740, 880].map((x, i) => (
-            <path key={i} d={`M${x} 470 L${x + (x - 500) * 0.13} 560`} stroke="#0a0e14" strokeWidth="0.8" opacity="0.6" />
-          ))}
-          <path d="M0 520 L1000 520" stroke="#0a0e14" strokeWidth="0.6" opacity="0.5" />
-
-          {/* Panneau plafond avec trappe visible sur les câbles */}
-          <rect x="0" y="0" width="1000" height="60" fill="#141820" stroke="#0a0e14" strokeWidth="2" />
-          {/* Trappe centrale ouverte : on voit les câbles descendre */}
-          <g transform="translate(500,10)">
-            <rect x="-60" y="0" width="120" height="34" fill="#0a0806" stroke="#5a6270" strokeWidth="1.5" />
-            {/* Câbles + poulie */}
-            <line x1="-30" y1="0" x2="-30" y2="34" stroke="#5a6270" strokeWidth="2" />
-            <line x1="30" y1="0" x2="30" y2="34" stroke="#5a6270" strokeWidth="2" />
-            <line x1="-30" y1="0" x2="-30" y2="-8" stroke="#5a6270" strokeWidth="2" />
-            <line x1="30" y1="0" x2="30" y2="-8" stroke="#5a6270" strokeWidth="2" />
-            {/* Deuxième néon derrière */}
-            <rect x="-40" y="4" width="80" height="4" fill="#7fd8ff" opacity="0.35" />
-          </g>
-          {/* Néon principal */}
-          <rect x="360" y="66" width="280" height="10" rx="3" fill="#e8eef5" opacity={isMoving ? 0.55 : 0.9}>
+          {/* Décor cabine simplifié : mur + sol + néon */}
+          <rect width="1000" height="640" fill="url(#ev-wall)" />
+          <rect y="560" width="1000" height="80" fill="#0a0e14" />
+          <path d="M0 560 L1000 560" stroke="#3a4048" strokeWidth="2" />
+          {/* Néon plafond */}
+          <rect x="380" y="18" width="240" height="10" rx="3" fill="#e8eef5" opacity={isMoving ? 0.55 : 0.9}>
             {isMoving && <animate attributeName="opacity" values="0.3;0.7;0.3" dur="0.25s" repeatCount="indefinite" />}
           </rect>
-          <ellipse cx="500" cy="100" rx="300" ry="60" fill="url(#ev-neon)" />
-
-          {/* Panneau lambris latéraux */}
-          {[40, 160, 780, 900].map((x, i) => (
-            <rect key={i} x={x} y="80" width="100" height="380" fill="none" stroke="#0a0e14" strokeWidth="1" opacity="0.7" />
-          ))}
-          {[40, 160, 780, 900].map((x, i) => (
-            <rect key={i} x={x + 20} y="100" width="60" height="10" fill="#3a4048" stroke="#0a0e14" strokeWidth="0.4" opacity="0.7" />
-          ))}
-
-          {/* Deux miroirs / hublots sur le mur du fond */}
-          <g>
-            <rect x="270" y="120" width="180" height="240" fill="#1a2028" stroke="#5a6270" strokeWidth="2" opacity="0.85" />
-            <rect x="278" y="128" width="164" height="224" fill="#2a3540" opacity="0.65" />
-            {/* Reflet vertical */}
-            <rect x="290" y="140" width="6" height="200" fill="#e8eef5" opacity="0.15" />
+          {/* Câbles bundlés côté droit */}
+          <path d="M990 40 L990 550" stroke="#c8a848" strokeWidth="3" opacity="0.7" />
+          <path d="M984 40 L984 550" stroke="#5eff9e" strokeWidth="2" opacity="0.55" />
+          <path d="M978 40 L978 550" stroke="#e83820" strokeWidth="2" opacity="0.55" />
+          {/* Extincteur au sol à gauche */}
+          <g transform="translate(30,500)">
+            <rect x="0" y="0" width="30" height="60" fill="#8a1010" stroke="#0a0806" strokeWidth="1.5" rx="4" />
+            <rect x="8" y="-5" width="14" height="9" fill="#3a4048" stroke="#0a0806" strokeWidth="0.8" />
+            <text x="15" y="34" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="5" fontWeight="800" fill="#fff">FEU</text>
+          </g>
+          {/* Grille de ventilation côté gauche */}
+          <g transform="translate(30,60)">
+            <rect x="0" y="0" width="50" height="120" fill="#0a0e14" stroke="#5a6270" strokeWidth="1" />
+            {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+              <line key={i} x1="4" y1={10 + i * 14} x2="46" y2={10 + i * 14} stroke="#5a6270" strokeWidth="1" />
+            ))}
+          </g>
+          {/* Numéro cabine */}
+          <g transform="translate(120,590)">
+            <rect x="0" y="0" width="80" height="24" fill="#e8dfc8" stroke="#3a2818" strokeWidth="1" />
+            <text x="40" y="17" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="12" fontWeight="900" fill="#0a0806" letterSpacing="2">CAB · A-3</text>
           </g>
 
-          {/* Panneau de bord à droite (GROS) : ticker d'étage + LEDs + poignée d'urgence */}
-          <g transform="translate(540,90)">
-            {/* Cadre du panneau */}
-            <rect x="0" y="0" width="340" height="400" fill="url(#ev-panel)" stroke="#0a0e14" strokeWidth="4" rx="10" />
-            <rect x="12" y="12" width="316" height="376" fill="#141c26" stroke="#3a4048" strokeWidth="1" />
-            {/* Ticker d'étage LED — grande vitrine noire */}
-            <rect x="30" y="28" width="280" height="130" fill="#0a0806" stroke="#5eff9e" strokeWidth="3" rx="4" />
-            <text x="170" y="58" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="16" fill="#5eff9e" letterSpacing="6">ÉTAGE</text>
-            <text x="170" y="118" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="60" fontWeight="900" fill={displayLvl?.color || "#5eff9e"} letterSpacing="6"
-              style={{ filter: `drop-shadow(0 0 6px ${displayLvl?.color || "#5eff9e"})` }}>
-              {displayLvl?.id || "?"}
-            </text>
-            <text x="170" y="146" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="12" fill="#c8d4e2" letterSpacing="4">
-              {(displayLvl?.name || "").toUpperCase()}
-            </text>
-            {/* Flèche direction (grande, centrale) */}
-            <g transform="translate(170,220)">
-              {isMoving ? (() => {
+          {/* HALO de couleur derrière le grand tableau */}
+          <ellipse cx="500" cy="320" rx="440" ry="280" fill="url(#ev-glow)" />
+
+          {/* ================================================
+              GRAND TABLEAU DE COMMANDE — occupe la majeure partie
+              ================================================ */}
+          <g transform="translate(120,60)">
+            {/* Cadre extérieur en acier brossé */}
+            <rect x="0" y="0" width="760" height="480" fill="url(#ev-panel)" stroke="#0a0e14" strokeWidth="6" rx="16" />
+            {/* Rivets aux quatre coins */}
+            {[[20, 20], [740, 20], [20, 460], [740, 460]].map(([rx, ry], i) => (
+              <g key={i} transform={`translate(${rx},${ry})`}>
+                <circle r="8" fill="#141c26" stroke="#5a6270" strokeWidth="1" />
+                <circle r="3" fill="#5a6270" />
+              </g>
+            ))}
+            {/* Panneau intérieur foncé */}
+            <rect x="16" y="16" width="728" height="448" fill="url(#ev-inner)" stroke="#3a4048" strokeWidth="1.5" rx="10" />
+
+            {/* TICKER LED en haut : ÉTAGE + nom + flèche */}
+            <g transform="translate(380,30)">
+              <rect x="-320" y="0" width="640" height="150" fill="#0a0806" stroke="#5eff9e" strokeWidth="4" rx="6" />
+              {/* Petit label */}
+              <text x="-306" y="26" fontFamily="ui-monospace,monospace" fontSize="14" fill="#5eff9e" letterSpacing="4">ÉTAGE</text>
+              {/* Grand chiffre au centre */}
+              <text x="0" y="98" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="82" fontWeight="900"
+                fill={displayLvl?.color || "#5eff9e"} letterSpacing="8"
+                style={{ filter: `drop-shadow(0 0 8px ${displayLvl?.color || "#5eff9e"})` }}>
+                {displayLvl?.id || "?"}
+              </text>
+              {/* Nom d'étage */}
+              <text x="0" y="132" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="16"
+                fill="#c8d4e2" letterSpacing="6">
+                {(displayLvl?.name || "").toUpperCase()}
+              </text>
+              {/* Flèche direction quand en mouvement */}
+              {isMoving && (() => {
                 const idxTarget = LEVELS.findIndex((l) => l.id === target.id);
                 const idxCur = LEVELS.findIndex((l) => l.id === currentLvl);
                 const goingDown = idxTarget > idxCur;
                 return (
-                  <path d={goingDown ? "M-36 -22 L36 -22 L0 32 Z" : "M-36 22 L36 22 L0 -32 Z"} fill="#ff5030">
+                  <path d={goingDown ? "M234 42 L302 42 L268 108 Z" : "M234 108 L302 108 L268 42 Z"} fill="#ff5030">
                     <animate attributeName="opacity" values="0.4;1;0.4" dur="0.5s" repeatCount="indefinite" />
                   </path>
                 );
-              })() : (
-                <g>
-                  <path d="M-36 -22 L36 -22 L0 -50 Z" fill="#3a4048" />
-                  <path d="M-36 22 L36 22 L0 50 Z" fill="#3a4048" />
-                </g>
-              )}
-            </g>
-            {/* Rangée de LEDs statut (plus grosses) */}
-            {[0, 1, 2, 3, 4, 5].map((i) => (
-              <g key={i} transform={`translate(${52 + i * 48},308)`}>
-                <circle r="11" fill="#0a0806" stroke="#3a4048" strokeWidth="1" />
-                <circle r="6" fill={i === 2 ? "#5eff9e" : (i % 2 === 0 ? "#e0a848" : "#3a4048")}>
-                  {i === 2 && <animate attributeName="opacity" values="0.5;1;0.5" dur="1.6s" repeatCount="indefinite" />}
+              })()}
+              {/* Point ARRÊT / EN MARCHE en haut à droite */}
+              <g transform="translate(280,20)">
+                <circle r="8" fill="#0a0806" stroke="#3a4048" strokeWidth="1" />
+                <circle r="4" fill={isMoving ? "#ff5030" : "#5eff9e"}>
+                  <animate attributeName="opacity" values="0.5;1;0.5" dur={isMoving ? "0.4s" : "1.6s"} repeatCount="indefinite" />
                 </circle>
               </g>
-            ))}
-            {/* Poignée d'urgence rouge (grande) */}
-            <g transform="translate(170,360)">
-              <rect x="-84" y="-10" width="168" height="50" fill="#8a1010" stroke="#0a0806" strokeWidth="2" rx="6" />
-              <rect x="-46" y="0" width="92" height="30" fill="#e83820" stroke="#3a0000" strokeWidth="1.5" rx="3" />
-              <text x="0" y="22" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="16" fontWeight="900" fill="#fff" letterSpacing="4">STOP</text>
-              <text x="0" y="46" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="8" fill="#ff8080" letterSpacing="3">URGENCE</text>
+              <text x="280" y="46" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fill="#5eff9e">
+                {isMoving ? "EN MARCHE" : "STATION."}
+              </text>
+            </g>
+
+            {/* GRILLE de boutons d'étage — au milieu du panneau */}
+            <g transform="translate(60,210)">
+              <text x="320" y="-8" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="12" fill="#c8d4e2" letterSpacing="6">SÉLECTIONNE UN ÉTAGE</text>
+              {LEVELS.map((lvl, i) => {
+                const unlocked = isLevelUnlocked(lvl.id, j3.flags);
+                const here = lvl.id === currentLvl;
+                const col = i % 3;
+                const row = Math.floor(i / 3);
+                const bx = col * 216;
+                const by = row * 90;
+                return (
+                  <g key={lvl.id} transform={`translate(${bx},${by})`}
+                    onClick={unlocked ? () => go(lvl) : undefined}
+                    style={{ cursor: unlocked ? "pointer" : "not-allowed" }}
+                    onMouseEnter={(e) => unlocked && e.currentTarget.querySelector(".hov").setAttribute("opacity", "1")}
+                    onMouseLeave={(e) => e.currentTarget.querySelector(".hov").setAttribute("opacity", "0")}>
+                    {/* Halo hover */}
+                    <rect className="hov" x="-4" y="-4" width="208" height="78" fill="none" stroke={lvl.color} strokeWidth="2" opacity="0" rx="10" />
+                    {/* Bouton */}
+                    <rect x="0" y="0" width="200" height="70"
+                      fill={here ? lvl.color : "#141c26"}
+                      stroke={unlocked ? lvl.color : "#3a4048"}
+                      strokeWidth="3" rx="8" opacity={unlocked ? 1 : 0.5} />
+                    {/* Gros chiffre */}
+                    <text x="24" y="46" fontFamily="ui-monospace,monospace" fontSize="30" fontWeight="900"
+                      fill={here ? "#0a0806" : lvl.color} letterSpacing="2">{lvl.id}</text>
+                    {/* Nom */}
+                    <text x="70" y="34" fontFamily="ui-monospace,monospace" fontSize="12" fontWeight="700"
+                      fill={here ? "#0a0806" : "#e8eef5"} letterSpacing="2">
+                      {lvl.name.toUpperCase()}
+                    </text>
+                    {/* Indication ICI ou verrou */}
+                    <text x="70" y="52" fontFamily="ui-monospace,monospace" fontSize="9"
+                      fill={here ? "#0a0806" : "#7a879e"} letterSpacing="1">
+                      {here ? "• ICI" : (unlocked ? "" : "🔒 VERROUILLÉ")}
+                    </text>
+                    {/* Petit voyant LED à droite */}
+                    <circle cx="180" cy="35" r="6" fill="#0a0806" stroke="#3a4048" strokeWidth="0.6" />
+                    <circle cx="180" cy="35" r="3" fill={here ? "#0a0806" : (unlocked ? lvl.color : "#3a4048")}>
+                      {here && <animate attributeName="opacity" values="0.3;1;0.3" dur="1.4s" repeatCount="indefinite" />}
+                    </circle>
+                  </g>
+                );
+              })}
+            </g>
+
+            {/* Poignée d'urgence STOP en bas */}
+            <g transform="translate(380,420)">
+              <rect x="-100" y="0" width="200" height="36" fill="#8a1010" stroke="#0a0806" strokeWidth="2" rx="6" />
+              <rect x="-60" y="6" width="120" height="24" fill="#e83820" stroke="#3a0000" strokeWidth="1.5" rx="3" />
+              <text x="0" y="24" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="16" fontWeight="900" fill="#fff" letterSpacing="6">STOP</text>
             </g>
           </g>
-
-          {/* Grille de ventilation à gauche haut */}
-          <g transform="translate(220,120)">
-            <rect x="0" y="0" width="40" height="80" fill="#0a0e14" stroke="#5a6270" strokeWidth="1" />
-            {[0, 1, 2, 3, 4, 5].map((i) => (
-              <line key={i} x1="4" y1={10 + i * 12} x2="36" y2={10 + i * 12} stroke="#5a6270" strokeWidth="1" />
-            ))}
-          </g>
-          {/* Câbles bundlés le long du mur droit */}
-          <g>
-            <path d="M990 60 L990 460" stroke="#c8a848" strokeWidth="3" opacity="0.7" />
-            <path d="M985 60 L985 460" stroke="#5eff9e" strokeWidth="2" opacity="0.6" />
-            <path d="M980 60 L980 460" stroke="#e83820" strokeWidth="2" opacity="0.6" />
-            {/* Attaches */}
-            {[140, 240, 340, 440].map((y) => (
-              <rect key={y} x="978" y={y} width="14" height="4" fill="#3a4048" stroke="#0a0806" strokeWidth="0.4" />
-            ))}
-          </g>
-          {/* Extincteur au sol à gauche */}
-          <g transform="translate(90,410)">
-            <rect x="0" y="0" width="24" height="60" fill="#8a1010" stroke="#0a0806" strokeWidth="1.5" rx="4" />
-            <rect x="6" y="-4" width="12" height="8" fill="#3a4048" stroke="#0a0806" strokeWidth="0.8" />
-            <text x="12" y="34" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="4" fontWeight="800" fill="#fff">FEU</text>
-          </g>
-
-          {/* Numéro de cabine (autocollant sur porte) */}
-          <g transform="translate(500,430)">
-            <rect x="-40" y="-12" width="80" height="24" fill="#e8dfc8" stroke="#3a2818" strokeWidth="1" />
-            <text x="0" y="6" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="12" fontWeight="900" fill="#0a0806" letterSpacing="2">CAB · A-3</text>
-          </g>
         </g>
-      </svg>
 
-      {/* Panneau de boutons — visible seulement quand on est à l'arrêt */}
-      {phase === "idle" && (
-        <div style={{ maxWidth: 820, width: "100%", background: "#0a0e14", border: "2px solid #5eff9e", borderRadius: 12, padding: "12px 14px" }}>
-          <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3, color: "#5eff9e", textAlign: "center", marginBottom: 8 }}>
-            ⌂ SÉLECTIONNE UN ÉTAGE
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 8 }}>
-            {LEVELS.map((lvl) => {
-              const unlocked = isLevelUnlocked(lvl.id, j3.flags);
-              const here = lvl.id === currentLvl;
-              return (
-                <button key={lvl.id} onClick={() => go(lvl)} disabled={!unlocked}
-                  title={unlocked ? `${lvl.id} · ${lvl.name}` : "Verrouillé — résous les 3 missions d'abord"}
-                  style={{
-                    background: here ? lvl.color : (unlocked ? "#141b26" : "#0a0e14"),
-                    color: here ? "#0a0806" : (unlocked ? "#e8eef5" : "#5a6678"),
-                    border: `2px solid ${unlocked ? lvl.color : "#3a4048"}`,
-                    borderRadius: 10, padding: "10px 12px", fontSize: 13, fontWeight: 700,
-                    cursor: unlocked ? "pointer" : "not-allowed",
-                    fontFamily: "ui-monospace,monospace", letterSpacing: 1,
-                    display: "flex", alignItems: "center", gap: 8,
-                    opacity: unlocked ? 1 : 0.55,
-                  }}>
-                  <span style={{ fontSize: 16, fontWeight: 900, minWidth: 26, textAlign: "center" }}>{lvl.id}</span>
-                  <span style={{ fontSize: 11, textTransform: "uppercase" }}>{lvl.name}</span>
-                  {here && <span style={{ marginLeft: "auto", fontSize: 10 }}>• ICI</span>}
-                  {!unlocked && <span style={{ marginLeft: "auto", fontSize: 12 }}>🔒</span>}
-                </button>
-              );
-            })}
-          </div>
-          <p style={{ margin: "10px 0 0", fontSize: 11, color: "#7a879e", textAlign: "center", fontStyle: "italic" }}>
-            Tu peux aussi cliquer directement dans la mini-carte du bunker (à gauche).
-          </p>
-        </div>
-      )}
+        <style>{`@keyframes evShake { 0%,100% { transform: translate(0,0); } 50% { transform: translate(0,1.2px); } }`}</style>
+      </svg>
 
       {phase === "arrived" && (
         <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, letterSpacing: 3, color: "#5eff9e" }}>
@@ -232,7 +215,11 @@ export default function BunkerElevator({ onGo, j3 }) {
         </div>
       )}
 
-      <style>{`@keyframes evShake { 0%,100% { transform: translate(0,0); } 50% { transform: translate(0,1.2px); } }`}</style>
+      {phase === "idle" && (
+        <p style={{ margin: 0, fontSize: 11, color: "#7a879e", textAlign: "center", fontStyle: "italic" }}>
+          Clique un étage sur le tableau, ou utilise la mini-carte à gauche.
+        </p>
+      )}
     </div>
   );
 }
