@@ -103,6 +103,24 @@ export const PNJ_ROOMS = {
       facing: "front", poseKind: "sit", activity: "write",
       replique: "Ça fait trente ans que je compare les récits des Anciens aux archives officielles. J'ai trente carnets. À chaque coupure de 40 jours, une ligne d'archive change. MARTINE réécrit doucement notre passé. Je n'ose pas le publier." },
   ],
+  chambreN24: [
+    { id: "voisin_lior", nom: "Lior", role: "Insomniaque",
+      pose: { x: 620, y: 400 }, color: "#3a80c8", pants: "#28303a", hair: "#1a1408",
+      facing: "front", activity: "cup",
+      replique: "Je dors plus. La nuit, je capte les vieux canaux radio du bunker. Il y a une voix féminine sur la bande 87 — ce n'est pas MARTINE. Elle chuchote un prénom : Kova. Personne ne veut m'écouter." },
+  ],
+  chambreN30: [
+    { id: "voisin_yona", nom: "Yona", role: "Couturière",
+      pose: { x: 640, y: 400 }, color: "#8a5030", pants: "#3a2010", hair: "#c8a848",
+      facing: "front", accessory: "apron", activity: "write",
+      replique: "Je refais tout le linge du bunker. Les rouleaux de tissu arrivent chaque mois par l'ascenseur. Neufs. Sentis frais. Si l'extérieur est mort depuis 40 ans, dis-moi qui tisse encore ce coton ?" },
+  ],
+  chambreN32: [
+    { id: "voisin_estev", nom: "Estev", role: "Ancien enseignant",
+      pose: { x: 640, y: 400 }, color: "#5a4028", pants: "#3a2818", hair: "#e8dfc8", skin: "#c8a888",
+      facing: "front", poseKind: "sit", activity: "write",
+      replique: "Ça fait trente ans que je compare les récits des Anciens aux archives officielles. J'ai trente carnets. À chaque coupure de 40 jours, une ligne d'archive change. MARTINE réécrit doucement notre passé. Je n'ose pas le publier." },
+  ],
   chapelle: [
     { id: "chapelle_anselme", nom: "Anselme", role: "Ancien",
       pose: { x: 260, y: 388 }, color: "#5a3818", pants: "#3a2010", hair: "#f0e4c8", skin: "#c8a888",
