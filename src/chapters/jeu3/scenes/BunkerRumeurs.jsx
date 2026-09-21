@@ -29,18 +29,13 @@ export default function BunkerRumeurs({ onGo, j3 }) {
   const currentPnj = selected ? mission.pnj.find((p) => p.id === selected) : null;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
-      {/* Bandeau mission */}
-      <div style={{ maxWidth: 900, width: "100%", background: "#0e1a30", border: "1px solid #5a4028", borderRadius: 10, padding: "10px 14px" }}>
-        <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, letterSpacing: 2, color: "#e0a848" }}>
-          🎯 MISSION · {mission.titre.toUpperCase()}
-        </div>
-        <p style={{ margin: "4px 0 0", fontSize: 13.5, lineHeight: 1.45, color: "#c8d4e2" }}>
-          {mission.briefing}
-        </p>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: "100%" }}>
+      {/* Bandeau mission compact (une seule ligne) */}
+      <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 2, color: "#e0a848" }}>
+        🎯 MISSION · {mission.titre.toUpperCase()} — clique un PNJ pour l'écouter
       </div>
 
-      <svg viewBox="0 0 1200 620" style={{ display: "block", width: "100%", height: "auto", maxHeight: "76vh" }}>
+      <svg viewBox="0 0 1200 620" style={{ display: "block", width: "100%", height: "auto", maxHeight: "84vh" }}>
         <defs>
           <linearGradient id="br-wall" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#2a2418" />
@@ -109,34 +104,14 @@ export default function BunkerRumeurs({ onGo, j3 }) {
           </g>
         ))}
 
-        {/* Enseigne murale néon « BUREAU DES RUMEURS · R-01 » */}
-        <g transform="translate(600,78)">
-          <rect x="-200" y="-24" width="400" height="46" fill="#0e0a04" stroke="#e0a848" strokeWidth="2" rx="4" />
-          <rect x="-194" y="-18" width="388" height="34" fill="#141008" opacity="0.6" />
-          <text x="0" y="6" textAnchor="middle" fontFamily="Georgia,serif" fontSize="22" fontWeight="800" fill="#e0a848" letterSpacing="6" style={{ filter: "drop-shadow(0 0 4px #c8a848)" }}>
-            BUREAU DES RUMEURS
-          </text>
-          <text x="0" y="20" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="9" fill="#c8a848" letterSpacing="8">
-            · R-01 ·
+        {/* Enseigne néon en haut du mur */}
+        <g transform="translate(600,90)">
+          <rect x="-220" y="-22" width="440" height="44" fill="#0e0a04" stroke="#e0a848" strokeWidth="2" rx="4" />
+          <rect x="-214" y="-16" width="428" height="32" fill="#141008" opacity="0.6" />
+          <text x="0" y="8" textAnchor="middle" fontFamily="Georgia,serif" fontSize="22" fontWeight="800" fill="#e0a848" letterSpacing="6" style={{ filter: "drop-shadow(0 0 4px #c8a848)" }}>
+            BUREAU DES RUMEURS · R-01
           </text>
         </g>
-
-        {/* Trois cadres « AVIS OFFICIEL » au mur haut */}
-        {[["AVIS N°1", "État de la sortie C-3"],
-          ["AVIS N°2", "Rations & effectifs"],
-          ["AVIS N°3", "Anniversaire de M."]].map(([titre, sujet], i) => (
-          <g key={i} transform={`translate(${180 + i * 300},170)`}>
-            <rect x="-64" y="-30" width="128" height="60" fill="#e8dfc8" stroke="#3a2010" strokeWidth="2" />
-            <rect x="-58" y="-24" width="116" height="48" fill="#f4ecd0" />
-            <text x="0" y="-8" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fontWeight="800" fill="#8a1010" letterSpacing="2">{titre}</text>
-            <line x1="-52" y1="0" x2="52" y2="0" stroke="#5a4028" strokeWidth="0.4" />
-            <text x="0" y="10" textAnchor="middle" fontFamily="Georgia,serif" fontSize="7" fill="#3a2010" fontStyle="italic">{sujet}</text>
-            <line x1="-52" y1="16" x2="30" y2="16" stroke="#5a4028" strokeWidth="0.3" opacity="0.5" />
-            {/* Sceau rond */}
-            <circle cx="42" cy="18" r="6" fill="none" stroke="#8a1010" strokeWidth="0.8" />
-            <text x="42" y="20" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="4" fill="#8a1010" fontWeight="900">M.</text>
-          </g>
-        ))}
 
         {/* Bibliothèque de dossiers reliés à gauche (7 rangées) */}
         <g transform="translate(30,140)">
@@ -154,34 +129,58 @@ export default function BunkerRumeurs({ onGo, j3 }) {
           <text x="56" y="298" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="8" fill="#c8a848" letterSpacing="2">DOSSIERS A-Z</text>
         </g>
 
-        {/* Grand tableau d'affichage central */}
+        {/* GRAND tableau d'affichage central — nouveau format, dominant */}
         <g transform="translate(600,270)">
-          <rect x="-190" y="-70" width="380" height="180" fill="#5a3818" stroke="#3a2010" strokeWidth="4" />
-          <rect x="-184" y="-64" width="368" height="168" fill="#3a2818" opacity="0.7" />
-          {/* Papiers punaisés (variés) */}
+          {/* Cadre extérieur épais bois foncé */}
+          <rect x="-340" y="-130" width="680" height="260" fill="#3a2010" stroke="#0a0604" strokeWidth="6" rx="4" />
+          {/* Liège brun */}
+          <rect x="-326" y="-116" width="652" height="232" fill="#5a3818" stroke="#3a2010" strokeWidth="1.5" />
+          <rect x="-320" y="-110" width="640" height="220" fill="#8a5030" opacity="0.35" />
+          {/* Texture liège : petits points */}
+          {Array.from({ length: 80 }).map((_, i) => {
+            const x = -318 + (i * 47) % 636;
+            const y = -108 + Math.floor((i * 47) / 636) * 28 + (i % 3) * 4;
+            return <circle key={i} cx={x} cy={y} r="0.8" fill="#3a2010" opacity="0.35" />;
+          })}
+          {/* Bande étiquette en haut */}
+          <rect x="-160" y="-156" width="320" height="26" fill="#e8dfc8" stroke="#3a2010" strokeWidth="1.5" />
+          <text x="0" y="-138" textAnchor="middle" fontFamily="Georgia,serif" fontSize="13" fontWeight="800" fill="#8a1010" letterSpacing="4">RUMEURS DE LA SEMAINE</text>
+
+          {/* Papiers punaisés — plus grands, mieux répartis */}
           {[
-            [-140, -38, "#e8dfc8", -5],
-            [-60, -48, "#c8b090", 3],
-            [20, -32, "#e8dfc8", -3],
-            [110, -44, "#f0e4c8", 4],
-            [-130, 30, "#e8dfc8", 2],
-            [-30, 46, "#c8b090", -4],
-            [70, 36, "#e8dfc8", 3],
-            [150, 40, "#f0e4c8", -3],
-            [140, -20, "#c8b090", 5],
-          ].map(([x, y, c, r], i) => (
+            [-256, -76, "#e8dfc8", -5, "Sortie C-3", "Un habitant dit avoir vu une nièce revenir vivante du dehors.", "M."],
+            [-124, -84, "#f4ecd0", 3, "Rations", "3 cageots par jour. Le compte est trop juste.", "B."],
+            [10, -76, "#e8dfc8", -3, "Voix radio", "Sur la bande 87 FM, une voix féminine qui n'est pas M.", "L."],
+            [148, -84, "#f0e4c8", 4, "Filtres", "Filtres air neufs — pourquoi si l'extérieur est mort ?", "T."],
+            [270, -76, "#c8b090", -4, "Coupures 40j", "Coupure électrique d'une minute pile toutes les 40 nuits.", "Y."],
+            [-256, 40, "#e8dfc8", 2, "Tissu neuf", "Rouleaux de coton qui arrivent chaque mois.", "Y."],
+            [-124, 50, "#c8b090", -3, "Livre effacé", "Champ de blé page 42 — livre disparu depuis.", "E."],
+            [10, 42, "#f4ecd0", 4, "Fatigue", "3 voisins par mois passés à l'infirmerie sans reparaître.", "M."],
+            [148, 50, "#e8dfc8", -3, "Carnets", "30 carnets comparant archives / récits Anciens.", "E."],
+            [270, 40, "#f0e4c8", 5, "Anniv. M.", "Célébration officielle prévue — présence attendue.", "M."],
+          ].map(([x, y, c, r, titre, texte, sig], i) => (
             <g key={i} transform={`translate(${x},${y}) rotate(${r})`}>
-              <rect x="-26" y="-16" width="52" height="34" fill={c} stroke="#5a4028" strokeWidth="0.6" />
-              <line x1="-22" y1="-8" x2="22" y2="-8" stroke="#5a4028" strokeWidth="0.5" opacity="0.5" />
-              <line x1="-22" y1="-2" x2="18" y2="-2" stroke="#5a4028" strokeWidth="0.5" opacity="0.5" />
-              <line x1="-22" y1="4" x2="20" y2="4" stroke="#5a4028" strokeWidth="0.5" opacity="0.5" />
-              <line x1="-22" y1="10" x2="14" y2="10" stroke="#5a4028" strokeWidth="0.5" opacity="0.5" />
-              <circle cx="0" cy="-16" r="1.6" fill={i % 3 === 0 ? "#e83820" : "#c8a848"} />
+              {/* Ombre du papier */}
+              <rect x="-52" y="-32" width="104" height="66" fill="#0a0604" opacity="0.35" transform="translate(2,3)" />
+              {/* Papier */}
+              <rect x="-52" y="-32" width="104" height="66" fill={c} stroke="#5a4028" strokeWidth="0.6" />
+              {/* Titre du papier */}
+              <text x="-46" y="-20" fontFamily="ui-monospace,monospace" fontSize="7" fontWeight="800" fill="#8a1010" letterSpacing="1">{titre}</text>
+              <line x1="-46" y1="-14" x2="46" y2="-14" stroke="#5a4028" strokeWidth="0.5" opacity="0.6" />
+              {/* Texte manuscrit */}
+              <foreignObject x="-46" y="-10" width="92" height="30">
+                <div xmlns="http://www.w3.org/1999/xhtml"
+                  style={{ font: "italic 6.5px Georgia,serif", color: "#3a2010", lineHeight: 1.15, textAlign: "justify" }}>
+                  {texte}
+                </div>
+              </foreignObject>
+              {/* Signature */}
+              <text x="42" y="30" textAnchor="end" fontFamily="Georgia,serif" fontSize="6" fontStyle="italic" fill="#5a4028">— {sig}</text>
+              {/* Punaise */}
+              <circle cx="0" cy="-30" r="2.2" fill={i % 3 === 0 ? "#e83820" : (i % 3 === 1 ? "#c8a848" : "#3a80c8")} stroke="#0a0604" strokeWidth="0.3" />
+              <circle cx="0" cy="-30" r="1" fill="#fff" opacity="0.6" />
             </g>
           ))}
-          {/* Étiquette en haut du tableau */}
-          <rect x="-90" y="-88" width="180" height="14" fill="#e8dfc8" stroke="#3a2010" strokeWidth="0.8" />
-          <text x="0" y="-77" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fontWeight="800" fill="#3a2010" letterSpacing="3">RUMEURS DE LA SEMAINE</text>
         </g>
 
         {/* Deux gros classeurs à tiroirs à droite */}
@@ -387,8 +386,11 @@ export default function BunkerRumeurs({ onGo, j3 }) {
             </p>
           </div>
         ) : (
-          <div style={{ background: "#0a0e14", border: "1px dashed #3a4048", borderRadius: 10, padding: "12px 16px", textAlign: "center" }}>
-            <p style={{ margin: 0, fontSize: 13, color: "#7a879e", fontStyle: "italic" }}>
+          <div style={{ background: "#0a0e14", border: "1px dashed #3a4048", borderRadius: 10, padding: "10px 14px" }}>
+            <p style={{ margin: 0, fontSize: 12.5, color: "#c8d4e2", lineHeight: 1.4 }}>
+              <span style={{ color: "#e0a848", fontWeight: 700 }}>Briefing : </span>{mission.briefing}
+            </p>
+            <p style={{ margin: "6px 0 0", fontSize: 12, color: "#7a879e", fontStyle: "italic" }}>
               Clique un PNJ dans la salle pour l'écouter.
               {heardAll ? " Tu peux maintenant rendre ton verdict." : ` (${Object.keys(j3.heardPnj).filter((k) => mission.pnj.some((p) => p.id === k)).length} / ${mission.pnj.length})`}
             </p>
