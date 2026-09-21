@@ -4,11 +4,21 @@ import PnjSprite from "../PnjSprite.jsx";
 /* ============================================================
    JEU 3 — SCÈNE : « Bureau des Rumeurs » (R-01) — MISSION TUTO
    ------------------------------------------------------------
-   Décor élargi (viewBox 1000×520), comptoir en bois massif au
-   fond, 3 PNJ (Marek habitant, Séra archiviste, Yol sécurité)
-   dessinés avec PnjSprite en corps entier, tenues et orientations
-   variées. Reste inchangée la mécanique de la mission Kova
-   (interviewer les 3, poser un verdict).
+   Salle refaite plus grande et plus élaborée (viewBox 1200×620,
+   maxHeight 76vh) tout en gardant la logique mission (Marek,
+   Séra, Yol → verdict). Décor :
+   - Plafond avec ventilateur qui tourne, tuyauterie, 4 lampes
+     suspendues à halo
+   - Enseigne murale néon « BUREAU DES RUMEURS · R-01 »
+   - Trois cadres « AVIS OFFICIEL » encadrés au mur
+   - Grand tableau d'affichage central avec papiers punaisés
+   - Deux gros classeurs à tiroirs (côté droit)
+   - Une bibliothèque de dossiers reliés (côté gauche)
+   - Kiosque à affichage vitré au premier plan
+   - Comptoir traversant avec registre, encrier, tampon, téléphone
+   - Fontaine à eau, plante en pot, deux tables rondes façon
+     coffee corner, horloge, extincteur
+   - Sol lattes bois en perspective
    ============================================================ */
 export default function BunkerRumeurs({ onGo, j3 }) {
   const mission = j3.missions.kova;
@@ -19,7 +29,7 @@ export default function BunkerRumeurs({ onGo, j3 }) {
   const currentPnj = selected ? mission.pnj.find((p) => p.id === selected) : null;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
       {/* Bandeau mission */}
       <div style={{ maxWidth: 900, width: "100%", background: "#0e1a30", border: "1px solid #5a4028", borderRadius: 10, padding: "10px 14px" }}>
         <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, letterSpacing: 2, color: "#e0a848" }}>
@@ -30,7 +40,7 @@ export default function BunkerRumeurs({ onGo, j3 }) {
         </p>
       </div>
 
-      <svg viewBox="0 0 1000 520" style={{ display: "block", width: "100%", height: "auto", maxHeight: "70vh" }}>
+      <svg viewBox="0 0 1200 620" style={{ display: "block", width: "100%", height: "auto", maxHeight: "76vh" }}>
         <defs>
           <linearGradient id="br-wall" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#2a2418" />
@@ -40,67 +50,295 @@ export default function BunkerRumeurs({ onGo, j3 }) {
             <stop offset="0%" stopColor="#3a2818" />
             <stop offset="100%" stopColor="#0e0a04" />
           </linearGradient>
+          <radialGradient id="br-lamp" cx="50%" cy="0%" r="60%">
+            <stop offset="0%" stopColor="#c8a848" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#c8a848" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id="br-counter" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#8a5030" />
+            <stop offset="100%" stopColor="#3a2010" />
+          </linearGradient>
+          <linearGradient id="br-cabinet" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#5a4028" />
+            <stop offset="100%" stopColor="#2a1808" />
+          </linearGradient>
         </defs>
-        <rect width="1000" height="520" fill="url(#br-wall)" />
-        <rect y="380" width="1000" height="140" fill="url(#br-floor)" />
-        <path d="M0 380 L1000 380" stroke="#0a0806" strokeWidth="1" />
-        {/* Plafond avec néons doux */}
-        <rect x="0" y="0" width="1000" height="50" fill="#1a1408" />
-        {[220, 500, 780].map((x, i) => (
-          <rect key={i} x={x - 40} y="20" width="80" height="8" rx="2" fill="#c8a848" opacity="0.75" />
+
+        {/* Mur + sol */}
+        <rect width="1200" height="620" fill="url(#br-wall)" />
+        <rect y="440" width="1200" height="180" fill="url(#br-floor)" />
+        <path d="M0 440 L1200 440" stroke="#0a0806" strokeWidth="1.5" />
+        {/* Sol lattes bois en perspective */}
+        {[80, 260, 460, 740, 940, 1120].map((x, i) => (
+          <path key={i} d={`M${x} 440 L${x + (x - 600) * 0.14} 620`} stroke="#0a0604" strokeWidth="0.8" opacity="0.55" />
         ))}
-        {/* Grand tableau d'affichage au fond avec papiers punaisés */}
-        <g transform="translate(500,110)">
-          <rect x="-160" y="-40" width="320" height="140" fill="#5a3818" stroke="#3a2010" strokeWidth="3" />
-          <rect x="-154" y="-34" width="308" height="128" fill="#3a2818" opacity="0.7" />
-          {/* Papiers punaisés */}
-          {[
-            [-120, -20, "#e8dfc8", -5],
-            [-40,  -30, "#c8b090", 3],
-            [30,   -10, "#e8dfc8", -3],
-            [110,  -20, "#f0e4c8", 4],
-            [-100, 40, "#e8dfc8", 2],
-            [10,   50, "#c8b090", -4],
-            [100,  40, "#e8dfc8", 3],
-          ].map(([x, y, c, r], i) => (
-            <g key={i} transform={`translate(${x},${y}) rotate(${r})`}>
-              <rect x="-24" y="-14" width="48" height="30" fill={c} stroke="#5a4028" strokeWidth="0.6" />
-              {/* Lignes de texte */}
-              <line x1="-20" y1="-8" x2="20" y2="-8" stroke="#5a4028" strokeWidth="0.5" opacity="0.5" />
-              <line x1="-20" y1="-2" x2="16" y2="-2" stroke="#5a4028" strokeWidth="0.5" opacity="0.5" />
-              <line x1="-20" y1="4"  x2="18" y2="4"  stroke="#5a4028" strokeWidth="0.5" opacity="0.5" />
-              {/* Punaise */}
-              <circle cx="0" cy="-14" r="1.5" fill="#e83820" />
-            </g>
-          ))}
-        </g>
-        {/* Comptoir massif en bois qui traverse presque toute la salle */}
-        <g transform="translate(100,340)">
-          <rect x="0" y="0" width="800" height="40" fill="#5a3818" stroke="#1a0e08" strokeWidth="2" />
-          <path d="M0 0 L800 0" stroke="#8a5030" strokeWidth="3" />
-          {/* Registre ouvert posé sur le comptoir */}
-          <g transform="translate(360,-20)">
-            <path d="M-30 0 L30 0 L30 20 L-30 20 Z" fill="#e8dfc8" stroke="#5a4028" strokeWidth="1" />
-            <path d="M0 0 L0 20" stroke="#5a4028" strokeWidth="1" />
-            <line x1="-24" y1="8" x2="-4" y2="8" stroke="#5a4028" strokeWidth="0.4" />
-            <line x1="-24" y1="13" x2="-6" y2="13" stroke="#5a4028" strokeWidth="0.4" />
-            <line x1="4" y1="8" x2="24" y2="8" stroke="#5a4028" strokeWidth="0.4" />
-            <line x1="4" y1="13" x2="22" y2="13" stroke="#5a4028" strokeWidth="0.4" />
+        <path d="M0 510 L1200 510" stroke="#0a0604" strokeWidth="0.5" opacity="0.5" />
+        <path d="M0 570 L1200 570" stroke="#0a0604" strokeWidth="0.4" opacity="0.4" />
+        {/* Plinthe */}
+        <rect y="436" width="1200" height="6" fill="#1a0e08" />
+
+        {/* PLAFOND avec poutre principale + tuyaux + 4 lampes suspendues */}
+        <rect x="0" y="0" width="1200" height="60" fill="#1a1408" />
+        <path d="M0 60 L1200 60" stroke="#3a2010" strokeWidth="3" />
+        <path d="M0 26 L1200 26" stroke="#c8a848" strokeWidth="6" opacity="0.85" />
+        <path d="M0 42 L1200 42" stroke="#5a4028" strokeWidth="2" opacity="0.75" />
+        {/* Attaches */}
+        {[120, 340, 600, 860, 1080].map((x, i) => (
+          <rect key={i} x={x - 6} y="22" width="12" height="12" fill="#3a2010" stroke="#0a0806" strokeWidth="0.5" />
+        ))}
+        {/* Ventilateur central au plafond */}
+        <g transform="translate(600,80)">
+          <line x1="0" y1="0" x2="0" y2="-24" stroke="#3a2010" strokeWidth="2" />
+          <circle r="10" fill="#28303a" stroke="#0a0806" strokeWidth="1" />
+          <g style={{ transformOrigin: "0 0", animation: "brFan 5s linear infinite" }}>
+            {[0, 90, 180, 270].map((a) => (
+              <path key={a} d="M0 0 L60 -6 L64 0 L60 6 Z" fill="#c8b090" stroke="#0a0806" strokeWidth="0.6" transform={`rotate(${a})`} />
+            ))}
           </g>
+          <circle r="4" fill="#c8a848" />
         </g>
-        {/* Étagère de dossiers à l'extrémité gauche */}
-        <g transform="translate(50,150)">
-          <rect x="0" y="0" width="70" height="4" fill="#3a2818" />
-          {[0, 12, 24, 36, 48, 60].map((x, i) => (
-            <rect key={x} x={x} y="-30" width="10" height="30" fill={["#8a3820", "#5a2818", "#8a5030", "#5a4028", "#8a3820", "#5a2818"][i]} />
-          ))}
-          <rect x="0" y="70" width="70" height="4" fill="#3a2818" />
-          {[0, 12, 24, 36, 48, 60].map((x, i) => (
-            <rect key={x} x={x} y="40" width="10" height="30" fill={["#5a4028", "#8a5030", "#5a2818", "#8a3820", "#5a4028", "#8a5030"][i]} />
-          ))}
+        {/* 4 lampes suspendues avec halo */}
+        {[200, 400, 800, 1000].map((x, i) => (
+          <g key={i}>
+            <line x1={x} y1="60" x2={x} y2="98" stroke="#3a2010" strokeWidth="2" />
+            <path d={`M${x - 26} 98 L${x + 26} 98 L${x + 20} 118 L${x - 20} 118 Z`} fill="#5a4028" stroke="#0a0806" strokeWidth="1" />
+            <circle cx={x} cy="116" r="5" fill="#ffd870">
+              <animate attributeName="opacity" values="0.6;1;0.6" dur={`${2.4 + i * 0.2}s`} repeatCount="indefinite" />
+            </circle>
+            <ellipse cx={x} cy="150" rx="90" ry="30" fill="url(#br-lamp)" />
+          </g>
+        ))}
+
+        {/* Enseigne murale néon « BUREAU DES RUMEURS · R-01 » */}
+        <g transform="translate(600,78)">
+          <rect x="-200" y="-24" width="400" height="46" fill="#0e0a04" stroke="#e0a848" strokeWidth="2" rx="4" />
+          <rect x="-194" y="-18" width="388" height="34" fill="#141008" opacity="0.6" />
+          <text x="0" y="6" textAnchor="middle" fontFamily="Georgia,serif" fontSize="22" fontWeight="800" fill="#e0a848" letterSpacing="6" style={{ filter: "drop-shadow(0 0 4px #c8a848)" }}>
+            BUREAU DES RUMEURS
+          </text>
+          <text x="0" y="20" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="9" fill="#c8a848" letterSpacing="8">
+            · R-01 ·
+          </text>
         </g>
 
-        {/* Les 3 PNJ derrière (ou devant) le comptoir — corps entiers via PnjSprite */}
+        {/* Trois cadres « AVIS OFFICIEL » au mur haut */}
+        {[["AVIS N°1", "État de la sortie C-3"],
+          ["AVIS N°2", "Rations & effectifs"],
+          ["AVIS N°3", "Anniversaire de M."]].map(([titre, sujet], i) => (
+          <g key={i} transform={`translate(${180 + i * 300},170)`}>
+            <rect x="-64" y="-30" width="128" height="60" fill="#e8dfc8" stroke="#3a2010" strokeWidth="2" />
+            <rect x="-58" y="-24" width="116" height="48" fill="#f4ecd0" />
+            <text x="0" y="-8" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fontWeight="800" fill="#8a1010" letterSpacing="2">{titre}</text>
+            <line x1="-52" y1="0" x2="52" y2="0" stroke="#5a4028" strokeWidth="0.4" />
+            <text x="0" y="10" textAnchor="middle" fontFamily="Georgia,serif" fontSize="7" fill="#3a2010" fontStyle="italic">{sujet}</text>
+            <line x1="-52" y1="16" x2="30" y2="16" stroke="#5a4028" strokeWidth="0.3" opacity="0.5" />
+            {/* Sceau rond */}
+            <circle cx="42" cy="18" r="6" fill="none" stroke="#8a1010" strokeWidth="0.8" />
+            <text x="42" y="20" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="4" fill="#8a1010" fontWeight="900">M.</text>
+          </g>
+        ))}
+
+        {/* Bibliothèque de dossiers reliés à gauche (7 rangées) */}
+        <g transform="translate(30,140)">
+          <rect x="-4" y="-6" width="120" height="294" fill="#2a1808" stroke="#0a0604" strokeWidth="2" />
+          {[0, 40, 80, 120, 160, 200, 240].map((y, k) => (
+            <g key={y}>
+              <rect x="0" y={y} width="112" height="4" fill="#3a2010" />
+              {[0, 15, 30, 45, 60, 75, 90].map((x, i) => (
+                <rect key={x} x={x} y={y - 34} width="13" height="34"
+                  fill={["#8a3820", "#5a2818", "#8a5030", "#5a4028", "#c8a848", "#8a3820", "#3a2818"][(i + k) % 7]}
+                  stroke="#1a0e08" strokeWidth="0.4" />
+              ))}
+            </g>
+          ))}
+          <text x="56" y="298" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="8" fill="#c8a848" letterSpacing="2">DOSSIERS A-Z</text>
+        </g>
+
+        {/* Grand tableau d'affichage central */}
+        <g transform="translate(600,270)">
+          <rect x="-190" y="-70" width="380" height="180" fill="#5a3818" stroke="#3a2010" strokeWidth="4" />
+          <rect x="-184" y="-64" width="368" height="168" fill="#3a2818" opacity="0.7" />
+          {/* Papiers punaisés (variés) */}
+          {[
+            [-140, -38, "#e8dfc8", -5],
+            [-60, -48, "#c8b090", 3],
+            [20, -32, "#e8dfc8", -3],
+            [110, -44, "#f0e4c8", 4],
+            [-130, 30, "#e8dfc8", 2],
+            [-30, 46, "#c8b090", -4],
+            [70, 36, "#e8dfc8", 3],
+            [150, 40, "#f0e4c8", -3],
+            [140, -20, "#c8b090", 5],
+          ].map(([x, y, c, r], i) => (
+            <g key={i} transform={`translate(${x},${y}) rotate(${r})`}>
+              <rect x="-26" y="-16" width="52" height="34" fill={c} stroke="#5a4028" strokeWidth="0.6" />
+              <line x1="-22" y1="-8" x2="22" y2="-8" stroke="#5a4028" strokeWidth="0.5" opacity="0.5" />
+              <line x1="-22" y1="-2" x2="18" y2="-2" stroke="#5a4028" strokeWidth="0.5" opacity="0.5" />
+              <line x1="-22" y1="4" x2="20" y2="4" stroke="#5a4028" strokeWidth="0.5" opacity="0.5" />
+              <line x1="-22" y1="10" x2="14" y2="10" stroke="#5a4028" strokeWidth="0.5" opacity="0.5" />
+              <circle cx="0" cy="-16" r="1.6" fill={i % 3 === 0 ? "#e83820" : "#c8a848"} />
+            </g>
+          ))}
+          {/* Étiquette en haut du tableau */}
+          <rect x="-90" y="-88" width="180" height="14" fill="#e8dfc8" stroke="#3a2010" strokeWidth="0.8" />
+          <text x="0" y="-77" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fontWeight="800" fill="#3a2010" letterSpacing="3">RUMEURS DE LA SEMAINE</text>
+        </g>
+
+        {/* Deux gros classeurs à tiroirs à droite */}
+        {[0, 1].map((k) => (
+          <g key={k} transform={`translate(${1080 + (k * -140)},${160 + k * 4})`}>
+            <rect x="0" y="0" width="90" height="270" fill="url(#br-cabinet)" stroke="#0a0604" strokeWidth="2" />
+            {[0, 1, 2, 3, 4].map((r) => (
+              <g key={r} transform={`translate(4,${8 + r * 52})`}>
+                <rect x="0" y="0" width="82" height="44" fill="#5a3818" stroke="#0a0604" strokeWidth="0.6" />
+                <rect x="0" y="0" width="82" height="44" fill="#8a5030" stroke="#3a2010" strokeWidth="0.5" opacity="0.55" />
+                <rect x="30" y="16" width="22" height="6" fill="#c8a848" stroke="#3a2010" strokeWidth="0.4" />
+                <rect x="6" y="6" width="20" height="8" fill="#e8dfc8" stroke="#5a4028" strokeWidth="0.3" />
+                <text x="16" y="12" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="4" fontWeight="800" fill="#3a2010">
+                  {String.fromCharCode(65 + k * 5 + r)}
+                </text>
+              </g>
+            ))}
+          </g>
+        ))}
+        {/* Petite plante sur le classeur avant */}
+        <g transform="translate(985,158)">
+          <rect x="-10" y="0" width="20" height="10" fill="#5a3018" />
+          <path d="M-6 0 Q-4 -14 -8 -6 M0 0 Q4 -18 -2 -8 M6 0 Q8 -12 12 -4" stroke="#3a6828" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+        </g>
+
+        {/* Comptoir massif traversant */}
+        <g transform="translate(180,400)">
+          <rect x="0" y="0" width="820" height="42" fill="url(#br-counter)" stroke="#1a0e08" strokeWidth="2" />
+          <path d="M0 0 L820 0" stroke="#c8a848" strokeWidth="2" opacity="0.5" />
+          {[0, 180, 360, 540, 720, 820].map((x, i) => (
+            <line key={i} x1={x} y1="0" x2={x} y2="42" stroke="#3a2010" strokeWidth="0.8" opacity="0.7" />
+          ))}
+          {/* Registre + plume */}
+          <g transform="translate(120,-22)">
+            <path d="M-38 0 L38 0 L38 22 L-38 22 Z" fill="#e8dfc8" stroke="#5a4028" strokeWidth="1" />
+            <path d="M0 0 L0 22" stroke="#5a4028" strokeWidth="0.8" />
+            {[6, 12, 18].map((y) => (
+              <g key={y}>
+                <line x1="-32" y1={y} x2="-6" y2={y} stroke="#5a4028" strokeWidth="0.4" />
+                <line x1="6" y1={y} x2="32" y2={y} stroke="#5a4028" strokeWidth="0.4" />
+              </g>
+            ))}
+            <path d="M30 -2 L40 -12 L38 -4 Z" fill="#3a2818" />
+          </g>
+          {/* Encrier + tampon */}
+          <g transform="translate(300,-14)">
+            <rect x="-8" y="0" width="16" height="14" fill="#28303a" stroke="#0a0806" strokeWidth="0.8" />
+            <ellipse cx="0" cy="0" rx="6" ry="2" fill="#0a0806" />
+            <rect x="18" y="4" width="22" height="10" fill="#8a1010" stroke="#0a0806" strokeWidth="0.6" />
+            <text x="29" y="12" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="4" fontWeight="800" fill="#e8dfc8">VU</text>
+          </g>
+          {/* Téléphone à cadran */}
+          <g transform="translate(500,-30)">
+            <rect x="-20" y="18" width="40" height="12" fill="#28303a" stroke="#0a0806" strokeWidth="0.8" />
+            <ellipse cx="0" cy="6" rx="18" ry="10" fill="#28303a" stroke="#0a0806" strokeWidth="1" />
+            <ellipse cx="0" cy="6" rx="10" ry="6" fill="#0a0806" />
+            <ellipse cx="0" cy="6" rx="6" ry="4" fill="#c8a848" />
+            <rect x="-24" y="-4" width="48" height="8" rx="3" fill="#3a2010" stroke="#0a0806" strokeWidth="0.6" />
+            <path d="M22 12 q6 4 -2 8 q6 4 -2 8 q6 4 -2 8" stroke="#0a0806" strokeWidth="0.8" fill="none" />
+          </g>
+          {/* Tas de dossiers */}
+          <g transform="translate(690,-24)">
+            {[0, 1, 2, 3].map((i) => (
+              <rect key={i} x={-30 + i * 4} y={-i * 4} width="70" height="18" fill={["#5a2818", "#8a5030", "#3a2818", "#8a3820"][i]} stroke="#1a0e08" strokeWidth="0.6" />
+            ))}
+          </g>
+          {/* Étiquette « COMPTOIR » */}
+          <rect x="380" y="14" width="70" height="14" fill="#e8dfc8" stroke="#3a2010" strokeWidth="0.5" />
+          <text x="415" y="24" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fontWeight="800" fill="#3a2010">COMPTOIR</text>
+        </g>
+
+        {/* Kiosque à affichage vitré au premier plan gauche */}
+        <g transform="translate(90,470)">
+          <rect x="-4" y="0" width="150" height="120" fill="#3a2010" stroke="#0a0604" strokeWidth="2" />
+          <rect x="0" y="4" width="142" height="94" fill="#e8dfc8" stroke="#3a2010" strokeWidth="1" />
+          <text x="71" y="20" textAnchor="middle" fontFamily="Georgia,serif" fontSize="10" fontWeight="800" fill="#8a1010" letterSpacing="1">« LA VOIX »</text>
+          <text x="71" y="34" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="5" fill="#5a4028">N°4 087 · JOUR 14 998</text>
+          <line x1="10" y1="42" x2="132" y2="42" stroke="#5a4028" strokeWidth="0.4" />
+          {[48, 56, 64, 72, 80, 88].map((y) => (
+            <line key={y} x1="10" y1={y} x2={y % 16 === 0 ? 100 : 120} y2={y} stroke="#5a4028" strokeWidth="0.3" opacity="0.55" />
+          ))}
+          <rect x="8" y="118" width="6" height="18" fill="#3a2010" />
+          <rect x="132" y="118" width="6" height="18" fill="#3a2010" />
+        </g>
+
+        {/* Fontaine à eau à droite */}
+        <g transform="translate(1060,470)">
+          <rect x="0" y="0" width="60" height="120" fill="#5a6270" stroke="#0a0604" strokeWidth="2" />
+          <rect x="4" y="4" width="52" height="34" fill="#3a80c8" opacity="0.7" stroke="#0a0604" strokeWidth="0.6" />
+          <circle cx="30" cy="18" r="2" fill="#e8eef5" opacity="0.7">
+            <animate attributeName="cy" values="30;6;30" dur="3s" repeatCount="indefinite" />
+          </circle>
+          <rect x="24" y="52" width="12" height="6" fill="#c8a848" />
+          <path d="M30 58 L30 66" stroke="#7fd8ff" strokeWidth="1" opacity="0.7" />
+          <rect x="22" y="66" width="16" height="14" fill="#c8d4e2" stroke="#5a6270" strokeWidth="0.5" opacity="0.7" />
+          <rect x="8" y="86" width="44" height="20" fill="#0a0604" stroke="#5a6270" strokeWidth="0.5" />
+          <text x="30" y="118" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="5" fill="#c8a848">H₂O</text>
+        </g>
+
+        {/* Table ronde + tabouret + tasses au centre-premier plan */}
+        <g transform="translate(340,540)">
+          <ellipse cx="0" cy="0" rx="56" ry="14" fill="#5a3818" stroke="#1a0e08" strokeWidth="1.5" />
+          <ellipse cx="0" cy="-3" rx="56" ry="14" fill="#8a5030" stroke="#1a0e08" strokeWidth="1" />
+          <rect x="-3" y="0" width="6" height="30" fill="#3a2010" />
+          <ellipse cx="-24" cy="-4" rx="7" ry="3" fill="#e8dfc8" stroke="#5a4028" strokeWidth="0.5" />
+          <ellipse cx="-24" cy="-6" rx="4" ry="1.5" fill="#3a2010" />
+          <ellipse cx="18" cy="-4" rx="7" ry="3" fill="#c8b090" stroke="#5a4028" strokeWidth="0.5" />
+          <ellipse cx="-2" cy="-5" rx="4" ry="1.5" fill="#3a4048" stroke="#0a0806" strokeWidth="0.3" />
+        </g>
+        <g transform="translate(280,556)">
+          <ellipse cx="0" cy="0" rx="14" ry="5" fill="#3a2010" stroke="#0a0806" strokeWidth="0.8" />
+          <ellipse cx="0" cy="-3" rx="14" ry="5" fill="#5a4028" stroke="#0a0806" strokeWidth="0.6" />
+          <rect x="-2" y="0" width="4" height="24" fill="#3a2010" />
+        </g>
+        {/* Deuxième table ronde à droite */}
+        <g transform="translate(760,548)">
+          <ellipse cx="0" cy="0" rx="50" ry="12" fill="#5a3818" stroke="#1a0e08" strokeWidth="1.5" />
+          <ellipse cx="0" cy="-3" rx="50" ry="12" fill="#8a5030" stroke="#1a0e08" strokeWidth="1" />
+          <rect x="-3" y="0" width="6" height="26" fill="#3a2010" />
+          {/* Journal ouvert */}
+          <g transform="translate(0,-8)">
+            <rect x="-22" y="-6" width="44" height="10" fill="#e8dfc8" stroke="#5a4028" strokeWidth="0.5" />
+            <line x1="-18" y1="-3" x2="18" y2="-3" stroke="#5a4028" strokeWidth="0.3" />
+            <line x1="-18" y1="0" x2="14" y2="0" stroke="#5a4028" strokeWidth="0.3" />
+            <line x1="-18" y1="3" x2="16" y2="3" stroke="#5a4028" strokeWidth="0.3" />
+          </g>
+        </g>
+        {/* Horloge murale au fond gauche */}
+        <g transform="translate(90,140)">
+          <circle r="20" fill="#e8dfc8" stroke="#3a2010" strokeWidth="2" />
+          <circle r="16" fill="#f4ecd0" />
+          {[0, 90, 180, 270].map((a) => (
+            <line key={a} x1={13 * Math.cos((a * Math.PI) / 180)} y1={13 * Math.sin((a * Math.PI) / 180)}
+              x2={17 * Math.cos((a * Math.PI) / 180)} y2={17 * Math.sin((a * Math.PI) / 180)}
+              stroke="#3a2010" strokeWidth="1.2" />
+          ))}
+          <line x1="0" y1="0" x2="0" y2="-13" stroke="#0a0806" strokeWidth="1.5" strokeLinecap="round" />
+          <line x1="0" y1="0" x2="9" y2="5" stroke="#0a0806" strokeWidth="1" strokeLinecap="round" />
+          <circle r="1.6" fill="#0a0806" />
+          <text x="0" y="10" textAnchor="middle" fontFamily="Georgia,serif" fontSize="4" fill="#5a4028" fontStyle="italic">M.</text>
+        </g>
+
+        {/* Plante en pot au premier plan droit */}
+        <g transform="translate(1010,570)">
+          <path d="M-16 0 L16 0 L12 40 L-12 40 Z" fill="#5a3818" stroke="#1a0e08" strokeWidth="1" />
+          <path d="M-14 -30 Q-6 -50 0 -22 M0 -46 Q6 -58 12 -30 M6 -30 Q14 -42 20 -22 M-14 -14 Q-22 -34 -8 -30 M-4 -38 Q2 -50 8 -34" stroke="#3a6828" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+          <ellipse cx="0" cy="-8" rx="16" ry="4" fill="#3a2010" opacity="0.5" />
+        </g>
+
+        {/* Extincteur au sol à gauche */}
+        <g transform="translate(230,550)">
+          <rect x="0" y="0" width="18" height="46" fill="#8a1010" stroke="#0a0806" strokeWidth="1" rx="3" />
+          <rect x="5" y="-3" width="8" height="6" fill="#3a4048" stroke="#0a0806" strokeWidth="0.5" />
+          <text x="9" y="24" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="3" fontWeight="800" fill="#fff">FEU</text>
+        </g>
+
+        {/* PNJ de mission */}
         {mission.pnj.map((p) => (
           <PnjSprite key={p.id}
             x={p.pose.x} y={p.pose.y}
@@ -112,6 +350,8 @@ export default function BunkerRumeurs({ onGo, j3 }) {
             active={selected === p.id}
             onClick={done ? undefined : () => { setSelected(p.id); j3.hear(p.id); setVerdict(null); }} />
         ))}
+
+        <style>{`@keyframes brFan { from { transform: rotate(0); } to { transform: rotate(360deg); } }`}</style>
       </svg>
 
       {/* Zone dialogue / verdict */}
