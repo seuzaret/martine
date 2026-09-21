@@ -42,7 +42,7 @@ export default function BunkerVoyage({ onGo, j3 }) {
 
   if (phase === "flash" || phase === "return") {
     return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, position: "relative" }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, position: "relative", width: "100%" }}>
         <svg viewBox="0 0 1100 560" style={{ display: "block", width: "100%", height: "auto", maxHeight: "72vh" }}>
           <defs>
             <radialGradient id="bv-flash" cx="50%" cy="50%" r="50%">
@@ -74,7 +74,7 @@ export default function BunkerVoyage({ onGo, j3 }) {
 
   /* Phase past : décor toit crépuscule + journaliste */
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, width: "100%" }}>
       <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3, color: "#e0a848" }}>
         📻 {mission.dateCible.toUpperCase()} — TOIT DE L'IMMEUBLE 12, RUE DES SIRÈNES
       </div>
