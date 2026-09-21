@@ -106,54 +106,54 @@ export default function BunkerElevator({ onGo, j3 }) {
             <rect x="290" y="140" width="6" height="200" fill="#e8eef5" opacity="0.15" />
           </g>
 
-          {/* Panneau de bord à droite (gros) : ticker d'étage + boutons + poignée d'urgence */}
-          <g transform="translate(600,110)">
+          {/* Panneau de bord à droite (GROS) : ticker d'étage + LEDs + poignée d'urgence */}
+          <g transform="translate(540,90)">
             {/* Cadre du panneau */}
-            <rect x="0" y="0" width="180" height="300" fill="url(#ev-panel)" stroke="#0a0e14" strokeWidth="3" rx="6" />
-            <rect x="8" y="8" width="164" height="284" fill="#141c26" stroke="#3a4048" strokeWidth="0.8" />
-            {/* Ticker d'étage LED */}
-            <rect x="20" y="20" width="140" height="60" fill="#0a0806" stroke="#5eff9e" strokeWidth="2" />
-            <text x="90" y="38" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="9" fill="#5eff9e" letterSpacing="3">ÉTAGE</text>
-            <text x="90" y="66" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="24" fontWeight="900" fill={displayLvl?.color || "#5eff9e"} letterSpacing="4">
+            <rect x="0" y="0" width="340" height="400" fill="url(#ev-panel)" stroke="#0a0e14" strokeWidth="4" rx="10" />
+            <rect x="12" y="12" width="316" height="376" fill="#141c26" stroke="#3a4048" strokeWidth="1" />
+            {/* Ticker d'étage LED — grande vitrine noire */}
+            <rect x="30" y="28" width="280" height="130" fill="#0a0806" stroke="#5eff9e" strokeWidth="3" rx="4" />
+            <text x="170" y="58" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="16" fill="#5eff9e" letterSpacing="6">ÉTAGE</text>
+            <text x="170" y="118" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="60" fontWeight="900" fill={displayLvl?.color || "#5eff9e"} letterSpacing="6"
+              style={{ filter: `drop-shadow(0 0 6px ${displayLvl?.color || "#5eff9e"})` }}>
               {displayLvl?.id || "?"}
             </text>
-            {/* Petit sous-titre nom d'étage */}
-            <text x="90" y="98" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fill="#c8d4e2" letterSpacing="2">
+            <text x="170" y="146" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="12" fill="#c8d4e2" letterSpacing="4">
               {(displayLvl?.name || "").toUpperCase()}
             </text>
-            {/* Flèche direction (grande) */}
-            <g transform="translate(90,140)">
+            {/* Flèche direction (grande, centrale) */}
+            <g transform="translate(170,220)">
               {isMoving ? (() => {
                 const idxTarget = LEVELS.findIndex((l) => l.id === target.id);
                 const idxCur = LEVELS.findIndex((l) => l.id === currentLvl);
                 const goingDown = idxTarget > idxCur;
                 return (
-                  <path d={goingDown ? "M-20 -14 L20 -14 L0 20 Z" : "M-20 14 L20 14 L0 -20 Z"} fill="#ff5030">
+                  <path d={goingDown ? "M-36 -22 L36 -22 L0 32 Z" : "M-36 22 L36 22 L0 -32 Z"} fill="#ff5030">
                     <animate attributeName="opacity" values="0.4;1;0.4" dur="0.5s" repeatCount="indefinite" />
                   </path>
                 );
               })() : (
                 <g>
-                  <path d="M-20 -14 L20 -14 L0 -30 Z" fill="#3a4048" />
-                  <path d="M-20 14 L20 14 L0 30 Z" fill="#3a4048" />
+                  <path d="M-36 -22 L36 -22 L0 -50 Z" fill="#3a4048" />
+                  <path d="M-36 22 L36 22 L0 50 Z" fill="#3a4048" />
                 </g>
               )}
             </g>
-            {/* Rangée de LEDs statut */}
-            {[0, 1, 2, 3, 4].map((i) => (
-              <g key={i} transform={`translate(${28 + i * 30},200)`}>
-                <circle r="6" fill="#0a0806" stroke="#3a4048" strokeWidth="0.6" />
-                <circle r="3" fill={i === 2 ? "#5eff9e" : (i % 2 === 0 ? "#e0a848" : "#3a4048")}>
+            {/* Rangée de LEDs statut (plus grosses) */}
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <g key={i} transform={`translate(${52 + i * 48},308)`}>
+                <circle r="11" fill="#0a0806" stroke="#3a4048" strokeWidth="1" />
+                <circle r="6" fill={i === 2 ? "#5eff9e" : (i % 2 === 0 ? "#e0a848" : "#3a4048")}>
                   {i === 2 && <animate attributeName="opacity" values="0.5;1;0.5" dur="1.6s" repeatCount="indefinite" />}
                 </circle>
               </g>
             ))}
-            {/* Poignée d'urgence rouge */}
-            <g transform="translate(90,240)">
-              <rect x="-40" y="0" width="80" height="34" fill="#8a1010" stroke="#0a0806" strokeWidth="1.5" rx="3" />
-              <rect x="-20" y="6" width="40" height="18" fill="#e83820" stroke="#3a0000" strokeWidth="1" rx="2" />
-              <text x="0" y="20" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="8" fontWeight="900" fill="#fff">STOP</text>
-              <text x="0" y="46" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="5" fill="#ff8080">URGENCE</text>
+            {/* Poignée d'urgence rouge (grande) */}
+            <g transform="translate(170,360)">
+              <rect x="-84" y="-10" width="168" height="50" fill="#8a1010" stroke="#0a0806" strokeWidth="2" rx="6" />
+              <rect x="-46" y="0" width="92" height="30" fill="#e83820" stroke="#3a0000" strokeWidth="1.5" rx="3" />
+              <text x="0" y="22" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="16" fontWeight="900" fill="#fff" letterSpacing="4">STOP</text>
+              <text x="0" y="46" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="8" fill="#ff8080" letterSpacing="3">URGENCE</text>
             </g>
           </g>
 
