@@ -186,12 +186,6 @@ export default function BunkerSerres({ onGo, j3 }) {
         <path d="M-14 -18 Q-14 -30 0 -30 Q14 -30 14 -18" fill="none" stroke="#5a6270" strokeWidth="1.5" />
       </g>
 
-      {/* Petit panneau réglementaire au fond */}
-      <g transform="translate(500,58)">
-        <rect x="-80" y="-14" width="160" height="30" fill="#e8dfc8" stroke="#3a2010" strokeWidth="1.5" />
-        <text x="0" y="4" textAnchor="middle" fontFamily="Georgia,serif" fontSize="10" fontWeight="700" fill="#0a2810" letterSpacing="3">SERRES · S-01 · HYDROPONIE</text>
-      </g>
-
       <style>{`@keyframes srHoist { 0% { transform: translate(0,80px); } 100% { transform: translate(0,-40px); } }`}</style>
     </>
   );
