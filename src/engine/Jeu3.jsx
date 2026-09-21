@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import BunkerAwake from "../chapters/jeu3/scenes/BunkerAwake.jsx";
 import BunkerHub from "../chapters/jeu3/scenes/BunkerHub.jsx";
 import BunkerHubHaut from "../chapters/jeu3/scenes/BunkerHubHaut.jsx";
@@ -64,6 +64,20 @@ export default function Jeu3({ prenom, onExit }) {
   const [room, setRoom] = useState("awake");
   const [flags, setFlags] = useState({});
   const [heardPnj, setHeardPnj] = useState({});
+  /* Mode triche : Ctrl+Shift+C toggle. Quand actif, la mini-carte redevient
+     cliquable pour se téléporter d'un étage à l'autre sans passer par
+     l'ascenseur. Sinon, la mini-carte est purement informative — il faut
+     utiliser l'ascenseur pour changer d'étage (immersion). */
+  const [cheat, setCheat] = useState(false);
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.ctrlKey && e.shiftKey && (e.key === "C" || e.key === "c")) {
+        setCheat((c) => !c);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
   /* previousRoom permet à l'ascenseur de savoir depuis quel étage
      on l'a appelé (pour surligner "ici" dans le sélecteur). */
   const prevRef = useRef("awake");
@@ -99,6 +113,7 @@ export default function Jeu3({ prenom, onExit }) {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", background: "#0a1020", borderBottom: "1px solid #1a2536" }}>
         <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, letterSpacing: 3, color: "#7fd8ff" }}>
           🌑 BUNKER · 2087 · <span style={{ color: "#e8eef5" }}>{current.label}</span>
+          {cheat && <span style={{ marginLeft: 12, color: "#ff5030", fontWeight: 800 }}>🐛 TRICHE</span>}
         </div>
         <button onClick={onExit}
           style={{ background: "transparent", color: "#8fa3bd", border: "1px solid #2a3648", borderRadius: 8, padding: "6px 12px", fontSize: 11, cursor: "pointer", fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
@@ -108,7 +123,7 @@ export default function Jeu3({ prenom, onExit }) {
 
       {/* Zone principale : mini-carte à gauche + scène à droite */}
       <div style={{ flex: 1, display: "flex", minHeight: 0 }}>
-        {showMinimap && <BunkerMinimap room={room} flags={flags} onGo={goTo} />}
+        {showMinimap && <BunkerMinimap room={room} flags={flags} onGo={goTo} cheat={cheat} />}
         <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 6, minHeight: 0, overflow: "hidden" }}>
           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <Comp prenom={prenom} onGo={goTo} j3={j3} />

@@ -11,7 +11,7 @@ import { LEVELS, ROOM_TO_LEVEL, isLevelUnlocked } from "./levels.js";
    un point clignotant. Cliquable — chaque étage débloqué renvoie
    vers son mini-hub.
    ============================================================ */
-export default function BunkerMinimap({ room, flags, onGo }) {
+export default function BunkerMinimap({ room, flags, onGo, cheat = false }) {
   const currentLevel = ROOM_TO_LEVEL[room] ?? null;
   /* Hauteurs et positions : la surface est en haut ; les 4 étages
      souterrains descendent. Le -3 est bien plus bas que le -1
@@ -127,7 +127,7 @@ export default function BunkerMinimap({ room, flags, onGo }) {
         {levelsPos.map(({ lvl, y }) => {
           const unlocked = isLevelUnlocked(lvl.id, flags);
           const isHere = currentLevel === lvl.id;
-          const canClick = unlocked;
+          const canClick = unlocked && (cheat || isHere);
           const roomCount = lvl.rooms.length;
           return (
             <g key={lvl.id}
@@ -205,7 +205,7 @@ export default function BunkerMinimap({ room, flags, onGo }) {
         })()}
       </svg>
       <div style={{ fontSize: 8.5, color: "#5a6678", textAlign: "center", marginTop: 6, lineHeight: 1.4 }}>
-        Clique un<br />étage pour<br />t'y rendre
+        {cheat ? <>🐛 TRICHE ·<br />clique un<br />étage</> : <>Prends<br />l'ascenseur<br />pour te<br />déplacer</>}
       </div>
     </div>
   );
