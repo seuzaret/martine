@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 /* Petit hook TYPEWRITER local — révèle un texte lettre par lettre.
    Repart de zéro dès que `text` change. `skip()` affiche tout d'un coup. */
-function useTypewriter(text, speed = 12) {
+function useTypewriter(text, speed = 6) {
   const [shown, setShown] = useState("");
   const [done, setDone] = useState(false);
   useEffect(() => {

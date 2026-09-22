@@ -16,7 +16,7 @@ import { useState, useEffect } from "react";
    Pendant la frappe du texte, l'antenne clignote plus vite.
    ============================================================ */
 
-function useTypewriter(text, speed = 8) {
+function useTypewriter(text, speed = 4) {
   const [shown, setShown] = useState("");
   const [done, setDone] = useState(false);
   useEffect(() => {

@@ -37,7 +37,7 @@ function Bubble({ x, y, w = 260, text, from = 'left', color = 'default' }) {
   useEffect(() => {
     setNShown(0);
     if (!fullText) return;
-    const step = 18;
+    const step = 8;
     let i = 0;
     const id = setInterval(() => {
       i += 1;
