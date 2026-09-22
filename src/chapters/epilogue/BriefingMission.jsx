@@ -18,7 +18,7 @@ import { CHAPTERS } from "../index.js";
    lance directement le jeu 2 (App bascule sans repasser au titre).
    ============================================================ */
 
-function useTypewriter(text, speed = 12) {
+function useTypewriter(text, speed = 6) {
   const [shown, setShown] = useState("");
   const [done, setDone] = useState(false);
   useEffect(() => {
