@@ -386,20 +386,22 @@ function SlideCockpit({ onNext }) {
    Vocabulaire de 6e, formulations très simples.
    ═══════════════════════════════════════════════════════════════ */
 function SlideRules({ onNext }) {
-<<<<<<< HEAD
-  /* Étapes : -1 = check-in MARTINE (comprends-tu la mission ?),
+  /* Étapes : -1 = check-in MARTINE avec 3 choix de réponse,
      0..3 = les 4 règles empilées une par une. */
   const [n, setN] = useState(-1);
-=======
-  const [n, setN] = useState(0);
->>>>>>> origin/main
+  /* mood: null (question posée), "content" / "dubitatif" / "enerve" (choix fait) */
+  const [mood, setMood] = useState(null);
+  const REPONSES = {
+    content:   { emoji: "😊", label: "Vas-y, je t'écoute !",              reponse: "« Parfait ! Voilà les règles. » MARTINE t'adresse un clin d'œil.", martineMood: "content" },
+    dubitatif: { emoji: "🤔", label: "Attends, j'ai peur de faire une bêtise…", reponse: "« C'est bien de te méfier. C'est justement pour ça qu'il y a des règles. Elles te protègent. »", martineMood: "neutre" },
+    enerve:    { emoji: "😤", label: "Bon, allez, on n'a pas toute la journée !", reponse: "« Ha ! Un(e) impatient(e). Tant mieux : les gens pressés sautent souvent les règles. Écoute d'autant mieux. »", martineMood: "vexe" },
+  };
   const REGLES = [
     { num: "1", titre: "Ne croise jamais un autre toi-même", desc: "Si tu rencontres une version de toi dans le passé ou le futur, le temps se déchire. Ne fais jamais ça.", couleur: "#ff6a7a" },
     { num: "2", titre: "Ne raconte pas le futur aux gens", desc: "Si tu dis à quelqu'un ce qui va lui arriver, il change ses choix — et l'histoire entière change avec.", couleur: "#ffd166" },
     { num: "3", titre: "Ne laisse rien du futur dans le passé", desc: "Ni objet, ni idée, ni technologie. Ramasse tout ce que tu poses. Sinon, les gens de l'époque changent leur monde à cause de toi.", couleur: "#5eff9e" },
     { num: "4", titre: "Rentre à ton époque avant qu'il soit trop tard", desc: "Si tu restes trop longtemps dans une autre époque, tu risques de ne plus jamais pouvoir revenir chez toi.", couleur: "#7fd8ff" },
   ];
-<<<<<<< HEAD
   const isCheckin = n === -1;
   const isLast = n === REGLES.length - 1;
   const seen = isCheckin ? [] : REGLES.slice(0, n + 1);
@@ -426,26 +428,57 @@ function SlideRules({ onNext }) {
               <circle key={i} cx={cx} cy={cy} r={i % 2 ? 1.4 : 1} fill="#fff" opacity="0.75" />
             ))}
             <circle cx="400" cy="200" r="180" fill="url(#s4b-glow2)" />
-            {/* Bulle centrée : question de MARTINE */}
+            {/* Bulle centrée : question de MARTINE (ou sa réponse) */}
             <g transform="translate(400,200)">
-              <rect x="-300" y="-70" width="600" height="140" fill="#0e1a30" stroke="#5eff9e" strokeWidth="3" rx="14" />
-              <text x="0" y="-38" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="11" fill="#5eff9e" letterSpacing="4">MARTINE</text>
-              <text x="0" y="-8" textAnchor="middle" fontFamily="Georgia,serif" fontSize="15" fill="#e8eef5" fontStyle="italic">« On va voyager dans le temps.</text>
-              <text x="0" y="12" textAnchor="middle" fontFamily="Georgia,serif" fontSize="15" fill="#e8eef5" fontStyle="italic">Ce n'est pas comme prendre le bus.</text>
-              <text x="0" y="36" textAnchor="middle" fontFamily="Georgia,serif" fontSize="15" fill="#e8eef5" fontStyle="italic">Il y a des règles précises. Prêt·e ?</text>
-              <text x="0" y="58" textAnchor="middle" fontFamily="Georgia,serif" fontSize="12" fill="#7a879e" fontStyle="italic">Je te les explique une par une. »</text>
+              <rect x="-320" y="-80" width="640" height="160" fill="#0e1a30" stroke="#5eff9e" strokeWidth="3" rx="14" />
+              <text x="0" y="-50" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="11" fill="#5eff9e" letterSpacing="4">MARTINE</text>
+              {!mood ? (
+                <>
+                  <text x="0" y="-20" textAnchor="middle" fontFamily="Georgia,serif" fontSize="15" fill="#e8eef5" fontStyle="italic">« On va voyager dans le temps.</text>
+                  <text x="0" y="0" textAnchor="middle" fontFamily="Georgia,serif" fontSize="15" fill="#e8eef5" fontStyle="italic">Ce n'est pas comme prendre le bus.</text>
+                  <text x="0" y="24" textAnchor="middle" fontFamily="Georgia,serif" fontSize="15" fill="#e8eef5" fontStyle="italic">Il y a des règles précises.</text>
+                  <text x="0" y="52" textAnchor="middle" fontFamily="Georgia,serif" fontSize="16" fill="#5eff9e" fontWeight="700">Prêt·e ? »</text>
+                </>
+              ) : (
+                <foreignObject x="-300" y="-30" width="600" height="90">
+                  <div xmlns="http://www.w3.org/1999/xhtml"
+                    style={{ font: "italic 15px Georgia,serif", color: "#e8eef5", lineHeight: 1.4, textAlign: "center", padding: "0 12px" }}>
+                    {REPONSES[mood].reponse}
+                  </div>
+                </foreignObject>
+              )}
             </g>
           </svg>
-          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-            <div><Avatar mood="content" size={64} talking /></div>
-            <button onClick={() => setN(0)} autoFocus
-              style={{ background: '#5eff9e', color: '#06110b', border: 'none', borderRadius: 10,
-                padding: '12px 26px', fontSize: 14, fontWeight: 800, cursor: 'pointer',
-                fontFamily: 'ui-monospace,monospace', letterSpacing: 2,
-                boxShadow: '0 0 22px rgba(94,255,158,0.55)' }}>
-              JE T'ÉCOUTE →
-            </button>
-          </div>
+
+          {/* Zone des choix ou du bouton continuer */}
+          {!mood ? (
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 720, marginTop: 4 }}>
+              {Object.entries(REPONSES).map(([key, r]) => (
+                <button key={key} onClick={() => setMood(key)}
+                  style={{ background: '#141b26', color: '#e8eef5', border: '2px solid #3a4048',
+                    borderRadius: 12, padding: '12px 18px', fontSize: 13, fontWeight: 700,
+                    cursor: 'pointer', fontFamily: 'ui-monospace,monospace',
+                    display: 'flex', alignItems: 'center', gap: 8, minWidth: 200,
+                    transition: 'all 0.2s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#5eff9e'; e.currentTarget.style.background = '#0e1a30'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#3a4048'; e.currentTarget.style.background = '#141b26'; }}>
+                  <span style={{ fontSize: 22 }}>{r.emoji}</span>
+                  <span style={{ textAlign: 'left', flex: 1 }}>« {r.label} »</span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 4 }}>
+              <div><Avatar mood={REPONSES[mood].martineMood} size={64} talking /></div>
+              <button onClick={() => setN(0)} autoFocus
+                style={{ background: '#5eff9e', color: '#06110b', border: 'none', borderRadius: 10,
+                  padding: '12px 26px', fontSize: 14, fontWeight: 800, cursor: 'pointer',
+                  fontFamily: 'ui-monospace,monospace', letterSpacing: 2,
+                  boxShadow: '0 0 22px rgba(94,255,158,0.55)' }}>
+                LES 4 RÈGLES →
+              </button>
+            </div>
+          )}
         </>
       )}
 
@@ -514,80 +547,6 @@ function SlideRules({ onNext }) {
           </div>
         </>
       )}
-=======
-  const seen = REGLES.slice(0, n + 1);
-  const isLast = n === REGLES.length - 1;
-
-  return (
-    <div style={{ animation: 'fadeIn 0.6s ease-out', position: 'relative', width: "100%" }}>
-      <svg viewBox="0 0 800 500" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '62vh' }}>
-        <defs>
-          <linearGradient id="s4b-cabin" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#0a1a2a" />
-            <stop offset="100%" stopColor="#050810" />
-          </linearGradient>
-          <radialGradient id="s4b-glow" cx="50%" cy="50%" r="60%">
-            <stop offset="0%" stopColor="#5eff9e" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#5eff9e" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <rect width="800" height="500" fill="url(#s4b-cabin)" />
-        {/* Hublot en haut avec fond étoilé (rappel du cockpit) */}
-        <ellipse cx="400" cy="60" rx="260" ry="34" fill="#000814" stroke="#5a7898" strokeWidth="3" />
-        {[[300, 50], [360, 66], [400, 46], [460, 68], [520, 54]].map(([cx, cy], i) => (
-          <circle key={i} cx={cx} cy={cy} r={i % 2 ? 1.4 : 1} fill="#fff" opacity="0.75" />
-        ))}
-        {/* Halo derrière l'écriteau */}
-        <circle cx="400" cy="270" r="200" fill="url(#s4b-glow)" />
-        {/* Bandeau titre */}
-        <g transform="translate(400,120)">
-          <rect x="-260" y="-22" width="520" height="44" fill="#0a1428" stroke="#5eff9e" strokeWidth="2.5" rx="8" />
-          <text x="0" y="8" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="18" fontWeight="800" fill="#5eff9e" letterSpacing="6">
-            LES 4 RÈGLES DES CHRONAUTES
-          </text>
-        </g>
-        {/* Les règles, empilées */}
-        {seen.map((r, i) => (
-          <g key={i} transform={`translate(80,${170 + i * 66})`} style={{ animation: i === n ? 'fadeIn 0.5s ease-out' : 'none' }}>
-            {/* Cercle du numéro */}
-            <circle cx="24" cy="24" r="22" fill={r.couleur} stroke="#0a0806" strokeWidth="2" />
-            <text x="24" y="32" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="24" fontWeight="900" fill="#0a0806">{r.num}</text>
-            {/* Bandeau texte à côté */}
-            <rect x="60" y="4" width="580" height="40" fill="#141c26" stroke={`${r.couleur}88`} strokeWidth="1.5" rx="6" />
-            <text x="76" y="22" fontFamily="ui-monospace,monospace" fontSize="12" fontWeight="800" fill={r.couleur} letterSpacing="1">
-              {r.titre.toUpperCase()}
-            </text>
-            <text x="76" y="38" fontFamily="Georgia,serif" fontSize="11" fill="#c8d4e2">
-              {r.desc}
-            </text>
-          </g>
-        ))}
-      </svg>
-      {/* MARTINE avatar en bas à gauche */}
-      <div style={{ position: 'absolute', bottom: 80, left: 20, pointerEvents: 'none' }}>
-        <Avatar mood="neutre" size={80} talking />
-      </div>
-      {/* Bulle + bouton */}
-      <div style={{ position: 'absolute', left: '50%', bottom: 20, transform: 'translateX(-50%)', width: 'min(88%, 620px)',
-        background: '#0e1a30', border: '2px solid #5eff9e', borderRadius: 14,
-        padding: '12px 18px', color: '#e8eef5',
-        boxShadow: '0 0 24px rgba(94,255,158,0.3)', textAlign: 'center' }}>
-        <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.5 }}>
-          {!isLast
-            ? "« Retiens bien ça. Chaque règle protège le fil du temps. »"
-            : "« Voilà. Quatre règles. Simples, mais très importantes. Prêt(e) à partir ? »"}
-        </p>
-        <button onClick={() => (isLast ? onNext() : setN(n + 1))} autoFocus
-          style={{ marginTop: 10, background: isLast ? '#5eff9e' : '#141b26',
-            color: isLast ? '#06110b' : '#5eff9e',
-            border: `2px solid ${isLast ? '#5eff9e' : '#5eff9e'}`,
-            borderRadius: 10, padding: '10px 22px', fontSize: 14, fontWeight: 800,
-            cursor: 'pointer', fontFamily: 'ui-monospace,monospace', letterSpacing: 2,
-            boxShadow: isLast ? '0 0 22px rgba(94,255,158,0.55)' : 'none' }}>
-          {isLast ? "COMPRIS, ON PART →" : `Règle suivante (${n + 2}/${REGLES.length})`}
-        </button>
-      </div>
->>>>>>> origin/main
     </div>
   );
 }
