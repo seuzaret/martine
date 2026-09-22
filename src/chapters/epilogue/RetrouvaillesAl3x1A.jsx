@@ -57,14 +57,18 @@ export function PortraitAl3x1AVivant({ mood = "content" }) {
 }
 
 const DIALOGUES = [
+  { mood: "neutre",
+    text: "Toi… ?" },
+  { mood: "neutre",
+    text: "Ton visage… je le connais. Mais tu es beaucoup trop jeune. Comment… non, laisse tomber. Je dois délirer. Dix ans toute seule ici, c'est long." },
   { mood: "content",
-    text: "Toi !? Non — ce n'est pas possible… Attends, si, ça l'est. Elias t'a envoyé·e. Dix ans que j'attends quelqu'un. Dix. Ans." },
-  { mood: "content",
-    text: "Ma MARTINE est cassée depuis longtemps. Je pensais mourir ici, doucement, sans que personne ne le sache. Tu m'as retrouvé·e, {prenom}. Je n'en reviens pas." },
+    text: "Elias t'a envoyé·e ? Bien sûr, qui d'autre. Ma MARTINE est cassée depuis longtemps. Je pensais mourir sans que personne ne le sache. Tu m'as retrouvé·e, {prenom}. Je n'en reviens pas." },
   { mood: "neutre",
     text: "J'ai trouvé le remède, oui. Tiens — prends-le, il est à toi. Ramène-le à Elias, à Mira, à tous ceux qui commencent à oublier. Vite." },
+  { mood: "neutre",
+    text: "Attends. Regarde-moi encore une seconde. Non… rien. Il y a des règles, tu sais. Je te le dirai peut-être quand on sera rentré·e·s. Peut-être pas. Allez, viens." },
   { mood: "content",
-    text: "Moi, je reste ici encore quelques heures — le temps de dire adieu à ce lieu, puis je monte dans ta MARTINE avec toi. Prête ? Prêt ? Repartons chez nous." },
+    text: "On monte dans ta MARTINE. Repartons chez nous." },
 ];
 
 export default function RetrouvaillesAl3x1A({ prenom, remede, chapitreNom, onDone }) {
