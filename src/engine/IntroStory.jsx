@@ -223,17 +223,19 @@ function SlideMessage({ onNext }) {
           {/* Bulle blanche du message (largeur 216, centrée dans le tel) */}
           <g transform="translate(-108,-124)">
             <rect x="0" y="0" width="216" height="264" rx="8" fill="#fff" stroke="#e0e0e0" strokeWidth="0.5" />
-            <text x="108" y="24" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">« Je m'appelle Al3x1a.</text>
-            <text x="108" y="42" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">Je viens du futur.</text>
-            <text x="108" y="66" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">Une machine — MARTINE —</text>
-            <text x="108" y="82" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">va se poser dehors.</text>
-            <text x="108" y="106" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">On a besoin de toi</text>
-            <text x="108" y="122" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">pour retrouver les messages</text>
-            <text x="108" y="138" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">perdus de l'humanité.</text>
-            <text x="108" y="162" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">Sans eux, tout s'efface —</text>
-            <text x="108" y="178" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">et moi avec.</text>
-            <text x="108" y="204" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="11" fontWeight="700" fill="#111b21">Sors. »</text>
-            <text x="200" y="250" textAnchor="end" fontFamily="ui-monospace,monospace" fontSize="8" fill="#8696a0">03:14</text>
+            <text x="108" y="22" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">« Je m'appelle Al3x1a.</text>
+            <text x="108" y="38" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">Je viens du futur.</text>
+            <text x="108" y="62" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">Ici, une maladie</text>
+            <text x="108" y="78" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">efface la mémoire</text>
+            <text x="108" y="94" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">de tout le monde.</text>
+            <text x="108" y="118" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">Mon père est parti</text>
+            <text x="108" y="134" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">dans le temps</text>
+            <text x="108" y="150" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">chercher un remède.</text>
+            <text x="108" y="166" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">Il n'est jamais rentré.</text>
+            <text x="108" y="190" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">MARTINE va se poser</text>
+            <text x="108" y="206" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="10.5" fill="#111b21" fontStyle="italic">devant chez toi.</text>
+            <text x="108" y="232" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif" fontSize="11" fontWeight="700" fill="#111b21">Sors. »</text>
+            <text x="200" y="252" textAnchor="end" fontFamily="ui-monospace,monospace" fontSize="8" fill="#8696a0">03:14</text>
           </g>
           <text x="0" y="176" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="9" fill="#8696a0">touche pour ouvrir</text>
           <rect x="-40" y="204" width="80" height="3" rx="1.5" fill="#5a6a80" />
@@ -384,13 +386,135 @@ function SlideCockpit({ onNext }) {
    Vocabulaire de 6e, formulations très simples.
    ═══════════════════════════════════════════════════════════════ */
 function SlideRules({ onNext }) {
+<<<<<<< HEAD
+  /* Étapes : -1 = check-in MARTINE (comprends-tu la mission ?),
+     0..3 = les 4 règles empilées une par une. */
+  const [n, setN] = useState(-1);
+=======
   const [n, setN] = useState(0);
+>>>>>>> origin/main
   const REGLES = [
     { num: "1", titre: "Ne croise jamais un autre toi-même", desc: "Si tu rencontres une version de toi dans le passé ou le futur, le temps se déchire. Ne fais jamais ça.", couleur: "#ff6a7a" },
     { num: "2", titre: "Ne raconte pas le futur aux gens", desc: "Si tu dis à quelqu'un ce qui va lui arriver, il change ses choix — et l'histoire entière change avec.", couleur: "#ffd166" },
     { num: "3", titre: "Ne laisse rien du futur dans le passé", desc: "Ni objet, ni idée, ni technologie. Ramasse tout ce que tu poses. Sinon, les gens de l'époque changent leur monde à cause de toi.", couleur: "#5eff9e" },
     { num: "4", titre: "Rentre à ton époque avant qu'il soit trop tard", desc: "Si tu restes trop longtemps dans une autre époque, tu risques de ne plus jamais pouvoir revenir chez toi.", couleur: "#7fd8ff" },
   ];
+<<<<<<< HEAD
+  const isCheckin = n === -1;
+  const isLast = n === REGLES.length - 1;
+  const seen = isCheckin ? [] : REGLES.slice(0, n + 1);
+
+  return (
+    <div style={{ animation: 'fadeIn 0.6s ease-out', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+      {/* --- ÉTAPE CHECK-IN : MARTINE demande si tout est clair --- */}
+      {isCheckin && (
+        <>
+          <svg viewBox="0 0 800 340" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '46vh' }}>
+            <defs>
+              <linearGradient id="s4b-cabin2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#0a1a2a" />
+                <stop offset="100%" stopColor="#050810" />
+              </linearGradient>
+              <radialGradient id="s4b-glow2" cx="50%" cy="50%" r="60%">
+                <stop offset="0%" stopColor="#5eff9e" stopOpacity="0.28" />
+                <stop offset="100%" stopColor="#5eff9e" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <rect width="800" height="340" fill="url(#s4b-cabin2)" />
+            <ellipse cx="400" cy="60" rx="260" ry="34" fill="#000814" stroke="#5a7898" strokeWidth="3" />
+            {[[300, 50], [360, 66], [400, 46], [460, 68], [520, 54]].map(([cx, cy], i) => (
+              <circle key={i} cx={cx} cy={cy} r={i % 2 ? 1.4 : 1} fill="#fff" opacity="0.75" />
+            ))}
+            <circle cx="400" cy="200" r="180" fill="url(#s4b-glow2)" />
+            {/* Bulle centrée : question de MARTINE */}
+            <g transform="translate(400,200)">
+              <rect x="-300" y="-70" width="600" height="140" fill="#0e1a30" stroke="#5eff9e" strokeWidth="3" rx="14" />
+              <text x="0" y="-38" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="11" fill="#5eff9e" letterSpacing="4">MARTINE</text>
+              <text x="0" y="-8" textAnchor="middle" fontFamily="Georgia,serif" fontSize="15" fill="#e8eef5" fontStyle="italic">« On va voyager dans le temps.</text>
+              <text x="0" y="12" textAnchor="middle" fontFamily="Georgia,serif" fontSize="15" fill="#e8eef5" fontStyle="italic">Ce n'est pas comme prendre le bus.</text>
+              <text x="0" y="36" textAnchor="middle" fontFamily="Georgia,serif" fontSize="15" fill="#e8eef5" fontStyle="italic">Il y a des règles précises. Prêt·e ?</text>
+              <text x="0" y="58" textAnchor="middle" fontFamily="Georgia,serif" fontSize="12" fill="#7a879e" fontStyle="italic">Je te les explique une par une. »</text>
+            </g>
+          </svg>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            <div><Avatar mood="content" size={64} talking /></div>
+            <button onClick={() => setN(0)} autoFocus
+              style={{ background: '#5eff9e', color: '#06110b', border: 'none', borderRadius: 10,
+                padding: '12px 26px', fontSize: 14, fontWeight: 800, cursor: 'pointer',
+                fontFamily: 'ui-monospace,monospace', letterSpacing: 2,
+                boxShadow: '0 0 22px rgba(94,255,158,0.55)' }}>
+              JE T'ÉCOUTE →
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* --- ÉTAPES 0..3 : LES RÈGLES --- */}
+      {!isCheckin && (
+        <>
+          <svg viewBox="0 0 800 520" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '58vh' }}>
+            <defs>
+              <linearGradient id="s4b-cabin3" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#0a1a2a" />
+                <stop offset="100%" stopColor="#050810" />
+              </linearGradient>
+              <radialGradient id="s4b-glow3" cx="50%" cy="50%" r="60%">
+                <stop offset="0%" stopColor="#5eff9e" stopOpacity="0.22" />
+                <stop offset="100%" stopColor="#5eff9e" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <rect width="800" height="520" fill="url(#s4b-cabin3)" />
+            <ellipse cx="400" cy="40" rx="260" ry="24" fill="#000814" stroke="#5a7898" strokeWidth="3" />
+            {[[300, 34], [360, 46], [400, 30], [460, 48], [520, 36]].map(([cx, cy], i) => (
+              <circle key={i} cx={cx} cy={cy} r={i % 2 ? 1.4 : 1} fill="#fff" opacity="0.75" />
+            ))}
+            <circle cx="400" cy="290" r="230" fill="url(#s4b-glow3)" />
+            {/* Bandeau titre */}
+            <g transform="translate(400,90)">
+              <rect x="-260" y="-22" width="520" height="44" fill="#0a1428" stroke="#5eff9e" strokeWidth="2.5" rx="8" />
+              <text x="0" y="8" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="18" fontWeight="800" fill="#5eff9e" letterSpacing="6">
+                LES 4 RÈGLES DES CHRONAUTES
+              </text>
+            </g>
+            {/* Règles empilées, y à partir de 140, hauteur 82 par ligne */}
+            {seen.map((r, i) => (
+              <g key={i} transform={`translate(70,${140 + i * 88})`} style={{ animation: i === n ? 'fadeIn 0.5s ease-out' : 'none' }}>
+                <circle cx="30" cy="30" r="26" fill={r.couleur} stroke="#0a0806" strokeWidth="2" />
+                <text x="30" y="40" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="28" fontWeight="900" fill="#0a0806">{r.num}</text>
+                <rect x="72" y="4" width="600" height="52" fill="#141c26" stroke={`${r.couleur}88`} strokeWidth="1.5" rx="6" />
+                <text x="88" y="24" fontFamily="ui-monospace,monospace" fontSize="13" fontWeight="800" fill={r.couleur} letterSpacing="1">
+                  {r.titre.toUpperCase()}
+                </text>
+                <text x="88" y="44" fontFamily="Georgia,serif" fontSize="12" fill="#c8d4e2">
+                  {r.desc}
+                </text>
+              </g>
+            ))}
+          </svg>
+          {/* Zone commentaire + bouton — POSITIONNÉE SOUS le SVG (plus de chevauchement) */}
+          <div style={{ width: 'min(92%, 660px)', display: 'flex', gap: 12, alignItems: 'center',
+            background: '#0e1a30', border: '2px solid #5eff9e', borderRadius: 14,
+            padding: '10px 16px', color: '#e8eef5',
+            boxShadow: '0 0 20px rgba(94,255,158,0.25)' }}>
+            <div style={{ flexShrink: 0 }}><Avatar mood="neutre" size={54} talking /></div>
+            <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.45, flex: 1, textAlign: 'left' }}>
+              {!isLast
+                ? "« Retiens bien ça. Chaque règle protège le fil du temps. »"
+                : "« Voilà. Quatre règles. Simples, mais très importantes. Prêt·e à partir ? »"}
+            </p>
+            <button onClick={() => (isLast ? onNext() : setN(n + 1))} autoFocus
+              style={{ flexShrink: 0, background: isLast ? '#5eff9e' : '#141b26',
+                color: isLast ? '#06110b' : '#5eff9e',
+                border: '2px solid #5eff9e',
+                borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 800,
+                cursor: 'pointer', fontFamily: 'ui-monospace,monospace', letterSpacing: 2,
+                boxShadow: isLast ? '0 0 22px rgba(94,255,158,0.55)' : 'none' }}>
+              {isLast ? "ON PART →" : `Suite (${n + 2}/${REGLES.length})`}
+            </button>
+          </div>
+        </>
+      )}
+=======
   const seen = REGLES.slice(0, n + 1);
   const isLast = n === REGLES.length - 1;
 
@@ -463,6 +587,7 @@ function SlideRules({ onNext }) {
           {isLast ? "COMPRIS, ON PART →" : `Règle suivante (${n + 2}/${REGLES.length})`}
         </button>
       </div>
+>>>>>>> origin/main
     </div>
   );
 }
