@@ -135,61 +135,316 @@ function SlideNight({ onNext }) {
   }, []);
 
   return (
-    <div style={{ animation: 'fadeIn 1s ease-out' }}>
-      <svg viewBox="0 0 800 500" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '62vh' }}>
+    <div style={{ animation: 'fadeIn 1s ease-out', width: '100%' }}>
+      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
         <defs>
-          <radialGradient id="s1-moon" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#f0e4c8" stopOpacity="0.35" /><stop offset="100%" stopColor="#f0e4c8" stopOpacity="0" /></radialGradient>
-          <radialGradient id="s1-phone-halo" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#7fb0e0" stopOpacity="0.85" /><stop offset="100%" stopColor="#7fb0e0" stopOpacity="0" /></radialGradient>
+          <linearGradient id="s1-wall" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#1a1f30" />
+            <stop offset="100%" stopColor="#0a0e18" />
+          </linearGradient>
+          <linearGradient id="s1-floor" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#3a2818" />
+            <stop offset="100%" stopColor="#0e0806" />
+          </linearGradient>
+          <linearGradient id="s1-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0a0a2a" />
+            <stop offset="100%" stopColor="#2a3050" />
+          </linearGradient>
+          <radialGradient id="s1-moon" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#f8ecd0" stopOpacity="1" />
+            <stop offset="100%" stopColor="#f0e4c8" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="s1-moonlight" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#f0e4c8" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="#f0e4c8" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="s1-phone-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#7fb0e0" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#7fb0e0" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="s1-nightlight" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="#ffb060" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#ffb060" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="s1-laptop" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="#3a80c8" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#3a80c8" stopOpacity="0" />
+          </radialGradient>
         </defs>
-        <rect width="800" height="500" fill="#0a0e18" />
-        <circle cx="750" cy="150" r="220" fill="url(#s1-moon)" />
-        <rect x="640" y="60" width="130" height="160" fill="#1a2438" stroke="#3a2818" strokeWidth="3" />
-        <path d="M705 60 v160 M640 140 h130" stroke="#3a2818" strokeWidth="2" />
-        <circle cx="720" cy="110" r="18" fill="#f0e4c8" opacity="0.8" />
-        <circle cx="726" cy="107" r="14" fill="#1a2438" />
 
-        {/* LIT au premier plan */}
-        <rect x="50" y="330" width="480" height="90" fill="#2a1e28" stroke="#0a0806" strokeWidth="2" />
-        <path d="M60 336 Q160 322 300 342 Q420 358 520 340 L520 372 Q420 380 300 372 Q160 366 60 372 Z" fill="#3a2450" />
-        <rect x="50" y="330" width="90" height="26" rx="6" fill="#5a4a58" transform="rotate(-3 95 343)" />
-        <path d="M180 348 Q220 336 280 348 Q320 358 300 372 Q240 376 200 370 Q170 360 180 348 Z" fill="#4a3060" opacity="0.7" />
-        <rect x="52" y="420" width="12" height="30" fill="#1a0e08" />
-        <rect x="518" y="420" width="12" height="30" fill="#1a0e08" />
+        {/* MUR + SOL */}
+        <rect width="1200" height="680" fill="url(#s1-wall)" />
+        {/* Papier peint subtil : rayures verticales */}
+        {[100, 200, 300, 400, 900, 1000, 1100].map((x, i) => (
+          <line key={i} x1={x} y1="0" x2={x} y2="520" stroke="#28303a" strokeWidth="0.8" opacity="0.35" />
+        ))}
+        <rect y="520" width="1200" height="160" fill="url(#s1-floor)" />
+        <path d="M0 520 L1200 520" stroke="#0a0806" strokeWidth="1.5" />
+        {/* Plinthe */}
+        <rect y="514" width="1200" height="8" fill="#141820" />
+        {/* Lattes du plancher en perspective */}
+        {[100, 300, 500, 800, 1000].map((x, i) => (
+          <path key={i} d={`M${x} 520 L${x + (x - 600) * 0.15} 680`} stroke="#0a0604" strokeWidth="0.8" opacity="0.55" />
+        ))}
+        {/* Tapis rond au sol */}
+        <ellipse cx="600" cy="620" rx="220" ry="42" fill="#5a2820" stroke="#3a1810" strokeWidth="1.5" opacity="0.85" />
+        <ellipse cx="600" cy="614" rx="220" ry="42" fill="#8a3820" opacity="0.6" />
+        <ellipse cx="600" cy="614" rx="190" ry="34" fill="none" stroke="#c8a848" strokeWidth="1" opacity="0.5" />
 
-        {/* Table de nuit avec réveil et téléphone */}
-        <rect x="540" y="330" width="130" height="90" fill="#5a3818" stroke="#1a0e08" strokeWidth="1.5" />
-        <rect x="544" y="418" width="8" height="26" fill="#1a0e08" />
-        <rect x="660" y="418" width="8" height="26" fill="#1a0e08" />
+        {/* GRANDE FENÊTRE à droite avec lune, ciel étoilé, silhouette de ville */}
+        <g>
+          <rect x="820" y="80" width="300" height="360" fill="url(#s1-sky)" stroke="#3a2818" strokeWidth="6" />
+          {/* Croisillons */}
+          <line x1="970" y1="80" x2="970" y2="440" stroke="#3a2818" strokeWidth="4" />
+          <line x1="820" y1="260" x2="1120" y2="260" stroke="#3a2818" strokeWidth="4" />
+          {/* Étoiles */}
+          {[[860, 120], [920, 140], [1010, 100], [1080, 160], [960, 200], [890, 210], [1050, 230], [900, 300], [1020, 340], [860, 380], [1090, 400]].map(([x, y], i) => (
+            <circle key={i} cx={x} cy={y} r={i % 3 === 0 ? 1.6 : 1} fill="#e8eef5" opacity={0.55 + (i % 4) * 0.12} />
+          ))}
+          {/* Lune */}
+          <circle cx="1050" cy="150" r="34" fill="url(#s1-moon)" />
+          <circle cx="1050" cy="150" r="28" fill="#f8ecd0" />
+          <circle cx="1060" cy="145" r="4" fill="#c8bda0" opacity="0.65" />
+          <circle cx="1042" cy="160" r="3" fill="#c8bda0" opacity="0.55" />
+          {/* Silhouette de ville au fond de la fenêtre */}
+          <path d="M820 400 L820 380 L850 380 L850 360 L890 360 L890 400 L920 400 L920 370 L960 370 L960 400 L1000 400 L1000 350 L1030 350 L1030 400 L1060 400 L1060 380 L1090 380 L1090 400 L1120 400 L1120 400 Z" fill="#0a0e18" />
+          {/* 2-3 fenêtres allumées lointaines */}
+          <rect x="900" y="380" width="3" height="4" fill="#ffd870" opacity="0.85" />
+          <rect x="1010" y="365" width="3" height="4" fill="#e0a848" opacity="0.75" />
+        </g>
+        {/* Rideaux */}
+        <path d="M810 70 L810 460 Q820 100 830 90 Q835 250 830 460 Z" fill="#5a3820" stroke="#1a0e08" strokeWidth="1.2" opacity="0.9" />
+        <path d="M1130 70 L1130 460 Q1120 100 1110 90 Q1105 250 1110 460 Z" fill="#5a3820" stroke="#1a0e08" strokeWidth="1.2" opacity="0.9" />
+        <path d="M810 70 L1130 70 L1130 90 L810 90 Z" fill="#3a2010" />
+        {/* Traînée de lune dans la chambre */}
+        <ellipse cx="820" cy="530" rx="180" ry="60" fill="url(#s1-moonlight)" transform="rotate(-18 820 530)" />
 
-        <g transform="translate(575,336)">
-          <rect x="-26" y="0" width="52" height="24" rx="3" fill="#1a1408" stroke="#3a2818" strokeWidth="1" />
-          <rect x="-22" y="4" width="44" height="14" fill="#0a0806" />
-          <text x="0" y="15" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="12" fontWeight="800" fill="#ff3020" style={{ letterSpacing: 2, filter: 'drop-shadow(0 0 3px #ff3020)' }}>03:14</text>
-          <circle cx="20" cy="10" r="1" fill="#ff3020" />
+        {/* ÉTAGÈRE MURALE en haut à gauche avec livres, plante, cadre, globe */}
+        <g transform="translate(80,80)">
+          {/* Planche */}
+          <rect x="0" y="0" width="380" height="10" fill="#5a3818" stroke="#1a0e08" strokeWidth="1.5" />
+          {/* Livres colorés inclinés */}
+          {[["#8a3820", 60, 0], ["#3a80c8", 54, 0], ["#c8a848", 50, 0], ["#5eff9e", 58, 0], ["#8a5030", 62, -8], ["#a04ce8", 54, 0]].map(([c, h, r], i) => (
+            <g key={i} transform={`translate(${16 + i * 22},${-h})`}>
+              <rect x="0" y="0" width="16" height={h} fill={c} stroke="#0a0806" strokeWidth="0.5" transform={r ? `rotate(${r} 8 ${h})` : ''} />
+              <line x1="0" y1={8} x2="16" y2="8" stroke="#0a0806" strokeWidth="0.4" opacity="0.5" transform={r ? `rotate(${r} 8 ${h})` : ''} />
+            </g>
+          ))}
+          {/* Cadre photo */}
+          <g transform="translate(180,-40)">
+            <rect x="0" y="0" width="46" height="36" fill="#c8a848" stroke="#3a2010" strokeWidth="1.2" />
+            <rect x="3" y="3" width="40" height="30" fill="#8a3820" />
+            {/* deux silhouettes floues (photo de famille) */}
+            <circle cx="15" cy="20" r="6" fill="#e0a878" />
+            <circle cx="30" cy="22" r="5" fill="#e0a878" />
+          </g>
+          {/* Plante en pot */}
+          <g transform="translate(250,-52)">
+            <rect x="0" y="30" width="26" height="22" fill="#5a3018" stroke="#1a0e08" strokeWidth="0.8" />
+            <path d="M4 30 Q10 -10 14 20 M12 30 Q16 -14 22 8 M0 30 Q-6 -6 8 24" stroke="#3a6828" strokeWidth="2" fill="none" strokeLinecap="round" />
+          </g>
+          {/* Petit globe/planète décoratif */}
+          <g transform="translate(310,-30)">
+            <circle r="18" fill="#3a80c8" stroke="#1a2028" strokeWidth="1" />
+            <path d="M-14 -4 Q-4 -8 8 -2 M-10 4 Q4 2 14 6 M-12 -10 Q0 -14 12 -8" stroke="#5eff9e" strokeWidth="1.4" fill="none" opacity="0.75" />
+            <path d="M-18 -6 L-8 -4 M-6 8 L6 10" stroke="#1a2028" strokeWidth="0.6" opacity="0.5" />
+          </g>
+          {/* Guirlande de LED (string lights) qui pend depuis l'étagère */}
+          <path d="M-40 10 Q80 60 200 30 Q320 60 420 20" stroke="#5a4028" strokeWidth="0.8" fill="none" />
+          {["#ffd870", "#7fb0e0", "#c88060", "#5eff9e", "#e0a848", "#a04ce8", "#ffd870", "#7fb0e0"].map((c, i) => (
+            <circle key={i} cx={-30 + i * 60} cy={20 + (i % 2 === 0 ? 14 : 22)} r="3.5" fill={c} opacity="0.9">
+              <animate attributeName="opacity" values="0.5;1;0.5" dur={`${1.6 + (i % 3) * 0.4}s`} repeatCount="indefinite" />
+            </circle>
+          ))}
         </g>
 
-        <g transform="translate(636,346)" style={vibrating ? { animation: 'phoneShake 0.12s ease-in-out infinite' } : {}}>
-          {vibrating && <circle cx="0" cy="0" r="42" fill="url(#s1-phone-halo)" style={{ animation: 'phoneGlow 0.9s ease-in-out infinite' }} />}
+        {/* POSTER MURAL "SPACE" au-dessus du lit */}
+        <g transform="translate(120,180)">
+          <rect x="0" y="0" width="140" height="180" fill="#0a0e28" stroke="#c8a848" strokeWidth="3" />
+          <rect x="6" y="6" width="128" height="168" fill="#0a0620" />
+          {/* Fusée stylisée */}
+          <path d="M70 30 L82 100 L58 100 Z" fill="#e8dfc8" stroke="#3a2010" strokeWidth="1" />
+          <rect x="60" y="100" width="20" height="20" fill="#8a1010" />
+          <circle cx="70" cy="60" r="6" fill="#3a80c8" />
+          <path d="M58 120 L46 140 L58 130 Z M82 120 L94 140 L82 130 Z" fill="#e83820" />
+          {/* Étoiles autour */}
+          {[[20, 40], [110, 40], [30, 90], [110, 90], [30, 150], [110, 160]].map(([x, y], i) => (
+            <circle key={i} cx={x} cy={y} r={i % 2 === 0 ? 1.4 : 1} fill="#ffd870" opacity="0.9" />
+          ))}
+          {/* Texte poster */}
+          <text x="70" y="164" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="11" fontWeight="900" fill="#c8a848" letterSpacing="3">ESPACE</text>
+        </g>
+
+        {/* POSTER MURAL 2 : musique/silhouette */}
+        <g transform="translate(280,220)">
+          <rect x="0" y="0" width="110" height="140" fill="#3a1030" stroke="#c88060" strokeWidth="3" />
+          <rect x="6" y="6" width="98" height="128" fill="#2a0820" />
+          <circle cx="55" cy="55" r="20" fill="#c88060" opacity="0.7" />
+          <path d="M45 90 Q55 100 65 90 L60 130 L50 130 Z" fill="#c88060" opacity="0.7" />
+          <text x="55" y="122" textAnchor="middle" fontFamily="Georgia,serif" fontSize="10" fontWeight="800" fill="#e8dfc8" fontStyle="italic">CONCERT</text>
+        </g>
+
+        {/* LIT à gauche-centre, plus grand */}
+        <g>
+          {/* Tête de lit en bois */}
+          <rect x="90" y="380" width="30" height="140" fill="#5a3818" stroke="#1a0e08" strokeWidth="2" />
+          <rect x="94" y="384" width="22" height="132" fill="#8a5030" opacity="0.6" />
+          {/* Base du lit */}
+          <rect x="90" y="500" width="480" height="30" fill="#5a3818" stroke="#1a0e08" strokeWidth="2" />
+          {/* Matelas + couette */}
+          <rect x="120" y="430" width="450" height="70" fill="#e8dfc8" stroke="#3a2818" strokeWidth="1.5" />
+          {/* Motif de la couette (rayures ou losanges) */}
+          <path d="M120 445 L570 445 M120 460 L570 460 M120 475 L570 475 M120 490 L570 490" stroke="#c88060" strokeWidth="1.5" opacity="0.55" />
+          <path d="M180 430 L180 500 M250 430 L250 500 M320 430 L320 500 M390 430 L390 500 M460 430 L460 500 M530 430 L530 500" stroke="#a04ce8" strokeWidth="0.8" opacity="0.4" />
+          {/* Oreillers */}
+          <rect x="135" y="400" width="120" height="40" rx="8" fill="#e8dfc8" stroke="#3a2818" strokeWidth="1.2" />
+          <rect x="140" y="404" width="110" height="32" rx="6" fill="#f4ecd0" />
+          <rect x="270" y="410" width="90" height="34" rx="6" fill="#c8a888" stroke="#3a2818" strokeWidth="1" />
+          {/* Une petite bosse qui suggère quelqu'un qui dort sous la couette */}
+          <path d="M300 440 Q380 425 460 440 L460 500 L300 500 Z" fill="#c8a888" opacity="0.7" />
+          {/* Pieds du lit */}
+          <rect x="94" y="530" width="14" height="26" fill="#1a0e08" />
+          <rect x="556" y="530" width="14" height="26" fill="#1a0e08" />
+        </g>
+
+        {/* TABLE DE NUIT à droite du lit avec réveil, phone, veilleuse */}
+        <g>
+          {/* Table de nuit */}
+          <rect x="600" y="440" width="180" height="120" fill="#5a3818" stroke="#1a0e08" strokeWidth="2" />
+          <rect x="606" y="446" width="168" height="108" fill="#8a5030" opacity="0.55" />
+          {/* Tiroir */}
+          <rect x="616" y="510" width="148" height="30" fill="#3a2010" stroke="#1a0e08" strokeWidth="1" />
+          <circle cx="690" cy="525" r="3" fill="#c8a848" />
+          {/* Pieds */}
+          <rect x="606" y="558" width="14" height="30" fill="#1a0e08" />
+          <rect x="760" y="558" width="14" height="30" fill="#1a0e08" />
+          {/* Halo veilleuse chaude sur toute la table */}
+          <ellipse cx="690" cy="450" rx="200" ry="60" fill="url(#s1-nightlight)" />
+          {/* Réveil digital à gauche de la table */}
+          <g transform="translate(636,410)">
+            <rect x="-32" y="0" width="64" height="30" rx="4" fill="#1a1408" stroke="#3a2818" strokeWidth="1.2" />
+            <rect x="-28" y="4" width="56" height="20" fill="#0a0806" />
+            <text x="0" y="19" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="16" fontWeight="900" fill="#ff3020" style={{ letterSpacing: 3, filter: 'drop-shadow(0 0 4px #ff3020)' }}>03:14</text>
+            <circle cx="24" cy="14" r="1.2" fill="#ff3020" />
+          </g>
+          {/* Petite lampe veilleuse à droite */}
+          <g transform="translate(740,406)">
+            <rect x="-4" y="6" width="8" height="20" fill="#5a4028" />
+            <path d="M-16 6 L16 6 L12 -12 L-12 -12 Z" fill="#c88060" stroke="#3a2010" strokeWidth="1" />
+            <circle cx="0" cy="20" r="14" fill="#ffb060" opacity="0.28">
+              <animate attributeName="opacity" values="0.2;0.35;0.2" dur="3s" repeatCount="indefinite" />
+            </circle>
+          </g>
+        </g>
+
+        {/* TÉLÉPHONE sur la table de nuit — position centrée sur la table */}
+        <g transform="translate(696,470)" style={vibrating ? { animation: 'phoneShake 0.12s ease-in-out infinite' } : {}}>
+          {vibrating && <circle cx="0" cy="0" r="60" fill="url(#s1-phone-halo)" style={{ animation: 'phoneGlow 0.9s ease-in-out infinite' }} />}
           <g onClick={vibrating ? onNext : undefined} style={{ cursor: vibrating ? 'pointer' : 'default' }}>
-            <rect x="-14" y="-20" width="28" height="40" rx="4" fill="#1a1a1a" stroke="#5a5a5a" strokeWidth="1" />
-            <rect x="-12" y="-18" width="24" height="34" rx="2" fill={vibrating ? '#3a80c8' : '#0a0a0a'} />
+            <rect x="-20" y="-30" width="40" height="60" rx="6" fill="#1a1a1a" stroke="#5a5a5a" strokeWidth="1.4" />
+            <rect x="-17" y="-27" width="34" height="52" rx="3" fill={vibrating ? '#3a80c8' : '#0a0a0a'} />
             {vibrating && (<>
-              <circle cx="0" cy="-6" r="4" fill="#e83820" />
-              <text x="0" y="-3.5" textAnchor="middle" fontSize="6" fontWeight="800" fill="#fff">1</text>
-              {[14, 22, 30].map((r, i) => (
-                <circle key={i} r={r} fill="none" stroke="#7fb0e0" strokeWidth="1.4" opacity={0.85 - i * 0.25} style={{ animation: 'phoneGlow 0.9s ease-in-out infinite' }} />
+              <circle cx="0" cy="-10" r="6" fill="#e83820" />
+              <text x="0" y="-6.5" textAnchor="middle" fontSize="9" fontWeight="800" fill="#fff">1</text>
+              {[20, 32, 44].map((r, i) => (
+                <circle key={i} r={r} fill="none" stroke="#7fb0e0" strokeWidth="1.6" opacity={0.85 - i * 0.25} style={{ animation: 'phoneGlow 0.9s ease-in-out infinite' }} />
               ))}
             </>)}
           </g>
         </g>
 
+        {/* BUREAU au fond gauche */}
+        <g transform="translate(410,300)">
+          {/* Plateau bureau */}
+          <rect x="0" y="130" width="240" height="16" fill="#5a3818" stroke="#1a0e08" strokeWidth="1.5" />
+          {/* Pieds */}
+          <rect x="10" y="146" width="12" height="80" fill="#3a2010" />
+          <rect x="218" y="146" width="12" height="80" fill="#3a2010" />
+          {/* Ordinateur portable ouvert avec léger halo bleu */}
+          <g transform="translate(70,90)">
+            <ellipse cx="55" cy="80" rx="80" ry="24" fill="url(#s1-laptop)" />
+            <path d="M0 40 L110 40 L100 0 L10 0 Z" fill="#28303a" stroke="#0a0e14" strokeWidth="1.2" />
+            <path d="M10 4 L100 4 L92 36 L18 36 Z" fill="#141c26" />
+            {/* Écran avec quelques lignes de texte */}
+            <rect x="20" y="8" width="70" height="24" fill="#0a0806" />
+            <line x1="26" y1="14" x2="82" y2="14" stroke="#5eff9e" strokeWidth="0.5" opacity="0.75" />
+            <line x1="26" y1="18" x2="70" y2="18" stroke="#5eff9e" strokeWidth="0.5" opacity="0.65" />
+            <line x1="26" y1="22" x2="76" y2="22" stroke="#5eff9e" strokeWidth="0.5" opacity="0.55" />
+            {/* Base clavier */}
+            <path d="M-6 40 L116 40 L110 48 L0 48 Z" fill="#3a4048" stroke="#0a0e14" strokeWidth="1.2" />
+          </g>
+          {/* Cahier ouvert + stylo */}
+          <g transform="translate(0,110)">
+            <rect x="0" y="0" width="60" height="20" fill="#e8dfc8" stroke="#5a4028" strokeWidth="0.8" />
+            <line x1="30" y1="0" x2="30" y2="20" stroke="#5a4028" strokeWidth="0.5" />
+            <line x1="4" y1="8" x2="26" y2="8" stroke="#5a4028" strokeWidth="0.3" />
+            <line x1="4" y1="14" x2="22" y2="14" stroke="#5a4028" strokeWidth="0.3" />
+            <rect x="32" y="-4" width="30" height="3" fill="#8a1010" transform="rotate(-8 32 -4)" />
+          </g>
+          {/* Pot à crayons */}
+          <g transform="translate(200,100)">
+            <rect x="0" y="0" width="20" height="30" fill="#5eff9e" stroke="#1a1a10" strokeWidth="0.8" opacity="0.85" />
+            <line x1="6" y1="0" x2="6" y2="-12" stroke="#c8a848" strokeWidth="1.2" />
+            <line x1="10" y1="0" x2="10" y2="-16" stroke="#8a3820" strokeWidth="1.2" />
+            <line x1="14" y1="0" x2="14" y2="-10" stroke="#3a80c8" strokeWidth="1.2" />
+          </g>
+          {/* Casque audio suspendu au coin du bureau */}
+          <g transform="translate(220,130)">
+            <path d="M0 0 Q10 -20 20 0" fill="none" stroke="#1a1a10" strokeWidth="3" />
+            <rect x="-4" y="0" width="8" height="14" rx="2" fill="#3a2010" />
+            <rect x="16" y="0" width="8" height="14" rx="2" fill="#3a2010" />
+          </g>
+        </g>
+
+        {/* CHAISE avec pull posé */}
+        <g transform="translate(370,470)">
+          <rect x="0" y="0" width="30" height="4" fill="#5a3818" />
+          <rect x="0" y="0" width="4" height="60" fill="#5a3818" />
+          <rect x="0" y="0" width="30" height="30" fill="#3a80c8" opacity="0.85" />
+          <path d="M0 8 L28 8 L26 22 L2 22 Z" fill="#3a80c8" />
+          <rect x="0" y="30" width="4" height="30" fill="#5a3818" />
+          <rect x="26" y="30" width="4" height="30" fill="#5a3818" />
+        </g>
+
+        {/* SAC À DOS au sol devant le bureau */}
+        <g transform="translate(500,540)">
+          <path d="M0 0 Q30 -8 60 0 L58 60 Q30 68 2 60 Z" fill="#8a3820" stroke="#3a1010" strokeWidth="1.5" />
+          <rect x="10" y="10" width="40" height="24" fill="#5a2010" opacity="0.7" />
+          <circle cx="30" cy="34" r="4" fill="#c8a848" />
+          <path d="M8 0 Q10 -20 30 -18 Q50 -20 52 0" stroke="#3a1010" strokeWidth="3" fill="none" />
+        </g>
+
+        {/* PORTE à droite (partiellement visible) avec filet de lumière dessous */}
+        <g>
+          <rect x="1150" y="220" width="50" height="300" fill="#3a2010" stroke="#0a0806" strokeWidth="2" />
+          <circle cx="1156" cy="380" r="3" fill="#c8a848" />
+          {/* Filet de lumière chaud sous la porte */}
+          <rect x="1150" y="518" width="50" height="4" fill="#ffd870" opacity="0.65">
+            <animate attributeName="opacity" values="0.5;0.75;0.5" dur="4s" repeatCount="indefinite" />
+          </rect>
+        </g>
+
+        {/* PANTOUFLES au sol */}
+        <g transform="translate(180,600)">
+          <ellipse cx="0" cy="0" rx="24" ry="8" fill="#8a5030" stroke="#3a2010" strokeWidth="0.8" />
+          <ellipse cx="0" cy="-3" rx="24" ry="8" fill="#c88060" />
+          <ellipse cx="60" cy="0" rx="24" ry="8" fill="#8a5030" stroke="#3a2010" strokeWidth="0.8" />
+          <ellipse cx="60" cy="-3" rx="24" ry="8" fill="#c88060" />
+        </g>
+
+        {/* PLANTE en pot au sol à gauche */}
+        <g transform="translate(40,540)">
+          <rect x="-24" y="20" width="48" height="60" fill="#5a3018" stroke="#1a0e08" strokeWidth="1.2" />
+          <path d="M-20 20 Q-14 -20 -4 8 M0 20 Q6 -30 16 -4 M14 20 Q20 -14 28 4 M-14 20 Q-30 -4 -16 -14 M8 20 Q22 -22 24 6" stroke="#3a6828" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+        </g>
+
         <style>{`
-          @keyframes phoneShake { 0%, 100% { transform: translate(636px, 346px); } 25% { transform: translate(635px, 346.5px); } 75% { transform: translate(637px, 345.5px); } }
+          @keyframes phoneShake { 0%, 100% { transform: translate(696px, 470px); } 25% { transform: translate(695px, 470.5px); } 75% { transform: translate(697px, 469.5px); } }
           @keyframes phoneGlow { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
         `}</style>
       </svg>
       {!vibrating && (
-        <p style={{ textAlign: 'center', margin: '20px auto', fontSize: 17, color: '#c8b090', fontStyle: 'italic', maxWidth: 600, lineHeight: 1.5 }}>
+        <p style={{ textAlign: 'center', margin: '10px auto 0', fontSize: 17, color: '#c8b090', fontStyle: 'italic', maxWidth: 600, lineHeight: 1.5 }}>
           Une nuit paisible de ta vie…
         </p>
       )}
@@ -202,7 +457,7 @@ function SlideNight({ onNext }) {
    ═══════════════════════════════════════════════════════════════ */
 function SlideMessage({ onNext }) {
   return (
-    <div style={{ animation: 'fadeIn 0.8s ease-out' }}>
+    <div style={{ animation: 'fadeIn 0.8s ease-out', width: '100%' }}>
       <svg viewBox="0 0 800 500" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '62vh' }}>
         <defs><radialGradient id="s2-halo" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#3a80c8" stopOpacity="0.4" /><stop offset="100%" stopColor="#3a80c8" stopOpacity="0" /></radialGradient></defs>
         <rect width="800" height="500" fill="#050810" />
@@ -257,53 +512,143 @@ function SlideOutside({ onNext }) {
   }, []);
 
   return (
-    <div style={{ animation: 'fadeIn 0.8s ease-out', position: 'relative' }}>
-      <svg viewBox="0 0 800 500" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '62vh' }}>
+    <div style={{ animation: 'fadeIn 0.8s ease-out', position: 'relative', width: '100%' }}>
+      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
         <defs>
-          <linearGradient id="s3-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#0a0e28" /><stop offset="100%" stopColor="#1a2438" /></linearGradient>
-          <radialGradient id="s3-moon" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#f0e4c8" stopOpacity="0.5" /><stop offset="100%" stopColor="#f0e4c8" stopOpacity="0" /></radialGradient>
-          <radialGradient id="s3-halo" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#b0ffdc" stopOpacity="0.85" /><stop offset="45%" stopColor="#5eff9e" stopOpacity="0.5" /><stop offset="100%" stopColor="#5eff9e" stopOpacity="0" /></radialGradient>
+          <linearGradient id="s3-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0a0e28" />
+            <stop offset="100%" stopColor="#2a2848" />
+          </linearGradient>
+          <radialGradient id="s3-moon" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#f0e4c8" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#f0e4c8" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="s3-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#b0ffdc" stopOpacity="0.9" />
+            <stop offset="45%" stopColor="#5eff9e" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#5eff9e" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="s3-lamp" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ffe8a0" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#ffe8a0" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="s3-window" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ffc060" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#ffc060" stopOpacity="0" />
+          </radialGradient>
         </defs>
-        {/* ciel nocturne */}
-        <rect width="800" height="380" fill="url(#s3-sky)" />
-        {/* étoiles */}
-        {[[80, 60], [180, 100], [280, 40], [420, 80], [560, 50], [640, 110], [720, 70], [340, 130], [500, 120]].map(([cx, cy], i) => (
-          <circle key={i} cx={cx} cy={cy} r={i % 3 === 0 ? 1.6 : 1} fill="#fff" opacity={0.6 + (i % 4) * 0.1} />
+        {/* CIEL nocturne */}
+        <rect width="1200" height="500" fill="url(#s3-sky)" />
+        {/* Étoiles nombreuses */}
+        {[[80, 60], [180, 100], [280, 40], [420, 80], [560, 50], [640, 110], [720, 70], [340, 130], [500, 120],
+          [820, 60], [880, 130], [960, 90], [1020, 60], [1080, 120], [1140, 80], [80, 180], [220, 220], [380, 200],
+          [640, 220], [780, 200], [980, 200], [1120, 220]].map(([cx, cy], i) => (
+          <circle key={i} cx={cx} cy={cy} r={i % 3 === 0 ? 1.6 : 1} fill="#fff" opacity={0.55 + (i % 4) * 0.1} />
         ))}
-        {/* lune */}
-        <circle cx="120" cy="100" r="90" fill="url(#s3-moon)" />
-        <circle cx="120" cy="100" r="34" fill="#f0e4c8" opacity="0.85" />
-        <circle cx="130" cy="90" r="28" fill="#0a0e28" opacity="0.3" />
-        {/* Silhouettes de maisons au fond */}
-        <g fill="#0a0e18" opacity="0.9">
-          <path d="M0 380 L0 320 L60 320 L60 300 L120 260 L180 300 L180 320 L280 320 L280 280 L340 240 L400 280 L400 320 L520 320 L520 300 L580 260 L640 300 L640 320 L720 320 L720 340 L800 340 L800 380 Z" />
-          {/* Quelques fenêtres allumées */}
-          <rect x="140" y="290" width="10" height="12" fill="#c8a848" opacity="0.85" />
-          <rect x="360" y="270" width="10" height="12" fill="#e0a848" opacity="0.75" />
-          <rect x="600" y="290" width="10" height="12" fill="#c8a848" opacity="0.7" />
+        {/* Lune plus imposante */}
+        <circle cx="200" cy="130" r="130" fill="url(#s3-moon)" />
+        <circle cx="200" cy="130" r="52" fill="#f0e4c8" opacity="0.95" />
+        <circle cx="212" cy="122" r="10" fill="#c8bda0" opacity="0.5" />
+        <circle cx="188" cy="140" r="6" fill="#c8bda0" opacity="0.5" />
+        {/* Nuage discret sur la lune */}
+        <path d="M120 150 Q160 140 200 148 Q240 138 280 148 Q320 158 280 168 Q220 172 160 170 Q100 168 120 150" fill="#0a0e28" opacity="0.35" />
+
+        {/* Silhouettes de collines au fond */}
+        <path d="M0 460 Q200 400 400 440 Q600 380 800 430 Q1000 400 1200 440 L1200 500 L0 500 Z" fill="#0a0e18" opacity="0.8" />
+
+        {/* QUARTIER : maisons de banlieue en enfilade */}
+        <g fill="#0a0e18">
+          {/* Maison à gauche : la maison du joueur (fenêtre allumée = sa chambre) */}
+          <path d="M60 490 L60 380 L200 300 L340 380 L340 490 Z" />
+          <rect x="60" y="380" width="280" height="110" fill="#141820" />
+          {/* Fenêtre allumée (chambre du joueur) */}
+          <rect x="180" y="400" width="50" height="46" fill="#141018" stroke="#3a2818" strokeWidth="1.5" />
+          <rect x="184" y="404" width="42" height="38" fill="#ffc060" opacity="0.85">
+            <animate attributeName="opacity" values="0.7;0.9;0.7" dur="4s" repeatCount="indefinite" />
+          </rect>
+          <line x1="205" y1="400" x2="205" y2="446" stroke="#3a2818" strokeWidth="1.2" />
+          <line x1="184" y1="423" x2="226" y2="423" stroke="#3a2818" strokeWidth="1.2" />
+          {/* Halo warm de la fenêtre */}
+          <circle cx="205" cy="423" r="60" fill="url(#s3-window)" />
+          {/* Porte */}
+          <rect x="100" y="430" width="34" height="60" fill="#3a2010" stroke="#5a3818" strokeWidth="1.2" />
+          <circle cx="127" cy="462" r="1.6" fill="#c8a848" />
+          {/* Cheminée avec fumée */}
+          <rect x="260" y="320" width="20" height="40" fill="#3a2010" />
+          <path d="M270 320 Q265 300 275 285 Q270 265 280 250" stroke="#8a9098" strokeWidth="4" fill="none" opacity="0.4">
+            <animate attributeName="opacity" values="0.2;0.5;0.2" dur="5s" repeatCount="indefinite" />
+          </path>
         </g>
-        {/* rue / sol */}
-        <rect y="380" width="800" height="120" fill="#141018" />
-        <path d="M0 400 L800 400" stroke="#2a2028" strokeWidth="1" />
-        {/* marquage au sol */}
-        {[80, 240, 400, 560, 720].map((x, i) => (
-          <rect key={i} x={x} y={445} width={40} height={4} fill="#4a4030" opacity="0.5" />
-        ))}
-        {/* lampadaire à gauche */}
-        <g>
-          <rect x="60" y="200" width="4" height="200" fill="#3a3a3a" />
-          <path d="M62 220 L110 220 L108 232 L62 232 Z" fill="#3a3a3a" />
-          <circle cx="108" cy="228" r="7" fill="#ffe8a0" opacity="0.9" />
-          <circle cx="108" cy="228" r="30" fill="#ffe8a0" opacity="0.15" />
+        {/* Autres maisons en enfilade au loin, sombres */}
+        <g fill="#0a0e18" opacity="0.9">
+          <path d="M380 490 L380 420 L440 380 L500 420 L500 490 Z" />
+          <path d="M540 490 L540 400 L620 350 L700 400 L700 490 Z" />
+          <path d="M740 490 L740 430 L800 390 L860 430 L860 490 Z" />
+          <path d="M900 490 L900 410 L980 360 L1060 410 L1060 490 Z" />
+          <path d="M1100 490 L1100 430 L1160 400 L1200 430 L1200 490 Z" />
+          {/* fenêtres allumées éparses */}
+          <rect x="446" y="440" width="8" height="10" fill="#c8a848" opacity="0.7" />
+          <rect x="620" y="420" width="8" height="10" fill="#e0a848" opacity="0.6" />
+          <rect x="980" y="420" width="8" height="10" fill="#c8a848" opacity="0.55" />
         </g>
 
-        {/* Halo qui grandit puis se stabilise */}
-        <circle cx="400" cy="380" r="0" fill="url(#s3-halo)">
-          <animate attributeName="r" values="20;280;240" keyTimes="0;0.65;1" dur="2s" fill="freeze" />
+        {/* Arbre à gauche */}
+        <g transform="translate(30,420)">
+          <rect x="-4" y="20" width="10" height="60" fill="#3a2010" />
+          <circle r="30" fill="#1a3020" stroke="#0a1810" strokeWidth="0.8" />
+          <circle cx="-10" cy="-14" r="18" fill="#1a3020" opacity="0.9" />
+          <circle cx="16" cy="-10" r="18" fill="#1a3020" opacity="0.9" />
+        </g>
+        {/* Arbre à droite */}
+        <g transform="translate(1100,440)">
+          <rect x="-4" y="20" width="10" height="60" fill="#3a2010" />
+          <circle r="32" fill="#1a3020" stroke="#0a1810" strokeWidth="0.8" />
+          <circle cx="-14" cy="-12" r="18" fill="#1a3020" opacity="0.9" />
+          <circle cx="18" cy="-8" r="16" fill="#1a3020" opacity="0.9" />
+        </g>
+
+        {/* RUE / SOL */}
+        <rect y="500" width="1200" height="180" fill="#141018" />
+        <path d="M0 520 L1200 520" stroke="#2a2028" strokeWidth="1.5" />
+        {/* Bordure trottoir */}
+        <rect y="500" width="1200" height="8" fill="#2a2830" />
+        {/* Marquage bandes centrales */}
+        {[80, 240, 400, 560, 720, 880, 1040].map((x, i) => (
+          <rect key={i} x={x} y="600" width="60" height="6" fill="#c8a848" opacity="0.55" />
+        ))}
+        {/* Ligne de bord de route */}
+        <rect y="558" width="1200" height="2" fill="#5a5040" opacity="0.4" />
+
+        {/* Lampadaire à gauche avec halo */}
+        <g>
+          <circle cx="440" cy="360" r="60" fill="url(#s3-lamp)" />
+          <rect x="436" y="180" width="6" height="330" fill="#3a3a3a" />
+          <path d="M440 200 L500 200 L498 214 L440 214 Z" fill="#3a3a3a" />
+          <circle cx="498" cy="210" r="10" fill="#ffe8a0" opacity="0.95" />
+        </g>
+        {/* Deuxième lampadaire à droite */}
+        <g>
+          <circle cx="960" cy="380" r="55" fill="url(#s3-lamp)" />
+          <rect x="956" y="200" width="6" height="310" fill="#3a3a3a" />
+          <path d="M960 220 L900 220 L902 234 L960 234 Z" fill="#3a3a3a" />
+          <circle cx="902" cy="230" r="10" fill="#ffe8a0" opacity="0.95" />
+        </g>
+
+        {/* Boîte aux lettres au premier plan */}
+        <g transform="translate(150,540)">
+          <rect x="-3" y="0" width="6" height="60" fill="#3a3a3a" />
+          <rect x="-20" y="-20" width="40" height="30" rx="6" fill="#8a1010" stroke="#3a0000" strokeWidth="1.2" />
+          <rect x="-16" y="-16" width="10" height="6" fill="#0a0806" />
+          <path d="M-20 -6 L-4 -14 L-4 -6 Z" fill="#c8a848" />
+        </g>
+
+        {/* Halo qui grandit puis se stabilise (position adaptée au centre du sol) */}
+        <circle cx="600" cy="580" r="0" fill="url(#s3-halo)">
+          <animate attributeName="r" values="20;340;280" keyTimes="0;0.65;1" dur="2s" fill="freeze" />
           <animate attributeName="opacity" values="0;1;0.75" keyTimes="0;0.55;1" dur="2s" fill="freeze" />
         </circle>
-        {/* MARTINE se matérialise progressivement (opacité 0 → 1) */}
-        <g transform="translate(400,380) scale(0.85)" opacity="0">
+        {/* MARTINE se matérialise progressivement */}
+        <g transform="translate(600,560) scale(1.05)" opacity="0">
           <animate attributeName="opacity" values="0;1" dur="0.8s" begin="1.2s" fill="freeze" />
           <TimeMachine landed={true} />
         </g>
@@ -329,35 +674,155 @@ function SlideOutside({ onNext }) {
    ═══════════════════════════════════════════════════════════════ */
 function SlideCockpit({ onNext }) {
   return (
-    <div style={{ animation: 'fadeIn 0.8s ease-out', position: 'relative' }}>
-      <svg viewBox="0 0 800 500" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '62vh' }}>
+    <div style={{ animation: 'fadeIn 0.8s ease-out', position: 'relative', width: '100%' }}>
+      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
         <defs>
-          <linearGradient id="s4-cabin" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#0a1a2a" /><stop offset="100%" stopColor="#050810" /></linearGradient>
-          <radialGradient id="s4-glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#7fd8ff" stopOpacity="0.35" /><stop offset="100%" stopColor="#7fd8ff" stopOpacity="0" /></radialGradient>
+          <linearGradient id="s4-cabin" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0a1a2a" />
+            <stop offset="100%" stopColor="#050810" />
+          </linearGradient>
+          <linearGradient id="s4-console" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#28303a" />
+            <stop offset="100%" stopColor="#0a0e14" />
+          </linearGradient>
+          <radialGradient id="s4-glow" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="#7fd8ff" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#7fd8ff" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="s4-hublot" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#0a0620" />
+            <stop offset="100%" stopColor="#000410" />
+          </radialGradient>
+          <radialGradient id="s4-panel-glow" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="#5eff9e" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#5eff9e" stopOpacity="0" />
+          </radialGradient>
         </defs>
-        <rect width="800" height="500" fill="url(#s4-cabin)" />
-        {/* hublot au-dessus : ciel étoilé qui défile */}
-        <ellipse cx="400" cy="120" rx="280" ry="60" fill="#000814" stroke="#5a7898" strokeWidth="4" />
-        {[[280, 100], [340, 130], [400, 105], [460, 135], [520, 110], [380, 145], [440, 100]].map(([cx, cy], i) => (
-          <circle key={i} cx={cx} cy={cy} r={i % 2 ? 1.4 : 1} fill="#fff" opacity="0.75" />
-        ))}
-        {/* diodes de bord */}
-        {[[100, 250], [700, 250], [80, 320], [720, 320], [90, 390], [710, 390]].map(([cx, cy], i) => (
+        {/* Fond cabine */}
+        <rect width="1200" height="680" fill="url(#s4-cabin)" />
+        {/* Nervures métalliques (côtes de la coque) */}
+        {[80, 200, 1000, 1120].map((x, i) => (
           <g key={i}>
-            <circle cx={cx} cy={cy} r="6" fill="#141c26" stroke="#4a5460" strokeWidth="1" />
-            <circle cx={cx} cy={cy} r="4" fill={['#5eff9e', '#ffd166', '#7fd8ff', '#ff6a7a'][i % 4]} opacity="0.85">
-              <animate attributeName="opacity" values="0.4;1;0.4" dur={`${1.4 + (i % 3) * 0.3}s`} repeatCount="indefinite" />
-            </circle>
+            <path d={`M${x} 40 Q${x + (x < 600 ? -20 : 20)} 340 ${x} 640`} stroke="#3a4048" strokeWidth="3" fill="none" opacity="0.6" />
+            <rect x={x - 4} y="60" width="8" height="6" fill="#5a6270" opacity="0.6" />
+            <rect x={x - 4} y="320" width="8" height="6" fill="#5a6270" opacity="0.6" />
+            <rect x={x - 4} y="580" width="8" height="6" fill="#5a6270" opacity="0.6" />
           </g>
         ))}
-        <circle cx="400" cy="120" r="60" fill="url(#s4-glow)" opacity="0.5" />
+        {/* GRAND HUBLOT ovale au-dessus, ciel étoilé */}
+        <ellipse cx="600" cy="140" rx="400" ry="90" fill="url(#s4-hublot)" stroke="#5a7898" strokeWidth="5" />
+        <ellipse cx="600" cy="140" rx="390" ry="82" fill="none" stroke="#3a5878" strokeWidth="1.5" />
+        {/* Rivets autour du hublot */}
+        {[0, 45, 90, 135, 180, 225, 270, 315].map((a, i) => (
+          <circle key={i} cx={600 + 405 * Math.cos((a * Math.PI) / 180)} cy={140 + 92 * Math.sin((a * Math.PI) / 180)} r="4" fill="#5a6270" stroke="#0a0e14" strokeWidth="0.6" />
+        ))}
+        {/* Étoiles dans le hublot */}
+        {[[380, 120], [460, 150], [540, 100], [620, 155], [700, 110], [780, 145], [820, 120], [500, 170], [660, 175]].map(([cx, cy], i) => (
+          <circle key={i} cx={cx} cy={cy} r={i % 2 ? 1.4 : 1} fill="#fff" opacity="0.8" />
+        ))}
+        {/* Petite planète bleue au fond */}
+        <circle cx="820" cy="140" r="12" fill="#3a80c8" opacity="0.85" />
+        <path d="M810 138 Q820 132 830 140" stroke="#5eff9e" strokeWidth="0.8" fill="none" opacity="0.7" />
+        {/* Comète */}
+        <path d="M400 100 L450 120" stroke="#e8eef5" strokeWidth="0.8" opacity="0.7" />
+        <circle cx="450" cy="120" r="1.4" fill="#fff" />
+
+        {/* CONSOLE de bord en U autour du bas */}
+        <path d="M0 480 Q0 440 40 440 L1160 440 Q1200 440 1200 480 L1200 680 L0 680 Z" fill="url(#s4-console)" stroke="#0a0e14" strokeWidth="4" />
+        {/* Panneau avant central */}
+        <rect x="380" y="440" width="440" height="140" fill="#141c26" stroke="#3a4048" strokeWidth="2" rx="6" />
+        {/* Écran principal du panneau : mini-carte du temps */}
+        <g transform="translate(600,470)">
+          <rect x="-160" y="-14" width="320" height="90" fill="#0a0806" stroke="#5eff9e" strokeWidth="2" />
+          <text x="-150" y="0" fontFamily="ui-monospace,monospace" fontSize="8" fill="#5eff9e" letterSpacing="3">TEMPOSCOPE</text>
+          {/* Ligne de temps horizontale avec 5 points */}
+          <line x1="-140" y1="30" x2="140" y2="30" stroke="#5eff9e" strokeWidth="1.5" opacity="0.65" />
+          {[-120, -60, 0, 60, 120].map((x, i) => (
+            <g key={i} transform={`translate(${x},30)`}>
+              <circle r="4" fill={i === 0 ? "#ffd166" : "#141c26"} stroke="#5eff9e" strokeWidth="1" />
+              <text x="0" y="16" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="6" fill="#5eff9e">{["−18k", "−12k", "−6k", "0", "+2k"][i]}</text>
+            </g>
+          ))}
+          <text x="0" y="66" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fill="#c8d4e2" letterSpacing="2">DESTINATION : PALÉOLITHIQUE</text>
+        </g>
+        {/* Rangée de boutons colorés à gauche du panneau */}
+        <g transform="translate(430,510)">
+          {[["#5eff9e", "MOT."], ["#7fd8ff", "NAV."], ["#ffd166", "COMM."]].map(([c, lab], i) => (
+            <g key={i} transform={`translate(0,${i * 22})`}>
+              <rect x="0" y="0" width="46" height="18" fill="#28303a" stroke={c} strokeWidth="1" rx="3" />
+              <text x="23" y="12" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fill={c} letterSpacing="1">{lab}</text>
+            </g>
+          ))}
+        </g>
+        <g transform="translate(724,510)">
+          {[["#ff6a7a", "URG."], ["#c88060", "HAB."], ["#a04ce8", "AUX."]].map(([c, lab], i) => (
+            <g key={i} transform={`translate(0,${i * 22})`}>
+              <rect x="0" y="0" width="46" height="18" fill="#28303a" stroke={c} strokeWidth="1" rx="3" />
+              <text x="23" y="12" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fill={c} letterSpacing="1">{lab}</text>
+            </g>
+          ))}
+        </g>
+
+        {/* Panneau LATÉRAL GAUCHE avec cadrans */}
+        <g>
+          <rect x="40" y="440" width="300" height="180" fill="#141c26" stroke="#3a4048" strokeWidth="2" rx="6" />
+          <ellipse cx="190" cy="530" rx="180" ry="110" fill="url(#s4-panel-glow)" />
+          {/* 3 cadrans ronds */}
+          {[[100, 500], [190, 500], [280, 500]].map(([cx, cy], i) => (
+            <g key={i} transform={`translate(${cx},${cy})`}>
+              <circle r="30" fill="#0a0806" stroke="#5a6270" strokeWidth="1.5" />
+              <circle r="26" fill="#141c26" stroke="#3a4048" strokeWidth="0.6" />
+              {[0, 45, 90, 135, 180, 225, 270, 315].map((a, k) => (
+                <line key={k} x1={22 * Math.cos((a * Math.PI) / 180)} y1={22 * Math.sin((a * Math.PI) / 180)}
+                  x2={26 * Math.cos((a * Math.PI) / 180)} y2={26 * Math.sin((a * Math.PI) / 180)}
+                  stroke="#5a6270" strokeWidth="0.6" />
+              ))}
+              <line x1="0" y1="0" x2={20 * Math.cos((-70 + i * 40) * Math.PI / 180)} y2={20 * Math.sin((-70 + i * 40) * Math.PI / 180)} stroke={["#5eff9e", "#ffd166", "#ff6a7a"][i]} strokeWidth="2" strokeLinecap="round" />
+              <circle r="2" fill="#5a6270" />
+              <text x="0" y="46" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fill="#c8d4e2" letterSpacing="1">{["TEMPS", "VITESSE", "PUISS."][i]}</text>
+            </g>
+          ))}
+          {/* Rangée LEDs statut en bas */}
+          {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+            <g key={i} transform={`translate(${60 + i * 36},580)`}>
+              <circle r="6" fill="#0a0806" stroke="#3a4048" strokeWidth="0.6" />
+              <circle r="3" fill={["#5eff9e", "#ffd166", "#7fd8ff", "#5eff9e", "#c88060", "#5eff9e", "#a04ce8"][i]}>
+                <animate attributeName="opacity" values="0.4;1;0.4" dur={`${1.2 + i * 0.15}s`} repeatCount="indefinite" />
+              </circle>
+            </g>
+          ))}
+        </g>
+
+        {/* Panneau LATÉRAL DROIT avec grand levier + boutons */}
+        <g>
+          <rect x="860" y="440" width="300" height="180" fill="#141c26" stroke="#3a4048" strokeWidth="2" rx="6" />
+          {/* Grand levier */}
+          <g transform="translate(940,540)">
+            <rect x="-30" y="30" width="60" height="14" fill="#28303a" stroke="#0a0e14" strokeWidth="1" rx="3" />
+            <rect x="-4" y="-40" width="8" height="70" fill="#5a6270" stroke="#0a0e14" strokeWidth="0.8" />
+            <circle cx="0" cy="-46" r="14" fill="#c8a848" stroke="#3a2010" strokeWidth="1.5" />
+            <text x="0" y="60" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="7" fill="#c8d4e2" letterSpacing="2">SAUT</text>
+          </g>
+          {/* Grille de boutons */}
+          <g transform="translate(1030,470)">
+            {[0, 1, 2, 3].map((r) => (
+              [0, 1, 2, 3].map((c) => (
+                <rect key={`${r}${c}`} x={c * 26} y={r * 26} width="20" height="20" rx="3" fill={["#28303a", "#3a4048"][c % 2]} stroke={["#5eff9e", "#7fd8ff", "#ffd166", "#ff6a7a"][r]} strokeWidth="0.6" />
+              ))
+            ))}
+          </g>
+        </g>
+
+        {/* MARTINE au centre — halo bleu */}
+        <ellipse cx="600" cy="310" rx="220" ry="120" fill="url(#s4-glow)" />
       </svg>
-      {/* MARTINE avatar centré */}
+
+      {/* MARTINE avatar centré (au-dessus du SVG) */}
       <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%, 0)', pointerEvents: 'none' }}>
-        <Avatar mood="content" size={110} talking />
+        <Avatar mood="content" size={130} talking />
       </div>
-      {/* Bulle texte */}
-      <div style={{ position: 'absolute', left: '50%', bottom: 80, transform: 'translateX(-50%)', width: 'min(88%, 560px)',
+      {/* Bulle texte + bouton GO */}
+      <div style={{ position: 'absolute', left: '50%', bottom: 20, transform: 'translateX(-50%)', width: 'min(88%, 620px)',
         background: '#0e1a30', border: '2px solid #5eff9e', borderRadius: 14,
         padding: '14px 20px', color: '#e8eef5',
         boxShadow: '0 0 30px rgba(94,255,158,0.35)', textAlign: 'center' }}>
