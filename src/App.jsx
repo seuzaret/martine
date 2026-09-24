@@ -667,12 +667,23 @@ export default function App() {
       }
     }
     /* BANALITÉS ALÉATOIRES (jeu 1) : quand on reparle à un PNJ qui n'est
-       PAS son tour dans la quête, on tire une réplique de son pool
-       `chitchat` au hasard. MARTINE reste silencieuse pendant ces
-       échanges anodins (elle a mieux à faire). */
-    if (mode === "jeu1" && !stepMatched && Array.isArray(act.chitchat) && act.chitchat.length > 0) {
-      bubbleText = act.chitchat[Math.floor(Math.random() * act.chitchat.length)];
-      sayText = null;
+       PAS son tour dans la quête, on peut :
+       - lui montrer UNE FOIS un mini-dialogue à choix (`chatOnce`) pour
+         du contact plus riche (question + 2-3 réponses, flavor pur) ;
+       - sinon tirer une réplique de son pool `chitchat` au hasard.
+       MARTINE reste silencieuse pendant ces échanges anodins. */
+    let bubbleChoices = null;
+    if (mode === "jeu1" && !stepMatched) {
+      const chatFlag = `chat_${name}`;
+      if (act.chatOnce && !flags[chatFlag]) {
+        bubbleText = act.chatOnce.q;
+        bubbleChoices = act.chatOnce.choices;
+        sayText = null;
+        grantFlag(chatFlag);
+      } else if (Array.isArray(act.chitchat) && act.chitchat.length > 0) {
+        bubbleText = act.chitchat[Math.floor(Math.random() * act.chitchat.length)];
+        sayText = null;
+      }
     }
     /* MODE JEU 2 : la variante du personnage prime en toute fin. Deux
        schemas supportes :
@@ -719,7 +730,7 @@ export default function App() {
        MARTINE, elle, commente dans sa console (`say`). Les deux tombent
        en même temps. */
     const pt = point || lastHotspotClick;
-    if (bubbleText) setBubble({ text: bubbleText, x: pt.x, y: pt.y });
+    if (bubbleText) setBubble({ text: bubbleText, x: pt.x, y: pt.y, choices: bubbleChoices });
     else setBubble(null);
     if (sayText) say(sayText, mood);
   };
@@ -2009,20 +2020,37 @@ export default function App() {
         );
       })()}
       {bubble && (() => {
-        const W = Math.min(300, window.innerWidth - 24);
+        const hasChoices = Array.isArray(bubble.choices) && bubble.choices.length > 0;
+        const W = Math.min(hasChoices ? 340 : 300, window.innerWidth - 24);
         const dessous = bubble.y < 240;               // perso trop haut → bulle en dessous
         const cx = Math.min(Math.max(bubble.x, 12 + W / 2), window.innerWidth - 12 - W / 2);
+        const pickChoice = (c) => setBubble((b) => b ? { ...b, text: c.r, choices: null } : b);
         return (
-          <div onClick={() => setBubble(null)}
+          <div onClick={hasChoices ? undefined : () => setBubble(null)}
             style={{
               position: "fixed", zIndex: 60, left: cx, width: W, transform: "translateX(-50%)",
               ...(dessous ? { top: bubble.y + 18 } : { bottom: window.innerHeight - bubble.y + 16 }),
               background: "#f4e8cc", color: "#2a1c10", border: "1px solid #cbb489", borderRadius: 14,
               padding: "11px 14px", fontFamily: "Palatino, Georgia, serif", fontSize: 14.5, lineHeight: 1.5,
-              boxShadow: "0 8px 26px rgba(0,0,0,0.5)", cursor: "pointer", animation: "fadein .18s ease-out",
+              boxShadow: "0 8px 26px rgba(0,0,0,0.5)", cursor: hasChoices ? "default" : "pointer", animation: "fadein .18s ease-out",
             }}>
             {bubble.text}
-            <div style={{ fontSize: 10, color: "#8a7250", fontStyle: "italic", marginTop: 5, textAlign: "right" }}>clique n'importe où pour fermer</div>
+            {hasChoices ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 10 }}>
+                {bubble.choices.map((c, i) => (
+                  <button key={i} onClick={(e) => { e.stopPropagation(); pickChoice(c); }}
+                    style={{ textAlign: "left", background: "#fff8ea", border: "1px solid #cbb489", borderRadius: 8,
+                      padding: "8px 10px", fontFamily: "Palatino, Georgia, serif", fontSize: 13.5, color: "#2a1c10",
+                      cursor: "pointer", lineHeight: 1.35 }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "#ffe8b8"; e.currentTarget.style.borderColor = "#a17c3a"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "#fff8ea"; e.currentTarget.style.borderColor = "#cbb489"; }}>
+                    ▸ {c.a}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div style={{ fontSize: 10, color: "#8a7250", fontStyle: "italic", marginTop: 5, textAlign: "right" }}>clique n'importe où pour fermer</div>
+            )}
             {/* la petite pointe du phylactère, vers le personnage */}
             <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", width: 0, height: 0,
               borderLeft: "10px solid transparent", borderRight: "10px solid transparent",
