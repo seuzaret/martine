@@ -1040,45 +1040,110 @@ function SlideFlash({ onNext }) {
   const fmt = (y) => (y < 0 ? `−${Math.abs(y).toLocaleString('fr-FR')}` : y.toLocaleString('fr-FR'));
 
   return (
-    <div style={{ animation: 'fadeIn 0.5s ease-out', position: 'relative' }}>
-      <svg viewBox="0 0 800 500" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '62vh' }}>
+    <div style={{ animation: 'fadeIn 0.5s ease-out', position: 'relative', width: '100%' }}>
+      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
         <defs>
-          <radialGradient id="s5-flash" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#fff" stopOpacity="1" /><stop offset="30%" stopColor="#fff8c0" stopOpacity="0.85" /><stop offset="70%" stopColor="#f8b800" stopOpacity="0.35" /><stop offset="100%" stopColor="#e88030" stopOpacity="0" /></radialGradient>
-          <radialGradient id="s5-tunnel" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#0a0604" stopOpacity="0" /><stop offset="70%" stopColor="#3a1808" stopOpacity="0.65" /><stop offset="100%" stopColor="#0a0604" stopOpacity="1" /></radialGradient>
+          <radialGradient id="s5-flash" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#fff" stopOpacity="1" />
+            <stop offset="20%" stopColor="#fff8c0" stopOpacity="0.9" />
+            <stop offset="55%" stopColor="#f8b800" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#e88030" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="s5-tunnel" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#0a0604" stopOpacity="0" />
+            <stop offset="55%" stopColor="#3a1808" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#0a0604" stopOpacity="1" />
+          </radialGradient>
+          <radialGradient id="s5-vortex" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#7fd8ff" stopOpacity="0.6" />
+            <stop offset="60%" stopColor="#3a80c8" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="#3a80c8" stopOpacity="0" />
+          </radialGradient>
         </defs>
-        <rect width="800" height="500" fill="#0a0604" />
-        {/* Rayons qui tournent */}
-        <g style={{ transformOrigin: '400px 250px', animation: 'flashSpin 3s linear infinite' }}>
-          {[...Array(24)].map((_, i) => {
-            const a = (i * 15) * Math.PI / 180;
-            const x2 = 400 + Math.cos(a) * 500;
-            const y2 = 250 + Math.sin(a) * 500;
-            return <path key={i} d={`M400 250 L${x2} ${y2}`} stroke="#ffd870" strokeWidth={i % 2 ? 0.8 : 1.6} opacity={i % 2 ? 0.25 : 0.5} />;
+        <rect width="1200" height="680" fill="#0a0604" />
+
+        {/* Étoiles éparpillées en fond, qui filent (traînées) */}
+        {[[100, 80, 40], [280, 140, 60], [960, 100, 50], [1080, 180, 30],
+          [180, 540, 45], [440, 620, 35], [800, 560, 55], [1120, 500, 40],
+          [80, 340, 20], [1140, 340, 20]].map(([x, y, l], i) => (
+          <g key={i}>
+            <line x1={x} y1={y} x2={x + l} y2={y - l / 4} stroke="#e8eef5" strokeWidth="0.8" opacity="0.55" />
+            <circle cx={x + l} cy={y - l / 4} r="1.6" fill="#fff" opacity="0.85" />
+          </g>
+        ))}
+
+        {/* Rayons dorés qui tournent (plus longs) */}
+        <g style={{ transformOrigin: '600px 340px', animation: 'flashSpin 4s linear infinite' }}>
+          {[...Array(32)].map((_, i) => {
+            const a = (i * 11.25) * Math.PI / 180;
+            const x2 = 600 + Math.cos(a) * 720;
+            const y2 = 340 + Math.sin(a) * 720;
+            return <path key={i} d={`M600 340 L${x2} ${y2}`} stroke="#ffd870" strokeWidth={i % 2 ? 0.8 : 1.8} opacity={i % 2 ? 0.22 : 0.5} />;
           })}
         </g>
-        {/* Anneaux concentriques qui foncent vers le centre (tunnel temporel) */}
-        {[0, 0.2, 0.4, 0.6, 0.8].map((delay, i) => (
-          <circle key={i} cx="400" cy="250" r="80" fill="none" stroke="#7fd8ff" strokeWidth="1.5" opacity="0.65">
-            <animate attributeName="r" values="20;320" dur="1.4s" begin={`${delay}s`} repeatCount="indefinite" />
-            <animate attributeName="opacity" values="0.9;0" dur="1.4s" begin={`${delay}s`} repeatCount="indefinite" />
+
+        {/* Deuxième couche de rayons qui tourne dans l'autre sens (contre-rotation) */}
+        <g style={{ transformOrigin: '600px 340px', animation: 'flashSpinReverse 6s linear infinite' }}>
+          {[...Array(16)].map((_, i) => {
+            const a = (i * 22.5 + 11.25) * Math.PI / 180;
+            const x2 = 600 + Math.cos(a) * 640;
+            const y2 = 340 + Math.sin(a) * 640;
+            return <path key={i} d={`M600 340 L${x2} ${y2}`} stroke="#7fd8ff" strokeWidth="1.2" opacity="0.3" />;
+          })}
+        </g>
+
+        {/* Anneaux concentriques cyan qui foncent vers le centre (tunnel) */}
+        {[0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9].map((delay, i) => (
+          <circle key={i} cx="600" cy="340" r="80" fill="none" stroke="#7fd8ff" strokeWidth="1.8" opacity="0.7">
+            <animate attributeName="r" values="30;480" dur="1.6s" begin={`${delay}s`} repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.95;0" dur="1.6s" begin={`${delay}s`} repeatCount="indefinite" />
           </circle>
         ))}
-        <circle cx="400" cy="250" r="280" fill="url(#s5-flash)" style={{ animation: 'flashPulse 1.2s ease-in-out infinite' }} />
-        <circle cx="400" cy="250" r="380" fill="url(#s5-tunnel)" pointerEvents="none" />
+
+        {/* Anneaux dorés secondaires (offset) */}
+        {[0.1, 0.4, 0.7].map((delay, i) => (
+          <circle key={i} cx="600" cy="340" r="80" fill="none" stroke="#ffd870" strokeWidth="1.2" opacity="0.5">
+            <animate attributeName="r" values="20;520" dur="1.8s" begin={`${delay}s`} repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.85;0" dur="1.8s" begin={`${delay}s`} repeatCount="indefinite" />
+          </circle>
+        ))}
+
+        {/* Vortex bleu-blanc au centre */}
+        <circle cx="600" cy="340" r="200" fill="url(#s5-vortex)" style={{ animation: 'flashPulse 1.6s ease-in-out infinite' }} />
+
+        {/* Halo blanc éclatant central */}
+        <circle cx="600" cy="340" r="360" fill="url(#s5-flash)" style={{ animation: 'flashPulse 1.2s ease-in-out infinite' }} />
+
+        {/* Particules dorées qui filent vers le centre (aspiration) */}
+        {[[120, 200], [1040, 180], [180, 500], [1000, 520], [400, 100], [800, 620], [80, 340], [1120, 340]].map(([sx, sy], i) => (
+          <g key={i}>
+            <circle cx={sx} cy={sy} r="2.4" fill="#ffd870" opacity="0">
+              <animate attributeName="cx" values={`${sx};600`} dur="1.4s" begin={`${i * 0.2}s`} repeatCount="indefinite" />
+              <animate attributeName="cy" values={`${sy};340`} dur="1.4s" begin={`${i * 0.2}s`} repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0;0.9;0" dur="1.4s" begin={`${i * 0.2}s`} repeatCount="indefinite" />
+              <animate attributeName="r" values="3;0.6" dur="1.4s" begin={`${i * 0.2}s`} repeatCount="indefinite" />
+            </circle>
+          </g>
+        ))}
+
+        {/* Vignettage sombre autour */}
+        <circle cx="600" cy="340" r="520" fill="url(#s5-tunnel)" pointerEvents="none" />
+
         <style>{`
           @keyframes flashSpin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
-          @keyframes flashPulse { 0%, 100% { opacity: 0.75; transform: scale(1); } 50% { opacity: 0.95; transform: scale(1.05); } }
+          @keyframes flashSpinReverse { from { transform: rotate(360deg); } to { transform: rotate(0); } }
+          @keyframes flashPulse { 0%, 100% { opacity: 0.75; transform: scale(1); } 50% { opacity: 0.95; transform: scale(1.06); } }
         `}</style>
       </svg>
       {/* Décompte des années, superposé au flash */}
       <div style={{ position: 'absolute', top: '38%', left: 0, right: 0, textAlign: 'center', pointerEvents: 'none' }}>
-        <div style={{ fontFamily: 'ui-monospace,monospace', fontSize: 12, letterSpacing: 4, color: '#ffd166',
-          textShadow: '0 0 12px rgba(0,0,0,0.9)' }}>
+        <div style={{ fontFamily: 'ui-monospace,monospace', fontSize: 14, letterSpacing: 6, color: '#ffd166',
+          textShadow: '0 0 14px rgba(0,0,0,0.9)' }}>
           ⏳ SAUT TEMPOREL
         </div>
-        <div style={{ fontFamily: 'ui-monospace,monospace', fontSize: 44, fontWeight: 900, color: '#fff',
-          textShadow: '0 0 18px #ffd870, 0 0 28px #ff8030',
-          letterSpacing: 2, marginTop: 8 }}>
+        <div style={{ fontFamily: 'ui-monospace,monospace', fontSize: 58, fontWeight: 900, color: '#fff',
+          textShadow: '0 0 22px #ffd870, 0 0 34px #ff8030',
+          letterSpacing: 3, marginTop: 10 }}>
           {fmt(year)}
         </div>
       </div>
@@ -1093,106 +1158,204 @@ function SlideArrival({ onDone }) {
   const [step, setStep] = useState(0);
   const dialogs = [
     { lines: ['« Nous y sommes.', 'Bienvenue en −18 000, chronaute. »'],
-      pos: { x: 460, y: 130 }, color: 'default' },
+      pos: { x: 700, y: 180 }, color: 'default' },
     { lines: ['« Ma mission — et la tienne :', 'récupérer les messages que', 'les humains laissent au futur. »'],
-      pos: { x: 440, y: 140 }, color: 'default' },
+      pos: { x: 680, y: 195 }, color: 'default' },
     { lines: ['« À chaque époque, aide un peuple', 'à laisser une trace de son savoir.', 'Plus le support est SOLIDE,', 'plus notre passage marque le temps. »'],
-      pos: { x: 460, y: 150 }, color: 'alert' },
+      pos: { x: 700, y: 210 }, color: 'alert' },
     { lines: ['« Allez, descends.', 'Approche-toi du feu — le clan t\'attend. »'],
-      pos: { x: 470, y: 120 }, color: 'default' },
+      pos: { x: 710, y: 170 }, color: 'default' },
   ];
   const lastStep = step === dialogs.length - 1;
   const clickMartine = () => { if (!lastStep) setStep(step + 1); };
 
   return (
-    <div style={{ animation: 'fadeIn 1s ease-out' }}>
-      <svg viewBox="0 0 800 500" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '62vh' }}>
+    <div style={{ animation: 'fadeIn 1s ease-out', width: '100%' }}>
+      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
         <defs>
-          <linearGradient id="s6-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#5a4020" /><stop offset="60%" stopColor="#e0a848" /><stop offset="100%" stopColor="#c86040" /></linearGradient>
-          <linearGradient id="s6-ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8a4028" /><stop offset="100%" stopColor="#3a1808" /></linearGradient>
-          <radialGradient id="s6-fire" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#ffd870" stopOpacity="0.9" /><stop offset="100%" stopColor="#ff5030" stopOpacity="0" /></radialGradient>
+          <linearGradient id="s6-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#5a3820" />
+            <stop offset="55%" stopColor="#e0a848" />
+            <stop offset="100%" stopColor="#c86040" />
+          </linearGradient>
+          <linearGradient id="s6-ground" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#8a4028" />
+            <stop offset="100%" stopColor="#3a1808" />
+          </linearGradient>
+          <radialGradient id="s6-fire" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ffd870" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#ff5030" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="s6-sun" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ffe870" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#ffe870" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id="s6-river" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#7fd8ff" stopOpacity="0.65" />
+            <stop offset="100%" stopColor="#3a80c8" stopOpacity="0.55" />
+          </linearGradient>
         </defs>
-        <rect width="800" height="320" fill="url(#s6-sky)" />
+
+        {/* CIEL crépuscule */}
+        <rect width="1200" height="440" fill="url(#s6-sky)" />
+        {/* Halo solaire large */}
+        <circle cx="870" cy="320" r="220" fill="url(#s6-sun)" />
         {/* Soleil couchant */}
-        <circle cx="580" cy="240" r="70" fill="#ffe870" opacity="0.75" />
-        <circle cx="580" cy="240" r="55" fill="#fff4b0" opacity="0.9" />
-        {/* Montagnes lointaines et proches */}
-        <path d="M0 320 L0 260 L100 220 L180 240 L280 210 L360 230 L460 200 L560 220 L680 200 L800 230 L800 320 Z" fill="#5a4058" opacity="0.55" />
-        <path d="M0 320 L0 240 L100 170 L180 230 L280 150 L380 220 L470 140 L560 210 L640 170 L740 220 L800 200 L800 320 Z" fill="#3a2010" />
-        <path d="M270 158 L280 150 L292 162 L282 168 Z" fill="#f0e4c8" opacity="0.7" />
-        <path d="M462 148 L470 140 L480 152 L472 156 Z" fill="#f0e4c8" opacity="0.7" />
-        {/* Forêt */}
+        <circle cx="870" cy="320" r="70" fill="#ffe870" opacity="0.85" />
+        <circle cx="870" cy="320" r="52" fill="#fff4b0" opacity="0.95" />
+        <circle cx="870" cy="320" r="28" fill="#fff" opacity="0.7" />
+        {/* Nuages plumes chauds */}
+        <path d="M100 200 Q220 190 340 210 Q460 200 580 215 Q500 230 380 224 Q260 220 160 218 Q120 216 100 200" fill="#8a3820" opacity="0.45" />
+        <path d="M700 180 Q820 170 940 190 Q1060 180 1160 195 Q1080 210 960 202 Q840 200 740 200 Q710 200 700 180" fill="#8a3820" opacity="0.35" />
+        {/* Étoiles pâles au-dessus */}
+        {[[80, 60], [260, 50], [440, 40], [640, 65], [960, 55], [1120, 45]].map(([x, y], i) => (
+          <circle key={i} cx={x} cy={y} r={i % 2 ? 1.2 : 0.8} fill="#f0e4c8" opacity={0.45 + (i % 3) * 0.1} />
+        ))}
+        {/* Oiseaux au loin */}
+        <path d="M480 180 q6 -8 12 0 q6 -8 12 0" stroke="#3a2010" strokeWidth="1.5" fill="none" opacity="0.8" />
+        <path d="M560 160 q4 -6 8 0 q4 -6 8 0" stroke="#3a2010" strokeWidth="1.2" fill="none" opacity="0.7" />
+
+        {/* MONTAGNES lointaines et proches */}
+        <path d="M0 440 L0 340 L120 290 L240 320 L380 280 L500 310 L680 260 L820 300 L980 270 L1120 310 L1200 300 L1200 440 Z" fill="#5a4058" opacity="0.5" />
+        <path d="M0 440 L0 320 L120 220 L240 310 L380 200 L510 300 L620 190 L740 290 L860 230 L980 300 L1100 240 L1200 270 L1200 440 Z" fill="#3a2010" />
+        {/* Neige au sommet des pics */}
+        <path d="M370 210 L380 200 L392 214 L382 220 Z" fill="#f0e4c8" opacity="0.75" />
+        <path d="M612 200 L620 190 L630 204 L622 208 Z" fill="#f0e4c8" opacity="0.75" />
+        <path d="M852 240 L860 230 L870 244 L862 248 Z" fill="#f0e4c8" opacity="0.75" />
+
+        {/* FORÊT en arrière-plan */}
         <g fill="#1a2a10">
-          {[40, 78, 120, 158, 202, 250, 312, 348, 400, 452, 520, 580, 630, 680, 730, 770].map((x, i) => {
-            const h = 30 + (i % 4) * 8;
-            const y = 320;
+          {[40, 90, 140, 190, 240, 290, 360, 410, 460, 520, 580, 640, 700, 760, 820, 880, 940, 1000, 1060, 1120, 1170].map((x, i) => {
+            const h = 34 + (i % 5) * 10;
+            const y = 440;
             return (
               <g key={i} transform={`translate(${x},${y})`}>
                 <path d={`M0 0 L-${h/3} 0 L-${h/4} -${h*0.6} L-${h/5} -${h*0.6} L0 -${h} L${h/5} -${h*0.6} L${h/4} -${h*0.6} L${h/3} 0 Z`} />
-                <rect x="-1.5" y="-4" width="3" height="6" fill="#3a2010" />
+                <rect x="-1.6" y="-4" width="3.2" height="6" fill="#3a2010" />
               </g>
             );
           })}
         </g>
-        {/* Mammouth */}
-        <g transform="translate(180,300)">
-          <ellipse cx="0" cy="0" rx="46" ry="26" fill="#1a0e04" />
-          <ellipse cx="-40" cy="-2" rx="18" ry="14" fill="#1a0e04" />
-          <path d="M-56 4 Q-70 20 -64 30 Q-56 32 -52 24" stroke="#1a0e04" strokeWidth="6" fill="none" strokeLinecap="round" />
-          <path d="M-52 -4 Q-62 -8 -58 -14" stroke="#e8dfc8" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-          <circle cx="-46" cy="-4" r="1.5" fill="#f0d090" />
-          <rect x="-30" y="20" width="9" height="24" fill="#1a0e04" />
-          <rect x="-10" y="22" width="9" height="22" fill="#1a0e04" />
-          <rect x="10" y="22" width="9" height="22" fill="#1a0e04" />
-          <rect x="26" y="20" width="9" height="24" fill="#1a0e04" />
+
+        {/* MAMMOUTH imposant à gauche */}
+        <g transform="translate(220,410)">
+          <ellipse cx="0" cy="0" rx="66" ry="36" fill="#1a0e04" />
+          <ellipse cx="-58" cy="-4" rx="26" ry="20" fill="#1a0e04" />
+          <path d="M-80 6 Q-100 26 -92 42 Q-80 46 -74 32" stroke="#1a0e04" strokeWidth="8" fill="none" strokeLinecap="round" />
+          <path d="M-74 -6 Q-88 -14 -84 -22 M-74 -4 Q-84 -12 -70 -20" stroke="#e8dfc8" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <circle cx="-66" cy="-6" r="2" fill="#f0d090" />
+          {/* Poils */}
+          <path d="M-40 -30 L-30 -20 M-20 -34 L-14 -22 M0 -34 L4 -22 M20 -30 L18 -20 M40 -28 L34 -18" stroke="#0a0602" strokeWidth="1.5" opacity="0.7" />
+          {/* Pattes */}
+          <rect x="-42" y="28" width="14" height="36" fill="#1a0e04" />
+          <rect x="-16" y="30" width="14" height="34" fill="#1a0e04" />
+          <rect x="14" y="30" width="14" height="34" fill="#1a0e04" />
+          <rect x="36" y="28" width="14" height="36" fill="#1a0e04" />
         </g>
 
-        <rect y="320" width="800" height="180" fill="url(#s6-ground)" />
-        {[[80, 380], [340, 400], [500, 380], [680, 410]].map(([cx, cy], i) => (
-          <ellipse key={i} cx={cx} cy={cy} rx="10" ry="3" fill="#5a3020" opacity="0.7" />
+        {/* Petit troupeau de cerfs au fond droit */}
+        <g fill="#3a2010" opacity="0.8">
+          <g transform="translate(1080,420)">
+            <ellipse cx="0" cy="0" rx="14" ry="7" />
+            <ellipse cx="-14" cy="-4" rx="5" ry="6" />
+            <path d="M-18 -8 L-20 -14 M-14 -8 L-12 -14" stroke="#3a2010" strokeWidth="1" fill="none" />
+            <rect x="-8" y="6" width="2" height="8" />
+            <rect x="-2" y="6" width="2" height="8" />
+            <rect x="4" y="6" width="2" height="8" />
+            <rect x="10" y="6" width="2" height="8" />
+          </g>
+          <g transform="translate(1120,428) scale(0.8)">
+            <ellipse cx="0" cy="0" rx="14" ry="7" />
+            <ellipse cx="-14" cy="-4" rx="5" ry="6" />
+            <rect x="-8" y="6" width="2" height="8" />
+            <rect x="8" y="6" width="2" height="8" />
+          </g>
+        </g>
+
+        {/* SOL */}
+        <rect y="440" width="1200" height="240" fill="url(#s6-ground)" />
+        {/* Herbe folle */}
+        {[[60, 480], [180, 490], [340, 500], [500, 495], [660, 500], [820, 505], [980, 500], [1140, 495]].map(([x, y], i) => (
+          <g key={i} transform={`translate(${x},${y})`}>
+            <path d="M-4 0 L-4 -10 M0 0 L0 -14 M4 0 L4 -8" stroke="#5a4020" strokeWidth="1" fill="none" strokeLinecap="round" />
+          </g>
+        ))}
+        {/* Pierres éparses */}
+        {[[100, 500], [420, 520], [620, 500], [860, 540], [1060, 520]].map(([cx, cy], i) => (
+          <ellipse key={i} cx={cx} cy={cy} rx="14" ry="4" fill="#5a3020" opacity="0.7" />
         ))}
 
-        {/* Feu du clan */}
-        <g transform="translate(120,410)">
-          <circle r="46" fill="url(#s6-fire)" style={{ animation: 'firePulse 1.4s ease-in-out infinite' }} />
-          <path d="M-18 8 L18 4 M-14 12 L18 10" stroke="#3a1808" strokeWidth="4" strokeLinecap="round" />
-          <path d="M-8 -2 Q-6 -14 0 -20 Q4 -12 2 -2 Z" fill="#ffd870" />
-          <path d="M-4 0 Q-2 -8 2 -12 Q4 -6 2 0 Z" fill="#ff8030" />
+        {/* RIVIÈRE qui traverse le fond */}
+        <path d="M0 500 Q150 490 300 508 Q450 520 600 510 Q750 500 900 512 Q1050 522 1200 510 L1200 540 Q1050 552 900 542 Q750 530 600 540 Q450 550 300 538 Q150 520 0 530 Z" fill="url(#s6-river)" />
+        {/* Reflet sur la rivière */}
+        <path d="M100 512 L200 510 M400 516 L500 514 M700 516 L800 516 M1000 520 L1100 518" stroke="#e8eef5" strokeWidth="0.8" opacity="0.5" />
+
+        {/* GRANDE PIERRE avec peinture rupestre au premier plan gauche */}
+        <g transform="translate(90,560)">
+          <path d="M0 40 Q10 -20 50 -40 Q100 -50 140 -20 Q150 30 100 60 Q40 66 0 40 Z" fill="#5a3020" stroke="#2a1010" strokeWidth="2" />
+          {/* Dessins rupestres : main + auroch stylisé + ligne de spirales */}
+          <path d="M30 20 q6 -12 14 -8 q4 -12 10 -6 q8 -8 12 -2 q6 -6 10 0 q0 12 -6 16 q-12 6 -20 4 q-14 -2 -20 -4" fill="#8a1010" opacity="0.85" />
+          <path d="M70 -14 Q84 -22 96 -12 L92 -6 Q100 -8 100 0 Q90 6 80 2 Q70 4 66 -6 Z M96 -18 L106 -22 M98 -14 L110 -12" stroke="#3a0000" strokeWidth="1.5" fill="none" opacity="0.85" />
         </g>
 
-        {/* Le VAISSEAU posé proprement à droite */}
-        <g transform="translate(600,430) scale(0.65)">
+        {/* TENTE / HUTTE près du feu */}
+        <g transform="translate(340,560)">
+          <path d="M-46 44 L0 -30 L46 44 Z" fill="#5a3020" stroke="#2a1010" strokeWidth="2" />
+          <path d="M-46 44 L0 -30 L46 44 Z" fill="none" stroke="#3a1808" strokeWidth="1.2" strokeDasharray="4 4" opacity="0.75" />
+          {/* Ouverture */}
+          <path d="M-8 44 L0 20 L8 44 Z" fill="#141008" />
+          {/* Perches qui dépassent */}
+          <line x1="0" y1="-30" x2="-8" y2="-46" stroke="#3a1808" strokeWidth="2" />
+          <line x1="0" y1="-30" x2="6" y2="-44" stroke="#3a1808" strokeWidth="2" />
+          <line x1="0" y1="-30" x2="0" y2="-50" stroke="#3a1808" strokeWidth="2" />
+        </g>
+
+        {/* FEU du clan (plus imposant) */}
+        <g transform="translate(180,600)">
+          <circle r="72" fill="url(#s6-fire)" style={{ animation: 'firePulse 1.4s ease-in-out infinite' }} />
+          {/* Bûches croisées */}
+          <path d="M-28 10 L28 6 M-22 16 L28 14 M-20 22 L22 18" stroke="#3a1808" strokeWidth="6" strokeLinecap="round" />
+          {/* Flammes */}
+          <path d="M-12 -2 Q-10 -22 0 -30 Q6 -18 4 -2 Z" fill="#ffd870" />
+          <path d="M-6 0 Q-2 -12 4 -18 Q6 -8 4 0 Z" fill="#ff8030" />
+          <path d="M0 -6 Q2 -14 6 -18 Q8 -10 6 -4 Z" fill="#fff4b0" />
+          {/* Fumée qui monte */}
+          <path d="M0 -30 Q-6 -50 4 -70 Q-4 -90 6 -110" stroke="#8a9098" strokeWidth="5" fill="none" opacity="0.35" strokeLinecap="round">
+            <animate attributeName="opacity" values="0.2;0.4;0.2" dur="3s" repeatCount="indefinite" />
+          </path>
+        </g>
+
+        {/* Le VAISSEAU posé plus grand */}
+        <g transform="translate(900,600) scale(0.9)">
           <TimeMachine landed={true} />
         </g>
-        {/* MARTINE (avatar) qui flotte à côté du vaisseau. Elle est
-            l'avatar parlant du vaisseau — c'est elle qu'on clique pour
-            avancer les dialogues. Petit bob vertical pour signaler
-            qu'elle lévite (via animateTransform SVG). */}
+
+        {/* MARTINE (avatar) — plus grande, lévite */}
         <g onClick={!lastStep ? clickMartine : undefined}
           style={{ cursor: !lastStep ? 'pointer' : 'default' }}>
-          <g transform="translate(480,340)">
+          <g transform="translate(720,490)">
             <animateTransform attributeName="transform" type="translate"
-              values="480 340; 480 328; 480 340" dur="2.6s" repeatCount="indefinite" additive="replace" />
-            <circle r="46" fill="rgba(94,255,158,0.18)">
-              <animate attributeName="r" values="42;50;42" dur="2.6s" repeatCount="indefinite" />
+              values="720 490; 720 476; 720 490" dur="2.6s" repeatCount="indefinite" additive="replace" />
+            <circle r="62" fill="rgba(94,255,158,0.18)">
+              <animate attributeName="r" values="56;68;56" dur="2.6s" repeatCount="indefinite" />
             </circle>
-            <circle cx="0" cy="0" r="34" fill="#8a6240" stroke="#5c3a22" strokeWidth="2" />
-            <path d="M-28 -6 Q0 -14 28 -6" stroke="#5c3a22" strokeWidth="2.4" fill="none" opacity="0.8" />
-            <circle cx="0" cy="4" r="12" fill="#cfeaff" stroke="#5c3a22" strokeWidth="2.4" />
-            <path d="M-8 6 Q0 -3 8 6" stroke="#0c2233" strokeWidth="3.6" fill="none" strokeLinecap="round" />
-            <line x1="0" y1="-34" x2="0" y2="-48" stroke="#8a94a8" strokeWidth="3" strokeLinecap="round" />
-            <circle cx="0" cy="-50" r="3.6" fill="#5eff9e">
+            <circle cx="0" cy="0" r="46" fill="#8a6240" stroke="#5c3a22" strokeWidth="2.5" />
+            <path d="M-38 -8 Q0 -18 38 -8" stroke="#5c3a22" strokeWidth="3" fill="none" opacity="0.85" />
+            <circle cx="0" cy="6" r="16" fill="#cfeaff" stroke="#5c3a22" strokeWidth="3" />
+            <path d="M-10 8 Q0 -4 10 8" stroke="#0c2233" strokeWidth="4.4" fill="none" strokeLinecap="round" />
+            <line x1="0" y1="-46" x2="0" y2="-64" stroke="#8a94a8" strokeWidth="3.5" strokeLinecap="round" />
+            <circle cx="0" cy="-66" r="4.5" fill="#5eff9e">
               <animate attributeName="opacity" values="0.5;1;0.5" dur="1.6s" repeatCount="indefinite" />
             </circle>
-            <rect x="-44" y="-4" width="12" height="9" rx="3" fill="#6a7488" />
-            <rect x="32" y="-4" width="12" height="9" rx="3" fill="#6a7488" />
-            <path d="M-44 0 l-8 3 l8 3 Z" fill="#7fd8ff" style={{ animation: 'flick .5s infinite' }} />
-            <path d="M44 0 l8 3 l-8 3 Z" fill="#7fd8ff" style={{ animation: 'flick .5s infinite' }} />
+            <rect x="-60" y="-6" width="16" height="12" rx="4" fill="#6a7488" />
+            <rect x="44" y="-6" width="16" height="12" rx="4" fill="#6a7488" />
+            <path d="M-60 0 l-10 4 l10 4 Z" fill="#7fd8ff" style={{ animation: 'flick .5s infinite' }} />
+            <path d="M60 0 l10 4 l-10 4 Z" fill="#7fd8ff" style={{ animation: 'flick .5s infinite' }} />
           </g>
         </g>
 
         {/* Bulle MARTINE */}
-        <Bubble x={dialogs[step].pos.x} y={dialogs[step].pos.y} w={340}
+        <Bubble x={dialogs[step].pos.x} y={dialogs[step].pos.y} w={400}
           text={dialogs[step].lines}
           color={dialogs[step].color}
           from="right" />
@@ -1200,23 +1363,43 @@ function SlideArrival({ onDone }) {
         {/* Au dernier dialogue : personnages du clan cliquables */}
         {lastStep && (
           <g>
-            <g transform="translate(200,400)" onClick={onDone} style={{ cursor: 'pointer' }}>
-              <circle cx="0" cy="-10" r="52" fill="none" stroke="#5eff9e" strokeWidth="2" strokeDasharray="4 4" opacity="0.85" style={{ animation: 'personneCall 1.6s ease-in-out infinite' }} />
-              <path d="M-18 20 L-18 -10 Q-18 -20 -10 -20 L10 -20 Q18 -20 18 -10 L18 20 Z" fill="#5a3818" />
-              <ellipse cx="0" cy="-28" rx="12" ry="14" fill="#e0a878" />
-              <path d="M-12 -32 q0 -8 6 -10 q6 2 8 -4 q4 6 8 4 q6 4 8 10 z" fill="#3a1808" />
-              <circle cx="-4" cy="-28" r="1.4" fill="#0a0806" />
-              <circle cx="4" cy="-28" r="1.4" fill="#0a0806" />
-              <text x="0" y="-58" textAnchor="middle" fontFamily="Palatino, Georgia, serif" fontSize="12" fontWeight="700" fill="#5eff9e" style={{ animation: 'personneCall 1.6s ease-in-out infinite' }}>◉ Rejoins-les</text>
+            {/* Membre du clan 1 : autour du feu, plus grand */}
+            <g transform="translate(300,550)" onClick={onDone} style={{ cursor: 'pointer' }}>
+              <circle cx="0" cy="-14" r="66" fill="none" stroke="#5eff9e" strokeWidth="2.5" strokeDasharray="4 4" opacity="0.85" style={{ animation: 'personneCall 1.6s ease-in-out infinite' }} />
+              <path d="M-22 28 L-22 -14 Q-22 -26 -14 -26 L14 -26 Q22 -26 22 -14 L22 28 Z" fill="#5a3818" />
+              <ellipse cx="0" cy="-38" rx="16" ry="18" fill="#e0a878" />
+              <path d="M-14 -42 q0 -10 8 -12 q6 4 10 -4 q4 8 10 4 q8 4 10 12 z" fill="#3a1808" />
+              <circle cx="-5" cy="-38" r="1.6" fill="#0a0806" />
+              <circle cx="5" cy="-38" r="1.6" fill="#0a0806" />
+              <path d="M-4 -32 q4 3 8 0" stroke="#3a1808" strokeWidth="1" fill="none" strokeLinecap="round" />
+              {/* Lance dans la main */}
+              <path d="M22 0 L46 -20" stroke="#3a1808" strokeWidth="3" strokeLinecap="round" />
+              <path d="M46 -20 L42 -24 L52 -20 L46 -14 Z" fill="#c8a848" />
+              <text x="0" y="-88" textAnchor="middle" fontFamily="Palatino, Georgia, serif" fontSize="15" fontWeight="700" fill="#5eff9e" style={{ animation: 'personneCall 1.6s ease-in-out infinite' }}>◉ Rejoins-les</text>
             </g>
-            <g transform="translate(320,380)" onClick={onDone} style={{ cursor: 'pointer' }}>
-              <circle cx="0" cy="-20" r="42" fill="none" stroke="#5eff9e" strokeWidth="2" strokeDasharray="4 4" opacity="0.7" style={{ animation: 'personneCall 1.8s ease-in-out infinite' }} />
-              <path d="M-14 40 L-14 -14 Q-14 -22 -8 -22 L8 -22 Q14 -22 14 -14 L14 40 Z" fill="#4a3020" />
-              <ellipse cx="0" cy="-30" rx="10" ry="12" fill="#d0a068" />
-              <path d="M-10 -34 q0 -6 4 -8 q4 2 6 -2 q3 4 6 2 q4 3 6 8 z" fill="#2a1808" />
-              <circle cx="-3" cy="-30" r="1.2" fill="#0a0806" />
-              <circle cx="3" cy="-30" r="1.2" fill="#0a0806" />
-              <path d="M14 -4 L28 -22" stroke="#3a1808" strokeWidth="3" strokeLinecap="round" />
+            {/* Membre du clan 2 */}
+            <g transform="translate(450,520)" onClick={onDone} style={{ cursor: 'pointer' }}>
+              <circle cx="0" cy="-24" r="52" fill="none" stroke="#5eff9e" strokeWidth="2" strokeDasharray="4 4" opacity="0.75" style={{ animation: 'personneCall 1.8s ease-in-out infinite' }} />
+              <path d="M-18 44 L-18 -18 Q-18 -28 -10 -28 L10 -28 Q18 -28 18 -18 L18 44 Z" fill="#4a3020" />
+              <ellipse cx="0" cy="-38" rx="12" ry="14" fill="#d0a068" />
+              <path d="M-12 -42 q0 -8 5 -10 q5 2 8 -3 q3 5 8 3 q5 4 8 10 z" fill="#2a1808" />
+              <circle cx="-4" cy="-38" r="1.4" fill="#0a0806" />
+              <circle cx="4" cy="-38" r="1.4" fill="#0a0806" />
+              <path d="M18 -6 L34 -28" stroke="#3a1808" strokeWidth="3.4" strokeLinecap="round" />
+              <path d="M34 -28 L30 -32 L40 -28 L34 -22 Z" fill="#c8a848" />
+            </g>
+            {/* Enfant du clan qui salue */}
+            <g transform="translate(550,570)" onClick={onDone} style={{ cursor: 'pointer' }}>
+              <circle cx="0" cy="-14" r="40" fill="none" stroke="#5eff9e" strokeWidth="1.8" strokeDasharray="4 4" opacity="0.7" style={{ animation: 'personneCall 2s ease-in-out infinite' }} />
+              <path d="M-12 26 L-12 -12 Q-12 -20 -6 -20 L6 -20 Q12 -20 12 -12 L12 26 Z" fill="#8a5030" />
+              <ellipse cx="0" cy="-28" rx="9" ry="10" fill="#e0a878" />
+              <circle cx="-3" cy="-28" r="1" fill="#0a0806" />
+              <circle cx="3" cy="-28" r="1" fill="#0a0806" />
+              <path d="M-3 -24 q3 2 6 0" stroke="#3a1808" strokeWidth="0.8" fill="none" strokeLinecap="round" />
+              {/* Petit bras levé qui salue */}
+              <path d="M-12 -8 L-22 -20" stroke="#e0a878" strokeWidth="3" strokeLinecap="round">
+                <animateTransform attributeName="transform" type="rotate" values="0 -12 -8; -18 -12 -8; 0 -12 -8" dur="1.8s" repeatCount="indefinite" />
+              </path>
             </g>
           </g>
         )}
