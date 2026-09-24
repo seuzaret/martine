@@ -84,6 +84,7 @@ export default function IntroStory({ onDone }) {
     <SlideOutside     key="s3" onNext={next} />,
     <SlideCockpit     key="s4" onNext={next} />,
     <SlideRules       key="s4b" onNext={next} />,
+    <SlideMartineReparee key="s4c" onNext={next} />,
     <SlideFlash       key="s5" onNext={next} />,
     <SlideArrival     key="s6" onDone={onDone} />,
   ];
@@ -998,7 +999,7 @@ function SlideRules({ onNext }) {
             <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.45, flex: 1, textAlign: 'left' }}>
               {!isLast
                 ? "« Retiens bien ça. Chaque règle protège le fil du temps. »"
-                : "« Voilà. Quatre règles. Simples, mais très importantes. Prêt·e à partir ? »"}
+                : "« Voilà. Quatre règles. Simples, mais très importantes. Encore une petite chose avant qu'on parte. »"}
             </p>
             <button onClick={() => (isLast ? onNext() : setN(n + 1))} autoFocus
               style={{ flexShrink: 0, background: isLast ? '#5eff9e' : '#141b26',
@@ -1007,11 +1008,73 @@ function SlideRules({ onNext }) {
                 borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 800,
                 cursor: 'pointer', fontFamily: 'ui-monospace,monospace', letterSpacing: 2,
                 boxShadow: isLast ? '0 0 22px rgba(94,255,158,0.55)' : 'none' }}>
-              {isLast ? "ON PART →" : `Suite (${n + 2}/${REGLES.length})`}
+              {isLast ? "Suite →" : `Suite (${n + 2}/${REGLES.length})`}
             </button>
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   S4c — MARTINE se présente : elle a été réparée par Al3x1a, sa
+   mémoire est lacunaire, et elle traduit toutes les langues.
+   Trois lignes courtes qui apparaissent l'une après l'autre.
+   ═══════════════════════════════════════════════════════════════ */
+function SlideMartineReparee({ onNext }) {
+  const LINES = [
+    { txt: "« Une dernière chose. Ce vaisseau que tu vois — c'est moi, MARTINE. Al3x1a m'a réparée avant de t'appeler. Elle a rebranché ce qu'elle a pu, mais il me manque des morceaux de mémoire. »", mood: "neutre" },
+    { txt: "« Si je bloque parfois, ou si j'oublie pourquoi je dis quelque chose… pardonne-moi. Ce n'est pas ma faute. »", mood: "vexe" },
+    { txt: "« Une bonne nouvelle : peu importe l'époque où on va se poser, je traduis tout automatiquement. Tu entendras chaque personne comme si elle parlait ta langue. »", mood: "content" },
+  ];
+  const [n, setN] = useState(0);
+  const isLast = n === LINES.length - 1;
+  const line = LINES[n];
+
+  return (
+    <div style={{ animation: 'fadeIn 0.6s ease-out', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+      <svg viewBox="0 0 800 340" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '60vh' }}>
+        <defs>
+          <linearGradient id="s4c-cabin" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0a1a2a" />
+            <stop offset="100%" stopColor="#050810" />
+          </linearGradient>
+          <radialGradient id="s4c-glow" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="#5eff9e" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="#5eff9e" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="800" height="340" fill="url(#s4c-cabin)" />
+        <ellipse cx="400" cy="60" rx="260" ry="34" fill="#000814" stroke="#5a7898" strokeWidth="3" />
+        {[[300, 50], [360, 66], [400, 46], [460, 68], [520, 54]].map(([cx, cy], i) => (
+          <circle key={i} cx={cx} cy={cy} r={i % 2 ? 1.4 : 1} fill="#fff" opacity="0.75" />
+        ))}
+        <circle cx="400" cy="200" r="180" fill="url(#s4c-glow)" />
+        <g transform="translate(400,200)">
+          <rect x="-320" y="-70" width="640" height="140" fill="#0e1a30" stroke="#5eff9e" strokeWidth="3" rx="14" />
+          <text x="0" y="-42" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="11" fill="#5eff9e" letterSpacing="4">MARTINE</text>
+          <foreignObject x="-300" y="-24" width="600" height="90">
+            <div xmlns="http://www.w3.org/1999/xhtml"
+              style={{ font: "italic 15px Georgia,serif", color: "#e8eef5", lineHeight: 1.45, textAlign: "center", padding: "0 12px" }}>
+              {line.txt}
+            </div>
+          </foreignObject>
+        </g>
+      </svg>
+
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 4 }}>
+        <div><Avatar mood={line.mood} size={64} talking /></div>
+        <button onClick={() => (isLast ? onNext() : setN(n + 1))} autoFocus
+          style={{ background: isLast ? '#5eff9e' : '#141b26',
+            color: isLast ? '#06110b' : '#5eff9e',
+            border: '2px solid #5eff9e',
+            borderRadius: 10, padding: '12px 26px', fontSize: 14, fontWeight: 800,
+            cursor: 'pointer', fontFamily: 'ui-monospace,monospace', letterSpacing: 2,
+            boxShadow: isLast ? '0 0 22px rgba(94,255,158,0.55)' : 'none' }}>
+          {isLast ? "ON PART →" : `Suite (${n + 2}/${LINES.length})`}
+        </button>
+      </div>
     </div>
   );
 }
