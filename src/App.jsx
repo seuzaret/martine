@@ -2021,7 +2021,6 @@ export default function App() {
       })()}
       {bubble && (() => {
         const hasChoices = Array.isArray(bubble.choices) && bubble.choices.length > 0;
-<<<<<<< HEAD
         const hasExchange = !!bubble.playerLine;
         const isDialog = hasChoices || hasExchange;
         const W = Math.min(isDialog ? 340 : 300, window.innerWidth - 24);
@@ -2032,12 +2031,6 @@ export default function App() {
            puis la réplique du PNJ. La bulle se ferme au clic sur le fond
            extérieur, comme une bulle normale, une fois l'échange complet. */
         const pickChoice = (c) => setBubble((b) => b ? { ...b, playerLine: c.a, followUp: c.r, choices: null } : b);
-=======
-        const W = Math.min(hasChoices ? 340 : 300, window.innerWidth - 24);
-        const dessous = bubble.y < 240;               // perso trop haut → bulle en dessous
-        const cx = Math.min(Math.max(bubble.x, 12 + W / 2), window.innerWidth - 12 - W / 2);
-        const pickChoice = (c) => setBubble((b) => b ? { ...b, text: c.r, choices: null } : b);
->>>>>>> origin/main
         return (
           <div onClick={hasChoices ? undefined : () => setBubble(null)}
             style={{
@@ -2047,7 +2040,6 @@ export default function App() {
               padding: "11px 14px", fontFamily: "Palatino, Georgia, serif", fontSize: 14.5, lineHeight: 1.5,
               boxShadow: "0 8px 26px rgba(0,0,0,0.5)", cursor: hasChoices ? "default" : "pointer", animation: "fadein .18s ease-out",
             }}>
-<<<<<<< HEAD
             {/* Réplique du PNJ (question, ou parole simple) */}
             <div>{bubble.text}</div>
 
@@ -2088,25 +2080,6 @@ export default function App() {
               <div style={{ fontSize: 10, color: "#8a7250", fontStyle: "italic", marginTop: 5, textAlign: "right" }}>clique n'importe où pour fermer</div>
             )}
 
-=======
-            {bubble.text}
-            {hasChoices ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 10 }}>
-                {bubble.choices.map((c, i) => (
-                  <button key={i} onClick={(e) => { e.stopPropagation(); pickChoice(c); }}
-                    style={{ textAlign: "left", background: "#fff8ea", border: "1px solid #cbb489", borderRadius: 8,
-                      padding: "8px 10px", fontFamily: "Palatino, Georgia, serif", fontSize: 13.5, color: "#2a1c10",
-                      cursor: "pointer", lineHeight: 1.35 }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = "#ffe8b8"; e.currentTarget.style.borderColor = "#a17c3a"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "#fff8ea"; e.currentTarget.style.borderColor = "#cbb489"; }}>
-                    ▸ {c.a}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div style={{ fontSize: 10, color: "#8a7250", fontStyle: "italic", marginTop: 5, textAlign: "right" }}>clique n'importe où pour fermer</div>
-            )}
->>>>>>> origin/main
             {/* la petite pointe du phylactère, vers le personnage */}
             <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", width: 0, height: 0,
               borderLeft: "10px solid transparent", borderRight: "10px solid transparent",
