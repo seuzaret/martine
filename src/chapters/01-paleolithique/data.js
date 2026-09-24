@@ -253,6 +253,18 @@ const ACTIONS = {
   ana: { mood: "content",
     bubble: "Alors, comment trouves-tu le clan ? Prends ton temps, regarde tout… Et si tu es perdu, parle à chacun : quelqu'un a toujours besoin de toi quelque part.",
     say: "Ana. C'est elle qui t'a ouvert les portes du clan — reste poli, on est invités.",
+    /* Un mini-dialogue à choix (une fois par partie), flavor pur. */
+    chatOnce: {
+      q: "Dis-moi, voyageur : d'où viens-tu, au juste ? Ta drôle de noix volante… je n'ai jamais rien vu de tel.",
+      choices: [
+        { a: "De très loin. Un endroit que tu ne pourrais pas imaginer.",
+          r: "Je te crois. J'ai déjà rencontré des voyageurs mystérieux — mais toi, tu es le plus étrange de tous." },
+        { a: "Secret. Mais je suis là pour aider.",
+          r: "Un secret ? Alors garde-le bien. Tout le monde en a un, ici aussi." },
+        { a: "De demain. Un demain très, très lointain.",
+          r: "« Demain » n'est jamais qu'un aujourd'hui plus tard. Tu parles bizarrement, mais tu as l'air gentil." },
+      ],
+    },
     chitchat: [
       "Ma petite Ila commence à nommer les choses. Hier, elle a dit « feu ». Ça, c'est un vrai jour !",
       "J'ai vu des traces d'ours ce matin, au sud. On restera à l'est pour ramasser.",
@@ -307,6 +319,17 @@ const ACTIONS = {
   kyan: { mood: "neutre",
     bubble: "Je suis la mémoire du clan. Tout ce qui s'oublie meurt une seconde fois — c'est pour ça que je me souviens.",
     say: "Kyan, la mémoire du clan. Ce qu'elle sait tient dans une seule tête… fragile, non ?",
+    chatOnce: {
+      q: "Dis-moi, chronaute : qu'est-ce qui t'importe le plus, dans tout ce que ton peuple garde en mémoire ?",
+      choices: [
+        { a: "Les histoires. Les récits qu'on se raconte le soir.",
+          r: "Bonne réponse. Une histoire tient dans une seule voix, et elle traverse mille générations. C'est le plus vieux trésor du monde." },
+        { a: "Les images. Les peintures, les dessins.",
+          r: "Elles disent ce que les mots ne peuvent pas. Une main plaquée sur la roche parle encore quand la voix se tait." },
+        { a: "Les objets. Ceux qu'on transmet de main en main.",
+          r: "Chaque objet garde un peu de qui l'a tenu. Une aiguille d'os, un galet gravé… ils portent des noms qu'on oublie, mais que la matière n'oublie pas." },
+      ],
+    },
     chitchat: [
       "Chaque nom qu'on oublie, c'est un ancêtre qui meurt une seconde fois.",
       "J'apprends à Ila les chants du clan. Elle en retient déjà trois.",
