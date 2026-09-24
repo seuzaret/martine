@@ -253,7 +253,6 @@ const ACTIONS = {
   ana: { mood: "content",
     bubble: "Alors, comment trouves-tu le clan ? Prends ton temps, regarde tout… Et si tu es perdu, parle à chacun : quelqu'un a toujours besoin de toi quelque part.",
     say: "Ana. C'est elle qui t'a ouvert les portes du clan — reste poli, on est invités.",
-<<<<<<< HEAD
     /* Un mini-dialogue à choix (une fois par partie), flavor pur. */
     chatOnce: {
       q: "Dis-moi, voyageur : d'où viens-tu, au juste ? Ta drôle de noix volante… je n'ai jamais rien vu de tel.",
@@ -266,8 +265,6 @@ const ACTIONS = {
           r: "« Demain » n'est jamais qu'un aujourd'hui plus tard. Tu parles bizarrement, mais tu as l'air gentil." },
       ],
     },
-=======
->>>>>>> origin/main
     chitchat: [
       "Ma petite Ila commence à nommer les choses. Hier, elle a dit « feu ». Ça, c'est un vrai jour !",
       "J'ai vu des traces d'ours ce matin, au sud. On restera à l'est pour ramasser.",
@@ -322,7 +319,6 @@ const ACTIONS = {
   kyan: { mood: "neutre",
     bubble: "Je suis la mémoire du clan. Tout ce qui s'oublie meurt une seconde fois — c'est pour ça que je me souviens.",
     say: "Kyan, la mémoire du clan. Ce qu'elle sait tient dans une seule tête… fragile, non ?",
-<<<<<<< HEAD
     chatOnce: {
       q: "Dis-moi, chronaute : qu'est-ce qui t'importe le plus, dans tout ce que ton peuple garde en mémoire ?",
       choices: [
@@ -334,8 +330,6 @@ const ACTIONS = {
           r: "Chaque objet garde un peu de qui l'a tenu. Une aiguille d'os, un galet gravé… ils portent des noms qu'on oublie, mais que la matière n'oublie pas." },
       ],
     },
-=======
->>>>>>> origin/main
     chitchat: [
       "Chaque nom qu'on oublie, c'est un ancêtre qui meurt une seconde fois.",
       "J'apprends à Ila les chants du clan. Elle en retient déjà trois.",
