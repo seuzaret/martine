@@ -253,6 +253,12 @@ const ACTIONS = {
   ana: { mood: "content",
     bubble: "Alors, comment trouves-tu le clan ? Prends ton temps, regarde tout… Et si tu es perdu, parle à chacun : quelqu'un a toujours besoin de toi quelque part.",
     say: "Ana. C'est elle qui t'a ouvert les portes du clan — reste poli, on est invités.",
+    chitchat: [
+      "Ma petite Ila commence à nommer les choses. Hier, elle a dit « feu ». Ça, c'est un vrai jour !",
+      "J'ai vu des traces d'ours ce matin, au sud. On restera à l'est pour ramasser.",
+      "Regarde le ciel : les grands nuages froids arrivent. La saison change vite, cette année.",
+      "Tu veux goûter ? On a fait sécher des myrtilles au soleil. C'est sucré comme rien.",
+    ],
     jeu2Variants: [
       { bubble: "Toi ? Encore ? Une autre comme toi est venue autrefois. Elle voulait entrer dans la grotte, tout au fond. Elle est ressortie les mains couvertes d'ocre.",
         say: "Ana se souvient d'Al3x1A : elle est entrée AU FOND DE LA GROTTE, sur la Grande Paroi." },
@@ -265,6 +271,12 @@ const ACTIONS = {
   raya: { mood: "neutre",
     bubble: "Un chef veille sur tout : le feu, les bêtes, les histoires. Fais ta part, voyageur, et le clan fera la sienne.",
     say: "Raya, le chef. Peu de mots, beaucoup d'autorité. Je l'aime bien.",
+    chitchat: [
+      "Le feu ne doit pas s'éteindre. Jamais. Le rallumer prend un jour entier.",
+      "Un bon chef écoute beaucoup. Il parle peu.",
+      "Aujourd'hui, tout va bien. Demain, on verra. C'est notre règle.",
+      "Il faudra bientôt lever le camp. La harde est déjà passée deux fois près d'ici.",
+    ],
     jeu2Variants: [
       { bubble: "Une drôle de voyageuse aux cheveux courts est venue avant toi. Elle a peint une marque étrange au fond de la grotte, sur la Grande Paroi.",
         say: "Le chef confirme : fond de la grotte, sur la paroi peinte." },
@@ -277,6 +289,12 @@ const ACTIONS = {
   doru: { mood: "neutre",
     bubble: "Chut ! Le gibier a l'oreille fine. Parle bas, marche léger.",
     say: "Doru, le chasseur du clan. Lui, c'est la rivière et le silence.",
+    chitchat: [
+      "Chuuut. Tu marches trop fort. Le gibier t'entend à cent pas.",
+      "J'ai vu un renard tout à l'heure. Trop rapide pour moi ce matin.",
+      "Un bon chasseur sait aussi rentrer bredouille. Ça arrive.",
+      "Le vent vient du nord. C'est mauvais : le cerf va nous flairer.",
+    ],
     jeu2Variants: [
       { bubble: "Une chasseuse d'un autre temps a bu à cette rivière avant toi. Elle n'a pas tué. Elle a filé au fond de la grotte pour peindre.",
         say: "Doru l'a vue partir vers LA GROTTE. Elle y a laissé une peinture." },
@@ -289,6 +307,12 @@ const ACTIONS = {
   kyan: { mood: "neutre",
     bubble: "Je suis la mémoire du clan. Tout ce qui s'oublie meurt une seconde fois — c'est pour ça que je me souviens.",
     say: "Kyan, la mémoire du clan. Ce qu'elle sait tient dans une seule tête… fragile, non ?",
+    chitchat: [
+      "Chaque nom qu'on oublie, c'est un ancêtre qui meurt une seconde fois.",
+      "J'apprends à Ila les chants du clan. Elle en retient déjà trois.",
+      "Autrefois, la grotte était plus grande. Ou nous étions plus petits, qui sait.",
+      "Je connais tous les prénoms de tous les enfants nés ici depuis mon enfance. Cinquante-deux.",
+    ],
     jeu2Variants: [
       { bubble: "Je me souviens d'elle comme si c'était hier. Al3x1A. Je l'ai vue peindre juste là, sur la Grande Paroi, au fond de la grotte.",
         say: "Kyan garde tout : la trace d'Al3x1A est AU FOND DE LA GROTTE." },
@@ -301,15 +325,33 @@ const ACTIONS = {
   /* ─── Nouveaux personnages / actions des tableaux ajoutés (atelier, gué, crête) ─── */
   ough: { mood: "neutre",
     bubble: "Je suis Ough, tailleur de silex. Ramasse un caillou brut là-bas, pose-le sur le rocher, et frappe-le au bon moment : un éclat tranchant s'en détache.",
-    say: "Ough, le tailleur de silex. Un savoir-faire transmis de la main à la main depuis 2 millions d'années — sans un mot écrit." },
+    say: "Ough, le tailleur de silex. Un savoir-faire transmis de la main à la main depuis 2 millions d'années — sans un mot écrit.",
+    chitchat: [
+      "Frapper au bon angle, au bon moment. C'est tout un art. Ma main sait ce que ma tête a oublié.",
+      "Regarde ces éclats à mes pieds : chacun a raté quelque chose de mieux.",
+      "Un bon silex, on le reconnaît au bruit qu'il fait quand on le tape. Écoute…",
+      "Mon père me tapait sur les doigts quand je frappais mal. Maintenant, je ne rate plus.",
+    ] },
 
   pecheur: { mood: "neutre",
     bubble: "Assis, silencieux, patient. La rivière donne à qui sait attendre.",
-    say: "Le pêcheur du gué. La patience comme technique — un savoir sans mots." },
+    say: "Le pêcheur du gué. La patience comme technique — un savoir sans mots.",
+    chitchat: [
+      "…",
+      "Le poisson ne parle pas — mais il écoute très bien. C'est nous qui devons nous taire.",
+      "Assis là depuis l'aube. Deux truites. Ce sera assez pour ce soir.",
+      "L'eau descend plus vite aujourd'hui. Les truites remontent. C'est bon signe.",
+    ] },
 
   aine: { mood: "neutre",
     bubble: "D'ici, on voit tout. Le troupeau au sud, l'orage à l'ouest. On garde l'œil, on prévient le clan.",
-    say: "L'aîné en observation sur la crête. Un « poste-relais » avant l'invention du télégraphe." },
+    say: "L'aîné en observation sur la crête. Un « poste-relais » avant l'invention du télégraphe.",
+    chitchat: [
+      "L'orage viendra du nord d'ici deux jours. Je le sens dans mes vieux os.",
+      "Les bisons descendent la vallée à la même saison, chaque année. Toujours la même piste.",
+      "D'ici, on voit tout. Sauf ce qu'on cherche vraiment.",
+      "J'ai passé plus de journées ici que dans ma propre grotte. Et je ne m'en lasse pas.",
+    ] },
 
   cairn: { mood: "neutre",
     bubble: "Un petit tas de pierres empilées — laissé par les chasseurs qui sont passés ici. Un message très simple : « quelqu'un est venu ». Ancêtre du panneau routier.",
