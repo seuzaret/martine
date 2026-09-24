@@ -458,7 +458,7 @@ function SlideNight({ onNext }) {
 function SlideMessage({ onNext }) {
   return (
     <div style={{ animation: 'fadeIn 0.8s ease-out', width: '100%' }}>
-      <svg viewBox="0 0 800 500" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '62vh' }}>
+      <svg viewBox="0 0 800 500" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
         <defs><radialGradient id="s2-halo" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#3a80c8" stopOpacity="0.4" /><stop offset="100%" stopColor="#3a80c8" stopOpacity="0" /></radialGradient></defs>
         <rect width="800" height="500" fill="#050810" />
         <circle cx="400" cy="250" r="300" fill="url(#s2-halo)" />
@@ -876,7 +876,7 @@ function SlideRules({ onNext }) {
       {/* --- ÉTAPE CHECK-IN : MARTINE demande si tout est clair --- */}
       {isCheckin && (
         <>
-          <svg viewBox="0 0 800 340" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '46vh' }}>
+          <svg viewBox="0 0 800 340" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '60vh' }}>
             <defs>
               <linearGradient id="s4b-cabin2" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#0a1a2a" />
@@ -950,7 +950,7 @@ function SlideRules({ onNext }) {
       {/* --- ÉTAPES 0..3 : LES RÈGLES --- */}
       {!isCheckin && (
         <>
-          <svg viewBox="0 0 800 520" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '58vh' }}>
+          <svg viewBox="0 0 800 520" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
             <defs>
               <linearGradient id="s4b-cabin3" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#0a1a2a" />
