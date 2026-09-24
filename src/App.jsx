@@ -652,10 +652,12 @@ export default function App() {
       return;
     }
     let bubbleText = act.bubble, sayText = act.say, mood = act.mood;
+    let stepMatched = false;
     if (step && step.perso === name) {
       bubbleText = step.bubble ?? act.bubble;
       sayText = step.say ?? act.say;
       mood = step.mood ?? act.mood;
+      stepMatched = true;
       if (!step.attend) {
         setQuete((q) => q + 1);
         /* une étape peut OCTROYER un drapeau en s'achevant (ex. l'accord
@@ -663,6 +665,14 @@ export default function App() {
         if (step.grant) grantFlag(step.grant);
         if (step.suite) setTimeout(() => say(`➜ ${step.suite}`), 1400);
       }
+    }
+    /* BANALITÉS ALÉATOIRES (jeu 1) : quand on reparle à un PNJ qui n'est
+       PAS son tour dans la quête, on tire une réplique de son pool
+       `chitchat` au hasard. MARTINE reste silencieuse pendant ces
+       échanges anodins (elle a mieux à faire). */
+    if (mode === "jeu1" && !stepMatched && Array.isArray(act.chitchat) && act.chitchat.length > 0) {
+      bubbleText = act.chitchat[Math.floor(Math.random() * act.chitchat.length)];
+      sayText = null;
     }
     /* MODE JEU 2 : la variante du personnage prime en toute fin. Deux
        schemas supportes :
