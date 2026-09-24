@@ -667,6 +667,7 @@ export default function App() {
       }
     }
     /* BANALITÉS ALÉATOIRES (jeu 1) : quand on reparle à un PNJ qui n'est
+<<<<<<< HEAD
        PAS son tour dans la quête, on peut :
        - lui montrer UNE FOIS un mini-dialogue à choix (`chatOnce`) pour
          du contact plus riche (question + 2-3 réponses, flavor pur) ;
@@ -684,6 +685,14 @@ export default function App() {
         bubbleText = act.chitchat[Math.floor(Math.random() * act.chitchat.length)];
         sayText = null;
       }
+=======
+       PAS son tour dans la quête, on tire une réplique de son pool
+       `chitchat` au hasard. MARTINE reste silencieuse pendant ces
+       échanges anodins (elle a mieux à faire). */
+    if (mode === "jeu1" && !stepMatched && Array.isArray(act.chitchat) && act.chitchat.length > 0) {
+      bubbleText = act.chitchat[Math.floor(Math.random() * act.chitchat.length)];
+      sayText = null;
+>>>>>>> origin/main
     }
     /* MODE JEU 2 : la variante du personnage prime en toute fin. Deux
        schemas supportes :
