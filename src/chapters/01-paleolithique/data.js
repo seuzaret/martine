@@ -232,7 +232,7 @@ const FAIL_LINES = [
 /* Introduction de MARTINE au lancement du chapitre */
 const INTRO = [
   "◈ Atterrissage en −18 000. Bienvenue au Paléolithique, chronaute. Tu es le premier humain de ton siècle à poser le pied ici.",
-  "Regarde autour de toi : ce clan te connaît déjà — Al3x1a est passée avant toi. Gagne leur confiance, aide chacun à laisser sa trace : elles remplissent ma jauge, à droite.",
+  "Regarde autour de toi : ce clan m'a déjà croisée — un autre chronaute est passé avant toi. Gagne leur confiance, aide chacun à laisser sa trace : elles remplissent ma jauge, à droite.",
   "Explore avec ‹ ›, touche ce qui t'intrigue, et va saluer Raya, le chef, au campement — c'est en parlant aux gens qu'on découvre qui attend quelque chose de toi.",
 ];
 

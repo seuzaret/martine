@@ -18,7 +18,7 @@ import { useDrag } from "./DragDrop.jsx";
    (voir App.jsx) : la besace reste courte.
    ============================================================ */
 
-export function InventoryBar({ items, inv, shake, vertical = false, mode = "jeu1", phoneCount = 0, onOpenPhone = null }) {
+export function InventoryBar({ items, inv, shake, vertical = false, mode = "jeu1" }) {
   const { dragId, hover, selected, dragProps } = useDrag();
   /* SECURITE : on ne peint que les objets qui existent VRAIMENT dans les
      items du chapitre courant. Sinon quand le sac contient un id d'un
@@ -44,46 +44,6 @@ export function InventoryBar({ items, inv, shake, vertical = false, mode = "jeu1
     if (e.key === suivant) e.currentTarget.nextElementSibling?.focus();
     if (e.key === precedent) e.currentTarget.previousElementSibling?.focus();
   };
-
-  /* Bouton téléphone : objet permanent (donné par Al3x1a), toujours en
-     tête de sac quand onOpenPhone est fourni. Pulse en bleu + pastille
-     rouge quand phoneCount > 0 (messages non lus). */
-  const PhoneButton = () => (
-    <button onClick={onOpenPhone}
-      title={phoneCount > 0 ? `${phoneCount} message(s) d'Al3x1a — clique pour lire` : "Téléphone (aucun message)"}
-      style={{
-        position: "relative",
-        minWidth: vertical ? 0 : 64, minHeight: 54,
-        width: vertical ? "100%" : undefined,
-        flex: "0 0 auto",
-        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2,
-        background: phoneCount > 0 ? "#0e2a3d" : "#211a11",
-        border: phoneCount > 0 ? "2px solid #7fd8ff" : "1px solid rgba(127,216,255,0.25)",
-        boxShadow: phoneCount > 0
-          ? `${BISEAU}, 0 0 18px rgba(127,216,255,0.7)`
-          : BISEAU,
-        transition: "border-color .2s, box-shadow .2s, background .2s",
-        borderRadius: 8, padding: "5px 9px", color: "#e8eef5",
-        cursor: "pointer",
-        animation: phoneCount > 0 ? "phonePulse 1.2s ease-in-out infinite" : "none",
-      }}>
-      <span style={{ fontSize: 23, lineHeight: 1 }}>📱</span>
-      <span style={{ fontSize: 9.5, textAlign: "center", lineHeight: 1.15, ...(vertical ? {} : { whiteSpace: "nowrap" }) }}>
-        Téléphone
-      </span>
-      {phoneCount > 0 && (
-        <span style={{
-          position: "absolute", top: -4, right: -4,
-          background: "#ff4e5a", color: "#fff", fontSize: 10, fontWeight: 800,
-          minWidth: 18, height: 18, borderRadius: 9, padding: "0 5px",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          border: "1.5px solid #0d1220", fontFamily: "ui-monospace,monospace",
-        }}>
-          {phoneCount}
-        </span>
-      )}
-    </button>
-  );
 
   /* Une pastille d'objet : identique dans les deux dispositions, seule
      sa largeur change (elle remplit la colonne). */
@@ -121,15 +81,13 @@ export function InventoryBar({ items, inv, shake, vertical = false, mode = "jeu1
      Occupe la hauteur restante de la colonne : App épingle le creuset
      juste en dessous, et la liste d'objets défile si besoin. */
   if (vertical) {
-    const pulseGlow = phoneCount > 0 ? ", 0 0 20px rgba(127,216,255,0.45)" : "";
     return (
-      <div style={{ ...CUIR, width: "100%", flex: "1 1 auto", display: "flex", flexDirection: "column", minHeight: 0, borderRadius: 12, padding: 8, WebkitUserSelect: "none", userSelect: "none", animation: shake ? "shake .5s" : "none", boxShadow: `${CUIR.boxShadow}${pulseGlow}` }}>
+      <div style={{ ...CUIR, width: "100%", flex: "1 1 auto", display: "flex", flexDirection: "column", minHeight: 0, borderRadius: 12, padding: 8, WebkitUserSelect: "none", userSelect: "none", animation: shake ? "shake .5s" : "none" }}>
         <div style={{ fontSize: 10, letterSpacing: 1, color: "#c9a877", fontFamily: "ui-monospace,monospace", marginBottom: 6, textAlign: "center" }}>
           🎒 SAC ({inv.length})
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 7, overflowY: "auto", paddingRight: 2, minHeight: 0 }}>
-          {onOpenPhone && <PhoneButton />}
-          {inv.length === 0 && !onOpenPhone ? null : inv.map(Pastille)}
+          {inv.map(Pastille)}
         </div>
         {inv.length === 0 && (
           <div style={{ fontSize: 11.5, color: "#7a879e", fontStyle: "italic", lineHeight: 1.4, textAlign: "center", marginTop: 8 }}>
@@ -156,7 +114,6 @@ export function InventoryBar({ items, inv, shake, vertical = false, mode = "jeu1
           {selected && <span style={{ color: "#ffd166" }}> · {items[selected].name} en main : touche une cible…</span>}
         </div>
         <div style={{ display: "flex", gap: 7, overflowX: "auto", paddingBottom: 4 }}>
-          {onOpenPhone && <PhoneButton />}
           {inv.map(Pastille)}
         </div>
         {inv.length === 0 && (
