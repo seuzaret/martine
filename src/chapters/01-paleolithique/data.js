@@ -50,7 +50,7 @@ const ITEMS = {
   paroi:    { name: "Paroi de la grotte", emoji: "🪨", support: true, desc: "Immense, lisse, à l'abri du vent et de la pluie. Un écran naturel." },
   rocher_taille: { name: "Rocher de taille", emoji: "🪨", support: true, desc: "Un rocher plat, cerné d'éclats de silex : la table de travail d'Ough." },
   feu:      { name: "Feu de camp", emoji: "🔥", support: true, desc: "Chaleur, lumière… et le lieu où le clan se rassemble le soir." },
-  voix:     { name: "Ta voix", emoji: "🗣️", desc: "Le tout premier média. Livré d'origine avec chaque être humain." },
+  voix:     { name: "Le chant", emoji: "🎵", desc: "Un cri, un mot, une mélodie. Le tout premier média — livré d'origine avec chaque être humain." },
   tronc:    { name: "Tronc creux", emoji: "🪵", desc: "Un tronc échoué, évidé par l'eau. Ça résonne quand on tape dessus." },
   /* SUPPORT (support: true) : le cerf ne se ramasse PAS. Il boit à la
      rivière, dans le décor : on lui envoie l'ARC ARMÉ (glisser dessus)
@@ -320,7 +320,7 @@ const ACTIONS = {
     bubble: "Je suis la mémoire du clan. Tout ce qui s'oublie meurt une seconde fois — c'est pour ça que je me souviens.",
     say: "Kyan, la mémoire du clan. Ce qu'elle sait tient dans une seule tête… fragile, non ?",
     chatOnce: {
-      q: "Dis-moi, chronaute : qu'est-ce qui t'importe le plus, dans tout ce que ton peuple garde en mémoire ?",
+      q: "Dis-moi, toi qui viens de si loin : qu'est-ce qui t'importe le plus, dans tout ce que ton peuple garde en mémoire ?",
       choices: [
         { a: "Les histoires. Les récits qu'on se raconte le soir.",
           r: "Bonne réponse. Une histoire tient dans une seule voix, et elle traverse mille générations. C'est le plus vieux trésor du monde." },
