@@ -78,6 +78,10 @@ export function TabletteGame({ onClose, onWin }) {
      changent de place à chaque partie — le bœuf et le blé ne sont
      plus systématiquement en tête. */
   const [palette] = useState(() => shuffle(PALETTE_BASE));
+  /* Ordre des lignes du registre également mélangé, pour ne pas
+     figer le bœuf et le blé en tête. Toutes les lignes partagent
+     le même style : c'est à l'élève de repérer les signes utiles. */
+  const [rowOrder] = useState(() => shuffle(["boeuf", "ble", "poisson", "eau", "homme"]));
   useWinOnce(won, onWin);
 
 
@@ -102,23 +106,18 @@ export function TabletteGame({ onClose, onWin }) {
   const okB = reg.boeuf === OBJECTIF.boeuf, okBle = reg.ble === OBJECTIF.ble;
 
   /* petite ligne de pictogrammes inscrits sur la tablette.
-     À GAUCHE : le MODÈLE à reproduire, en BLEU dans un cadre → pour ne pas
-     le confondre avec les marques qu'on presse (en brun d'argile).
-     `muted` : la ligne est présente mais grisée (signes que le scribe
-     ne compte pas ici, mais qu'il liste quand même à la marge du
-     registre — l'élève doit repérer lesquels lui servent). */
-  const Ligne = ({ type, n, ok, muted = false }) => (
-    <div style={{ display: "flex", alignItems: "center", gap: 7, minHeight: 40, opacity: muted ? 0.42 : 1 }}>
+     Toutes les lignes partagent le MÊME style : c'est à l'élève de
+     repérer les signes utiles parmi les 5 pictogrammes du scribe. */
+  const Ligne = ({ type, n, ok }) => (
+    <div style={{ display: "flex", alignItems: "center", gap: 7, minHeight: 40 }}>
       <div style={{ width: 30, height: 30, flex: "0 0 auto", padding: 3, border: "1px dashed #3a6a9a", borderRadius: 6, background: "rgba(47,106,154,0.12)" }}><Picto type={type} stroke="#2f6a9a" sw={3} /></div>
       <span style={{ color: "#3a6a9a", fontFamily: "ui-monospace,monospace", fontSize: 15, fontWeight: 700, flex: "0 0 auto" }}>→</span>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 3, flex: 1, minHeight: 20 }}>
-        {muted ? (
-          <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, color: "#3a2614", fontStyle: "italic" }}>—</span>
-        ) : Array.from({ length: n }).map((_, i) => (
+        {Array.from({ length: n }).map((_, i) => (
           <div key={i} style={{ width: 22, height: 22, animation: "popIn .25s ease-out" }}><Picto type={type} stroke="#3a2614" sw={3.4} /></div>
         ))}
       </div>
-      <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 13, fontWeight: 700, color: ok ? "#2e7d4a" : "#8a5a2e" }}>{muted ? "" : n}</span>
+      <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 13, fontWeight: 700, color: ok ? "#2e7d4a" : "#8a5a2e" }}>{n}</span>
     </div>
   );
 
@@ -143,14 +142,11 @@ export function TabletteGame({ onClose, onWin }) {
                   <div style={{ width: 30, height: 30 }}><Picto type="etable" stroke="#2f6a9a" sw={3} /></div>
                   <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 12, color: "#3a6a9a", fontWeight: 700 }}>é — l'étable</span>
                 </div>
-                <Ligne type="boeuf" n={reg.boeuf} ok={okB} />
-                <Ligne type="ble" n={reg.ble} ok={okBle} />
-                {/* Les autres signes existent dans le registre mais rien
-                   d'entré ici — le scribe doit les repérer et les laisser
-                   vides s'ils n'ont rien vu passer. */}
-                <Ligne type="poisson" muted />
-                <Ligne type="eau" muted />
-                <Ligne type="homme" muted />
+                {rowOrder.map((type) => {
+                  const n = reg[type] || 0;
+                  const ok = type === "boeuf" ? okB : type === "ble" ? okBle : false;
+                  return <Ligne key={type} type={type} n={n} ok={ok} />;
+                })}
               </div>
 
               {/* LA PALETTE de signes */}

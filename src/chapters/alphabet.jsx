@@ -223,21 +223,28 @@ export function AlphabetGame({ onClose, onWin }) {
           Clique-les <strong style={{ color: "#ffd166" }}>dans le bon ordre</strong> pour épeler M · A · R · T · I · N · E.
         </p>
 
-        {/* Progression : les 7 emplacements de MARTINE, remplis un à un. */}
+        {/* Progression — le CARTOUCHE : les 7 emplacements de MARTINE.
+           Une fois une lettre trouvée, on y voit le PICTO PHÉNICIEN
+           correspondant (le mot MARTINE s'écrit ici comme sur une
+           tablette antique). La tuile, elle, montre la lettre latine. */}
         <div style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 14 }}>
           {TARGET.split("").map((ch, idx) => {
             const filled = idx < used.length;
             const active = idx === used.length && !done;
+            const info = filled ? LETTERS.find((x) => x.l === ch) : null;
             return (
               <div key={idx} style={{
-                width: 42, height: 52, borderRadius: 8,
+                width: 46, height: 56, borderRadius: 8,
                 border: `2px solid ${filled ? "#5eff9e" : active ? "#ffd166" : "#2a3648"}`,
                 background: filled ? "rgba(94,255,158,0.10)" : active ? "rgba(255,209,102,0.08)" : "#101827",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontFamily: "'Cinzel', 'Trajan Pro', Georgia, serif", fontWeight: 700, fontSize: 26,
-                color: filled ? "#5eff9e" : active ? "#ffd166" : "#3a4048",
-                transition: "all .3s" }}>
-                {filled ? ch : ""}
+                padding: 4, transition: "all .3s" }}>
+                {info ? (
+                  <div style={{ width: "100%", height: "100%",
+                    transform: info.rotate ? `rotate(${info.rotate}deg)` : "none" }}>
+                    <info.Picto />
+                  </div>
+                ) : null}
               </div>
             );
           })}
