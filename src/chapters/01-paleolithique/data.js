@@ -253,18 +253,6 @@ const ACTIONS = {
   ana: { mood: "content",
     bubble: "Alors, comment trouves-tu le clan ? Prends ton temps, regarde tout… Et si tu es perdu, parle à chacun : quelqu'un a toujours besoin de toi quelque part.",
     say: "Ana. C'est elle qui t'a ouvert les portes du clan — reste poli, on est invités.",
-    /* Un mini-dialogue à choix (une fois par partie), flavor pur. */
-    chatOnce: {
-      q: "Ah, tu tombes bien ! Tu peux tenir Ila deux minutes ? Faut que je surveille la marmite avant qu'elle finisse en charbon.",
-      choices: [
-        { a: "Euh… d'accord, mais elle bave un peu, non ?",
-          r: "Elle bave sur tout le monde, c'est un signe. Tu es des nôtres, maintenant." },
-        { a: "Je préfère la marmite, si tu veux bien.",
-          r: "Malin. Cela dit, tenir un feu c'est moins bruyant qu'un bébé, tu me diras des nouvelles." },
-        { a: "Comment on tient un bébé du Paléolithique ?",
-          r: "Pareil qu'un du tien, j'imagine ! Bras replié, tête calée, et on lui parle doucement. Voilà — tu vois, elle a arrêté de pleurer." },
-      ],
-    },
     chitchat: [
       "Ma petite Ila commence à nommer les choses. Hier, elle a dit « feu ». Ça, c'est un vrai jour !",
       "J'ai vu des traces d'ours ce matin, au sud. On restera à l'est pour ramasser.",
@@ -320,14 +308,14 @@ const ACTIONS = {
     bubble: "Je suis la mémoire du clan. Tout ce qui s'oublie meurt une seconde fois — c'est pour ça que je me souviens.",
     say: "Kyan, la mémoire du clan. Ce qu'elle sait tient dans une seule tête… fragile, non ?",
     chatOnce: {
-      q: "Approche un peu. J'apprends une berceuse à la petite et je bloque sur un mot. « L'oiseau… et retourne au… ». Aide-moi, va.",
+      q: "Ah, tu tombes bien ! Demain je monte peindre sur la Grande Paroi et je bloque : un animal me manque, quelque chose que le clan n'a pas encore. À ton avis, lequel ?",
       choices: [
-        { a: "L'oiseau chante et retourne au nid ?",
-          r: "Oui ! Chante et nid. Merci — sinon ce mot serait tombé dans le trou de ma mémoire. Ça arrive, aux vieilles." },
-        { a: "L'oiseau plane et retourne au ciel ?",
-          r: "Plane et ciel… j'aime bien. Je tenterai les deux versions ce soir, la petite tranchera." },
-        { a: "Aucune idée, désolé.",
-          r: "Pas grave. Ça reviendra à trois heures du matin, comme d'habitude. Les vieux savoirs se cachent la nuit, c'est bien connu." },
+        { a: "Un cheval sauvage — ceux qui galopent dans la plaine.",
+          r: "Un cheval… personne n'a osé ici. Tu me donnes une drôle d'idée. Merci, voyageur — je vais essayer." },
+        { a: "Un mammouth — impressionnant, personne ne l'oubliera.",
+          r: "Ah, le mammouth ! Grand chantier. Une semaine et beaucoup d'ocre. Mais j'aime les défis — c'est peut-être le bon jour pour commencer." },
+        { a: "Un poisson — le pêcheur en serait fier.",
+          r: "Un poisson ! Ha ! Personne n'y pense jamais. Le vieux du gué en serait tout ému. Tu es plein d'idées, toi." },
       ],
     },
     chitchat: [
