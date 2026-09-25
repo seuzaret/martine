@@ -43,7 +43,7 @@ function Picto({ type, stroke = "#e8dcc0", sw = 3.4 }) {
   }
 }
 
-const PALETTE = [
+const PALETTE_BASE = [
   { type: "boeuf", nom: "gud", sens: "le bœuf", cible: "boeuf" },
   { type: "ble", nom: "še", sens: "le grain", cible: "ble" },
   { type: "etable", nom: "é", sens: "la maison", cible: null },
@@ -51,6 +51,18 @@ const PALETTE = [
   { type: "eau", nom: "a", sens: "l'eau", cible: null },
   { type: "homme", nom: "lu", sens: "l'homme", cible: null },
 ];
+
+/* Mélange stable au montage : on ne veut pas que bœuf et blé soient
+   toujours en tête de palette — l'élève doit repérer les bons signes
+   parmi tous les pictogrammes sumériens connus. */
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 const RATE = [
   "Ça, ce n'est pas dans l'étable ! Le scribe note ce qu'il VOIT entrer.",
@@ -62,6 +74,10 @@ export function TabletteGame({ onClose, onWin }) {
   const [reg, setReg] = useState({ boeuf: 0, ble: 0 }); // ce qui est inscrit
   const [flash, setFlash] = useState(null);   // message d'erreur passager
   const [won, setWon] = useState(false);
+  /* Palette mélangée une fois pour la session. Les pictogrammes
+     changent de place à chaque partie — le bœuf et le blé ne sont
+     plus systématiquement en tête. */
+  const [palette] = useState(() => shuffle(PALETTE_BASE));
   useWinOnce(won, onWin);
 
 
@@ -87,17 +103,22 @@ export function TabletteGame({ onClose, onWin }) {
 
   /* petite ligne de pictogrammes inscrits sur la tablette.
      À GAUCHE : le MODÈLE à reproduire, en BLEU dans un cadre → pour ne pas
-     le confondre avec les marques qu'on presse (en brun d'argile). */
-  const Ligne = ({ type, n, ok }) => (
-    <div style={{ display: "flex", alignItems: "center", gap: 7, minHeight: 40 }}>
+     le confondre avec les marques qu'on presse (en brun d'argile).
+     `muted` : la ligne est présente mais grisée (signes que le scribe
+     ne compte pas ici, mais qu'il liste quand même à la marge du
+     registre — l'élève doit repérer lesquels lui servent). */
+  const Ligne = ({ type, n, ok, muted = false }) => (
+    <div style={{ display: "flex", alignItems: "center", gap: 7, minHeight: 40, opacity: muted ? 0.42 : 1 }}>
       <div style={{ width: 30, height: 30, flex: "0 0 auto", padding: 3, border: "1px dashed #3a6a9a", borderRadius: 6, background: "rgba(47,106,154,0.12)" }}><Picto type={type} stroke="#2f6a9a" sw={3} /></div>
       <span style={{ color: "#3a6a9a", fontFamily: "ui-monospace,monospace", fontSize: 15, fontWeight: 700, flex: "0 0 auto" }}>→</span>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 3, flex: 1 }}>
-        {Array.from({ length: n }).map((_, i) => (
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 3, flex: 1, minHeight: 20 }}>
+        {muted ? (
+          <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, color: "#3a2614", fontStyle: "italic" }}>—</span>
+        ) : Array.from({ length: n }).map((_, i) => (
           <div key={i} style={{ width: 22, height: 22, animation: "popIn .25s ease-out" }}><Picto type={type} stroke="#3a2614" sw={3.4} /></div>
         ))}
       </div>
-      <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 13, fontWeight: 700, color: ok ? "#2e7d4a" : "#8a5a2e" }}>{n}</span>
+      <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 13, fontWeight: 700, color: ok ? "#2e7d4a" : "#8a5a2e" }}>{muted ? "" : n}</span>
     </div>
   );
 
@@ -124,13 +145,19 @@ export function TabletteGame({ onClose, onWin }) {
                 </div>
                 <Ligne type="boeuf" n={reg.boeuf} ok={okB} />
                 <Ligne type="ble" n={reg.ble} ok={okBle} />
+                {/* Les autres signes existent dans le registre mais rien
+                   d'entré ici — le scribe doit les repérer et les laisser
+                   vides s'ils n'ont rien vu passer. */}
+                <Ligne type="poisson" muted />
+                <Ligne type="eau" muted />
+                <Ligne type="homme" muted />
               </div>
 
               {/* LA PALETTE de signes */}
               <div style={{ flex: "1 1 240px" }}>
                 <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10.5, letterSpacing: 1, color: "#8fa3bd", marginBottom: 6 }}>LES SIGNES — touche pour inscrire</div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 7 }}>
-                  {PALETTE.map((p) => (
+                  {palette.map((p) => (
                     <button key={p.type} onClick={() => presser(p)}
                       style={{ background: "#1a130c", border: "1px solid #3a2c1c", borderRadius: 10, padding: "7px 4px 5px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
                       <div style={{ width: 40, height: 40 }}><Picto type={p.type} /></div>
