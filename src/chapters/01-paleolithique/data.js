@@ -353,7 +353,7 @@ const ACTIONS = {
       "Frapper au bon angle, au bon moment. C'est tout un art. Ma main sait ce que ma tête a oublié.",
       "Regarde ces éclats à mes pieds : chacun a raté quelque chose de mieux.",
       "Un bon silex, on le reconnaît au bruit qu'il fait quand on le tape. Écoute…",
-      "Mon père me tapait sur les doigts quand je frappais mal. Maintenant, je ne rate plus.",
+      "Ma grand-mère m'a montré. Je fais pareil avec les petits, main sur la main. C'est comme ça qu'on apprend.",
     ] },
 
   pecheur: { mood: "neutre",
