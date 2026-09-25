@@ -35,6 +35,7 @@ import { CineGame } from "./chapters/xixe-cine.jsx";
 import { TsfReglageGame } from "./chapters/xxe-tsf-reglage.jsx";
 import { CassetteGame } from "./chapters/xxe-cassette.jsx";
 import { GraverCdGame } from "./chapters/xxe-graver-cd.jsx";
+import { FaireLaUneGame } from "./chapters/xxe-faire-la-une.jsx";
 import { EniacDebugGame } from "./chapters/xxe-eniac-debug.jsx";
 import { TailleSilexGame } from "./chapters/paleo-taille-silex.jsx";
 import Mediadex from "./engine/Mediadex.jsx";
@@ -2242,6 +2243,10 @@ export default function App() {
 
       {modal?.type === "graver_cd" && (
         <GraverCdGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_cd")} />
+      )}
+
+      {modal?.type === "faire_la_une" && (
+        <FaireLaUneGame onClose={() => setModal(null)} onWin={() => grantMessage("msg_ligneEditoriale")} />
       )}
 
       {modal?.type === "eniac_debug" && (

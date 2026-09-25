@@ -15,6 +15,7 @@
    ============================================================ */
 
 import SceneSalon1969 from "./scenes/SceneSalon1969.jsx";
+import SceneKiosque1980 from "./scenes/SceneKiosque1980.jsx";
 import SceneChambre1985 from "./scenes/SceneChambre1985.jsx";
 import SceneBureau1990 from "./scenes/SceneBureau1990.jsx";
 import CarteMedias from "./scenes/CarteMedias.jsx";
@@ -64,6 +65,7 @@ const ITEMS = {
    ------------------------------------------------------------ */
 const SCENES = [
   { id: "salon69",  name: "Salon, 21 juillet 1969, 3h56 du matin", Component: SceneSalon1969,   nextWhen: ["msg_tv_lune"] },
+  { id: "kiosque",  name: "Kiosque à journaux, années 80",          Component: SceneKiosque1980, nextWhen: ["msg_ligneEditoriale"] },
   { id: "chambre",  name: "Chambre d'ado, 1985",                    Component: SceneChambre1985, nextWhen: ["msg_cassette"] },
   { id: "bureau",   name: "Bureau, 1990",                            Component: SceneBureau1990 },
 ];
@@ -107,6 +109,10 @@ const MESSAGES = {
   msg_cassette: { title: "Enregistrer une cassette", emoji: "📼",
     jauges: { vitesse: 3, portee: 3, capacite: 3, durabilite: 2 },
     fact: "Cassette audio (Philips, 1963) puis magnétoscope VHS (JVC, 1976) : pour la PREMIÈRE FOIS de l'Histoire, chaque foyer peut ENREGISTRER chez soi la radio, la télé, la musique des copains — puis la copier, la prêter, l'échanger. L'industrie du disque crie déjà au « piratage » (le débat Napster de la fin des années 90 commence là). Mais attention : la bande magnétique se démagnétise avec le temps, se casse, s'aimante par erreur (un simple aimant peut tout effacer). Des archives entières de radio et de télé ont été perdues : les bandes étaient trop chères, on effaçait pour ré-enregistrer par-dessus. Un support qui EXISTE ne garantit pas la SURVIE du message." },
+  msg_ligneEditoriale: { title: "La ligne éditoriale", emoji: "📰",
+    jauges: { vitesse: 3, portee: 4, capacite: 3, durabilite: 2 },
+    fact: "Un kiosque à journaux dans les années 80 propose des DIZAINES de titres — mais chaque journal, chaque magazine fait ses CHOIX : quelles dépêches il retient, quels titres il met en une, sur quel ton il en parle. Deux quotidiens le même matin, avec les MÊMES dépêches AFP, produisent des Unes différentes. C'est ça, une « ligne éditoriale » : un point de vue assumé sur ce qui compte. Il n'y a pas de journal neutre — même le plus « sérieux » sélectionne. Savoir lire un journal, c'est savoir de quel journal il s'agit : qui l'écrit, pour qui, avec quel angle. Cette question ne s'est pas éteinte : les mêmes choix se font aujourd'hui sur un fil d'actu ou un feed de réseau social — sauf qu'un algorithme les fait à la place du kioskier." },
+
   msg_cd: { title: "CD-Rom & disque optique", emoji: "💿",
     jauges: { vitesse: 3, portee: 4, capacite: 4, durabilite: 2 },
     fact: "CD audio (Philips + Sony, 1982) puis CD-Rom pour l'ordinateur (1985) : un laser lit des creux minuscules gravés sur une couche métallique sous du plastique. On vend le CD comme un support « inaltérable » qui durerait à jamais. La réalité, 30 ans plus tard : beaucoup de CD gravés dans les années 90 sont ILLISIBLES — la couche métallique s'oxyde et se décolle, on appelle ça la « maladie du disque ». Le support censé tout garder ne tient parfois même pas 20 ans. Prochaine étape (chapitre suivant) : on verra ce que devient une disquette héritée d'ici, 30 ans plus tard…" },
@@ -169,6 +175,34 @@ const ACTIONS = {
   platine_rec: { modal: "cassette", needsFlag: "cassette_chargee",
     needMsg: "Il faut d'abord glisser une cassette dans la platine." },
 
+  robert: { mood: "content",
+    bubble: "Robert, kioskier de père en fils depuis 1962 ! Ce matin j'ai reçu six dépêches AFP tout juste sorties du télex. Tu veux bien m'aider à choisir les trois à mettre en Une de mon présentoir ? Ce que tu choisis fera ma journée — et celle de mes clients.",
+    say: "Robert : au kiosque, personne n'est neutre. Choisir 3 dépêches sur 6, c'est déjà éditer un journal.",
+    chitchat: [
+      "Ma cliente préférée, c'est la petite Mathilde, 8 ans. Elle vient chercher Pif tous les mercredis. Elle rate jamais.",
+      "Un jour je ferme boutique, je vais dans le Sud. Mais qui va vendre le journal aux gens du quartier, hein ? Alors je reste.",
+      "Ma fille dit que dans le futur, on lira les journaux sur des petits écrans. Sans papier ! Je veux bien voir ça de mon vivant.",
+    ] },
+
+  faire_la_une: { modal: "faire_la_une",
+    needMsg: "Approche-toi du kiosque et clique dessus pour composer la Une avec Robert." },
+
+  cadre_presse: { mood: "neutre",
+    bubble: "Un Monde et un ticket de métro, s'il vous plaît. Vite, je suis pressé.",
+    say: "Un cadre du quartier. Il achète Le Monde tous les matins depuis douze ans — sans jamais le lire dans le métro.",
+    chitchat: [
+      "Toujours Le Monde. Toujours. Depuis que je suis étudiant.",
+      "J'ai essayé Libé une fois. Trop de couleur pour moi.",
+    ] },
+
+  lyceenne: { mood: "content",
+    bubble: "Star Hebdo est arrivé ! Il y a Sabrina en couverture. Ma mère va râler mais je le lirai sous les couvertures.",
+    say: "Une lycéenne devant le mag people. Achat plaisir, achat furtif — la moitié du kiosque vit de ces achats-là.",
+    chitchat: [
+      "L'année prochaine je passe au Nouvel Obs. Enfin, je crois. C'est ma sœur qui le lit, elle est prof.",
+      "Tu savais qu'ils inventent la moitié des trucs sur les stars ? Ma mère me l'a dit.",
+    ] },
+
   celine: { mood: "neutre",
     bubble: "Céline, 25 ans, cadre en informatique. On vient de me livrer un GRAVEUR de CD-Rom au bureau — la classe ! Aide-moi à graver mon premier disque. On dit qu'un CD dure 100 ans… on verra bien.",
     say: "Céline : le CD-Rom, censé être « inaltérable ». Sauf que 30 ans plus tard, la couche métallique se décolle.",
@@ -204,7 +238,7 @@ const chapter = {
   finTitre: "SAUT TEMPOREL RÉUSSI",
   finTexte: "« Circuits rechargés à {pct} %. Vingt ans, trois révolutions : le direct mondial, l'enregistrement à domicile, la gravure numérique. Chaque support s'est vendu comme « inaltérable ». Regarde ta frise : la durabilité continue de plonger. Prochain saut : ton époque. Et j'ai gardé la disquette de Julien, on va voir ce qu'elle vaut aujourd'hui… » — MARTINE",
 
-  required: 3,
+  required: 4,
   startScene: 0,
   destination: "XXIe SIÈCLE",
   linear: true,
