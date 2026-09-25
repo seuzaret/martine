@@ -179,9 +179,9 @@ const ACTIONS = {
     bubble: "Robert, kioskier de père en fils depuis 1962 ! Ce matin j'ai reçu six dépêches AFP tout juste sorties du télex. Tu veux bien m'aider à choisir les trois à mettre en Une de mon présentoir ? Ce que tu choisis fera ma journée — et celle de mes clients.",
     say: "Robert : au kiosque, personne n'est neutre. Choisir 3 dépêches sur 6, c'est déjà éditer un journal.",
     chitchat: [
-      "Ma cliente préférée, c'est la petite Mathilde, 8 ans. Elle vient chercher Pif tous les mercredis. Elle rate jamais.",
       "Un jour je ferme boutique, je vais dans le Sud. Mais qui va vendre le journal aux gens du quartier, hein ? Alors je reste.",
       "Ma fille dit que dans le futur, on lira les journaux sur des petits écrans. Sans papier ! Je veux bien voir ça de mon vivant.",
+      "Trente ans que je suis là. J'ai vu passer trois présidents, deux monnaies, et toute une génération de lecteurs.",
     ] },
 
   faire_la_une: { modal: "faire_la_une",

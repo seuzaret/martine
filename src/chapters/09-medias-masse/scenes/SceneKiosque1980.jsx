@@ -132,8 +132,9 @@ export default function SceneKiosque1980({ collect, action, reveal, made = [], i
           })
         ))}
 
-        {/* Comptoir + Robert le kioskier passe la tête par la fenêtre latérale gauche */}
-        <g transform="translate(255,300)">
+        {/* Comptoir + Robert le kioskier passe la tête par la fenêtre latérale gauche
+           (dimensionné plus petit pour ne pas éclipser le kiosque) */}
+        <g transform="translate(276,306) scale(0.7)">
           {/* petite ouverture de service, côté gauche du kiosque */}
           <rect x="70" y="-20" width="16" height="60" fill="#1a2a1e" stroke="#0e1a10" strokeWidth="1" />
           {/* tête et buste de Robert */}
@@ -234,7 +235,7 @@ export default function SceneKiosque1980({ collect, action, reveal, made = [], i
       {/* zones cliquables */}
       {/* Le kioskier — ouvre le mini-jeu « Fais la Une » (tant qu'il n'est pas fait) */}
       {!made.includes("msg_ligneEditoriale") && mode !== "jeu2" && (
-        <Hotspot cx={295} cy={310} r={38} label="parler à Robert, le kioskier" reveal={reveal} onClick={() => action("robert")} />
+        <Hotspot cx={312} cy={330} r={28} label="parler à Robert, le kioskier" reveal={reveal} onClick={() => action("robert")} />
       )}
       {/* Bouton mini-jeu direct sur le présentoir (accessible aussi via Robert) */}
       {!made.includes("msg_ligneEditoriale") && mode !== "jeu2" && (
