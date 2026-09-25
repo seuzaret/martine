@@ -690,7 +690,19 @@ export default function App() {
         sayText = null;
         grantFlag(chatFlag);
       } else if (Array.isArray(act.chitchat) && act.chitchat.length > 0) {
-        bubbleText = act.chitchat[Math.floor(Math.random() * act.chitchat.length)];
+        /* On tire UN SEUL index de chitchat par PNJ et par partie
+           (mémorisé dans les flags du chapitre), pour que chaque
+           relance donne un autre parfum de banalité — plus de
+           rejouabilité, mais cohérence en session. Les flags se
+           réinitialisent au début d'un nouveau chapitre / d'une
+           nouvelle partie. */
+        const idxKey = `chitidx_${name}`;
+        let idx = flags[idxKey];
+        if (typeof idx !== "number") {
+          idx = Math.floor(Math.random() * act.chitchat.length);
+          setFlags((f) => ({ ...f, [idxKey]: idx }));
+        }
+        bubbleText = act.chitchat[idx];
         sayText = null;
       }
     }
