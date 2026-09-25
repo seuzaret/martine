@@ -147,7 +147,11 @@ export default function ScenePhenicie({ collect, action, reveal, made = [], mode
       {/* Hotspot pour parler à Assurbanipal — visible tant qu'on n'a pas
           l'alphabet, caché en jeu 2 (l'enquête Al3x1A ne le concerne pas). */}
       {!made.includes("msg_alphabet") && mode !== "jeu2" && (
+<<<<<<< HEAD
         <Hotspot cx={560} cy={478} r={34} label="parler à Assurbanipal" reveal={reveal} onClick={() => action("assurbanipal")} />
+=======
+        <Hotspot cx={572} cy={424} r={28} label="parler à Assurbanipal" reveal={reveal} onClick={() => action("assurbanipal")} />
+>>>>>>> origin/main
       )}
 
       {/* la tablette : APPRENDRE l'alphabet (mini-jeu) → on gagne les 22 signes */}
