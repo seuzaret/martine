@@ -194,16 +194,31 @@ const ACTIONS = {
 
   guna: { mood: "neutre",
     bubble: "Je garde cette porte jour et nuit. Personne n'entre sans l'accord du roi.",
-    say: "Guna, le garde. Peu causant, mais c'est lui qui ouvre la porte de la cité." },
+    say: "Guna, le garde. Peu causant, mais c'est lui qui ouvre la porte de la cité.",
+    chitchat: [
+      "Je vois passer tout le monde. Personne ne me remarque, moi. Ça m'arrange plutôt.",
+      "Un jour, un chien s'est faufilé sous la porte. J'ai dû lui courir après devant toute la cité. On en rit encore.",
+      "Il fait chaud avec ce casque. Sans casque, on a moins l'air sérieux, tu vois le problème ?",
+    ] },
   /* La porte elle-même : clic direct vers la salle du trône (scène 1). */
   porte_cite: { mood: "content", goto: 1,
     say: "Les battants s'écartent en grinçant. La cité de Tannis s'ouvre à nous." },
   tannis: { mood: "neutre",
     bubble: "Une cité, ça se mérite : du grain engrangé, des impôts, des murs. Rends-toi utile, étranger.",
-    say: "Le roi Tannis. Un chef, des impôts, une cité fortifiée : au Néolithique, l'humanité s'organise pour de bon." },
+    say: "Le roi Tannis. Un chef, des impôts, une cité fortifiée : au Néolithique, l'humanité s'organise pour de bon.",
+    chitchat: [
+      "Diriger, c'est écouter tout le monde et décider seul. Éprouvant.",
+      "Mes greniers sont pleins, ma cité prospère. Cela dit, il pleut trop cet été.",
+      "Les rois de la région ont des couronnes. Moi j'ai un bâton bien poli. Simple, efficace, et je ne le perds jamais.",
+    ] },
   jala: { mood: "content",
     bubble: "Nos poteries sont les plus belles du pays. Chaque motif dit : « ça vient de chez nous ».",
     say: "Jala, la potière. Ses motifs sont la « marque » de la cité — l'ancêtre du logo.",
+    chitchat: [
+      "Regarde la spirale sur ce pot : c'est notre marque à nous. Toutes mes pièces la portent, on nous reconnaît de loin.",
+      "L'argile sèche trop vite au soleil. Je travaille surtout à l'ombre, avec les mouches pour compagnie.",
+      "Ma fille tourne déjà mieux que moi à son âge. Un jour, elle prendra ma place — et elle changera le motif, je le sens.",
+    ],
     jeu2Variants: [
       { bubble: "Une chronaute a filé à la porte de la cité, tout en haut. Elle a laissé un signe sur la petite fenêtre noire de la tour de guet.",
         say: "Jala : signe À LA PORTE, sur la fenêtre noire de la tour de guet." },
@@ -214,10 +229,31 @@ const ACTIONS = {
     ] },
   ahmid: { mood: "vexe",
     bubble: "Compter des bêtes de tête, c'est se faire voler à coup sûr. Il me faut mieux.",
-    say: "Ahmid, le marchand. Son problème de comptes va faire naître… l'écriture. Rien que ça." },
+    say: "Ahmid, le marchand. Son problème de comptes va faire naître… l'écriture. Rien que ça.",
+    chitchat: [
+      "Sept vaches partent d'ici, sept vaches doivent arriver là-bas. Sept, pas six.",
+      "Mes hommes sont d'honnêtes filous. Il suffit de leur montrer qu'on compte, et ils redeviennent tout à fait honnêtes.",
+      "La route jusqu'à la cité voisine, trois jours. Trois jours à surveiller le troupeau et surtout les gens.",
+    ] },
   imir: { mood: "neutre",
     bubble: "Nous dressons des pierres pour honorer le roi et les dieux. Elles nous survivront de mille ans.",
     say: "Imir, le prêtre. Le mégalithe : un message monumental, pour l'éternité.",
+    chitchat: [
+      "Je bénis chaque pierre avant qu'on la grave. Sans bénédiction, elle finirait par tomber, c'est bien connu.",
+      "Cette plaine n'avait pas de nom, autrefois. Maintenant les voisins l'appellent « la plaine aux pierres ». C'est déjà quelque chose.",
+      "Un mégalithe bien dressé regarde le ciel pour mille ans. Les dieux aiment ces attentions, et les voyageurs aussi, semble-t-il.",
+    ],
+    chatOnce: {
+      q: "Nous dressons des pierres pour honorer le roi et les dieux. Elles nous survivront de mille ans. Dis-moi, voyageur — tu viens de loin — connais-tu une bonne méthode pour planter ces énormes pierres ?",
+      choices: [
+        { a: "On creuse une fosse penchée et on la bascule dedans avec des cordes.",
+          r: "Une fosse penchée pour l'accueillir… tu parles comme un tailleur. Doka va aimer ton idée." },
+        { a: "On la fait glisser sur des rondins de bois qui roulent.",
+          r: "Faire rouler la pierre sur des troncs ? Astucieux. On tirerait moins fort, et les hommes rentreraient plus tôt chez eux." },
+        { a: "On construit une rampe de terre pour la hisser, puis on retire la terre.",
+          r: "Une pente qu'on efface ensuite… j'aime cette idée. Les dieux auront leur pierre, et les hommes leurs muscles épargnés." },
+      ],
+    },
     jeu2Variants: [
       { bubble: "Une voyageuse aux mains blanches est montée jusqu'à la tour de guet, à la porte de la cité. Elle a marqué la petite fenêtre noire, tout en haut.",
         say: "Imir : trace SUR LA FENÊTRE NOIRE de la tour de guet." },
@@ -228,10 +264,20 @@ const ACTIONS = {
     ] },
   doka: { mood: "neutre",
     bubble: "Le silex, ça casse. Depuis qu'on connaît le métal, plus rien ne m'arrête… si j'en ai.",
-    say: "Doka, le tailleur de pierre. Il lui faut des outils de cuivre, solides." },
+    say: "Doka, le tailleur de pierre. Il lui faut des outils de cuivre, solides.",
+    chitchat: [
+      "Le cuivre rouge, c'est de l'orfèvrerie. Ça se plie, ça se martèle, ça revient. Une révolution, pour nous.",
+      "Un burin bien affûté, ça grave la pierre comme le beurre. Un burin usé, ça fait rebondir. Tu vois la différence.",
+      "Mes ancêtres taillaient les silex pendant des jours. Moi, en une matinée j'ai fait mieux avec le métal. Le progrès, ça change tout.",
+    ] },
   otzi: { mood: "vexe",
     bubble: "Cette mine me ronge les os. Le froid, l'humidité… j'ai mal partout.",
     say: "L'homme des glaces — notre Ötzi. Il cherche des tatouages de soin qui ne s'effacent jamais.",
+    chitchat: [
+      "Aujourd'hui, ce sont les genoux. Hier, c'était le dos. Demain, je ne sais pas encore. Le corps décide, moi je subis.",
+      "Le guérisseur dit que la fumée d'herbes soulage. Elle soulage surtout ses honoraires, je crois.",
+      "Un tatouage bien placé, c'est un remède qui ne s'efface pas. Encore faut-il tomber sur un bon aiguilleur.",
+    ],
     jeu2Variants: [
       { bubble: "Al3x1A ? Elle voulait un tatouage — une petite étoile. Puis elle a filé vers la porte, tout en haut. Elle a marqué la petite fenêtre noire de la tour.",
         say: "Ötzi : marque SUR LA FENÊTRE NOIRE de la tour de guet." },
