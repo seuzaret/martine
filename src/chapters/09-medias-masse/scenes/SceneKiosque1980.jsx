@@ -205,18 +205,94 @@ export default function SceneKiosque1980({ collect, action, reveal, made = [], i
           <text x="0" y="26" textAnchor="middle" fontFamily="Georgia, serif" fontSize="5" fontWeight="800" fill="#c04a70">STAR</text>
         </g>
 
-        {/* petit chien attaché à la grille du kiosque, à droite */}
+        {/* petit chien attaché à la grille du kiosque, à droite —
+           la queue qui remue tranquillement (bascule d'un côté à l'autre) */}
         <g transform="translate(720,392)">
           <ellipse cx="0" cy="14" rx="18" ry="8" fill="#5a4030" />
           <circle cx="14" cy="6" r="7" fill="#5a4030" />
           <ellipse cx="-14" cy="10" rx="6" ry="4" fill="#5a4030" />
-          <path d="M-18 6 Q-18 -2 -12 -2" stroke="#5a4030" strokeWidth="4" fill="none" strokeLinecap="round" />
+          {/* queue animée : rotation périodique autour du point d'attache */}
+          <g style={{ transformOrigin: "-14px 10px", transformBox: "fill-box" }}>
+            <path d="M-18 6 Q-18 -2 -12 -2" stroke="#5a4030" strokeWidth="4" fill="none" strokeLinecap="round">
+              <animateTransform attributeName="transform" attributeType="XML" type="rotate"
+                values="0; -25; 12; -18; 0" keyTimes="0; 0.25; 0.5; 0.75; 1"
+                dur="1.4s" repeatCount="indefinite" />
+            </path>
+          </g>
           {/* laisse */}
           <path d="M14 6 Q10 -20 -10 -30" stroke="#3a2418" strokeWidth="1.5" fill="none" />
           <circle cx="14" cy="6" r="1.5" fill="#c9a54a" />
           {/* museau + œil */}
           <circle cx="18" cy="8" r="1.5" fill="#1a1410" />
           <circle cx="14" cy="4" r="1" fill="#1a1410" />
+        </g>
+      </PLayer>
+
+      {/* ═══ Mobylette Solex qui traverse le trottoir de temps en temps ═══
+         L'icône même des années 80 dans les rues françaises. Elle
+         passe de gauche à droite toutes les 14s, avec un petit
+         panache de fumée bleutée au pot d'échappement. */}
+      <PLayer depth={2}>
+        <g>
+          <animateTransform attributeName="transform" attributeType="XML" type="translate"
+            values="-140,0; 1140,0" dur="14s" begin="2s" repeatCount="indefinite" />
+          {/* fumée du pot d'échappement — traînée qui suit la mobylette */}
+          <g opacity="0.55">
+            <ellipse cx="-14" cy="420" rx="10" ry="4" fill="#c8c0b8">
+              <animate attributeName="opacity" values="0.7; 0" dur="1.4s" repeatCount="indefinite" />
+              <animate attributeName="rx" values="4; 20" dur="1.4s" repeatCount="indefinite" />
+            </ellipse>
+            <ellipse cx="-30" cy="415" rx="8" ry="3.5" fill="#b8b0a8">
+              <animate attributeName="opacity" values="0.6; 0" dur="1.6s" begin="0.4s" repeatCount="indefinite" />
+              <animate attributeName="rx" values="3; 16" dur="1.6s" begin="0.4s" repeatCount="indefinite" />
+            </ellipse>
+          </g>
+          {/* la mobylette (translate x=0 = position de départ à gauche) */}
+          <g transform="translate(60,410)">
+            {/* roues avec rayons */}
+            <circle cx="-18" cy="16" r="13" fill="none" stroke="#1a1a1a" strokeWidth="3" />
+            <circle cx="-18" cy="16" r="13" fill="#2a2a2a" opacity="0.35" />
+            <line x1="-18" y1="4" x2="-18" y2="28" stroke="#c8c8c8" strokeWidth="1" />
+            <line x1="-30" y1="16" x2="-6" y2="16" stroke="#c8c8c8" strokeWidth="1" />
+            <line x1="-26" y1="8" x2="-10" y2="24" stroke="#c8c8c8" strokeWidth="0.8" />
+            <line x1="-26" y1="24" x2="-10" y2="8" stroke="#c8c8c8" strokeWidth="0.8" />
+            <circle cx="30" cy="16" r="13" fill="none" stroke="#1a1a1a" strokeWidth="3" />
+            <circle cx="30" cy="16" r="13" fill="#2a2a2a" opacity="0.35" />
+            <line x1="30" y1="4" x2="30" y2="28" stroke="#c8c8c8" strokeWidth="1" />
+            <line x1="18" y1="16" x2="42" y2="16" stroke="#c8c8c8" strokeWidth="1" />
+            {/* cadre noir Solex */}
+            <path d="M-18 16 L-6 -2 L18 -2 L30 16" stroke="#1a1a1a" strokeWidth="4" fill="none" strokeLinecap="round" />
+            {/* moteur sur la roue avant, très iconique */}
+            <rect x="-32" y="-2" width="16" height="12" fill="#3a3a3a" stroke="#1a1a1a" strokeWidth="1" rx="1" />
+            <circle cx="-24" cy="4" r="4" fill="none" stroke="#c8c8c8" strokeWidth="0.6" />
+            {/* réservoir triangulaire */}
+            <path d="M-6 -2 L18 -2 L14 -12 L-2 -12 Z" fill="#5a1a1a" stroke="#1a1a1a" strokeWidth="1" />
+            {/* selle */}
+            <path d="M14 -2 Q20 -6 30 -4 L30 0 L14 0 Z" fill="#1a1a1a" />
+            {/* guidon */}
+            <path d="M-6 -2 L-14 -18 L-10 -22 M-14 -18 L-18 -20" stroke="#1a1a1a" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            {/* petit phare rond */}
+            <circle cx="-16" cy="-14" r="3" fill="#f0e4a8" stroke="#1a1a1a" strokeWidth="1" />
+            {/* pédales */}
+            <line x1="6" y1="10" x2="14" y2="18" stroke="#1a1a1a" strokeWidth="2" />
+            <rect x="12" y="17" width="6" height="3" fill="#c8c8c8" />
+            {/* CONDUCTEUR — homme au blouson bleu, casque bol */}
+            <g transform="translate(12,-14)">
+              {/* dos + torse */}
+              <path d="M-8 12 L-6 -2 Q0 -4 6 -2 L8 12 Z" fill="#3a5a90" />
+              {/* jambes en pantalon marron */}
+              <rect x="-6" y="12" width="5" height="14" fill="#4a3620" />
+              <rect x="1" y="12" width="5" height="14" fill="#4a3620" />
+              {/* bras tendus sur le guidon */}
+              <path d="M-6 0 L-16 -4" stroke="#3a5a90" strokeWidth="4" strokeLinecap="round" />
+              <path d="M6 0 L14 4" stroke="#3a5a90" strokeWidth="4" strokeLinecap="round" />
+              {/* tête */}
+              <circle cx="0" cy="-10" r="6" fill="#e8bfa0" />
+              {/* casque bol beige, très 70/80s */}
+              <path d="M-7 -13 Q0 -20 7 -13 Q7 -8 0 -8 Q-7 -8 -7 -13 Z" fill="#c9a878" stroke="#5a4028" strokeWidth="0.8" />
+              <path d="M-7 -12 L7 -12" stroke="#5a4028" strokeWidth="0.6" />
+            </g>
+          </g>
         </g>
       </PLayer>
 
