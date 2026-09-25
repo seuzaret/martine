@@ -15,7 +15,7 @@ export default function BunkerArchives({ onGo, j3 }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, width: "100%", maxWidth: 1600 }}>
-      <svg viewBox="0 0 1000 520" style={{ display: "block", width: "100%", height: "auto", maxHeight: "72vh" }}>
+      <svg viewBox="0 0 1000 520" style={{ display: "block", width: "100%", height: "auto", maxHeight: "100%" }}>
         <defs>
           <linearGradient id="ar-wall" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#1a2028" />

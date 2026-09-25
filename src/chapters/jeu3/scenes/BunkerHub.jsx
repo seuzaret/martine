@@ -17,7 +17,7 @@ export default function BunkerHub({ onGo, j3 }) {
   ];
 
   return (
-    <svg viewBox="0 0 1200 480" style={{ display: "block", width: "100%", height: "auto", maxHeight: "70vh" }}>
+    <svg viewBox="0 0 1200 480" style={{ display: "block", width: "100%", height: "auto", maxHeight: "100%" }}>
       <defs>
         <linearGradient id="hb0-wall" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#2a2f38" />

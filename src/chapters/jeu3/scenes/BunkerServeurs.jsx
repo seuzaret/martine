@@ -60,7 +60,7 @@ export default function BunkerServeurs({ prenom, j3 }) {
 
   /* ─── Décor commun aux phases intro et choice ─── */
   const background = (
-    <svg viewBox="0 0 800 380" style={{ display: "block", width: "100%", height: "auto", maxHeight: "70vh" }}>
+    <svg viewBox="0 0 800 380" style={{ display: "block", width: "100%", height: "auto", maxHeight: "100%" }}>
       <defs>
         <linearGradient id="sv-wall" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#0a1420" />
