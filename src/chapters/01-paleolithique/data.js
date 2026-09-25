@@ -255,14 +255,14 @@ const ACTIONS = {
     say: "Ana. C'est elle qui t'a ouvert les portes du clan — reste poli, on est invités.",
     /* Un mini-dialogue à choix (une fois par partie), flavor pur. */
     chatOnce: {
-      q: "Dis-moi, voyageur : d'où viens-tu, au juste ? Ta drôle de noix volante… je n'ai jamais rien vu de tel.",
+      q: "Ah, tu tombes bien ! Tu peux tenir Ila deux minutes ? Faut que je surveille la marmite avant qu'elle finisse en charbon.",
       choices: [
-        { a: "De très loin. Un endroit que tu ne pourrais pas imaginer.",
-          r: "Je te crois. J'ai déjà rencontré des voyageurs mystérieux — mais toi, tu es le plus étrange de tous." },
-        { a: "Secret. Mais je suis là pour aider.",
-          r: "Un secret ? Alors garde-le bien. Tout le monde en a un, ici aussi." },
-        { a: "De demain. Un demain très, très lointain.",
-          r: "« Demain » n'est jamais qu'un aujourd'hui plus tard. Tu parles bizarrement, mais tu as l'air gentil." },
+        { a: "Euh… d'accord, mais elle bave un peu, non ?",
+          r: "Elle bave sur tout le monde, c'est un signe. Tu es des nôtres, maintenant." },
+        { a: "Je préfère la marmite, si tu veux bien.",
+          r: "Malin. Cela dit, tenir un feu c'est moins bruyant qu'un bébé, tu me diras des nouvelles." },
+        { a: "Comment on tient un bébé du Paléolithique ?",
+          r: "Pareil qu'un du tien, j'imagine ! Bras replié, tête calée, et on lui parle doucement. Voilà — tu vois, elle a arrêté de pleurer." },
       ],
     },
     chitchat: [
@@ -320,14 +320,14 @@ const ACTIONS = {
     bubble: "Je suis la mémoire du clan. Tout ce qui s'oublie meurt une seconde fois — c'est pour ça que je me souviens.",
     say: "Kyan, la mémoire du clan. Ce qu'elle sait tient dans une seule tête… fragile, non ?",
     chatOnce: {
-      q: "Dis-moi, toi qui viens de si loin : qu'est-ce qui t'importe le plus, dans tout ce que ton peuple garde en mémoire ?",
+      q: "Approche un peu. J'apprends une berceuse à la petite et je bloque sur un mot. « L'oiseau… et retourne au… ». Aide-moi, va.",
       choices: [
-        { a: "Les histoires. Les récits qu'on se raconte le soir.",
-          r: "Bonne réponse. Une histoire tient dans une seule voix, et elle traverse mille générations. C'est le plus vieux trésor du monde." },
-        { a: "Les images. Les peintures, les dessins.",
-          r: "Elles disent ce que les mots ne peuvent pas. Une main plaquée sur la roche parle encore quand la voix se tait." },
-        { a: "Les objets. Ceux qu'on transmet de main en main.",
-          r: "Chaque objet garde un peu de qui l'a tenu. Une aiguille d'os, un galet gravé… ils portent des noms qu'on oublie, mais que la matière n'oublie pas." },
+        { a: "L'oiseau chante et retourne au nid ?",
+          r: "Oui ! Chante et nid. Merci — sinon ce mot serait tombé dans le trou de ma mémoire. Ça arrive, aux vieilles." },
+        { a: "L'oiseau plane et retourne au ciel ?",
+          r: "Plane et ciel… j'aime bien. Je tenterai les deux versions ce soir, la petite tranchera." },
+        { a: "Aucune idée, désolé.",
+          r: "Pas grave. Ça reviendra à trois heures du matin, comme d'habitude. Les vieux savoirs se cachent la nuit, c'est bien connu." },
       ],
     },
     chitchat: [
