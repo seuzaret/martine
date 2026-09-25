@@ -739,7 +739,7 @@ export default function App() {
        MARTINE, elle, commente dans sa console (`say`). Les deux tombent
        en même temps. */
     const pt = point || lastHotspotClick;
-    if (bubbleText) setBubble({ text: bubbleText, x: pt.x, y: pt.y, choices: bubbleChoices });
+    if (bubbleText) setBubble({ text: bubbleText, x: pt.x, y: pt.y, choices: bubbleChoices, speaker: name });
     else setBubble(null);
     if (sayText) say(sayText, mood);
   };
@@ -2031,70 +2031,85 @@ export default function App() {
       {bubble && (() => {
         const hasChoices = Array.isArray(bubble.choices) && bubble.choices.length > 0;
         const hasExchange = !!bubble.playerLine;
-        const isDialog = hasChoices || hasExchange;
-        const W = Math.min(isDialog ? 340 : 300, window.innerWidth - 24);
-        const dessous = bubble.y < 240;               // perso trop haut → bulle en dessous
-        const cx = Math.min(Math.max(bubble.x, 12 + W / 2), window.innerWidth - 12 - W / 2);
-        /* Après un choix on garde l'échange visible : la question du PNJ, ce
-           que le joueur a répondu (aligné à droite, en style « voix off »),
-           puis la réplique du PNJ. La bulle se ferme au clic sur le fond
-           extérieur, comme une bulle normale, une fois l'échange complet. */
+        const speakerId = bubble.speaker;
+        const Portrait = speakerId && chapter?.portraits?.[speakerId];
+        const speakerName = speakerId ? speakerId.charAt(0).toUpperCase() + speakerId.slice(1) : "";
         const pickChoice = (c) => setBubble((b) => b ? { ...b, playerLine: c.a, followUp: c.r, choices: null } : b);
         return (
-          <div onClick={hasChoices ? undefined : () => setBubble(null)}
-            style={{
-              position: "fixed", zIndex: 60, left: cx, width: W, transform: "translateX(-50%)",
-              ...(dessous ? { top: bubble.y + 18 } : { bottom: window.innerHeight - bubble.y + 16 }),
-              background: "#f4e8cc", color: "#2a1c10", border: "1px solid #cbb489", borderRadius: 14,
-              padding: "11px 14px", fontFamily: "Palatino, Georgia, serif", fontSize: 14.5, lineHeight: 1.5,
-              boxShadow: "0 8px 26px rgba(0,0,0,0.5)", cursor: hasChoices ? "default" : "pointer", animation: "fadein .18s ease-out",
-            }}>
-            {/* Réplique du PNJ (question, ou parole simple) — brun profond */}
-            <div style={{ color: "#2a1c10" }}>{bubble.text}</div>
+          <div style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 60,
+            display: "flex", justifyContent: "center", pointerEvents: "none" }}>
+            <div data-bubble-choice
+              style={{ pointerEvents: "auto", width: "min(880px, calc(100vw - 24px))",
+                margin: "0 12px 12px",
+                background: "linear-gradient(180deg,#1a2130,#0b1018)",
+                border: "1px solid #d9a34a", borderRadius: 14,
+                boxShadow: "0 -6px 30px rgba(0,0,0,0.7), 0 0 22px rgba(217,163,74,0.22)",
+                padding: "12px 14px", display: "flex", gap: 14, alignItems: "flex-start",
+                color: "#eadfc4", fontFamily: "Palatino, Georgia, serif",
+                animation: "fadein .22s ease-out" }}>
 
-            {/* Choix du joueur : liste sobre, sans cases, pour éviter le look quiz */}
-            {hasChoices && (
-              <div style={{ marginTop: 12, paddingTop: 8, borderTop: "1px dashed #cbb489" }}>
-                <div style={{ fontSize: 11, color: "#8a7250", fontStyle: "italic", marginBottom: 4 }}>Tu peux répondre…</div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  {bubble.choices.map((c, i) => (
-                    <button key={i} data-bubble-choice onClick={(e) => { e.stopPropagation(); pickChoice(c); }}
-                      style={{ textAlign: "left", background: "transparent", border: "none",
-                        padding: "5px 4px 5px 12px", fontFamily: "Palatino, Georgia, serif", fontSize: 14,
-                        color: "#26365a", cursor: "pointer", lineHeight: 1.35,
-                        borderLeft: "2px solid transparent", transition: "border-color .15s, color .15s, background .15s" }}
-                      onMouseEnter={(e) => { e.currentTarget.style.borderLeftColor = "#4a6a9c"; e.currentTarget.style.color = "#12203d"; e.currentTarget.style.background = "rgba(60,90,140,0.10)"; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.borderLeftColor = "transparent"; e.currentTarget.style.color = "#26365a"; e.currentTarget.style.background = "transparent"; }}>
-                      — {c.a}
-                    </button>
-                  ))}
+              {/* Portrait rond à gauche, si dispo pour ce PNJ */}
+              {Portrait && (
+                <div style={{ width: 92, height: 92, flex: "0 0 auto", borderRadius: "50%",
+                  overflow: "hidden", border: "2px solid #d9a34a",
+                  background: "#000", boxShadow: "0 0 14px rgba(217,163,74,0.35)" }}>
+                  <div style={{ width: 92, height: "auto" }}><Portrait /></div>
                 </div>
+              )}
+
+              {/* Corps du dialogue */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                {speakerName && (
+                  <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3,
+                    color: "#ffd166", marginBottom: 6 }}>✦ {speakerName.toUpperCase()}</div>
+                )}
+                <div style={{ fontSize: 15.5, lineHeight: 1.5, color: "#f4e8cc" }}>{bubble.text}</div>
+
+                {/* Choix du joueur — RPG style, sur bandeau sombre */}
+                {hasChoices && (
+                  <div style={{ marginTop: 12, paddingTop: 8, borderTop: "1px dashed #614a2a" }}>
+                    <div style={{ fontSize: 11, color: "#a89468", fontStyle: "italic", marginBottom: 4 }}>Tu peux répondre…</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      {bubble.choices.map((c, i) => (
+                        <button key={i} onClick={(e) => { e.stopPropagation(); pickChoice(c); }}
+                          style={{ textAlign: "left", background: "transparent", border: "none",
+                            padding: "6px 6px 6px 12px", fontFamily: "Palatino, Georgia, serif", fontSize: 14.5,
+                            color: "#d8c9a0", cursor: "pointer", lineHeight: 1.4,
+                            borderLeft: "2px solid transparent",
+                            transition: "border-color .15s, color .15s, background .15s" }}
+                          onMouseEnter={(e) => { e.currentTarget.style.borderLeftColor = "#ffd166"; e.currentTarget.style.color = "#fff8ea"; e.currentTarget.style.background = "rgba(255,209,102,0.08)"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.borderLeftColor = "transparent"; e.currentTarget.style.color = "#d8c9a0"; e.currentTarget.style.background = "transparent"; }}>
+                          — {c.a}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Après le choix : la voix du joueur en carte crème + la relance du PNJ */}
+                {hasExchange && (
+                  <>
+                    <div style={{ marginTop: 12, marginLeft: "18%", padding: "7px 12px",
+                      background: "#fdfaf0", border: "1px solid #a17c3a", borderRadius: 10,
+                      fontStyle: "italic", color: "#2a1c10", fontSize: 14, lineHeight: 1.4 }}>
+                      — {bubble.playerLine}
+                    </div>
+                    <div style={{ marginTop: 10, fontSize: 15.5, lineHeight: 1.5, color: "#f4e8cc" }}>{bubble.followUp}</div>
+                  </>
+                )}
               </div>
-            )}
 
-            {/* Après le choix : la voix du joueur (bleu, alignée à droite),
-               puis la relance du PNJ (brun profond, à gauche, comme la Q) */}
-            {hasExchange && (
-              <>
-                <div style={{ marginTop: 10, marginLeft: "18%", padding: "6px 10px",
-                  background: "#fdfaf0", border: "1px solid #eadfc4", borderRadius: 10,
-                  fontStyle: "italic", color: "#26365a", fontSize: 13.5, lineHeight: 1.4 }}>
-                  — {bubble.playerLine}
-                </div>
-                <div style={{ marginTop: 8, color: "#2a1c10" }}>{bubble.followUp}</div>
-                <div style={{ fontSize: 10, color: "#8a7250", fontStyle: "italic", marginTop: 5, textAlign: "right" }}>clique n'importe où pour fermer</div>
-              </>
-            )}
-
-            {/* Hint de fermeture pour une bulle sans choix ni échange */}
-            {!isDialog && (
-              <div style={{ fontSize: 10, color: "#8a7250", fontStyle: "italic", marginTop: 5, textAlign: "right" }}>clique n'importe où pour fermer</div>
-            )}
-
-            {/* la petite pointe du phylactère, vers le personnage */}
-            <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", width: 0, height: 0,
-              borderLeft: "10px solid transparent", borderRight: "10px solid transparent",
-              ...(dessous ? { top: -11, borderBottom: "12px solid #f4e8cc" } : { bottom: -11, borderTop: "12px solid #f4e8cc" }) }} />
+              {/* Fermer (croix) — masquée pendant qu'il faut faire un choix */}
+              {!hasChoices && (
+                <button onClick={(e) => { e.stopPropagation(); setBubble(null); }}
+                  title="Fermer"
+                  style={{ flex: "0 0 auto", background: "transparent", border: "none",
+                    color: "#a89468", fontSize: 22, cursor: "pointer",
+                    padding: "0 6px", fontFamily: "ui-monospace,monospace", lineHeight: 1 }}>
+                  ×
+                </button>
+              )}
+            </div>
           </div>
         );
       })()}
