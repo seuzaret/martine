@@ -1,168 +1,295 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useWinOnce } from "../engine/useWinOnce.js";
 
 /* ============================================================
-   MINI-JEU : « Fais la une »
+   MINI-JEU : « Fais la Une » (v2 — plus simple, plus visuel)
    ------------------------------------------------------------
-   Le kioskier propose 6 dépêches AFP du jour. L'élève doit en
-   choisir TROIS à mettre en Une de son présentoir. Aucune
-   « bonne » réponse : chaque combinaison reflète une ligne
-   éditoriale (info sérieuse, people, sensationnel, savoir…).
-   MARTINE commente à la fin le journal que l'élève vient de
-   composer sans s'en rendre compte. Introduit la notion de
-   ligne éditoriale : choisir, c'est déjà éditer.
+   Une seule dépêche AFP tirée au hasard, présentée telle qu'elle
+   arrive sur le télex : neutre, factuelle. L'élève choisit
+   ensuite UN titre (4 angles possibles) puis UN ton (3 registres).
+   À la fin, la Une se compose sous ses yeux avec une petite
+   animation « impression » — et MARTINE commente la ligne
+   éditoriale que ces deux choix ont fabriquée.
+
+   L'idée : à partir du même fait, plusieurs Unes possibles.
+   Choisir, c'est déjà éditer.
    ============================================================ */
 
-/* Chaque dépêche : id, titre, un « chapo » (résumé), et un TAG
-   qui indique son registre (info / people / sensation / savoir /
-   sport / société). Le mix des 3 tags choisis fabrique la ligne. */
+/* 5 dépêches AFP, une seule tirée à chaque partie. Chaque titre
+   possède un tag qui traduit son angle éditorial (neutre,
+   accrocheur, sensationnel, mesuré). Aucun n'est faux ; tous
+   racontent le même fait, différemment. */
 const DEPECHES = [
-  { id: "sommet",   tag: "info",     titre: "Sommet européen : accord sur les subventions agricoles",
-    chapo: "Les Douze trouvent un compromis au terme de 48 heures de négociations." },
-  { id: "grippe",   tag: "info",     titre: "Épidémie de grippe : l'Europe touchée",
-    chapo: "Le ministère de la Santé recommande la vaccination des personnes fragiles." },
-  { id: "star",     tag: "people",   titre: "Diana attend son deuxième enfant",
-    chapo: "Buckingham confirme la nouvelle grossesse de la princesse de Galles." },
-  { id: "divorce",  tag: "people",   titre: "Le divorce du siècle : la star et son producteur",
-    chapo: "Photos exclusives : cinq pages inédites à l'intérieur." },
-  { id: "monstre",  tag: "sensation", titre: "Une créature étrange aperçue dans le lac de Serre-Ponçon",
-    chapo: "Trois témoins l'ont vue. Le maire promet une enquête." },
-  { id: "meurtre",  tag: "sensation", titre: "Le tueur de Marseille toujours en fuite : reconstitution",
-    chapo: "Neuvième jour de traque. Photos du suspect en pages centrales." },
-  { id: "voyager",  tag: "savoir",   titre: "Voyager 2 : premières images en couleur de Saturne",
-    chapo: "La sonde de la NASA a transmis 18 000 clichés en quinze jours." },
-  { id: "fouille",  tag: "savoir",   titre: "Une nouvelle chambre découverte dans une pyramide",
-    chapo: "L'équipe française du CNRS l'annonce depuis Le Caire." },
-  { id: "coupe",    tag: "sport",    titre: "Finale de Coupe : le suspense jusqu'aux tirs au but",
-    chapo: "Les Verts arrachent la victoire à la dernière seconde." },
-  { id: "olympiades", tag: "sport",  titre: "JO d'hiver : trois médailles françaises",
-    chapo: "Le ski alpin sauve l'honneur, le patinage déçoit." },
-  { id: "greve",    tag: "societe",  titre: "SNCF : appel à la grève pour vendredi",
-    chapo: "Les syndicats réclament l'ouverture de négociations salariales." },
-  { id: "lycee",    tag: "societe",  titre: "Lycéens dans la rue contre la réforme",
-    chapo: "50 000 manifestants à Paris, calmes selon la préfecture." },
+  {
+    id: "incendie",
+    date: "SAINT-DENIS, 6h12",
+    fait: "Un incendie a détruit un entrepôt de textile durant la nuit. Aucune victime. Origine indéterminée, une enquête est ouverte. Le maire s'est rendu sur place.",
+    titres: [
+      { angle: "neutre",       t: "Incendie maîtrisé dans un entrepôt à Saint-Denis" },
+      { angle: "accrocheur",   t: "Nouvel incendie mystérieux en banlieue parisienne" },
+      { angle: "sensationnel", t: "LES FLAMMES RAVAGENT SAINT-DENIS DANS LA NUIT" },
+      { angle: "mesure",       t: "Entrepôt en cendres à Saint-Denis, enquête en cours" },
+    ],
+  },
+  {
+    id: "greve",
+    date: "PARIS, 18h30",
+    fait: "Trois syndicats de la SNCF appellent à la grève vendredi pour réclamer une revalorisation salariale. Le gouvernement propose des négociations.",
+    titres: [
+      { angle: "neutre",       t: "SNCF : grève annoncée vendredi, négociations proposées" },
+      { angle: "accrocheur",   t: "Un vendredi noir se prépare sur les rails" },
+      { angle: "sensationnel", t: "LA FRANCE À L'ARRÊT : LES USAGERS EN OTAGE !" },
+      { angle: "mesure",       t: "Cheminots et gouvernement à la table dès vendredi" },
+    ],
+  },
+  {
+    id: "star",
+    date: "LONDRES, 14h05",
+    fait: "Buckingham confirme la seconde grossesse de la princesse Diana. Naissance prévue au printemps prochain.",
+    titres: [
+      { angle: "neutre",       t: "Second enfant attendu chez les Windsor" },
+      { angle: "accrocheur",   t: "Diana à nouveau enceinte : c'est confirmé !" },
+      { angle: "sensationnel", t: "DIANA ATTEND DÉJÀ SON DEUXIÈME BÉBÉ !!" },
+      { angle: "mesure",       t: "La famille royale britannique s'agrandit" },
+    ],
+  },
+  {
+    id: "voyager",
+    date: "PASADENA, 22h40",
+    fait: "La sonde américaine Voyager 2 a transmis les premières images en couleur de Saturne. 18 000 clichés ont été reçus en quinze jours.",
+    titres: [
+      { angle: "neutre",       t: "Voyager 2 : premières photos couleur de Saturne" },
+      { angle: "accrocheur",   t: "Ces images de Saturne comme on n'en a jamais vu" },
+      { angle: "sensationnel", t: "SATURNE COMME SI VOUS Y ÉTIEZ : LES CLICHÉS EXCLUSIFS !" },
+      { angle: "mesure",       t: "Une moisson historique d'images pour la NASA" },
+    ],
+  },
+  {
+    id: "lycee",
+    date: "PARIS, 19h20",
+    fait: "50 000 lycéens ont manifesté dans le calme à Paris contre le projet de réforme du baccalauréat. Rassemblements aussi à Lyon et Marseille.",
+    titres: [
+      { angle: "neutre",       t: "50 000 lycéens dans la rue contre la réforme du bac" },
+      { angle: "accrocheur",   t: "La jeunesse dit non : la mobilisation prend de l'ampleur" },
+      { angle: "sensationnel", t: "LES LYCÉES SOUS TENSION : LA COLÈRE MONTE !" },
+      { angle: "mesure",       t: "Manifestation lycéenne : dialogue attendu au ministère" },
+    ],
+  },
 ];
 
-/* On tire 6 dépêches au hasard parmi les 12 disponibles, à
-   chaque nouvelle partie, pour que les Unes possibles varient. */
-function shuffle(arr) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+/* 3 tons possibles pour le chapô — le même fait, écrit trois
+   façons. Chaque ton a sa couleur d'écriture. */
+const TONS = [
+  { angle: "factuel",   label: "Factuel — juste les faits",
+    intro: "Ce jeudi matin, les pompiers ont maîtrisé un incendie. Aucun blessé. Une enquête est ouverte." },
+  { angle: "emotionnel", label: "Humain — l'angle émotion",
+    intro: "Ils l'ont vu brûler depuis leur fenêtre. Une famille du quartier raconte la peur, l'attente, le soulagement." },
+  { angle: "alarmant",   label: "Alarmant — mystère et menace",
+    intro: "Encore un. Un troisième feu suspect en un mois dans la banlieue nord. La psychose s'installe chez les habitants." },
+];
+
+/* On personnalise le chapô selon la dépêche + le ton, pour que
+   la « fabrication » de la Une soit concrète et lisible. */
+function chapoFor(dep, tonAngle) {
+  const M = {
+    incendie: {
+      factuel:    "Cette nuit à Saint-Denis, un entrepôt de textile a brûlé. Aucun blessé. L'enquête est ouverte, le maire s'est rendu sur place.",
+      emotionnel: "Ils l'ont vu brûler depuis leur fenêtre. Les voisins racontent la peur, l'attente, le soulagement des pompiers arrivant à temps.",
+      alarmant:   "Encore un. Un troisième entrepôt qui part en fumée en trois mois dans la banlieue nord. Personne ne dit rien, mais tout le monde s'inquiète.",
+    },
+    greve: {
+      factuel:    "Trois syndicats appellent les cheminots à la grève vendredi. Le gouvernement ouvre des négociations dès demain.",
+      emotionnel: "Denise, contrôleuse depuis 20 ans, fait grève « la mort dans l'âme ». Elle sait ce que ce vendredi coûtera à ses collègues, et aux voyageurs.",
+      alarmant:   "Une France paralysée dès vendredi. Écoles, hôpitaux, gares : personne ne sortira indemne du bras de fer qui commence.",
+    },
+    star: {
+      factuel:    "Buckingham confirme dans un communiqué la seconde grossesse de la princesse Diana. Naissance attendue au printemps.",
+      emotionnel: "Photographiée hier main dans la main avec le prince William, Diana rayonnait déjà. La nouvelle est officielle depuis ce matin.",
+      alarmant:   "Une nouvelle grossesse, alors que la rumeur d'un couple en crise n'a jamais été aussi forte. Les prochains mois seront scrutés.",
+    },
+    voyager: {
+      factuel:    "La sonde Voyager 2 a transmis en quinze jours 18 000 photographies en couleur de Saturne. Les scientifiques analysent les données.",
+      emotionnel: "« On voit ce qu'aucun humain n'a jamais vu », résume un astronome de la NASA, la voix étranglée. Les images circulent partout dans les labos.",
+      alarmant:   "Alors que le programme spatial américain vacille, ces images inespérées relancent le débat : Saturne pourrait-elle abriter la vie ?",
+    },
+    lycee: {
+      factuel:    "50 000 lycéens ont manifesté à Paris. Rassemblements également à Lyon et Marseille. Aucun incident signalé.",
+      emotionnel: "Ils portent leurs pancartes comme un premier acte politique. Léa, 16 ans : « Je manifeste pour la première fois de ma vie. »",
+      alarmant:   "La mobilisation s'amplifie et rien ne semble pouvoir l'arrêter. Certains professeurs craignent un embrasement dans les jours à venir.",
+    },
+  };
+  return (M[dep.id] || {})[tonAngle] || "";
 }
 
-/* Étiquette humaine + couleur pour chaque tag. */
-const TAGS = {
-  info:      { label: "Info",       color: "#4a6fa5" },
-  people:    { label: "People",     color: "#c85a7a" },
-  sensation: { label: "Sensation",  color: "#c05a2a" },
-  savoir:    { label: "Savoir",     color: "#5aa07a" },
-  sport:     { label: "Sport",      color: "#c9a54a" },
-  societe:   { label: "Société",    color: "#8a5aa0" },
-};
-
-/* Verdict final : selon le tag majoritaire dans les 3 dépêches
-   choisies, on décrit la ligne éditoriale composée. Aucune n'est
-   « mauvaise » — chaque combinaison a sa personnalité. */
-function verdict(picks) {
-  const counts = picks.reduce((m, p) => { m[p.tag] = (m[p.tag] || 0) + 1; return m; }, {});
-  const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
-  const [tag, n] = top;
-  if (n >= 2) {
-    const V = {
-      info:      "Ton kiosque met l'info sérieuse en tête. Ligne éditoriale : « quotidien de référence ». Le lecteur pressé a l'essentiel en un regard.",
-      people:    "Ta Une file droit vers les stars. Ligne éditoriale : « hebdo people ». Ça se vend très fort — c'est aussi ce qui attire le plus l'œil sur un présentoir.",
-      sensation: "Ta Une joue sur le frisson et le mystère. Ligne éditoriale : « presse à sensation ». Le lecteur revient chaque semaine pour la suite — même si le fait divers monte souvent en épingle.",
-      savoir:    "Tu privilégies la connaissance. Ligne éditoriale : « magazine de savoir ». Moins de lecteurs, mais très fidèles — c'est le journal qu'on garde et qu'on prête.",
-      sport:     "Ta Une célèbre l'exploit. Ligne éditoriale : « presse sportive ». Un lectorat immense, très passionné, qui zappe le reste.",
-      societe:   "Ta Une donne la parole aux mouvements sociaux. Ligne éditoriale : « journal engagé ». Il assume une couleur politique, le lecteur le sait en l'achetant.",
-    };
-    return V[tag];
+/* Verdict : croise l'angle du titre et le ton du chapô pour
+   nommer la ligne éditoriale composée. Aucun combo « faux ». */
+function verdict(titreAngle, tonAngle) {
+  if (titreAngle === "sensationnel" || tonAngle === "alarmant") {
+    return "Ta Une joue sur le frisson. Ligne éditoriale : PRESSE À SENSATION. Elle vend beaucoup, mais monte l'événement en épingle : le lecteur ressort la tête chauffée.";
   }
-  return "Ta Une est éclectique : un peu de tout, pour attirer tous les regards. Ligne éditoriale : « quotidien généraliste ». C'est le pari des grands titres — plaire large, sans se compromettre trop.";
+  if (titreAngle === "mesure" && tonAngle === "factuel") {
+    return "Ta Une va droit à l'essentiel, sans dramatiser. Ligne éditoriale : QUOTIDIEN DE RÉFÉRENCE. C'est ce qu'on lit sans emballement, mais qu'on relit dans 10 ans sans rougir.";
+  }
+  if (tonAngle === "emotionnel") {
+    return "Ta Une place l'humain au centre. Ligne éditoriale : PRESSE MAGAZINE / SOCIÉTÉ. Elle raconte l'événement à travers les gens — plus long à lire, plus long à oublier.";
+  }
+  if (titreAngle === "accrocheur") {
+    return "Ta Une accroche l'œil sans crier. Ligne éditoriale : QUOTIDIEN GRAND PUBLIC. Elle veut vendre au kiosque tout en restant crédible — l'équilibre le plus difficile.";
+  }
+  return "Ta Une est sobre et précise. Ligne éditoriale : JOURNAL DE RÉFÉRENCE. Peu de bruit, beaucoup d'information.";
 }
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 export function FaireLaUneGame({ onClose, onWin }) {
-  const [pool] = useState(() => shuffle(DEPECHES).slice(0, 6));
-  const [picked, setPicked] = useState([]);   // ids
+  const [dep] = useState(() => pick(DEPECHES));
+  const [step, setStep] = useState(0); // 0 = dépêche, 1 = titre, 2 = ton, 3 = impression
+  const [titre, setTitre] = useState(null);
+  const [ton, setTon]     = useState(null);
+  const [pressStep, setPressStep] = useState(0); // 0..3, animation "impression"
   const [done, setDone] = useState(false);
   useWinOnce(done, onWin);
 
-  const isPicked = (id) => picked.includes(id);
-  const toggle = (id) => {
-    if (done) return;
-    setPicked((p) => p.includes(id) ? p.filter(x => x !== id) : (p.length < 3 ? [...p, id] : p));
-  };
-  const valider = () => { if (picked.length === 3) setDone(true); };
-  const pickedObjs = picked.map((id) => pool.find((d) => d.id === id));
+  /* animation d'impression progressive quand on arrive à l'étape finale */
+  useEffect(() => {
+    if (step !== 3) return;
+    setPressStep(0);
+    const timers = [
+      setTimeout(() => setPressStep(1), 260),   // bandeau titre
+      setTimeout(() => setPressStep(2), 720),   // titre principal
+      setTimeout(() => setPressStep(3), 1180),  // chapo
+      setTimeout(() => setPressStep(4), 1700),  // verdict + validation
+      setTimeout(() => setDone(true),   1900),
+    ];
+    return () => timers.forEach(clearTimeout);
+  }, [step]);
+
+  const anglesLabel = { neutre: "sobre", accrocheur: "accrocheur", sensationnel: "sensation !", mesure: "mesuré" };
+  const angleColor  = { neutre: "#3a5a7a", accrocheur: "#7a5a2a", sensationnel: "#a03028", mesure: "#3a5a3a" };
 
   return (
     <div onClick={onClose}
       style={{ position: "fixed", inset: 0, background: "rgba(4,8,14,0.82)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, zIndex: 70, backdropFilter: "blur(3px)" }}>
       <div onClick={(e) => e.stopPropagation()}
-        style={{ background: "#f6efdf", color: "#1c1a10", border: "2px solid #8a6a3a", borderRadius: 14, padding: 20, maxWidth: 780, width: "100%", maxHeight: "92vh", overflowY: "auto", boxShadow: "0 12px 48px rgba(0,0,0,0.6)", fontFamily: "Georgia, serif" }}>
+        style={{ background: "#f6efdf", color: "#1c1a10", border: "2px solid #8a6a3a", borderRadius: 14, padding: 20, maxWidth: 660, width: "100%", maxHeight: "92vh", overflowY: "auto", boxShadow: "0 12px 48px rgba(0,0,0,0.6)", fontFamily: "Georgia, serif" }}>
         <div style={{ textAlign: "center", fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 2, color: "#8a5a2a" }}>📰 FABRIQUE DE LA UNE — 1980</div>
-        <h2 style={{ textAlign: "center", margin: "6px 0 4px", color: "#3a2214", fontSize: 22, fontFamily: "Georgia, serif" }}>Fais la Une du kiosque</h2>
-        <p style={{ fontSize: 13.5, lineHeight: 1.55, textAlign: "center", margin: "0 0 14px", color: "#3a2e1e" }}>
-          Le kioskier reçoit 6 dépêches AFP ce matin. À toi d'en <strong>choisir 3</strong> à mettre en Une de son présentoir. Chaque choix compte : ton journal aura une personnalité.
-        </p>
+        <h2 style={{ textAlign: "center", margin: "6px 0 4px", color: "#3a2214", fontSize: 22 }}>Fais la Une du kiosque</h2>
 
-        {!done ? (
+        {/* ═════ ÉTAPE 0 : la dépêche AFP brute ═════ */}
+        {step === 0 && (
           <>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 10 }}>
-              {pool.map((d) => {
-                const T = TAGS[d.tag];
-                const sel = isPicked(d.id);
+            <p style={{ fontSize: 13.5, lineHeight: 1.55, textAlign: "center", margin: "0 0 12px", color: "#3a2e1e" }}>
+              Le télex crache une dépêche AFP. Robert te la tend : « À toi de la mettre en Une. »
+            </p>
+            <div style={{ background: "#fff", border: "1px dashed #8a6a3a", borderRadius: 8, padding: "14px 16px", fontFamily: "ui-monospace, monospace" }}>
+              <div style={{ fontSize: 10, letterSpacing: 2, color: "#8a5a2a", marginBottom: 8, borderBottom: "1px solid #c9b48c", paddingBottom: 6 }}>DÉPÊCHE AFP · {dep.date}</div>
+              <p style={{ fontSize: 13.5, lineHeight: 1.5, margin: 0, color: "#1c1a10" }}>{dep.fait}</p>
+            </div>
+            <button onClick={() => setStep(1)}
+              style={{ marginTop: 14, width: "100%", background: "#8a5a2a", color: "#fff", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer", fontSize: 14, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
+              1/2 · Choisir un titre →
+            </button>
+          </>
+        )}
+
+        {/* ═════ ÉTAPE 1 : choix du titre ═════ */}
+        {step === 1 && (
+          <>
+            <p style={{ fontSize: 13, lineHeight: 1.5, textAlign: "center", margin: "0 0 12px", color: "#3a2e1e" }}>
+              Même fait, 4 titres possibles. Chaque titre donne <strong>un angle</strong>.
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {dep.titres.map((t) => {
+                const sel = titre?.t === t.t;
                 return (
-                  <button key={d.id} onClick={() => toggle(d.id)}
-                    style={{ textAlign: "left", background: sel ? "#fffbe8" : "#fff", border: `2px solid ${sel ? T.color : "#c9b48c"}`, borderRadius: 10, padding: "10px 12px", cursor: "pointer", fontFamily: "Georgia, serif", boxShadow: sel ? `0 0 0 2px ${T.color}33` : "0 1px 2px rgba(0,0,0,0.06)", transition: "all .15s" }}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 5 }}>
-                      <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, letterSpacing: 1, color: T.color, fontWeight: 800 }}>{T.label.toUpperCase()}</span>
-                      <span style={{ width: 16, height: 16, borderRadius: "50%", background: sel ? T.color : "transparent", border: `1.5px solid ${T.color}`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10, fontWeight: 900 }}>{sel ? "✓" : ""}</span>
-                    </div>
-                    <div style={{ fontSize: 13.5, fontWeight: 700, color: "#1c1a10", lineHeight: 1.3, marginBottom: 4 }}>{d.titre}</div>
-                    <div style={{ fontSize: 12, color: "#4a3e2e", lineHeight: 1.4, fontStyle: "italic" }}>{d.chapo}</div>
+                  <button key={t.t} onClick={() => setTitre(t)}
+                    style={{ textAlign: "left", background: sel ? "#fffbe8" : "#fff", border: `2px solid ${sel ? angleColor[t.angle] : "#c9b48c"}`, borderRadius: 10, padding: "10px 14px", cursor: "pointer", fontFamily: "Georgia, serif", boxShadow: sel ? `0 0 0 2px ${angleColor[t.angle]}33` : "0 1px 2px rgba(0,0,0,0.06)", transition: "all .15s" }}>
+                    <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, letterSpacing: 1, color: angleColor[t.angle], fontWeight: 800, marginBottom: 4 }}>ANGLE : {anglesLabel[t.angle].toUpperCase()}</div>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: "#1c1a10", lineHeight: 1.3 }}>{t.t}</div>
                   </button>
                 );
               })}
             </div>
-
-            <div style={{ marginTop: 14, display: "flex", alignItems: "center", gap: 12 }}>
-              <span style={{ flex: 1, fontFamily: "ui-monospace,monospace", fontSize: 12, color: "#5a4028" }}>{picked.length}/3 dépêches sélectionnées</span>
-              <button onClick={valider} disabled={picked.length !== 3}
-                style={{ background: picked.length === 3 ? "#8a5a2a" : "#c9b48c", color: "#fff", border: "none", borderRadius: 10, padding: "10px 22px", fontWeight: 800, fontSize: 14, cursor: picked.length === 3 ? "pointer" : "not-allowed", fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
-                ✓ Composer la Une
-              </button>
-            </div>
-          </>
-        ) : (
-          <div>
-            {/* Aperçu de la Une composée */}
-            <div style={{ background: "#fff", border: "1px solid #c9b48c", borderRadius: 8, padding: 14, marginBottom: 12 }}>
-              <div style={{ fontFamily: "Georgia, serif", fontSize: 22, fontWeight: 800, textAlign: "center", borderBottom: "3px double #1c1a10", paddingBottom: 6, marginBottom: 10, color: "#1c1a10" }}>LE JOURNAL DU JOUR</div>
-              {pickedObjs.map((d, i) => (
-                <div key={d.id} style={{ marginBottom: i < 2 ? 10 : 0, paddingBottom: i < 2 ? 10 : 0, borderBottom: i < 2 ? "1px dashed #c9b48c" : "none" }}>
-                  <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, letterSpacing: 1, color: TAGS[d.tag].color, fontWeight: 800, marginBottom: 2 }}>{TAGS[d.tag].label.toUpperCase()}</div>
-                  <div style={{ fontSize: 15, fontWeight: 800, lineHeight: 1.25 }}>{d.titre}</div>
-                  <div style={{ fontSize: 12.5, color: "#4a3e2e", fontStyle: "italic", marginTop: 3 }}>{d.chapo}</div>
-                </div>
-              ))}
-            </div>
-
-            <div style={{ background: "#101827", border: "1px solid #2a3648", borderRadius: 10, padding: "12px 14px", color: "#e8eef5" }}>
-              <p style={{ fontSize: 14.5, lineHeight: 1.6, margin: 0 }}>
-                « {verdict(pickedObjs)} Retiens : deux journaux différents avec les MÊMES dépêches font des Unes différentes. C'est ça, une ligne éditoriale — un choix, assumé. Il n'y a pas de journal neutre. » — MARTINE
-              </p>
-            </div>
-            <button onClick={onClose}
-              style={{ marginTop: 12, width: "100%", background: "#8a5a2a", color: "#fff", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer", fontSize: 15, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
-              Continuer
+            <button onClick={() => setStep(2)} disabled={!titre}
+              style={{ marginTop: 14, width: "100%", background: titre ? "#8a5a2a" : "#c9b48c", color: "#fff", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: titre ? "pointer" : "not-allowed", fontSize: 14, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
+              2/2 · Choisir le ton →
             </button>
-          </div>
+          </>
         )}
+
+        {/* ═════ ÉTAPE 2 : choix du ton ═════ */}
+        {step === 2 && (
+          <>
+            <p style={{ fontSize: 13, lineHeight: 1.5, textAlign: "center", margin: "0 0 12px", color: "#3a2e1e" }}>
+              Reste à choisir <strong>comment</strong> tu vas raconter l'histoire dans le chapô.
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {TONS.map((T) => {
+                const sel = ton?.angle === T.angle;
+                return (
+                  <button key={T.angle} onClick={() => setTon(T)}
+                    style={{ textAlign: "left", background: sel ? "#fffbe8" : "#fff", border: `2px solid ${sel ? "#8a5a2a" : "#c9b48c"}`, borderRadius: 10, padding: "10px 14px", cursor: "pointer", fontFamily: "Georgia, serif" }}>
+                    <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, letterSpacing: 1, color: "#8a5a2a", fontWeight: 800, marginBottom: 4 }}>{T.label}</div>
+                    <div style={{ fontSize: 12.5, color: "#4a3e2e", fontStyle: "italic", lineHeight: 1.4 }}>« {chapoFor(dep, T.angle).slice(0, 110)}… »</div>
+                  </button>
+                );
+              })}
+            </div>
+            <button onClick={() => setStep(3)} disabled={!ton}
+              style={{ marginTop: 14, width: "100%", background: ton ? "#8a5a2a" : "#c9b48c", color: "#fff", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: ton ? "pointer" : "not-allowed", fontSize: 14, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
+              ✓ Imprimer la Une !
+            </button>
+          </>
+        )}
+
+        {/* ═════ ÉTAPE 3 : impression animée ═════ */}
+        {step === 3 && (
+          <>
+            {/* Aperçu de la Une composée, apparaît par blocs successifs */}
+            <div style={{ background: "#fff", border: "1px solid #c9b48c", borderRadius: 8, padding: 18, boxShadow: "0 4px 16px rgba(0,0,0,0.15)", position: "relative", overflow: "hidden", minHeight: 220 }}>
+              {/* effet "encre fraîche" : petit voile qui balaie */}
+              {pressStep < 4 && (
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, transparent 0%, rgba(60,40,20,0.12) 50%, transparent 100%)", animation: "inkPass 1.6s ease-out 1", pointerEvents: "none" }} />
+              )}
+              {/* Tête de journal */}
+              <div style={{ opacity: pressStep >= 1 ? 1 : 0, transition: "opacity .4s", fontFamily: "Georgia, serif", fontSize: 22, fontWeight: 900, textAlign: "center", borderBottom: "3px double #1c1a10", paddingBottom: 6, marginBottom: 12, color: "#1c1a10", letterSpacing: 2 }}>
+                LE JOURNAL DU JOUR
+              </div>
+              {/* Titre principal */}
+              <div style={{ opacity: pressStep >= 2 ? 1 : 0, transform: pressStep >= 2 ? "translateY(0)" : "translateY(6px)", transition: "opacity .4s, transform .4s", fontSize: 22, fontWeight: 900, lineHeight: 1.2, color: "#1c1a10", marginBottom: 10 }}>
+                {titre?.t}
+              </div>
+              {/* chapô */}
+              <div style={{ opacity: pressStep >= 3 ? 1 : 0, transition: "opacity .5s", fontSize: 14.5, lineHeight: 1.55, color: "#2a2418" }}>
+                {chapoFor(dep, ton?.angle)}
+              </div>
+              {/* petit filet en bas + colonne fictive */}
+              {pressStep >= 3 && (
+                <div style={{ marginTop: 14, borderTop: "1px solid #c9b48c", paddingTop: 10, fontSize: 11.5, color: "#7a6248", fontStyle: "italic" }}>
+                  Suite en pages intérieures — Voir aussi : brèves du jour, sports, télévision.
+                </div>
+              )}
+            </div>
+
+            {/* Verdict MARTINE */}
+            {pressStep >= 4 && (
+              <div style={{ marginTop: 14, background: "#101827", border: "1px solid #2a3648", borderRadius: 10, padding: "12px 14px", color: "#e8eef5", animation: "fadein .4s" }}>
+                <p style={{ fontSize: 14.5, lineHeight: 1.6, margin: 0 }}>
+                  « {verdict(titre.angle, ton.angle)} Deux journaux différents peuvent partir de la MÊME dépêche et sortir des Unes complètement différentes. C'est ça, une ligne éditoriale — un point de vue assumé sur ce qui compte. » — MARTINE
+                </p>
+              </div>
+            )}
+            {pressStep >= 4 && (
+              <button onClick={onClose}
+                style={{ marginTop: 12, width: "100%", background: "#8a5a2a", color: "#fff", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer", fontSize: 15, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
+                Continuer
+              </button>
+            )}
+          </>
+        )}
+        <style>{`
+          @keyframes inkPass { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        `}</style>
       </div>
     </div>
   );
