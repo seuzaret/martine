@@ -1,14 +1,15 @@
 /* ============================================================
    CHAPITRE 9 — Carte : frise chronologique 1960 → 1990
-   Les 3 tableaux se passent tous « à la maison » — ce n'est pas
-   la géographie qui structure l'époque, c'est le temps. Chaque
-   arrêt correspond à un média qui entre dans le foyer.
+   Les 4 arrêts se passent « dans la ville » et « à la maison » :
+   c'est le temps qui structure l'époque, chaque arrêt un nouveau
+   média qui entre dans le foyer, ou une nouvelle façon de trier.
    ============================================================ */
 
 const ETAPES = [
   { tab: 0, an: 1969, nom: "Le salon",   sous: "TV Lune, direct mondial",     emoji: "📺" },
-  { tab: 1, an: 1985, nom: "La chambre", sous: "cassette + magnétoscope",     emoji: "📼" },
-  { tab: 2, an: 1990, nom: "Le bureau",  sous: "PC beige, disquette, CD-Rom", emoji: "💿" },
+  { tab: 1, an: 1980, nom: "Le kiosque", sous: "ligne éditoriale, choix",     emoji: "📰" },
+  { tab: 2, an: 1985, nom: "La chambre", sous: "cassette + magnétoscope",     emoji: "📼" },
+  { tab: 3, an: 1990, nom: "Le bureau",  sous: "PC beige, disquette, CD-Rom", emoji: "💿" },
 ];
 
 const T0 = 1960;
