@@ -164,6 +164,7 @@ export default function App() {
   const [quete, setQuete] = useState(0);         // étape en cours de la quête du chapitre (voir data.js)
   const [portraitOpen, setPortraitOpen] = useState(false); // le gros plan de l'étape est-il affiché ?
   const [modal, setModal] = useState(null);      // fiche documentaire ou carnet
+  const [restartAsk, setRestartAsk] = useState(null); // "chapter" | "game" | null — confirmation « recommencer »
   const [bubble, setBubble] = useState(null);    // phylactère d'un personnage {text, x, y}
   const [shake, setShake] = useState(false);     // animation d'échec (besace)
   const [sparkle, setSparkle] = useState(false); // halo de réussite (tableau)
@@ -1170,6 +1171,48 @@ export default function App() {
             📔 Carnet de bord
           </button>
         </div>
+
+        {/* ---- Recommencer : ce chapitre / toute la partie ---- */}
+        <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10.5, letterSpacing: 2, color: "#7a879e", margin: "16px 0 8px" }}>🔄 RECOMMENCER</div>
+        {restartAsk ? (
+          <div style={{ background: "#2a1a10", border: "1px solid #6a3820", borderRadius: 10, padding: "12px 14px" }}>
+            <p style={{ margin: "0 0 10px", fontSize: 13.5, color: "#ffd8b0", lineHeight: 1.5 }}>
+              {restartAsk === "chapter"
+                ? "Recommencer ce chapitre depuis le début ? Ta progression dans les autres chapitres est conservée."
+                : "Effacer TOUTE la partie et repartir du début ? Cette action est définitive."}
+            </p>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={() => setRestartAsk(null)}
+                style={{ flex: 1, background: "#141b26", color: "#c8d4e2", border: "1px solid #2a3648", borderRadius: 8, padding: "10px", fontWeight: 700, cursor: "pointer", fontSize: 13 }}>
+                Non, annuler
+              </button>
+              <button onClick={() => {
+                  if (restartAsk === "chapter") {
+                    playChapter(chapterIndex);
+                  } else {
+                    clearSave("jeu1");
+                    newGame();
+                  }
+                  setRestartAsk(null);
+                  setModal(null);
+                }}
+                style={{ flex: 1, background: "#c04a2a", color: "#fff", border: "none", borderRadius: 8, padding: "10px", fontWeight: 800, cursor: "pointer", fontSize: 13 }}>
+                Oui, recommencer
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+            <button onClick={() => setRestartAsk("chapter")}
+              style={{ background: "#141b26", color: "#ffd166", border: "1px solid #2a3648", borderRadius: 10, padding: "11px 12px", fontWeight: 700, cursor: "pointer", fontSize: 14, textAlign: "left" }}>
+              ↺ Ce chapitre
+            </button>
+            <button onClick={() => setRestartAsk("game")}
+              style={{ background: "#141b26", color: "#ff8a6a", border: "1px solid #4a2a20", borderRadius: 10, padding: "11px 12px", fontWeight: 700, cursor: "pointer", fontSize: 14, textAlign: "left" }}>
+              ↺ Toute la partie
+            </button>
+          </div>
+        )}
 
         {/* ---- Confort de lecture (accessibilité) ---- */}
         <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10.5, letterSpacing: 2, color: "#7a879e", margin: "16px 0 8px" }}>👁 CONFORT DE LECTURE</div>
