@@ -17,6 +17,7 @@
 import SceneSalon1969 from "./scenes/SceneSalon1969.jsx";
 import SceneKiosque1980 from "./scenes/SceneKiosque1980.jsx";
 import SceneChambre1985 from "./scenes/SceneChambre1985.jsx";
+import SceneSalonJT1989 from "./scenes/SceneSalonJT1989.jsx";
 import SceneBureau1990 from "./scenes/SceneBureau1990.jsx";
 import CarteMedias from "./scenes/CarteMedias.jsx";
 import { PortraitNathalie, PortraitJulien, PortraitCeline } from "./scenes/portraits.jsx";
@@ -67,6 +68,7 @@ const SCENES = [
   { id: "salon69",  name: "Salon, 21 juillet 1969, 3h56 du matin", Component: SceneSalon1969,   nextWhen: ["msg_tv_lune"] },
   { id: "kiosque",  name: "Kiosque à journaux, années 80",          Component: SceneKiosque1980, nextWhen: ["msg_ligneEditoriale"] },
   { id: "chambre",  name: "Chambre d'ado, 1985",                    Component: SceneChambre1985, nextWhen: ["msg_cassette"] },
+  { id: "salonjt",  name: "Salon devant le JT, 9 novembre 1989",    Component: SceneSalonJT1989, nextWhen: ["msg_evenement"] },
   { id: "bureau",   name: "Bureau, 1990",                            Component: SceneBureau1990 },
 ];
 
@@ -112,6 +114,10 @@ const MESSAGES = {
   msg_ligneEditoriale: { title: "La ligne éditoriale", emoji: "📰",
     jauges: { vitesse: 3, portee: 4, capacite: 3, durabilite: 2 },
     fact: "Dans un kiosque des années 80, il y a des dizaines de journaux et magazines. Chacun fait des CHOIX : quelles infos il garde, quels titres il met en Une, comment il en parle. Deux journaux qui reçoivent la MÊME information peuvent sortir des Unes très différentes. C'est ça, une « ligne éditoriale » : le point de vue d'un journal sur ce qui compte. Aucun journal n'est complètement neutre. Bien lire un journal, c'est se demander : qui l'écrit ? pour qui ? avec quel angle ? Aujourd'hui, sur un fil d'actu ou un réseau social, c'est un ordinateur qui choisit à ta place ce que tu vois — mais quelqu'un (ou quelque chose) choisit toujours." },
+
+  msg_evenement: { title: "L'événement mondial en direct", emoji: "📺",
+    jauges: { vitesse: 5, portee: 5, capacite: 3, durabilite: 2 },
+    fact: "Le 9 novembre 1989, le mur de Berlin tombe. Pour la première fois, un événement historique majeur est vu EN DIRECT par des millions de gens sur toute la planète, en même temps. La TV devient un « village mondial » : chacun sait ce que sait le voisin. Mais attention : le journaliste choisit UNE image pour ouvrir son édition. La foule qui danse ? Un garde-frontière hébété ? Un couple qui s'embrasse ? Chaque choix raconte l'événement autrement. Cadrer, c'est déjà interpréter. C'est ça, la force et la limite du direct : on voit le monde entier — mais on voit ce qu'un rédacteur a décidé de nous montrer." },
 
   msg_cd: { title: "CD-Rom & disque optique", emoji: "💿",
     jauges: { vitesse: 3, portee: 4, capacite: 4, durabilite: 2 },
@@ -187,6 +193,45 @@ const ACTIONS = {
   faire_la_une: { modal: "faire_la_une",
     needMsg: "Approche-toi du kiosque et clique dessus pour composer la Une avec Robert." },
 
+  cadrer_evenement: { modal: "cadrer_evenement",
+    needMsg: "Clique sur la télé pour rejoindre la rédaction du JT du soir." },
+
+  papa_jt: { mood: "neutre",
+    bubble: "…",
+    say: "Papa. Absorbé, muet devant l'écran. Il ne pensait pas voir ça de son vivant.",
+    chitchat: [
+      "Trente ans que ce mur est debout. Trente ans qu'on nous dit qu'il ne tombera jamais.",
+      "Je vais garder cette cassette VHS toute ma vie. Toute ma vie.",
+      "Chuuut… j'écoute le journaliste.",
+    ] },
+
+  maman_jt: { mood: "content",
+    bubble: "Allô, Mamie ? Allume la deux ! Berlin ! LE MUR ! Non mais tu te rends compte ?",
+    say: "Maman appelle grand-mère au téléphone à fil. Elle veut que TOUT LE MONDE regarde en même temps.",
+    chitchat: [
+      "Allô, Sylvie ? Allume la télé, vite ! … Comment ça, tu regardais un film ? Change de chaîne !",
+      "Ma mère habite à côté de Strasbourg. Elle entend parler allemand tous les jours. Elle doit être bouleversée.",
+      "J'ai appelé toute la famille. Tout le monde regarde en direct, dans son salon. C'est fou, non ?",
+    ] },
+
+  ado_jt: { mood: "neutre",
+    bubble: "C'est quoi ce mur, en fait ? Pourquoi ils l'ont mis, pourquoi ils le cassent ?",
+    say: "L'ado, 13 ans. Elle voit la joie sans comprendre pourquoi. Une image qui la marquera quand même.",
+    chitchat: [
+      "Papa m'a expliqué trois fois. J'ai retenu qu'il y avait deux Allemagnes. Pas plus.",
+      "Mes copines vont pas y croire demain au collège. Je vais tout leur raconter.",
+      "Je peux enregistrer sur ma cassette moi aussi ? Papa veut me tuer si je touche à la platine.",
+    ] },
+
+  grandpere_jt: { mood: "content",
+    bubble: "J'ai vu construire ce mur en 61. Je vais le voir tomber en 89. C'est la fin de quelque chose, ma petite.",
+    say: "Grand-père. Il a le regard qui brille. Il a connu l'après-guerre, il a vu ce mur monter — il le voit tomber.",
+    chitchat: [
+      "J'ai vu tomber le mur, comme j'ai vu tomber le maréchal. Deux fois dans une vie, ce n'est pas rien.",
+      "En 61, personne n'aurait parié un franc là-dessus. Regardez-moi ces gens qui dansent.",
+      "Enregistrez, enregistrez ! Vos enfants voudront voir ça.",
+    ] },
+
   cadre_presse: { mood: "neutre",
     bubble: "Un Monde et un ticket de métro, s'il vous plaît. Vite, je suis pressé.",
     say: "Un cadre du quartier. Il achète Le Monde tous les matins depuis douze ans — sans jamais le lire dans le métro.",
@@ -238,7 +283,7 @@ const chapter = {
   finTitre: "SAUT TEMPOREL RÉUSSI",
   finTexte: "« Circuits rechargés à {pct} %. Vingt ans, trois révolutions : le direct mondial, l'enregistrement à domicile, la gravure numérique. Chaque support s'est vendu comme « inaltérable ». Regarde ta frise : la durabilité continue de plonger. Prochain saut : ton époque. Et j'ai gardé la disquette de Julien, on va voir ce qu'elle vaut aujourd'hui… » — MARTINE",
 
-  required: 4,
+  required: 5,
   startScene: 0,
   destination: "XXIe SIÈCLE",
   linear: true,
