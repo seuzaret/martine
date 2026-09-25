@@ -144,16 +144,10 @@ export default function ScenePhenicie({ collect, action, reveal, made = [], mode
       <rect width="1000" height="560" fill="#231a10" opacity="0.06" style={{ pointerEvents: "none" }} />
 
       {/* zones cliquables */}
-      {/* le « ? » d'Assurbanipal : un code simple, apprenable en quelques jours.
-          Cache en jeu 2 (l'enquete Al3x1A n'a rien a voir avec l'alphabet). */}
+      {/* Hotspot pour parler à Assurbanipal — visible tant qu'on n'a pas
+          l'alphabet, caché en jeu 2 (l'enquête Al3x1A ne le concerne pas). */}
       {!made.includes("msg_alphabet") && mode !== "jeu2" && (
-        <>
-          <g transform="translate(552,414)" style={{ animation: "glow 2.4s ease-in-out infinite" }}>
-            <path d="M0 0 q0 -20 20 -20 q20 0 20 17 q0 14 -17 18 l0 6" fill="none" stroke="#ffd166" strokeWidth="4" />
-            <circle cx="20" cy="31" r="2.6" fill="#ffd166" />
-          </g>
-          <Hotspot cx={572} cy={424} r={28} label="parler à Assurbanipal" reveal={reveal} onClick={() => action("assurbanipal")} />
-        </>
+        <Hotspot cx={572} cy={424} r={28} label="parler à Assurbanipal" reveal={reveal} onClick={() => action("assurbanipal")} />
       )}
 
       {/* la tablette : APPRENDRE l'alphabet (mini-jeu) → on gagne les 22 signes */}
