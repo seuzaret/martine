@@ -307,10 +307,17 @@ export default function App() {
 
   /* …et dès qu'on clique AILLEURS (n'importe où sur l'écran). L'écouteur
      est en phase de CAPTURE : si le clic vise un autre personnage, la bulle
-     s'efface d'abord, puis son action réaffiche aussitôt la nouvelle. */
+     s'efface d'abord, puis son action réaffiche aussitôt la nouvelle.
+     EXCEPTION : quand la bulle porte un mini-dialogue à choix, ne pas la
+     fermer sur le clic du choix (sinon la sélection est perdue avant que
+     pickChoice n'ait le temps d'inscrire la réponse). */
   useEffect(() => {
     if (!bubble) return;
-    const fermer = () => setBubble(null);
+    const fermer = (ev) => {
+      const inChoices = ev.target && ev.target.closest && ev.target.closest('[data-bubble-choice]');
+      if (inChoices) return;
+      setBubble(null);
+    };
     document.addEventListener("click", fermer, true);
     return () => document.removeEventListener("click", fermer, true);
   }, [bubble]);
@@ -2051,7 +2058,7 @@ export default function App() {
                 <div style={{ fontSize: 11, color: "#8a7250", fontStyle: "italic", marginBottom: 4 }}>Tu peux répondre…</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
                   {bubble.choices.map((c, i) => (
-                    <button key={i} onClick={(e) => { e.stopPropagation(); pickChoice(c); }}
+                    <button key={i} data-bubble-choice onClick={(e) => { e.stopPropagation(); pickChoice(c); }}
                       style={{ textAlign: "left", background: "transparent", border: "none",
                         padding: "5px 4px 5px 12px", fontFamily: "Palatino, Georgia, serif", fontSize: 14,
                         color: "#26365a", cursor: "pointer", lineHeight: 1.35,
@@ -2070,7 +2077,7 @@ export default function App() {
             {hasExchange && (
               <>
                 <div style={{ marginTop: 10, marginLeft: "18%", padding: "6px 10px",
-                  background: "rgba(60,90,140,0.12)", borderRadius: 10,
+                  background: "#fdfaf0", border: "1px solid #eadfc4", borderRadius: 10,
                   fontStyle: "italic", color: "#26365a", fontSize: 13.5, lineHeight: 1.4 }}>
                   — {bubble.playerLine}
                 </div>
