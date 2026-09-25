@@ -897,19 +897,19 @@ function SlideRules({ onNext }) {
             <circle cx="400" cy="200" r="180" fill="url(#s4b-glow2)" />
             {/* Bulle centrée : question de MARTINE (ou sa réponse) */}
             <g transform="translate(400,200)">
-              <rect x="-320" y="-80" width="640" height="160" fill="#0e1a30" stroke="#5eff9e" strokeWidth="3" rx="14" />
-              <text x="0" y="-50" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="11" fill="#5eff9e" letterSpacing="4">MARTINE</text>
+              <rect x="-260" y="-70" width="520" height="140" fill="#0e1a30" stroke="#5eff9e" strokeWidth="2.5" rx="12" />
+              <text x="0" y="-45" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="10" fill="#5eff9e" letterSpacing="3.5">MARTINE</text>
               {!mood ? (
                 <>
-                  <text x="0" y="-20" textAnchor="middle" fontFamily="Georgia,serif" fontSize="15" fill="#e8eef5" fontStyle="italic">« On va voyager dans le temps.</text>
-                  <text x="0" y="0" textAnchor="middle" fontFamily="Georgia,serif" fontSize="15" fill="#e8eef5" fontStyle="italic">Ce n'est pas comme prendre le bus.</text>
-                  <text x="0" y="24" textAnchor="middle" fontFamily="Georgia,serif" fontSize="15" fill="#e8eef5" fontStyle="italic">Il y a des règles précises.</text>
-                  <text x="0" y="52" textAnchor="middle" fontFamily="Georgia,serif" fontSize="16" fill="#5eff9e" fontWeight="700">Prêt·e ? »</text>
+                  <text x="0" y="-20" textAnchor="middle" fontFamily="Georgia,serif" fontSize="13" fill="#e8eef5" fontStyle="italic">« On va voyager dans le temps.</text>
+                  <text x="0" y="-2" textAnchor="middle" fontFamily="Georgia,serif" fontSize="13" fill="#e8eef5" fontStyle="italic">Ce n'est pas comme prendre le bus.</text>
+                  <text x="0" y="20" textAnchor="middle" fontFamily="Georgia,serif" fontSize="13" fill="#e8eef5" fontStyle="italic">Il y a des règles précises.</text>
+                  <text x="0" y="46" textAnchor="middle" fontFamily="Georgia,serif" fontSize="14" fill="#5eff9e" fontWeight="700">Prêt·e ? »</text>
                 </>
               ) : (
-                <foreignObject x="-300" y="-30" width="600" height="90">
+                <foreignObject x="-240" y="-25" width="480" height="80">
                   <div xmlns="http://www.w3.org/1999/xhtml"
-                    style={{ font: "italic 15px Georgia,serif", color: "#e8eef5", lineHeight: 1.4, textAlign: "center", padding: "0 12px" }}>
+                    style={{ font: "italic 13px Georgia,serif", color: "#e8eef5", lineHeight: 1.4, textAlign: "center", padding: "0 10px" }}>
                     {REPONSES[mood].reponse}
                   </div>
                 </foreignObject>
@@ -1053,11 +1053,11 @@ function SlideMartineReparee({ onNext }) {
         ))}
         <circle cx="400" cy="200" r="180" fill="url(#s4c-glow)" />
         <g transform="translate(400,200)">
-          <rect x="-320" y="-70" width="640" height="140" fill="#0e1a30" stroke="#5eff9e" strokeWidth="3" rx="14" />
-          <text x="0" y="-42" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="11" fill="#5eff9e" letterSpacing="4">MARTINE</text>
-          <foreignObject x="-300" y="-24" width="600" height="90">
+          <rect x="-260" y="-60" width="520" height="120" fill="#0e1a30" stroke="#5eff9e" strokeWidth="2.5" rx="12" />
+          <text x="0" y="-36" textAnchor="middle" fontFamily="ui-monospace,monospace" fontSize="10" fill="#5eff9e" letterSpacing="3.5">MARTINE</text>
+          <foreignObject x="-240" y="-22" width="480" height="80">
             <div xmlns="http://www.w3.org/1999/xhtml"
-              style={{ font: "italic 15px Georgia,serif", color: "#e8eef5", lineHeight: 1.45, textAlign: "center", padding: "0 12px" }}>
+              style={{ font: "italic 13px Georgia,serif", color: "#e8eef5", lineHeight: 1.45, textAlign: "center", padding: "0 10px" }}>
               {line.txt}
             </div>
           </foreignObject>
