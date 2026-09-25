@@ -9,7 +9,8 @@ const ETAPES = [
   { tab: 0, an: 1969, nom: "Le salon",   sous: "TV Lune, direct mondial",     emoji: "📺" },
   { tab: 1, an: 1980, nom: "Le kiosque", sous: "ligne éditoriale, choix",     emoji: "📰" },
   { tab: 2, an: 1985, nom: "La chambre", sous: "cassette + magnétoscope",     emoji: "📼" },
-  { tab: 3, an: 1990, nom: "Le bureau",  sous: "PC beige, disquette, CD-Rom", emoji: "💿" },
+  { tab: 3, an: 1989, nom: "Le JT",      sous: "chute du Mur en direct",      emoji: "🗞️" },
+  { tab: 4, an: 1990, nom: "Le bureau",  sous: "PC beige, disquette, CD-Rom", emoji: "💿" },
 ];
 
 const T0 = 1960;
