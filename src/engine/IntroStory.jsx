@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { playMaterialize } from './sfx.js';
 import TimeMachine from './TimeMachine.jsx';
 import { Avatar } from './Martine.jsx';
+import SceneFrame from './SceneFrame.jsx';
 
 /* ============================================================
    INTRO — 6 tableaux INTERACTIFS.
@@ -94,9 +95,9 @@ export default function IntroStory({ onDone }) {
         style={{ position: 'absolute', top: 12, right: 16, zIndex: 10, background: '#ffd166', border: '2px solid #5a4028', color: '#3a2410', padding: '10px 18px', borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'ui-monospace,monospace', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
         Passer l'intro ›
       </button>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, minHeight: 0 }}>
-        <div style={{ width: '100%', maxWidth: 900 }}>{SLIDES[i]}</div>
-      </div>
+      <SceneFrame style={{ padding: 12 }}>
+        {SLIDES[i]}
+      </SceneFrame>
       <style>{`
         @keyframes drift { 0%, 100% { opacity: 0.85; transform: translate(0, 0); } 50% { opacity: 0.4; transform: translate(2px, -3px); } }
         @keyframes flick { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
@@ -136,8 +137,8 @@ function SlideNight({ onNext }) {
   }, []);
 
   return (
-    <div style={{ animation: 'fadeIn 1s ease-out', width: '100%' }}>
-      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
+    <div style={{ animation: 'fadeIn 1s ease-out', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="s1-wall" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#1a1f30" />
@@ -458,8 +459,8 @@ function SlideNight({ onNext }) {
    ═══════════════════════════════════════════════════════════════ */
 function SlideMessage({ onNext }) {
   return (
-    <div style={{ animation: 'fadeIn 0.8s ease-out', width: '100%' }}>
-      <svg viewBox="0 0 800 500" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
+    <div style={{ animation: 'fadeIn 0.8s ease-out', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <svg viewBox="0 0 800 500" style={{ display: 'block', width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
         <defs><radialGradient id="s2-halo" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#3a80c8" stopOpacity="0.4" /><stop offset="100%" stopColor="#3a80c8" stopOpacity="0" /></radialGradient></defs>
         <rect width="800" height="500" fill="#050810" />
         <circle cx="400" cy="250" r="300" fill="url(#s2-halo)" />
@@ -513,8 +514,8 @@ function SlideOutside({ onNext }) {
   }, []);
 
   return (
-    <div style={{ animation: 'fadeIn 0.8s ease-out', position: 'relative', width: '100%' }}>
-      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
+    <div style={{ animation: 'fadeIn 0.8s ease-out', position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="s3-sky" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#0a0e28" />
@@ -675,8 +676,8 @@ function SlideOutside({ onNext }) {
    ═══════════════════════════════════════════════════════════════ */
 function SlideCockpit({ onNext }) {
   return (
-    <div style={{ animation: 'fadeIn 0.8s ease-out', position: 'relative', width: '100%' }}>
-      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
+    <div style={{ animation: 'fadeIn 0.8s ease-out', position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="s4-cabin" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#0a1a2a" />
@@ -873,11 +874,11 @@ function SlideRules({ onNext }) {
   const seen = isCheckin ? [] : REGLES.slice(0, n + 1);
 
   return (
-    <div style={{ animation: 'fadeIn 0.6s ease-out', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+    <div style={{ animation: 'fadeIn 0.6s ease-out', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, minHeight: 0 }}>
       {/* --- ÉTAPE CHECK-IN : MARTINE demande si tout est clair --- */}
       {isCheckin && (
         <>
-          <svg viewBox="0 0 800 340" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '60vh' }}>
+          <svg viewBox="0 0 800 340" style={{ display: 'block', width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
             <defs>
               <linearGradient id="s4b-cabin2" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#0a1a2a" />
@@ -951,7 +952,7 @@ function SlideRules({ onNext }) {
       {/* --- ÉTAPES 0..3 : LES RÈGLES --- */}
       {!isCheckin && (
         <>
-          <svg viewBox="0 0 800 520" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
+          <svg viewBox="0 0 800 520" style={{ display: 'block', width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
             <defs>
               <linearGradient id="s4b-cabin3" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#0a1a2a" />
@@ -1033,8 +1034,8 @@ function SlideMartineReparee({ onNext }) {
   const line = LINES[n];
 
   return (
-    <div style={{ animation: 'fadeIn 0.6s ease-out', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-      <svg viewBox="0 0 800 340" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '60vh' }}>
+    <div style={{ animation: 'fadeIn 0.6s ease-out', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, minHeight: 0 }}>
+      <svg viewBox="0 0 800 340" style={{ display: 'block', width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="s4c-cabin" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#0a1a2a" />
@@ -1103,8 +1104,8 @@ function SlideFlash({ onNext }) {
   const fmt = (y) => (y < 0 ? `−${Math.abs(y).toLocaleString('fr-FR')}` : y.toLocaleString('fr-FR'));
 
   return (
-    <div style={{ animation: 'fadeIn 0.5s ease-out', position: 'relative', width: '100%' }}>
-      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
+    <div style={{ animation: 'fadeIn 0.5s ease-out', position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
         <defs>
           <radialGradient id="s5-flash" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#fff" stopOpacity="1" />
@@ -1233,8 +1234,8 @@ function SlideArrival({ onDone }) {
   const clickMartine = () => { if (!lastStep) setStep(step + 1); };
 
   return (
-    <div style={{ animation: 'fadeIn 1s ease-out', width: '100%' }}>
-      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '72vh' }}>
+    <div style={{ animation: 'fadeIn 1s ease-out', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <svg viewBox="0 0 1200 680" style={{ display: 'block', width: '100%', height: '100%' }} preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="s6-sky" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#5a3820" />

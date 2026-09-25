@@ -35,7 +35,7 @@ export default function BunkerRumeurs({ onGo, j3 }) {
         🎯 MISSION · {mission.titre.toUpperCase()} — clique un PNJ pour l'écouter
       </div>
 
-      <svg viewBox="0 0 1200 620" style={{ display: "block", width: "100%", height: "auto", maxHeight: "72vh" }}>
+      <svg viewBox="0 0 1200 620" style={{ display: "block", width: "100%", height: "auto", maxHeight: "100%" }}>
         <defs>
           <linearGradient id="br-wall" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#2a2418" />

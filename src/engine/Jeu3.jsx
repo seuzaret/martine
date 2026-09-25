@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import SceneFrame from "./SceneFrame.jsx";
 import BunkerAwake from "../chapters/jeu3/scenes/BunkerAwake.jsx";
 import BunkerHub from "../chapters/jeu3/scenes/BunkerHub.jsx";
 import BunkerHubHaut from "../chapters/jeu3/scenes/BunkerHubHaut.jsx";
@@ -124,11 +125,9 @@ export default function Jeu3({ prenom, onExit }) {
       {/* Zone principale : mini-carte à gauche + scène à droite */}
       <div style={{ flex: 1, display: "flex", minHeight: 0 }}>
         {showMinimap && <BunkerMinimap room={room} flags={flags} onGo={goTo} cheat={cheat} />}
-        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 6, minHeight: 0, overflow: "hidden" }}>
-          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Comp prenom={prenom} onGo={goTo} j3={j3} />
-          </div>
-        </div>
+        <SceneFrame style={{ padding: 6 }}>
+          <Comp prenom={prenom} onGo={goTo} j3={j3} />
+        </SceneFrame>
       </div>
     </div>
   );

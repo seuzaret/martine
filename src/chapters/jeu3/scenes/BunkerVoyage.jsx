@@ -43,7 +43,7 @@ export default function BunkerVoyage({ onGo, j3 }) {
   if (phase === "flash" || phase === "return") {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, position: "relative", width: "100%" }}>
-        <svg viewBox="0 0 1100 560" style={{ display: "block", width: "100%", height: "auto", maxHeight: "72vh" }}>
+        <svg viewBox="0 0 1100 560" style={{ display: "block", width: "100%", height: "auto", maxHeight: "100%" }}>
           <defs>
             <radialGradient id="bv-flash" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#fff" stopOpacity="1" />
@@ -78,7 +78,7 @@ export default function BunkerVoyage({ onGo, j3 }) {
       <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 3, color: "#e0a848" }}>
         📻 {mission.dateCible.toUpperCase()} — TOIT DE L'IMMEUBLE 12, RUE DES SIRÈNES
       </div>
-      <svg viewBox="0 0 1100 560" style={{ display: "block", width: "100%", height: "auto", maxHeight: "78vh", flexShrink: 0 }}>
+      <svg viewBox="0 0 1100 560" style={{ display: "block", width: "100%", height: "auto", maxHeight: "100%", flexShrink: 0 }}>
         <defs>
           <linearGradient id="bv-sky" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#1a1030" />
