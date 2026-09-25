@@ -319,7 +319,13 @@ export default function SceneCampement({ collect, action, reveal, made = [], que
 
       {/* zones cliquables — hors couches (décalage max « rayon) */}
       <Hotspot cx={500} cy={440} r={62} label="feu" item="feu" support reveal={reveal} onClick={() => collect("feu")} />
-      <Hotspot cx={410} cy={432} r={48} label="toi" item="voix" reveal={reveal} onClick={() => collect("voix")} />
+      {/* petites notes de musique flottantes au-dessus du personnage qui fredonne */}
+      <g style={{ pointerEvents: "none" }} opacity="0.85">
+        <text x="380" y="400" fontSize="16" fill="#c9a877" fontFamily="Georgia,serif" style={{ animation: "drift 3.2s ease-in-out infinite" }}>♪</text>
+        <text x="405" y="386" fontSize="13" fill="#c9a877" fontFamily="Georgia,serif" style={{ animation: "drift 3.8s ease-in-out infinite", animationDelay: "0.6s" }}>♫</text>
+        <text x="428" y="402" fontSize="14" fill="#c9a877" fontFamily="Georgia,serif" style={{ animation: "drift 3.5s ease-in-out infinite", animationDelay: "1.2s" }}>♪</text>
+      </g>
+      <Hotspot cx={410} cy={432} r={48} label="quelqu'un qui fredonne" item="voix" reveal={reveal} onClick={() => collect("voix")} />
       <Hotspot cx={660} cy={488} r={58} label="branches" item="branche" reveal={reveal} onClick={() => collect("branche")} />
       <Hotspot cx={300} cy={446} r={44} label="Raya, le chef" reveal={reveal} onClick={(p) => action("raya", p)} />
 

@@ -674,7 +674,9 @@ export default function App() {
        MARTINE reste silencieuse pendant ces échanges anodins. */
     let bubbleChoices = null;
     if (mode === "jeu1" && !stepMatched) {
-      const chatFlag = `chat_${name}`;
+      /* Le flag est nommé v2 pour ignorer les anciens flags `chat_*`
+         d'une itération précédente qui restaient dans les saves. */
+      const chatFlag = `chatv2_${name}`;
       if (act.chatOnce && !flags[chatFlag]) {
         bubbleText = act.chatOnce.q;
         bubbleChoices = act.chatOnce.choices;
@@ -2040,22 +2042,22 @@ export default function App() {
               padding: "11px 14px", fontFamily: "Palatino, Georgia, serif", fontSize: 14.5, lineHeight: 1.5,
               boxShadow: "0 8px 26px rgba(0,0,0,0.5)", cursor: hasChoices ? "default" : "pointer", animation: "fadein .18s ease-out",
             }}>
-            {/* Réplique du PNJ (question, ou parole simple) */}
-            <div>{bubble.text}</div>
+            {/* Réplique du PNJ (question, ou parole simple) — brun profond */}
+            <div style={{ color: "#2a1c10" }}>{bubble.text}</div>
 
             {/* Choix du joueur : liste sobre, sans cases, pour éviter le look quiz */}
             {hasChoices && (
               <div style={{ marginTop: 12, paddingTop: 8, borderTop: "1px dashed #cbb489" }}>
-                <div style={{ fontSize: 11, color: "#8a7250", fontStyle: "italic", marginBottom: 4 }}>Tu réponds…</div>
+                <div style={{ fontSize: 11, color: "#8a7250", fontStyle: "italic", marginBottom: 4 }}>Tu peux répondre…</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
                   {bubble.choices.map((c, i) => (
                     <button key={i} onClick={(e) => { e.stopPropagation(); pickChoice(c); }}
                       style={{ textAlign: "left", background: "transparent", border: "none",
                         padding: "5px 4px 5px 12px", fontFamily: "Palatino, Georgia, serif", fontSize: 14,
-                        color: "#3a4028", cursor: "pointer", lineHeight: 1.35,
+                        color: "#26365a", cursor: "pointer", lineHeight: 1.35,
                         borderLeft: "2px solid transparent", transition: "border-color .15s, color .15s, background .15s" }}
-                      onMouseEnter={(e) => { e.currentTarget.style.borderLeftColor = "#a17c3a"; e.currentTarget.style.color = "#2a1c10"; e.currentTarget.style.background = "rgba(203,180,137,0.18)"; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.borderLeftColor = "transparent"; e.currentTarget.style.color = "#3a4028"; e.currentTarget.style.background = "transparent"; }}>
+                      onMouseEnter={(e) => { e.currentTarget.style.borderLeftColor = "#4a6a9c"; e.currentTarget.style.color = "#12203d"; e.currentTarget.style.background = "rgba(60,90,140,0.10)"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderLeftColor = "transparent"; e.currentTarget.style.color = "#26365a"; e.currentTarget.style.background = "transparent"; }}>
                       — {c.a}
                     </button>
                   ))}
@@ -2063,14 +2065,16 @@ export default function App() {
               </div>
             )}
 
-            {/* Après le choix : la voix du joueur puis la relance du PNJ */}
+            {/* Après le choix : la voix du joueur (bleu, alignée à droite),
+               puis la relance du PNJ (brun profond, à gauche, comme la Q) */}
             {hasExchange && (
               <>
-                <div style={{ marginTop: 10, marginLeft: "18%", padding: "6px 10px", background: "rgba(94,120,80,0.14)",
-                  borderRadius: 10, fontStyle: "italic", color: "#3d4a30", fontSize: 13.5, lineHeight: 1.4 }}>
+                <div style={{ marginTop: 10, marginLeft: "18%", padding: "6px 10px",
+                  background: "rgba(60,90,140,0.12)", borderRadius: 10,
+                  fontStyle: "italic", color: "#26365a", fontSize: 13.5, lineHeight: 1.4 }}>
                   — {bubble.playerLine}
                 </div>
-                <div style={{ marginTop: 8 }}>{bubble.followUp}</div>
+                <div style={{ marginTop: 8, color: "#2a1c10" }}>{bubble.followUp}</div>
                 <div style={{ fontSize: 10, color: "#8a7250", fontStyle: "italic", marginTop: 5, textAlign: "right" }}>clique n'importe où pour fermer</div>
               </>
             )}
