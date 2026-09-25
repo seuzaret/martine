@@ -173,16 +173,20 @@ export default function SceneAtelier({ collect, action, reveal, made = [], inv =
             <ellipse cx={x - 4} cy={y - 2} rx={5} ry={2.5} fill="#4c5c2c" />
           </g>
         ))}
-        {/* bouche de la grotte — d'où sort une lueur chaude et un peu de fumée */}
-        <path d="M92 430 Q84 320 168 298 Q254 314 246 430 Z" fill="url(#at-cave)" />
-        <path d="M92 430 Q84 320 168 298 Q254 314 246 430" fill="none" stroke="#1a0d08" strokeWidth="8" />
-        <path d="M100 430 Q96 336 168 314" stroke="#ffe0a0" strokeWidth="3" fill="none" opacity="0.3" />
-        {/* lueur du foyer */}
-        <ellipse cx="168" cy="360" rx="46" ry="20" fill="#ff9040" opacity="0.35" filter="url(#at-blur)" style={{ animation: "glow 2.6s ease-in-out infinite" }} />
-        {/* fumée qui sort */}
-        {[0, 1, 2].map((i) => (
-          <ellipse key={i} cx={172 + i * 4} cy={220 - i * 22} rx={12 + i * 2} ry={8 + i} fill="#e0d8c0" opacity={0.5 - i * 0.12}
-            style={{ animation: `smokeRise ${4 + i}s ease-in-out infinite` }} />
+        {/* ABRI SOUS ROCHE — une saillie horizontale de la falaise
+           forme un dais rocheux au-dessus de l'atelier. Rien à voir
+           avec la grotte du campement : ici, on travaille à l'air
+           libre, à l'abri d'une avancée de pierre. */}
+        {/* la saillie qui déborde vers l'avant */}
+        <path d="M0 296 Q140 288 300 306 Q380 316 388 340 Q286 344 176 342 Q80 340 0 336 Z" fill="url(#at-cliff)" />
+        <path d="M0 296 Q140 288 300 306 Q380 316 388 340 Q286 344 176 342 Q80 340 0 336 Z" fill="#1c1006" opacity="0.35" filter="url(#at-mottle)" />
+        {/* trait d'ombre sous la saillie */}
+        <path d="M0 340 Q160 348 320 342 L320 356 Q160 362 0 354 Z" fill="#1a0e06" opacity="0.55" />
+        {/* zone d'ombre au sol, sous l'abri, là où Ough travaille */}
+        <ellipse cx="150" cy="418" rx="180" ry="18" fill="#1a0e06" opacity="0.35" filter="url(#at-blur)" />
+        {/* éclats de silex éparpillés sous l'abri (résidus de taille) */}
+        {[[60, 424], [96, 432], [130, 420], [162, 428], [198, 424], [58, 440], [104, 444], [148, 442], [190, 440], [76, 452], [122, 452], [174, 452]].map(([x, y], i) => (
+          <path key={i} d={`M${x} ${y} l${3 + (i % 3)} ${-2 - (i % 2)} l${2 + (i % 2)} ${2 + (i % 2)} z`} fill={i % 2 ? "#c8bfae" : "#8a7f6c"} opacity="0.75" />
         ))}
       </PLayer>
 
