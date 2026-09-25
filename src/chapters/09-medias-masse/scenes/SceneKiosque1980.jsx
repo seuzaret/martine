@@ -230,6 +230,7 @@ export default function SceneKiosque1980({ collect, action, reveal, made = [], i
 
       {/* ═══ Mobylette Solex qui traverse le trottoir de temps en temps ═══
          L'icône même des années 80 dans les rues françaises. Elle
+<<<<<<< HEAD
          passe de DROITE À GAUCHE toutes les 14 s, plus près du bord
          bas du trottoir, avec un petit panache de fumée bleutée au
          pot d'échappement, qui traîne derrière (donc à droite du
@@ -245,13 +246,33 @@ export default function SceneKiosque1980({ collect, action, reveal, made = [], i
               <animate attributeName="rx" values="4; 20" dur="1.4s" repeatCount="indefinite" />
             </ellipse>
             <ellipse cx="114" cy="497" rx="8" ry="3.5" fill="#b8b0a8">
+=======
+         passe de gauche à droite toutes les 14s, avec un petit
+         panache de fumée bleutée au pot d'échappement. */}
+      <PLayer depth={2}>
+        <g>
+          <animateTransform attributeName="transform" attributeType="XML" type="translate"
+            values="-140,0; 1140,0" dur="14s" begin="2s" repeatCount="indefinite" />
+          {/* fumée du pot d'échappement — traînée qui suit la mobylette */}
+          <g opacity="0.55">
+            <ellipse cx="-14" cy="420" rx="10" ry="4" fill="#c8c0b8">
+              <animate attributeName="opacity" values="0.7; 0" dur="1.4s" repeatCount="indefinite" />
+              <animate attributeName="rx" values="4; 20" dur="1.4s" repeatCount="indefinite" />
+            </ellipse>
+            <ellipse cx="-30" cy="415" rx="8" ry="3.5" fill="#b8b0a8">
+>>>>>>> origin/main
               <animate attributeName="opacity" values="0.6; 0" dur="1.6s" begin="0.4s" repeatCount="indefinite" />
               <animate attributeName="rx" values="3; 16" dur="1.6s" begin="0.4s" repeatCount="indefinite" />
             </ellipse>
           </g>
+<<<<<<< HEAD
           {/* la mobylette, mirrored (scale -1) pour qu'elle regarde à gauche,
              et abaissée à y=492 pour rouler plus bas sur le trottoir */}
           <g transform="translate(60,492) scale(-1,1)">
+=======
+          {/* la mobylette (translate x=0 = position de départ à gauche) */}
+          <g transform="translate(60,410)">
+>>>>>>> origin/main
             {/* roues avec rayons */}
             <circle cx="-18" cy="16" r="13" fill="none" stroke="#1a1a1a" strokeWidth="3" />
             <circle cx="-18" cy="16" r="13" fill="#2a2a2a" opacity="0.35" />
