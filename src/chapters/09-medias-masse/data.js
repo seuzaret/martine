@@ -232,6 +232,45 @@ const ACTIONS = {
       "Enregistrez, enregistrez ! Vos enfants voudront voir ça.",
     ] },
 
+  cadrer_evenement: { modal: "cadrer_evenement",
+    needMsg: "Clique sur la télé pour rejoindre la rédaction du JT du soir." },
+
+  papa_jt: { mood: "neutre",
+    bubble: "…",
+    say: "Papa. Absorbé, muet devant l'écran. Il ne pensait pas voir ça de son vivant.",
+    chitchat: [
+      "Trente ans que ce mur est debout. Trente ans qu'on nous dit qu'il ne tombera jamais.",
+      "Je vais garder cette cassette VHS toute ma vie. Toute ma vie.",
+      "Chuuut… j'écoute le journaliste.",
+    ] },
+
+  maman_jt: { mood: "content",
+    bubble: "Allô, Mamie ? Allume la deux ! Berlin ! LE MUR ! Non mais tu te rends compte ?",
+    say: "Maman appelle grand-mère au téléphone à fil. Elle veut que TOUT LE MONDE regarde en même temps.",
+    chitchat: [
+      "Allô, Sylvie ? Allume la télé, vite ! … Comment ça, tu regardais un film ? Change de chaîne !",
+      "Ma mère habite à côté de Strasbourg. Elle entend parler allemand tous les jours. Elle doit être bouleversée.",
+      "J'ai appelé toute la famille. Tout le monde regarde en direct, dans son salon. C'est fou, non ?",
+    ] },
+
+  ado_jt: { mood: "neutre",
+    bubble: "C'est quoi ce mur, en fait ? Pourquoi ils l'ont mis, pourquoi ils le cassent ?",
+    say: "L'ado, 13 ans. Elle voit la joie sans comprendre pourquoi. Une image qui la marquera quand même.",
+    chitchat: [
+      "Papa m'a expliqué trois fois. J'ai retenu qu'il y avait deux Allemagnes. Pas plus.",
+      "Mes copines vont pas y croire demain au collège. Je vais tout leur raconter.",
+      "Je peux enregistrer sur ma cassette moi aussi ? Papa veut me tuer si je touche à la platine.",
+    ] },
+
+  grandpere_jt: { mood: "content",
+    bubble: "J'ai vu construire ce mur en 61. Je vais le voir tomber en 89. C'est la fin de quelque chose, ma petite.",
+    say: "Grand-père. Il a le regard qui brille. Il a connu l'après-guerre, il a vu ce mur monter — il le voit tomber.",
+    chitchat: [
+      "J'ai vu tomber le mur, comme j'ai vu tomber le maréchal. Deux fois dans une vie, ce n'est pas rien.",
+      "En 61, personne n'aurait parié un franc là-dessus. Regardez-moi ces gens qui dansent.",
+      "Enregistrez, enregistrez ! Vos enfants voudront voir ça.",
+    ] },
+
   cadre_presse: { mood: "neutre",
     bubble: "Un Monde et un ticket de métro, s'il vous plaît. Vite, je suis pressé.",
     say: "Un cadre du quartier. Il achète Le Monde tous les matins depuis douze ans — sans jamais le lire dans le métro.",
