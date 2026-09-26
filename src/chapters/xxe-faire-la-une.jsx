@@ -26,33 +26,48 @@ const JOURNAUX = [
     id: "reporter",
     nom: "Le Petit Reporter",
     couleur: "#e0a848",
+<<<<<<< HEAD
     perso: "Sophie",
     titrePerso: "rédactrice en chef",
     cible: "collégiens et lycéens (12-16 ans)",
     ligne: "un hebdo jeunesse : rythmé, curieux, expliquant sans être scolaire.",
     accroche: "Salut ! Je suis Sophie, du Petit Reporter. Robert m'a dit que tu pourrais me dépanner ce matin — ma stagiaire est malade et je dois boucler la Une avant midi. Nos lecteurs sont des collégiens et des lycéens, il faut que ça leur parle. Tu me donnes un coup de main ?",
+=======
+    cible: "collégiens et lycéens (12-16 ans)",
+    ligne: "un hebdo jeunesse : rythmé, curieux, expliquant sans être scolaire.",
+>>>>>>> origin/main
     prefer: { titre: ["accroche"], ton: ["emotion"] },
   },
   {
     id: "grand",
     nom: "Le Grand Quotidien",
     couleur: "#4a6a90",
+<<<<<<< HEAD
     perso: "Monsieur Berger",
     titrePerso: "rédacteur en chef",
     cible: "adultes actifs, pressés, cadres et enseignants",
     ligne: "un quotidien de référence : sobre, précis, fiable.",
     accroche: "Bonjour. Ici Berger, du Grand Quotidien. Robert m'a passé votre numéro — vous auriez cinq minutes ? Nous cherchons un regard neuf pour la Une. Attention : nos lecteurs sont des adultes pressés, ils veulent l'essentiel, sans emballement.",
+=======
+    cible: "adultes actifs, pressés, cadres et enseignants",
+    ligne: "un quotidien de référence : sobre, précis, fiable.",
+>>>>>>> origin/main
     prefer: { titre: ["pose", "calme"], ton: ["factuel"] },
   },
   {
     id: "star",
     nom: "Star Magazine",
     couleur: "#c04a70",
+<<<<<<< HEAD
     perso: "Chantal",
     titrePerso: "cheffe des Unes",
     cible: "amateurs de célébrités, de faits divers spectaculaires",
     ligne: "un hebdo grand public qui joue sur les émotions et le sensationnel.",
     accroche: "Allô ma choupinette ? C'est Chantal, de Star Magazine ! Robert m'a dit que t'étais dispo. Écoute, on doit sortir demain matin et j'ai une dépêche qui pue le scoop mais je suis vidée. Nos lecteurs veulent du frisson, des émotions, du croustillant — tu me suis, hein ?",
+=======
+    cible: "amateurs de célébrités, de faits divers spectaculaires",
+    ligne: "un hebdo grand public qui joue sur les émotions et le sensationnel.",
+>>>>>>> origin/main
     prefer: { titre: ["sensation"], ton: ["inquiet", "emotion"] },
   },
 ];
@@ -208,6 +223,7 @@ export function FaireLaUneGame({ onClose, onWin }) {
         <div style={{ textAlign: "center", fontFamily: "ui-monospace,monospace", fontSize: 11, letterSpacing: 2, color: "#8a5a2a" }}>📞 RÉDACTION EN LIGNE — 1980</div>
         <h2 style={{ textAlign: "center", margin: "6px 0 4px", color: "#3a2214", fontSize: 22 }}>Fais la Une</h2>
 
+<<<<<<< HEAD
         {/* ═════ 0 : dialogue d'accueil, le/la journaliste appelle ═════ */}
         {step === 0 && (
           <>
@@ -227,7 +243,25 @@ export function FaireLaUneGame({ onClose, onWin }) {
             <div style={{ background: "#fffbe8", border: "1px dashed #a08040", borderRadius: 8, padding: "10px 12px", marginTop: 12, fontSize: 12.5, lineHeight: 1.5, color: "#3a2e1e" }}>
               <strong>Fiche du journal — </strong>
               <span style={{ color: journal.couleur, fontWeight: 700 }}>{journal.nom}</span> · public visé : <em>{journal.cible}</em> · style : <em>{journal.ligne}</em>
+=======
+        {/* ═════ 0 : présentation du journal + public cible ═════ */}
+        {step === 0 && (
+          <>
+            <p style={{ fontSize: 13.5, lineHeight: 1.55, textAlign: "center", margin: "0 0 12px", color: "#3a2e1e" }}>
+              Le téléphone du kiosque sonne. C'est un journal qui a besoin d'aide pour composer sa Une. Robert te tend le combiné.
+            </p>
+            <div style={{ background: "#fff", border: `2px solid ${journal.couleur}`, borderRadius: 10, padding: "14px 16px" }}>
+              <div style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, letterSpacing: 2, color: journal.couleur, marginBottom: 6 }}>▸ TU AIDES CE JOURNAL</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 22, fontWeight: 900, color: "#1c1a10", marginBottom: 6 }}>{journal.nom}</div>
+              <div style={{ fontSize: 13.5, lineHeight: 1.5, color: "#3a2e1e" }}>
+                <strong>Public visé :</strong> {journal.cible}<br />
+                <strong>Style de la maison :</strong> {journal.ligne}
+              </div>
+>>>>>>> origin/main
             </div>
+            <p style={{ fontSize: 12.5, lineHeight: 1.5, color: "#5a4028", marginTop: 12, fontStyle: "italic", textAlign: "center" }}>
+              À toi d'adapter la Une pour ce public-là. Un titre qui plaît à un public de collégiens ne parlera pas forcément à des adultes pressés.
+            </p>
             <button onClick={() => setStep(1)}
               style={{ marginTop: 14, width: "100%", background: "#8a5a2a", color: "#fff", border: "none", borderRadius: 10, padding: "12px", fontWeight: 800, cursor: "pointer", fontSize: 14, fontFamily: "ui-monospace,monospace", letterSpacing: 1 }}>
               1/3 · Recevoir la dépêche AFP →
