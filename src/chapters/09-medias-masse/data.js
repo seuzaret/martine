@@ -182,8 +182,8 @@ const ACTIONS = {
     needMsg: "Il faut d'abord glisser une cassette dans la platine." },
 
   robert: { mood: "content",
-    bubble: "Robert, kioskier de père en fils depuis 1962 ! Ce matin j'ai reçu six dépêches AFP tout juste sorties du télex. Tu veux bien m'aider à choisir les trois à mettre en Une de mon présentoir ? Ce que tu choisis fera ma journée — et celle de mes clients.",
-    say: "Robert : au kiosque, personne n'est neutre. Choisir 3 dépêches sur 6, c'est déjà éditer un journal.",
+    bubble: "Robert, kioskier de père en fils depuis 1962 ! Justement, un de mes amis journalistes vient d'appeler — il aurait besoin d'un coup de main pour faire la Une du soir. Chaque journal vise un public différent, tu sais. Tu veux bien lui donner un coup de main ?",
+    say: "Robert te branche avec la rédaction d'un journal. Ligne éditoriale, public cible : la Une doit être adaptée.",
     chitchat: [
       "Un jour je ferme boutique, je vais dans le Sud. Mais qui va vendre le journal aux gens du quartier, hein ? Alors je reste.",
       "Ma fille dit que dans le futur, on lira les journaux sur des petits écrans. Sans papier ! Je veux bien voir ça de mon vivant.",
@@ -191,7 +191,46 @@ const ACTIONS = {
     ] },
 
   faire_la_une: { modal: "faire_la_une",
-    needMsg: "Approche-toi du kiosque et clique dessus pour composer la Une avec Robert." },
+    needMsg: "Approche-toi du kiosque et clique dessus : un journal a besoin d'aide pour composer sa Une." },
+
+  cadrer_evenement: { modal: "cadrer_evenement",
+    needMsg: "Clique sur la télé pour rejoindre la rédaction du JT du soir." },
+
+  papa_jt: { mood: "neutre",
+    bubble: "…",
+    say: "Papa. Absorbé, muet devant l'écran. Il ne pensait pas voir ça de son vivant.",
+    chitchat: [
+      "Trente ans que ce mur est debout. Trente ans qu'on nous dit qu'il ne tombera jamais.",
+      "Je vais garder cette cassette VHS toute ma vie. Toute ma vie.",
+      "Chuuut… j'écoute le journaliste.",
+    ] },
+
+  maman_jt: { mood: "content",
+    bubble: "Allô, Mamie ? Allume la deux ! Berlin ! LE MUR ! Non mais tu te rends compte ?",
+    say: "Maman appelle grand-mère au téléphone à fil. Elle veut que TOUT LE MONDE regarde en même temps.",
+    chitchat: [
+      "Allô, Sylvie ? Allume la télé, vite ! … Comment ça, tu regardais un film ? Change de chaîne !",
+      "Ma mère habite à côté de Strasbourg. Elle entend parler allemand tous les jours. Elle doit être bouleversée.",
+      "J'ai appelé toute la famille. Tout le monde regarde en direct, dans son salon. C'est fou, non ?",
+    ] },
+
+  ado_jt: { mood: "neutre",
+    bubble: "C'est quoi ce mur, en fait ? Pourquoi ils l'ont mis, pourquoi ils le cassent ?",
+    say: "L'ado, 13 ans. Elle voit la joie sans comprendre pourquoi. Une image qui la marquera quand même.",
+    chitchat: [
+      "Papa m'a expliqué trois fois. J'ai retenu qu'il y avait deux Allemagnes. Pas plus.",
+      "Mes copines vont pas y croire demain au collège. Je vais tout leur raconter.",
+      "Je peux enregistrer sur ma cassette moi aussi ? Papa veut me tuer si je touche à la platine.",
+    ] },
+
+  grandpere_jt: { mood: "content",
+    bubble: "J'ai vu construire ce mur en 61. Je vais le voir tomber en 89. C'est la fin de quelque chose, ma petite.",
+    say: "Grand-père. Il a le regard qui brille. Il a connu l'après-guerre, il a vu ce mur monter — il le voit tomber.",
+    chitchat: [
+      "J'ai vu tomber le mur, comme j'ai vu tomber le maréchal. Deux fois dans une vie, ce n'est pas rien.",
+      "En 61, personne n'aurait parié un franc là-dessus. Regardez-moi ces gens qui dansent.",
+      "Enregistrez, enregistrez ! Vos enfants voudront voir ça.",
+    ] },
 
   cadrer_evenement: { modal: "cadrer_evenement",
     needMsg: "Clique sur la télé pour rejoindre la rédaction du JT du soir." },
