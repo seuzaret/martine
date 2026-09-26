@@ -182,8 +182,8 @@ const ACTIONS = {
     needMsg: "Il faut d'abord glisser une cassette dans la platine." },
 
   robert: { mood: "content",
-    bubble: "Robert, kioskier de père en fils depuis 1962 ! Ce matin j'ai reçu six dépêches AFP tout juste sorties du télex. Tu veux bien m'aider à choisir les trois à mettre en Une de mon présentoir ? Ce que tu choisis fera ma journée — et celle de mes clients.",
-    say: "Robert : au kiosque, personne n'est neutre. Choisir 3 dépêches sur 6, c'est déjà éditer un journal.",
+    bubble: "Robert, kioskier de père en fils depuis 1962 ! Justement, un de mes amis journalistes vient d'appeler — il aurait besoin d'un coup de main pour faire la Une du soir. Chaque journal vise un public différent, tu sais. Tu veux bien lui donner un coup de main ?",
+    say: "Robert te branche avec la rédaction d'un journal. Ligne éditoriale, public cible : la Une doit être adaptée.",
     chitchat: [
       "Un jour je ferme boutique, je vais dans le Sud. Mais qui va vendre le journal aux gens du quartier, hein ? Alors je reste.",
       "Ma fille dit que dans le futur, on lira les journaux sur des petits écrans. Sans papier ! Je veux bien voir ça de mon vivant.",
@@ -191,7 +191,7 @@ const ACTIONS = {
     ] },
 
   faire_la_une: { modal: "faire_la_une",
-    needMsg: "Approche-toi du kiosque et clique dessus pour composer la Une avec Robert." },
+    needMsg: "Approche-toi du kiosque et clique dessus : un journal a besoin d'aide pour composer sa Une." },
 
   cadrer_evenement: { modal: "cadrer_evenement",
     needMsg: "Clique sur la télé pour rejoindre la rédaction du JT du soir." },
